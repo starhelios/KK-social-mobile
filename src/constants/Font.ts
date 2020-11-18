@@ -1,3 +1,4 @@
 export const FONT = {
-  SpaceMono_Regular: 'SpaceMono-Regular',
+  ANC_Regular: 'AvenirNextCyr-Regular',
+  ANC_Bold: 'AvenirNextCyr-Bold',
 };

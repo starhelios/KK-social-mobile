@@ -23,7 +23,7 @@ export const ProfileScreen: React.FC = () => {
 
   return (
     <View style={{width: viewportWidth, flex: 1, backgroundColor: COLOR.blackColor}}>
-      <Text style={{width: '100%', height: '100%', color: COLOR.whiteColor, top: 200, left: 100}}>Profile Tab</Text>
+      <Text style={{width: '100%', height: '100%', color: COLOR.systemWhiteColor, top: 200, left: 100}}>Profile Tab</Text>
     </View>
   );
 };

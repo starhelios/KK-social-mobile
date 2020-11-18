@@ -4,8 +4,10 @@ import { LOGIN_USER_TOKEN } from '.';
 const API_HOST = 'https://admin.finderscope.com/api/v1';
 
 export const API_ENDPOINT = {
-  // Login User
-  LOGIN_EMAIL     : `${API_HOST}/rest-auth/login/`,
+  // Home Tab
+  EXPERIENCE_CATEGORY_LIST  : `${API_HOST}/rest-auth/login/`,
+  EXPERIENCE_LIST           : `${API_HOST}/rest-auth/login/`,
+  HOST_LIST                 : `${API_HOST}/rest-auth/login/`,
 };
 
 export const API_CONFIG: AxiosRequestConfig = {

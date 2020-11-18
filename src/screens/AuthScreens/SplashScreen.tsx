@@ -1,38 +1,52 @@
 import * as React from 'react';
 import {
   StyleSheet,
-  Dimensions,
   View,
 } from 'react-native';
-import { useCallback, useState } from 'react';
+import { useEffect } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { SvgXml } from 'react-native-svg';
 
 // from app
-import { COLOR } from '../../constants';
-
-
-const { width: viewportWidth } = Dimensions.get('window');
+import { 
+  COLOR, 
+  Icon_Splash_Background, 
+  Icon_Tab_Bar_Booking_Select,
+  LOADING_TIME,
+} from '../../constants';
 
 export const SplashScreen: React.FC = () => {
-  
-  const { navigate, goBack } = useNavigation();
 
-  var fetching = false;
+  const { navigate } = useNavigation();
+
+  useEffect(() => {
+    setTimeout(() => {
+      navigate('TabBar');
+    }, LOADING_TIME)
+  }, [])
 
   return (
-    <View style={{width: viewportWidth, flex: 1, backgroundColor: COLOR.blackColor}}>
-      
+    <View style={styles.background}>
+      <SvgXml width='100%' height='100%' xml={Icon_Splash_Background} />
+      <View style={styles.icon} >
+        <SvgXml width={75} height={130} xml={Icon_Tab_Bar_Booking_Select} />
+      </View>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  title_bar: {
-    marginTop: 10,
-    marginLeft: 0,
-    width: viewportWidth,
-    height: 44,
+  background: {
+    width: '100%', 
+    flex: 1, 
+    backgroundColor: COLOR.blackColor, 
     alignItems: 'center',
   },
+  icon: {
+    position: 'absolute',
+    width: 75,
+    height: '100%',
+    flex: 1,
+    justifyContent: 'space-evenly',
+  }
 });

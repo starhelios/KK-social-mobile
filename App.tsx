@@ -6,6 +6,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 
 // from app
 import { Provider } from './src/redux/Store';
+import { SplashScreen } from './src/screens/AuthScreens/SplashScreen';
 import TabBarNavigator from './src/navigators/TabBarNavigator';
 
 // Sentry.init({
@@ -24,6 +25,7 @@ const App = () => {
           barStyle="light-content"
         />
         <Stack.Navigator screenOptions={{headerShown: false}}>
+          <Stack.Screen name="Splash" component={SplashScreen} />
           <Stack.Screen name="TabBar" component={TabBarNavigator} />
         </Stack.Navigator>
       </NavigationContainer>

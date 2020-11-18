@@ -11,8 +11,17 @@ import Icon_Tab_Bar_Booking_Select from '../assets/svg/tab_bar_booking_select'
 import Icon_Tab_Bar_Profile_Normal from '../assets/svg/tab_bar_profile_normal'
 import Icon_Tab_Bar_Profile_Select from '../assets/svg/tab_bar_profile_select'
 
-// Star
-// const Img_Book_Star_Full = require('../assets/image/ic_book_star_full.png');
+// Home Tab
+import Icon_Search from '../assets/svg/search_bar_icon'
+import Icon_Filter from '../assets/svg/search_bar_filter'
+
+// Development
+import Icon_Category_Cooking from '../assets/dev/category_cooking'
+import Icon_Category_Music from '../assets/dev/category_music'
+const Img_Avatar_1 = require('../assets/dev/img_avatar_1.png');
+const Img_Avatar_2 = require('../assets/dev/img_avatar_2.png');
+const Img_Experience_1 = require('../assets/dev/img_experience_1.png');
+const Img_Experience_2 = require('../assets/dev/img_experience_2.png');
 
 export {
   // Splash
@@ -26,4 +35,14 @@ export {
   Icon_Tab_Bar_Booking_Select,
   Icon_Tab_Bar_Profile_Normal,
   Icon_Tab_Bar_Profile_Select,
+  // Home Tab
+  Icon_Search,
+  Icon_Filter,  
+  // Development
+  Icon_Category_Cooking,
+  Icon_Category_Music,
+  Img_Avatar_1,
+  Img_Avatar_2,
+  Img_Experience_1,
+  Img_Experience_2,
 }

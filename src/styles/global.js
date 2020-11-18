@@ -1,4 +1,5 @@
 import { StyleSheet } from 'react-native';
+import { FONT } from 'src/constants';
 
 export default StyleSheet.create({
   stretch: {
@@ -14,7 +15,7 @@ export default StyleSheet.create({
     alignItems: 'center',
   },
   navigationText: {
-    fontFamily: 'Montserrat-Regular',
+    fontFamily: FONT.ANC_Regular,
     textAlign: 'center',
     fontSize: 10,
     top: -27,

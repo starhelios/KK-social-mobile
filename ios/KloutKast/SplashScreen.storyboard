@@ -5,7 +5,6 @@
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17505"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
-        <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -16,8 +15,28 @@
                     <view key="view" contentMode="scaleToFill" id="jjp-4f-nMQ">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="bg_splash" translatesAutoresizingMaskIntoConstraints="NO" id="6jk-q8-Vgx">
+                                <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
+                            </imageView>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic_logo" translatesAutoresizingMaskIntoConstraints="NO" id="FEk-6t-4WS">
+                                <rect key="frame" x="169.66666666666666" y="303" width="75" height="130"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="130" id="DkO-Sz-fOq"/>
+                                    <constraint firstAttribute="width" constant="75" id="iKY-cz-3ea"/>
+                                </constraints>
+                            </imageView>
+                        </subviews>
                         <viewLayoutGuide key="safeArea" id="erp-p4-iPB"/>
-                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <color key="backgroundColor" red="0.16470588235294117" green="0.16470588235294117" blue="0.16078431372549018" alpha="1" colorSpace="calibratedRGB"/>
+                        <constraints>
+                            <constraint firstItem="erp-p4-iPB" firstAttribute="trailing" secondItem="6jk-q8-Vgx" secondAttribute="trailing" id="3sm-hP-Dfd"/>
+                            <constraint firstItem="FEk-6t-4WS" firstAttribute="centerX" secondItem="erp-p4-iPB" secondAttribute="centerX" id="9Ao-kp-Xxv"/>
+                            <constraint firstItem="FEk-6t-4WS" firstAttribute="centerY" secondItem="erp-p4-iPB" secondAttribute="centerY" id="TzN-uN-rYE"/>
+                            <constraint firstItem="6jk-q8-Vgx" firstAttribute="top" secondItem="jjp-4f-nMQ" secondAttribute="top" id="bUs-b9-ZIn"/>
+                            <constraint firstItem="erp-p4-iPB" firstAttribute="bottom" secondItem="6jk-q8-Vgx" secondAttribute="bottom" id="ctX-ny-kwq"/>
+                            <constraint firstItem="6jk-q8-Vgx" firstAttribute="leading" secondItem="jjp-4f-nMQ" secondAttribute="leading" id="pBl-K2-M37"/>
+                        </constraints>
                     </view>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="EyK-nQ-906" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
@@ -26,8 +45,7 @@
         </scene>
     </scenes>
     <resources>
-        <systemColor name="systemBackgroundColor">
-            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-        </systemColor>
+        <image name="bg_splash" width="512" height="1109"/>
+        <image name="ic_logo" width="512" height="887"/>
     </resources>
 </document>
