@@ -123,6 +123,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     height: '100%',
     flex: 1,
+    backgroundColor: COLOR.whiteColor,
   },
   navigation_bar_select_line: {
     position: 'absolute', 

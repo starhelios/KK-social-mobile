@@ -5,7 +5,8 @@ export const COLOR = {
   clearColor: '#0000',
   blackColor: '#2A2A29',
   redColor: '#E41E35',
-  tabBarColor: '#EAEAEA',
+  whiteColor: '#EAEAEA',
   whiteBorderColor: '#979797',
   selectedExperienceCategoryBackgroudnColor: '#9797973F',
+  alphaBlackColor: '#0003',
 };

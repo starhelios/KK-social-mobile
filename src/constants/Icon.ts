@@ -15,6 +15,10 @@ import Icon_Tab_Bar_Profile_Select from '../assets/svg/tab_bar_profile_select'
 import Icon_Search from '../assets/svg/search_bar_icon'
 import Icon_Filter from '../assets/svg/search_bar_filter'
 
+// Booking Tab
+const Img_Rating_Full = require('../assets/images/rating_full.png');
+const Img_Rating_Empty = require('../assets/images/rating_empty.png');
+
 // Development
 import Icon_Category_Cooking from '../assets/dev/category_cooking'
 import Icon_Category_Music from '../assets/dev/category_music'
@@ -37,7 +41,10 @@ export {
   Icon_Tab_Bar_Profile_Select,
   // Home Tab
   Icon_Search,
-  Icon_Filter,  
+  Icon_Filter,
+  // Booking Tab
+  Img_Rating_Full,
+  Img_Rating_Empty,  
   // Development
   Icon_Category_Cooking,
   Icon_Category_Music,

@@ -9,6 +9,4 @@ declare module "*.svg" {
 declare module '*.jpg'
 
 declare module 'react-native-stars';
-declare module 'react-native-tag-selector';
-declare module 'react-native-tags-input';
 declare module 'react-native-user-defaults';

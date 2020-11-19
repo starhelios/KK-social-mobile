@@ -1,0 +1,76 @@
+import * as React from 'react';
+import {
+  Dimensions,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
+import Stars from 'react-native-stars';
+
+// from app
+import { 
+  COLOR, 
+  FONT,
+  Img_Rating_Empty,
+  Img_Rating_Full, 
+} from '../../constants';
+import { IBooking } from '../../interfaces/app';
+
+interface props {
+  booking: IBooking;
+}
+
+const { width: viewportWidth } = Dimensions.get('window');
+
+export const BookingRatingInfoView: React.FC<props> = (props: props) => {
+  return (
+    <View>
+      <View style={styles.line} />
+      <Text style={styles.rating_title}>
+        {
+          props.booking.is_host == true 
+          ? (props.booking.host != null ? 'Rate your host, ' + props.booking.host.username : 'Rate your host')
+          : 'Rate this experience:'}
+      </Text>
+      <View style={styles.rating}>
+        <Stars
+          value={props.booking.rating}
+          spacing={12}
+          count={5}
+          starSize={29}
+          fullStar={Img_Rating_Full}
+          emptyStar={Img_Rating_Empty}
+          half={false}
+        />
+      </View>
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  line: {
+    marginTop: 24,
+    marginLeft: 24,
+    marginRight: 24,
+    height: 1,
+    backgroundColor: COLOR.systemWhiteColor,
+  },
+  rating_title: {
+    marginTop: 24,
+    marginLeft: 24,
+    marginRight: 24,
+    height: 16,
+    lineHeight: 16,
+    color: COLOR.systemWhiteColor,
+    fontFamily: FONT.ANC_Regular,
+    fontSize: 16,
+    flexWrap: 'wrap'
+  },
+  rating: {
+    marginTop: 16,
+    marginLeft: 24,
+    marginRight: 24,
+    height: 29,
+    alignItems: 'flex-start',
+  },
+});

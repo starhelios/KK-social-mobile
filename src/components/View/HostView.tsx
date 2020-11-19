@@ -25,7 +25,7 @@ export const HostView: React.FC<props> = (props: props) => {
     <View style={styles.container}>
       <Image
         style={styles.image}
-        // source={(props.host.image == null && props.host.image == '') ? Img_Avatar_1 : {uri: props.host.image}}
+        // source={(props.host.image == null || props.host.image == '') ? Img_Avatar_1 : {uri: props.host.image}}
         // test
         source={props.host.experience == 'Music' || props.host.experience == 'Sports' ? Img_Avatar_1 : Img_Avatar_2}
       />

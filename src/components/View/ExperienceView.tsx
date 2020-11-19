@@ -25,7 +25,7 @@ export const ExperienceView: React.FC<props> = (props: props) => {
     <View style={styles.container}>
       <Image
         style={styles.image}
-        // source={(props.experience.image == null && props.experience.image == '') ? Img_Experience_1 : {uri: props.experience.image}}
+        // source={(props.experience.image == null || props.experience.image == '') ? Img_Experience_1 : {uri: props.experience.image}}
         // test
         source={props.experience.experience == 'Music' || props.experience.experience == 'Sports' ? Img_Experience_2 : Img_Experience_1}
       />

@@ -8,6 +8,10 @@ export const API_ENDPOINT = {
   EXPERIENCE_CATEGORY_LIST  : `${API_HOST}/rest-auth/login/`,
   EXPERIENCE_LIST           : `${API_HOST}/rest-auth/login/`,
   HOST_LIST                 : `${API_HOST}/rest-auth/login/`,
+
+  // Booking Tab
+  COMPLETED_BOOKING_LIST    : `${API_HOST}/rest-auth/login/`,
+  UPCOMING_BOOKING_LIST     : `${API_HOST}/rest-auth/login/`,
 };
 
 export const API_CONFIG: AxiosRequestConfig = {

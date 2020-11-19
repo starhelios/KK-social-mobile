@@ -14,7 +14,7 @@ export default StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  navigationText: {
+  navigation_text: {
     fontFamily: FONT.ANC_Regular,
     textAlign: 'center',
     fontSize: 10,
