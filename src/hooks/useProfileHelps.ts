@@ -3,13 +3,13 @@ import axios, { AxiosRequestConfig } from 'axios';
 // from app
 import { API_ENDPOINT, Icon_Category_Cooking, Icon_Category_Music, LOGIN_USER_TOKEN } from '../constants';
 import { IApiSuccess } from '../interfaces/api';
-import { IHost } from '../interfaces/app';
+import { IProfileHelp } from '../interfaces/app';
 
-export const useHosts = () => {
+export const useProfileHelps = () => {
 
-  const hosts = async (
+  const profileHelps = async (
   ): Promise<any> => {
-    var url = API_ENDPOINT.HOST_LIST;
+    var url = API_ENDPOINT.PROFILE_HELP;
   
     const HEADER_CONFIG: AxiosRequestConfig = {
       headers: {
@@ -26,11 +26,11 @@ export const useHosts = () => {
       */
 
       // test
-      var result: IHost[] = [];
-      result.push({ id: 1, image: '', username: 'Lindsay Wyatt', experience_icon: Icon_Category_Cooking, experience: 'Cooking' });
-      result.push({ id: 2, image: '', username: 'Brian Wong', experience_icon: Icon_Category_Music, experience: 'Music' });
-      result.push({ id: 3, image: '', username: 'Alex', experience_icon: Icon_Category_Cooking, experience: 'Sports' });
-      result.push({ id: 4, image: '', username: 'Samuel', experience_icon: Icon_Category_Music, experience: 'Study' });
+      var result: IProfileHelp[] = [];
+      result.push({ id: 1, image: '', title: 'Surf Lessons with Kelly Slater' });
+      result.push({ id: 2, image: '', title: 'Surf Lessons with Music' });
+      result.push({ id: 3, image: '', title: 'Surf Lessons with Sports'});
+      result.push({ id: 4, image: '', title: 'Surf Lessons with Guitar'});
 
       return Promise.resolve(result);
     } catch (err) {
@@ -38,5 +38,5 @@ export const useHosts = () => {
     }
   };
 
-  return { hosts };
+  return { profileHelps };
 };

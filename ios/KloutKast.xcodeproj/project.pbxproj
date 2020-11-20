@@ -14,8 +14,9 @@
 		3E461D99554A48A4959DE609 /* SplashScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AA286B85B6C04FC6940260E9 /* SplashScreen.storyboard */; };
 		96905EF65AED1B983A6B3ABC /* libPods-KloutKast.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 58EEBF8E8E6FB1BC6CAF49B5 /* libPods-KloutKast.a */; };
 		BB2F792D24A3F905000567C9 /* Expo.plist in Resources */ = {isa = PBXBuildFile; fileRef = BB2F792C24A3F905000567C9 /* Expo.plist */; };
-		D845D048256519790015B949 /* AvenirNextCyr-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = D845D046256519790015B949 /* AvenirNextCyr-Regular.ttf */; };
-		D845D049256519790015B949 /* AvenirNextCyr-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = D845D047256519790015B949 /* AvenirNextCyr-Bold.ttf */; };
+		D8B8407A2567C53D0038C5BD /* AvenirNextLTPro-It.otf in Resources */ = {isa = PBXBuildFile; fileRef = D8B840772567C53C0038C5BD /* AvenirNextLTPro-It.otf */; };
+		D8B8407B2567C53D0038C5BD /* AvenirNextLTPro-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = D8B840782567C53C0038C5BD /* AvenirNextLTPro-Regular.otf */; };
+		D8B8407C2567C53D0038C5BD /* AvenirNextLTPro-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = D8B840792567C53D0038C5BD /* AvenirNextLTPro-Bold.otf */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -32,8 +33,9 @@
 		7A4D352CD337FB3A3BF06240 /* Pods-KloutKast.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-KloutKast.release.xcconfig"; path = "Target Support Files/Pods-KloutKast/Pods-KloutKast.release.xcconfig"; sourceTree = "<group>"; };
 		AA286B85B6C04FC6940260E9 /* SplashScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = SplashScreen.storyboard; path = KloutKast/SplashScreen.storyboard; sourceTree = "<group>"; };
 		BB2F792C24A3F905000567C9 /* Expo.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Expo.plist; sourceTree = "<group>"; };
-		D845D046256519790015B949 /* AvenirNextCyr-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "AvenirNextCyr-Regular.ttf"; path = "../src/assets/fonts/AvenirNextCyr-Regular.ttf"; sourceTree = "<group>"; };
-		D845D047256519790015B949 /* AvenirNextCyr-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "AvenirNextCyr-Bold.ttf"; path = "../src/assets/fonts/AvenirNextCyr-Bold.ttf"; sourceTree = "<group>"; };
+		D8B840772567C53C0038C5BD /* AvenirNextLTPro-It.otf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "AvenirNextLTPro-It.otf"; path = "../src/assets/fonts/AvenirNextLTPro-It.otf"; sourceTree = "<group>"; };
+		D8B840782567C53C0038C5BD /* AvenirNextLTPro-Regular.otf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "AvenirNextLTPro-Regular.otf"; path = "../src/assets/fonts/AvenirNextLTPro-Regular.otf"; sourceTree = "<group>"; };
+		D8B840792567C53D0038C5BD /* AvenirNextLTPro-Bold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "AvenirNextLTPro-Bold.otf"; path = "../src/assets/fonts/AvenirNextLTPro-Bold.otf"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 		ED2971642150620600B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = Platforms/AppleTVOS.platform/Developer/SDKs/AppleTVOS12.0.sdk/System/Library/Frameworks/JavaScriptCore.framework; sourceTree = DEVELOPER_DIR; };
 /* End PBXFileReference section */
@@ -135,8 +137,9 @@
 		D845D0452565196A0015B949 /* fonts */ = {
 			isa = PBXGroup;
 			children = (
-				D845D047256519790015B949 /* AvenirNextCyr-Bold.ttf */,
-				D845D046256519790015B949 /* AvenirNextCyr-Regular.ttf */,
+				D8B840792567C53D0038C5BD /* AvenirNextLTPro-Bold.otf */,
+				D8B840772567C53C0038C5BD /* AvenirNextLTPro-It.otf */,
+				D8B840782567C53C0038C5BD /* AvenirNextLTPro-Regular.otf */,
 			);
 			name = fonts;
 			sourceTree = "<group>";
@@ -202,11 +205,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				BB2F792D24A3F905000567C9 /* Expo.plist in Resources */,
+				D8B8407C2567C53D0038C5BD /* AvenirNextLTPro-Bold.otf in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
-				D845D048256519790015B949 /* AvenirNextCyr-Regular.ttf in Resources */,
 				13B07FBD1A68108700A75B9A /* LaunchScreen.xib in Resources */,
-				D845D049256519790015B949 /* AvenirNextCyr-Bold.ttf in Resources */,
 				3E461D99554A48A4959DE609 /* SplashScreen.storyboard in Resources */,
+				D8B8407B2567C53D0038C5BD /* AvenirNextLTPro-Regular.otf in Resources */,
+				D8B8407A2567C53D0038C5BD /* AvenirNextLTPro-It.otf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -16,16 +16,23 @@ import Icon_Search from '../assets/svg/search_bar_icon'
 import Icon_Filter from '../assets/svg/search_bar_filter'
 
 // Booking Tab
-const Img_Rating_Full = require('../assets/images/rating_full.png');
-const Img_Rating_Empty = require('../assets/images/rating_empty.png');
+const Img_Rating_Full = require('../assets/images/rating_full.png')
+const Img_Rating_Empty = require('../assets/images/rating_empty.png')
+
+// Profile Tab
+const Img_Edit_Profile_Background = require('../assets/images/bg_edit_profile.png')
+
+// Auth
+import Icon_Back from '../assets/svg/back'
+const Img_Auth_Background = require('../assets/images/bg_auth.png')
 
 // Development
 import Icon_Category_Cooking from '../assets/dev/category_cooking'
 import Icon_Category_Music from '../assets/dev/category_music'
-const Img_Avatar_1 = require('../assets/dev/img_avatar_1.png');
-const Img_Avatar_2 = require('../assets/dev/img_avatar_2.png');
-const Img_Experience_1 = require('../assets/dev/img_experience_1.png');
-const Img_Experience_2 = require('../assets/dev/img_experience_2.png');
+const Img_Avatar_1 = require('../assets/dev/img_avatar_1.png')
+const Img_Avatar_2 = require('../assets/dev/img_avatar_2.png')
+const Img_Experience_1 = require('../assets/dev/img_experience_1.png')
+const Img_Experience_2 = require('../assets/dev/img_experience_2.png')
 
 export {
   // Splash
@@ -44,7 +51,12 @@ export {
   Icon_Filter,
   // Booking Tab
   Img_Rating_Full,
-  Img_Rating_Empty,  
+  Img_Rating_Empty,
+  // Profile Tab
+  Img_Edit_Profile_Background,
+  // Auth
+  Icon_Back,
+  Img_Auth_Background,
   // Development
   Icon_Category_Cooking,
   Icon_Category_Music,

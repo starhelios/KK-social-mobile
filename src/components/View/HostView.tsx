@@ -64,7 +64,7 @@ const styles = StyleSheet.create({
     lineHeight: 17,
     marginTop: 12,
     color: COLOR.systemWhiteColor,
-    fontFamily: FONT.ANC_Bold,
+    fontFamily: FONT.AN_Bold,
     fontSize: 12,
     textAlign: 'center',
   },
@@ -80,7 +80,7 @@ const styles = StyleSheet.create({
     lineHeight: 12,
     marginLeft: 5,
     color: COLOR.systemWhiteColor,
-    fontFamily: FONT.ANC_Regular,
+    fontFamily: FONT.AN_Regular,
     fontSize: 12,
   },
 });

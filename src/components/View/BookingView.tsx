@@ -3,7 +3,6 @@ import {
   Dimensions,
   Image,
   StyleSheet,
-  Text,
   TouchableWithoutFeedback,
   View,
 } from 'react-native';
@@ -14,7 +13,7 @@ import {
   Img_Experience_2, 
 } from '../../constants';
 import { IBooking } from '../../interfaces/app';
-import { RedButton } from '../Button';
+import { ColorButton } from '../Button';
 import { BookingMainInfoView } from './BookingMainInfoView';
 import { BookingRatingInfoView } from './BookingRatingInfoView';
 
@@ -49,7 +48,7 @@ export const BookingView: React.FC<props> = (props: props) => {
               <View style={styles.join_container}>
                 <TouchableWithoutFeedback onPress={() => onJoinExperience()}>
                   <View style={styles.join_button_container}>
-                    <RedButton title={'Join Experience'} />
+                    <ColorButton title={'Join Experience'} backgroundColor={COLOR.redColor} color={COLOR.systemWhiteColor} />
                   </View>
                 </TouchableWithoutFeedback>
               </View>

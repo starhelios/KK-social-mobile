@@ -53,7 +53,7 @@ const styles = StyleSheet.create({
     height: 18,
     lineHeight: 18,
     color: COLOR.systemWhiteColor,
-    fontFamily: FONT.ANC_Regular,
+    fontFamily: FONT.AN_Regular,
     fontSize: 18,
     flexWrap: 'wrap'
   },
@@ -68,7 +68,7 @@ const styles = StyleSheet.create({
     height: 16,
     lineHeight: 16,
     color: COLOR.systemWhiteColor,
-    fontFamily: FONT.ANC_Regular,
+    fontFamily: FONT.AN_Regular,
     fontSize: 16,
     flexWrap: 'wrap'
   },
@@ -78,7 +78,7 @@ const styles = StyleSheet.create({
     height: 16,
     lineHeight: 16,
     color: COLOR.systemWhiteColor,
-    fontFamily: FONT.ANC_Regular,
+    fontFamily: FONT.AN_Regular,
     fontSize: 16,
     flexWrap: 'wrap'
   },

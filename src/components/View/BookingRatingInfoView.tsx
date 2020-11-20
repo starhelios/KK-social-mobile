@@ -62,7 +62,7 @@ const styles = StyleSheet.create({
     height: 16,
     lineHeight: 16,
     color: COLOR.systemWhiteColor,
-    fontFamily: FONT.ANC_Regular,
+    fontFamily: FONT.AN_Regular,
     fontSize: 16,
     flexWrap: 'wrap'
   },

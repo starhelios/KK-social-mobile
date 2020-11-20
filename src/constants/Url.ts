@@ -12,6 +12,9 @@ export const API_ENDPOINT = {
   // Booking Tab
   COMPLETED_BOOKING_LIST    : `${API_HOST}/rest-auth/login/`,
   UPCOMING_BOOKING_LIST     : `${API_HOST}/rest-auth/login/`,
+
+  // Profile Tab
+  PROFILE_HELP              : `${API_HOST}/rest-auth/login/`,
 };
 
 export const API_CONFIG: AxiosRequestConfig = {

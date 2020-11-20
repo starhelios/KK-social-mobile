@@ -1,4 +1,5 @@
 export const FONT = {
-  ANC_Regular: 'AvenirNextCyr-Regular',
-  ANC_Bold: 'AvenirNextCyr-Bold',
+  AN_Regular: 'AvenirNextLTPro-Regular',
+  AN_Bold: 'AvenirNextLTPro-Bold',
+  AN_Italic: 'AvenirNextLTPro-It',
 };

@@ -5,8 +5,10 @@ export const COLOR = {
   clearColor: '#0000',
   blackColor: '#2A2A29',
   redColor: '#E41E35',
+  blueColor: '#1778F2',
   whiteColor: '#EAEAEA',
   whiteBorderColor: '#979797',
   selectedExperienceCategoryBackgroudnColor: '#9797973F',
   alphaBlackColor: '#0003',
+  alphaWhiteColor: '#FFF8',
 };

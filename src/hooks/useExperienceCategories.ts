@@ -3,7 +3,6 @@ import axios, { AxiosRequestConfig } from 'axios';
 // from app
 import { API_ENDPOINT, LOGIN_USER_TOKEN } from '../constants';
 import { IApiSuccess } from '../interfaces/api';
-import { handleError } from '../utils';
 import { IExperienceCategory } from '../interfaces/app';
 
 export const useExperienceCategories = () => {
@@ -35,12 +34,7 @@ export const useExperienceCategories = () => {
 
       return Promise.resolve(result);
     } catch (err) {
-      const apiError = handleError(err);
-      if (apiError) {
-        return Promise.reject(apiError);
-      } else {
-        return Promise.reject(null);
-      }
+      return Promise.reject(null);
     }
   };
 

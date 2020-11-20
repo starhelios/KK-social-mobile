@@ -4,13 +4,18 @@ import {
   Dimensions,
   View,
   Text,
+  SafeAreaView,
+  TouchableWithoutFeedback,
+  FlatList,
 } from 'react-native';
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
-import { SvgXml } from 'react-native-svg';
 
 // from app
-import { COLOR } from '../../constants';
+import { COLOR, FONT, LOGIN_USER_ID, MARGIN_TOP } from '../../constants';
+import { useCompletedBookings, useUpcomingBookings } from '../../hooks';
+import { IBooking } from '../../interfaces/app';
+import { ProfileView } from '../../components/View';
 
 
 const { width: viewportWidth } = Dimensions.get('window');
@@ -18,22 +23,39 @@ const { width: viewportWidth } = Dimensions.get('window');
 export const ProfileScreen: React.FC = () => {
   
   const { navigate, goBack } = useNavigation();
+  const { upcomingBookings } = useUpcomingBookings();
+  const { completedBookings } = useCompletedBookings();
+
+  const [ selectedTab, setSelectedTab ] = useState<number>(0);
+
+  useEffect(() => {
+
+  }, [])
 
   var fetching = false;
 
   return (
     <View style={{width: viewportWidth, flex: 1, backgroundColor: COLOR.blackColor}}>
-      <Text style={{width: '100%', height: '100%', color: COLOR.systemWhiteColor, top: 200, left: 100}}>Profile Tab</Text>
+      <SafeAreaView style={styles.safe_area}>
+        {
+          LOGIN_USER_ID == 0
+          ? <ProfileView />
+          : null
+        }
+      </SafeAreaView>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  title_bar: {
-    marginTop: 10,
-    marginLeft: 0,
-    width: viewportWidth,
-    height: 44,
+  background: {
+    width: '100%', 
+    flex: 1, 
+    backgroundColor: COLOR.blackColor, 
     alignItems: 'center',
+  },
+  safe_area: {
+    width: '100%',
+    flex: 1,
   },
 });

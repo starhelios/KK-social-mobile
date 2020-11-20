@@ -41,8 +41,9 @@
 	<string></string>
 	<key>UIAppFonts</key>
 	<array>
-		<string>AvenirNextCyr-Regular.ttf</string>
-		<string>AvenirNextCyr-Bold.ttf</string>
+		<string>AvenirNextLTPro-Regular.otf</string>
+		<string>AvenirNextLTPro-Bold.otf</string>
+		<string>AvenirNextLTPro-It.otf</string>
 	</array>
 	<key>UILaunchStoryboardName</key>
 	<string>SplashScreen</string>

@@ -124,7 +124,7 @@ const styles = StyleSheet.create({
     backgroundColor: COLOR.clearColor, 
     height: 33, 
     lineHeight: 33,
-    fontFamily: FONT.ANC_Bold, 
+    fontFamily: FONT.AN_Bold, 
     fontSize: 24, 
     color: COLOR.systemWhiteColor,
   },
@@ -160,7 +160,7 @@ const styles = StyleSheet.create({
   },
   tab_title: {
     backgroundColor: COLOR.clearColor,
-    fontFamily: FONT.ANC_Bold,
+    fontFamily: FONT.AN_Bold,
     fontSize: 14,
     textAlign: 'center',
   },
