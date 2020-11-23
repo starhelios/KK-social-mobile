@@ -13,6 +13,7 @@ import {
   Dimensions,
   FlatList,
 } from 'react-native';
+import { Container } from 'native-base';
 import { useEffect, useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { SvgXml } from 'react-native-svg';
@@ -45,9 +46,9 @@ export const WithdrawalScreen: React.FC = () => {
   }, [])
 
   return (
-    <View style={styles.background}>
+    <Container style={styles.background}>
       
-      <Image style={{width: '100%', height: '100%', resizeMode: 'cover'}} source={Img_Auth_Background}></Image>
+      <Image style={{width: '100%', height: '100%', resizeMode: 'cover'}} source={Img_Auth_Background} />
 
       <SafeAreaView style={styles.safe_area}>
         <View style={styles.navigation_bar}>
@@ -59,39 +60,32 @@ export const WithdrawalScreen: React.FC = () => {
             </View>
           </TouchableWithoutFeedback>
         </View>
-        
-        <KeyboardAvoidingView
-          behavior={Platform.OS == "ios" ? "padding" : "height"}
-          style={styles.container} >
 
-          <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-            <View style={styles.input_container}>
-              <View style={{width:'100%'}}>
-                <Text style={styles.info_title}>Connected Account</Text>
-                <FlatList
-                  style={{width: '100%', marginTop: 5, marginBottom: 44, height: bankList.length * 78 <= viewportHeight - 500 ? bankList.length * 78 : viewportHeight - 500 }}
-                  contentContainerStyle={{paddingVertical: 0}}
-                  showsHorizontalScrollIndicator={false}
-                  horizontal={false}
-                  data={bankList}
-                  keyExtractor={item => item.number}
-                  renderItem={({item}) => <BankButton card={item} />}
-                />
-              </View>
-
-              <View style={{width:'100%', marginTop: 22}}>
-                <Text style={styles.info_title}>Add Account</Text>
-                <Text style={styles.info_input}>Add Bank Account</Text>
-                <View style={styles.info_right_arrow}>
-                    <SvgXml width='100%' height='100%' xml={Icon_Detail_Right_Arrow} />
-                </View>
-                <View style={styles.info_line} />
-              </View>
+          <View style={styles.input_container}>
+            <View style={{width:'100%'}}>
+              <Text style={styles.info_title}>Connected Account</Text>
+              <FlatList
+                style={{width: '100%', marginTop: 5, marginBottom: 44, height: bankList.length * 78 <= viewportHeight - 500 ? bankList.length * 78 : viewportHeight - 500 }}
+                contentContainerStyle={{paddingVertical: 0}}
+                showsHorizontalScrollIndicator={false}
+                horizontal={false}
+                data={bankList}
+                keyExtractor={item => item.number}
+                renderItem={({item}) => <BankButton card={item} />}
+              />
             </View>
-          </TouchableWithoutFeedback>
-        </KeyboardAvoidingView>
+
+            <View style={{width:'100%', marginTop: 22}}>
+              <Text style={styles.info_title}>Add Account</Text>
+              <Text style={styles.info_input}>Add Bank Account</Text>
+              <View style={styles.info_right_arrow}>
+                  <SvgXml width='100%' height='100%' xml={Icon_Detail_Right_Arrow} />
+              </View>
+              <View style={styles.info_line} />
+            </View>
+          </View>
       </SafeAreaView>
-    </View>
+    </Container>
   );
 
   function onCreateAccount() {

@@ -9,10 +9,10 @@ import {
   Dimensions,
   Platform,
 } from 'react-native';
+import { Container } from 'native-base';
 import { useEffect, useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { SvgXml } from 'react-native-svg';
-import ImagePicker from 'react-native-image-crop-picker';
 
 // from app
 import { 
@@ -38,7 +38,7 @@ export const SignUpAddProfilePictureConfirmScreen: React.FC = ({route}) => {
   }, [])
 
   return (
-    <View style={styles.background}>
+    <Container style={styles.background}>
       
       <Image style={{width: '100%', height: '100%', resizeMode: 'cover'}} source={Img_Edit_Profile_Background} />
 
@@ -73,7 +73,7 @@ export const SignUpAddProfilePictureConfirmScreen: React.FC = ({route}) => {
           
         </View>
       </SafeAreaView>
-    </View>
+    </Container>
   );
 
   function onContinue() {

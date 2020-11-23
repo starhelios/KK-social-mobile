@@ -11,7 +11,9 @@ import {
   Keyboard,
   TextInput,
   Dimensions,
+  ScrollView,
 } from 'react-native';
+import { Container } from 'native-base';
 import { useEffect, useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { SvgXml } from 'react-native-svg';
@@ -26,7 +28,7 @@ import {
 } from '../../constants';
 import { ColorButton } from '../../components/Button';
 
-const { width: viewportWidth } = Dimensions.get('window');
+const { width: viewportWidth, height: viewportHeight } = Dimensions.get('window');
 
 export const LogInScreen: React.FC = () => {
 
@@ -39,9 +41,9 @@ export const LogInScreen: React.FC = () => {
   }, [])
 
   return (
-    <View style={styles.background}>
+    <Container style={styles.background}>
       
-      <Image style={{width: '100%', height: '100%', resizeMode: 'cover'}} source={Img_Auth_Background} />
+      <Image style={{width: viewportWidth, height: viewportHeight, resizeMode: 'cover'}} source={Img_Auth_Background} />
 
       <SafeAreaView style={styles.safe_area}>
         <View style={styles.navigation_bar}>
@@ -54,54 +56,55 @@ export const LogInScreen: React.FC = () => {
           </TouchableWithoutFeedback>
         </View>
         
-        <KeyboardAvoidingView
-          behavior={Platform.OS == "ios" ? "padding" : "height"}
-          style={styles.container} >
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+          <View style={styles.container}>
+            <KeyboardAvoidingView behavior={Platform.OS == "ios" ? "padding" : "height"} >
+              <ScrollView>
+                <View style={styles.input_container}>
+                  <View style={{width:'100%', marginTop: 22}}>
+                    <Text style={styles.info_title}>Email Address</Text>
+                    <TextInput
+                      style={styles.info_input}
+                      keyboardType={'email-address'}
+                      placeholder={'Email Address'}
+                      placeholderTextColor={COLOR.alphaWhiteColor}
+                      onChangeText={text => setEmailAddress(text)}
+                      value={emailAddress}
+                    />
+                    <View style={styles.info_line} />
+                  </View>
 
-          <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-            <View style={styles.input_container}>
-              <View style={{width:'100%', marginTop: 22}}>
-                <Text style={styles.info_title}>Email Address</Text>
-                <TextInput
-                  style={styles.info_input}
-                  keyboardType={'email-address'}
-                  placeholder={'Email Address'}
-                  placeholderTextColor={COLOR.alphaWhiteColor}
-                  onChangeText={text => setEmailAddress(text)}
-                  value={emailAddress}
-                />
-                <View style={styles.info_line} />
-              </View>
+                  <View style={{width:'100%', marginTop: 22}}>
+                    <Text style={styles.info_title}>Password</Text>
+                    <TextInput
+                      style={styles.info_input}
+                      placeholder={'Password'}
+                      secureTextEntry={true}
+                      placeholderTextColor={COLOR.alphaWhiteColor}
+                      onChangeText={text => setPassword(text)}
+                      value={password}
+                    />
+                    <View style={styles.info_line} />
+                  </View>
 
-              <View style={{width:'100%', marginTop: 22}}>
-                <Text style={styles.info_title}>Password</Text>
-                <TextInput
-                  style={styles.info_input}
-                  placeholder={'Password'}
-                  secureTextEntry={true}
-                  placeholderTextColor={COLOR.alphaWhiteColor}
-                  onChangeText={text => setPassword(text)}
-                  value={password}
-                />
-                <View style={styles.info_line} />
-              </View>
-
-              <TouchableWithoutFeedback onPress={() => navigate('ForgotPassword') }>
-                <View style={styles.forgot_password_container}>
-                  <Text style={styles.forgot_password}>Forgot Password?</Text>
+                  <TouchableWithoutFeedback onPress={() => navigate('ForgotPassword') }>
+                    <View style={styles.forgot_password_container}>
+                      <Text style={styles.forgot_password}>Forgot Password?</Text>
+                    </View>
+                  </TouchableWithoutFeedback>
                 </View>
-              </TouchableWithoutFeedback>
+              </ScrollView>
+             </KeyboardAvoidingView>
+          </View>
+        </TouchableWithoutFeedback>
 
-              <TouchableWithoutFeedback onPress={() => onLogIn() }>
-                <View style={styles.bottom_button}>
-                  <ColorButton title={'Log In'} backgroundColor={COLOR.whiteColor} color={COLOR.blackColor} />
-                </View>
-              </TouchableWithoutFeedback>
-            </View>
-          </TouchableWithoutFeedback>
-        </KeyboardAvoidingView>
+        <TouchableWithoutFeedback onPress={() => onLogIn() }>
+          <View style={styles.bottom_button}>
+            <ColorButton title={'Log In'} backgroundColor={COLOR.whiteColor} color={COLOR.blackColor} />
+          </View>
+        </TouchableWithoutFeedback>
       </SafeAreaView>
-    </View>
+    </Container>
   );
 
   function onLogIn() {
@@ -164,16 +167,16 @@ const styles = StyleSheet.create({
     color: COLOR.systemWhiteColor,
   },
   info_input: {
-    marginTop: 5,
+    marginTop: 0,
     width: '100%',
-    height: 35,
-    lineHeight: 25,
+    height: 45,
+    lineHeight: 40,
     fontFamily: FONT.AN_Regular,
     fontSize: 16,
     color: COLOR.systemWhiteColor,
   },
   info_line: {
-    marginTop: 15,
+    marginTop: 5,
     width: '100%',
     height: 1,
     backgroundColor: COLOR.alphaWhiteColor,
@@ -194,9 +197,9 @@ const styles = StyleSheet.create({
   },
   bottom_button: {
     position: 'absolute',
-    bottom: 33,
-    marginLeft: 24,
-    marginRight: 24,
+    top: viewportHeight - 77,
+    marginLeft: 48,
+    marginRight: 48,
     width: viewportWidth - 96,
     height: 44,
     flex: 1,

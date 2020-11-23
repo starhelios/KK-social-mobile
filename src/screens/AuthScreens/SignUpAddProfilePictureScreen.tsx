@@ -9,6 +9,7 @@ import {
   Dimensions,
   Platform,
 } from 'react-native';
+import { Container } from 'native-base';
 import { useEffect } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { SvgXml } from 'react-native-svg';
@@ -36,7 +37,7 @@ export const SignUpAddProfilePictureScreen: React.FC = () => {
   }, [])
 
   return (
-    <View style={styles.background}>
+    <Container style={styles.background}>
       
       <Image style={{width: '100%', height: '100%', resizeMode: 'cover'}} source={Img_Edit_Profile_Background} />
 
@@ -85,7 +86,7 @@ export const SignUpAddProfilePictureScreen: React.FC = () => {
           
         </View>
       </SafeAreaView>
-    </View>
+    </Container>
   );
 
   function onSkip() {

@@ -1,18 +1,20 @@
 import * as React from 'react';
 import {
+  Image,
   StyleSheet,
   View,
 } from 'react-native';
+import { Container } from 'native-base';
 import { useEffect } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { SvgXml } from 'react-native-svg';
 
 // from app
 import { 
-  COLOR, 
-  Icon_Splash_Background, 
-  Icon_Tab_Bar_Booking_Select,
+  COLOR,
   LOADING_TIME,
+  Img_Splash_Background, 
+  Icon_Tab_Bar_Booking_Select,
 } from '../../constants';
 
 export const SplashScreen: React.FC = () => {
@@ -26,12 +28,13 @@ export const SplashScreen: React.FC = () => {
   }, [])
 
   return (
-    <View style={styles.background}>
-      <SvgXml width='100%' height='100%' xml={Icon_Splash_Background} />
+    <Container style={styles.background}>
+      <Image style={{width: '100%', height: '100%', resizeMode: 'cover'}} source={Img_Splash_Background} />
+      
       <View style={styles.icon} >
         <SvgXml width={75} height={130} xml={Icon_Tab_Bar_Booking_Select} />
       </View>
-    </View>
+    </Container>
   );
 };
 

@@ -8,6 +8,7 @@ import {
   TouchableWithoutFeedback,
   FlatList,
 } from 'react-native';
+import { Container } from 'native-base';
 import { useCallback, useEffect, useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
 
@@ -53,7 +54,7 @@ export const BookingScreen: React.FC = () => {
   var fetching = false;
 
   return (
-    <View style={{width: viewportWidth, flex: 1, backgroundColor: COLOR.blackColor}}>
+    <Container style={{width: viewportWidth, flex: 1, backgroundColor: COLOR.blackColor}}>
       <SafeAreaView style={styles.safe_area}>
         <Text style={styles.title}>Booking</Text>
 
@@ -92,7 +93,7 @@ export const BookingScreen: React.FC = () => {
           renderItem={({item}) => <BookingView completed_booking={selectedTab == 0 ? false : true} booking={item} />}
         />
       </SafeAreaView>
-    </View>
+    </Container>
   );
 
   function onShowUpcomingBooking() {
@@ -165,7 +166,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   booking_list: {
-    marginTop: 33, 
+    marginTop: 22, 
     marginLeft: 24, 
     marginRight: 24, 
     width: viewportWidth - 48,

@@ -1,6 +1,7 @@
 // Splash
 import Icon_Splash_Background from '../assets/svg/splash_background'
 import Icon_Splash_Logo from '../assets/svg/splash_logo'
+const Img_Splash_Background = require('../assets/images/bg_splash.png')
 
 // Tab Bar
 import Icon_Tab_Bar_Select_Line from '../assets/svg/tab_bar_select_line'
@@ -40,6 +41,7 @@ export {
   // Splash
   Icon_Splash_Background,
   Icon_Splash_Logo,
+  Img_Splash_Background,
   // Tab Bar
   Icon_Tab_Bar_Select_Line,
   Icon_Tab_Bar_Home_Normal,

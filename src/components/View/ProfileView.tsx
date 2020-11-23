@@ -190,10 +190,10 @@ const styles = StyleSheet.create({
     fontSize: 14,
   },
   info_container: {
-    marginTop: 28,
+    marginTop: 20,
     marginLeft: 24,
     marginRight: 24,
-    marginBottom: 33,
+    marginBottom: 22,
     borderRadius: 22,
     flex: 1,
   },
@@ -202,11 +202,15 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 22,
     marginBottom: 212,
     flex: 1,
+    overflow: 'hidden',
   },
   profile_help_image: {
+    borderTopLeftRadius: 22,
+    borderTopRightRadius: 22,
     width: viewportWidth - 48,
     height: '100%',
     resizeMode: 'cover',
+    overflow: 'hidden'
   },
   profile_help_description_container: {
     position: 'absolute',

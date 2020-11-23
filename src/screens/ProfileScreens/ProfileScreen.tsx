@@ -8,6 +8,7 @@ import {
   TouchableWithoutFeedback,
   FlatList,
 } from 'react-native';
+import { Container } from 'native-base';
 import { useCallback, useEffect, useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
 
@@ -35,7 +36,7 @@ export const ProfileScreen: React.FC = () => {
   var fetching = false;
 
   return (
-    <View style={{width: viewportWidth, flex: 1, backgroundColor: COLOR.blackColor}}>
+    <Container style={{width: viewportWidth, flex: 1, backgroundColor: COLOR.blackColor}}>
       <SafeAreaView style={styles.safe_area}>
         {
           LOGIN_USER_ID == 0
@@ -55,7 +56,7 @@ export const ProfileScreen: React.FC = () => {
           </View>
         }
       </SafeAreaView>
-    </View>
+    </Container>
   );
 };
 

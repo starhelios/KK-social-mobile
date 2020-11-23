@@ -10,7 +10,8 @@ import {
   TextInput,
   ScrollView,
 } from 'react-native';
-import { useCallback, useEffect, useState } from 'react';
+import { Container } from 'native-base';
+import { useEffect, useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { SvgXml } from 'react-native-svg';
 
@@ -70,7 +71,7 @@ export const HomeScreen: React.FC = () => {
   }
 
   return (
-    <View style={styles.background}>
+    <Container style={styles.background}>
       <SafeAreaView style={styles.safe_area}>
         <View style={styles.search_bar}>
           <TouchableWithoutFeedback onPress={() => onSearch()}>
@@ -170,7 +171,7 @@ export const HomeScreen: React.FC = () => {
 
         </ScrollView>
       </SafeAreaView>
-    </View>
+    </Container>
   );
 
   function onSearch() {

@@ -2,8 +2,8 @@
 export const EMAIL_LOGIN = 'Email';
 
 // Values
-export const MARGIN_TOP = 20;
-export const LOADING_TIME = 0; //1000;
+export const MARGIN_TOP = 40;
+export const LOADING_TIME = 1500;
 
 
 // Global Values
