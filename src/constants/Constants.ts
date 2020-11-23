@@ -13,6 +13,6 @@ export const setUserToken = (token: string) => {
 };
 
 export var LOGIN_USER_ID = 0;
-export const setUserID = (id: number) => {
+export const setLoginUserID = (id: number) => {
   LOGIN_USER_ID = id;
 };

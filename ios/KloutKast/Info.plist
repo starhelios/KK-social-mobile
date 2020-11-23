@@ -37,8 +37,12 @@
 			</dict>
 		</dict>
 	</dict>
+	<key>NSCameraUsageDescription</key>
+	<string>KloutKast is going to access to the Photo Library for taking profile picture.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string></string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>KloutKast is going to access to the Photo Library for selecting profile picture.</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>AvenirNextLTPro-Regular.otf</string>

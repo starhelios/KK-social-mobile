@@ -18,3 +18,9 @@
 - SignUp screen.
 - LogIn screen.
 - Forgot Password screen.
+
+### 2020.11.23
+- Sign Up - Add Profile Picture
+- Sign Up - Added Profile Picture
+- Payment Options
+- Withdrawal

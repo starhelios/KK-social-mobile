@@ -42,7 +42,7 @@ export const SignUpScreen: React.FC = () => {
   return (
     <View style={styles.background}>
       
-      <Image style={{width: '100%', height: '100%', resizeMode: 'cover'}} source={Img_Auth_Background}></Image>
+      <Image style={{width: '100%', height: '100%', resizeMode: 'cover'}} source={Img_Auth_Background} />
 
       <SafeAreaView style={styles.safe_area}>
         <View style={styles.navigation_bar}>
@@ -113,6 +113,7 @@ export const SignUpScreen: React.FC = () => {
 
   function onCreateAccount() {
     console.log('create account');
+    navigate('SignUpAddProfilePicture');
   }
 };
 

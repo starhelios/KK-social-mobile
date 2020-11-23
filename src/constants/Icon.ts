@@ -21,9 +21,11 @@ const Img_Rating_Empty = require('../assets/images/rating_empty.png')
 
 // Profile Tab
 const Img_Edit_Profile_Background = require('../assets/images/bg_edit_profile.png')
+import Icon_Detail_Right_Arrow from '../assets/svg/detail_right_arrow'
 
 // Auth
 import Icon_Back from '../assets/svg/back'
+import Icon_Normal_Profile from '../assets/svg/normal_profile'
 const Img_Auth_Background = require('../assets/images/bg_auth.png')
 
 // Development
@@ -54,9 +56,11 @@ export {
   Img_Rating_Empty,
   // Profile Tab
   Img_Edit_Profile_Background,
+  Icon_Detail_Right_Arrow,
   // Auth
   Icon_Back,
   Img_Auth_Background,
+  Icon_Normal_Profile,
   // Development
   Icon_Category_Cooking,
   Icon_Category_Music,
