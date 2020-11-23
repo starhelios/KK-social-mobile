@@ -29,7 +29,7 @@ export const ProfileScreen: React.FC = () => {
   const [ selectedTab, setSelectedTab ] = useState<number>(0);
 
   useEffect(() => {
-    setLoginUserID(1);
+    setLoginUserID(0);
   }, [])
 
   var fetching = false;
@@ -38,7 +38,7 @@ export const ProfileScreen: React.FC = () => {
     <View style={{width: viewportWidth, flex: 1, backgroundColor: COLOR.blackColor}}>
       <SafeAreaView style={styles.safe_area}>
         {
-          LOGIN_USER_ID == 2
+          LOGIN_USER_ID == 0
           ? <ProfileView />
           : <View style={{width: '100%', height: '100%', alignItems: 'center', flex: 1}}>
             <TouchableWithoutFeedback onPress={() => navigate('PaymentOptions') }>
