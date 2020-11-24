@@ -20,7 +20,13 @@
 - Forgot Password screen.
 
 ### 2020.11.23
-- Sign Up - Add Profile Picture
-- Sign Up - Added Profile Picture
-- Payment Options
-- Withdrawal
+- Sign Up - Add Profile Picture screen
+- Sign Up - Added Profile Picture screen
+- Payment Options screen
+- Withdrawal screen
+
+### 2020.11.24
+- Profile screen
+- My Experiences Screen
+- Update the components
+- Fix the styles for android and android

@@ -23,6 +23,7 @@ const Img_Rating_Empty = require('../assets/images/rating_empty.png')
 // Profile Tab
 const Img_Edit_Profile_Background = require('../assets/images/bg_edit_profile.png')
 import Icon_Detail_Right_Arrow from '../assets/svg/detail_right_arrow'
+import Icon_Experience_Rating from '../assets/svg/experience_rating'
 
 // Auth
 import Icon_Back from '../assets/svg/back'
@@ -59,6 +60,7 @@ export {
   // Profile Tab
   Img_Edit_Profile_Background,
   Icon_Detail_Right_Arrow,
+  Icon_Experience_Rating,
   // Auth
   Icon_Back,
   Img_Auth_Background,

@@ -27,6 +27,7 @@ import {
   MARGIN_TOP,
 } from '../../constants';
 import { ColorButton } from '../../components/Button';
+import GlobalStyle from '../../styles/global';
 
 const { width: viewportWidth, height: viewportHeight } = Dimensions.get('window');
 
@@ -64,27 +65,27 @@ export const LogInScreen: React.FC = () => {
                   <View style={{width:'100%', marginTop: 22}}>
                     <Text style={styles.info_title}>Email Address</Text>
                     <TextInput
-                      style={styles.info_input}
+                      style={GlobalStyle.auth_input}
                       keyboardType={'email-address'}
                       placeholder={'Email Address'}
-                      placeholderTextColor={COLOR.alphaWhiteColor}
+                      placeholderTextColor={COLOR.alphaWhiteColor50}
                       onChangeText={text => setEmailAddress(text)}
                       value={emailAddress}
                     />
-                    <View style={styles.info_line} />
+                    <View style={GlobalStyle.auth_line} />
                   </View>
 
                   <View style={{width:'100%', marginTop: 22}}>
                     <Text style={styles.info_title}>Password</Text>
                     <TextInput
-                      style={styles.info_input}
+                      style={GlobalStyle.auth_input}
                       placeholder={'Password'}
                       secureTextEntry={true}
-                      placeholderTextColor={COLOR.alphaWhiteColor}
+                      placeholderTextColor={COLOR.alphaWhiteColor50}
                       onChangeText={text => setPassword(text)}
                       value={password}
                     />
-                    <View style={styles.info_line} />
+                    <View style={GlobalStyle.auth_line} />
                   </View>
 
                   <TouchableWithoutFeedback onPress={() => navigate('ForgotPassword') }>
@@ -166,21 +167,6 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: COLOR.systemWhiteColor,
   },
-  info_input: {
-    marginTop: 0,
-    width: '100%',
-    height: 45,
-    lineHeight: 40,
-    fontFamily: FONT.AN_Regular,
-    fontSize: 16,
-    color: COLOR.systemWhiteColor,
-  },
-  info_line: {
-    marginTop: 5,
-    width: '100%',
-    height: 1,
-    backgroundColor: COLOR.alphaWhiteColor,
-  },
   forgot_password_container: {
     marginTop: 25,
     width: '100%',
@@ -193,11 +179,12 @@ const styles = StyleSheet.create({
     lineHeight: 25,
     fontFamily: FONT.AN_Regular,
     fontSize: 16,
-    color: COLOR.alphaWhiteColor,
+    color: COLOR.alphaWhiteColor50,
   },
   bottom_button: {
     position: 'absolute',
-    top: viewportHeight - 77,
+    // top: viewportHeight - 77,
+    bottom: 33,
     marginLeft: 48,
     marginRight: 48,
     width: viewportWidth - 96,

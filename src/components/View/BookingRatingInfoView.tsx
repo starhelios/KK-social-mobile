@@ -53,7 +53,8 @@ const styles = StyleSheet.create({
     marginLeft: 24,
     marginRight: 24,
     height: 1,
-    backgroundColor: COLOR.systemWhiteColor,
+    borderRadius: 0.5,
+    backgroundColor: COLOR.alphaWhiteColor50,
   },
   rating_title: {
     marginTop: 24,

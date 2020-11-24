@@ -6,5 +6,7 @@ export interface IExperience {
 	experience: string;
 	duration: string;
 	min_price: number;
-	count: string;
+	personal: string;
+	rating: number;
+	rating_count: number;
 }

@@ -7,3 +7,4 @@ export * from './ProfileHelp';
 export * from './File';
 export * from './Bank';
 export * from './Card';
+export * from './User';

@@ -7,7 +7,6 @@ import {
   Image,
   TouchableWithoutFeedback,
   Dimensions,
-  Platform,
 } from 'react-native';
 import { Container } from 'native-base';
 import { useEffect, useState } from 'react';
@@ -34,7 +33,6 @@ export const SignUpAddProfilePictureConfirmScreen: React.FC = ({route}) => {
   const profile_icon: IFile = route.params.profile_icon;
 
   useEffect(() => {
-    console.log(profile_icon);
   }, [])
 
   return (

@@ -26,7 +26,7 @@ import { useProfileHelps } from '../../hooks';
 
 const { width: viewportWidth, height: viewportHeight } = Dimensions.get('window');
 
-export const ProfileView: React.FC = () => {
+export const NotLoginProfileView: React.FC = () => {
 
   const { navigate } = useNavigation();
   const { profileHelps } = useProfileHelps();
@@ -186,7 +186,7 @@ const styles = StyleSheet.create({
   },
   auth_text: {
     fontFamily: FONT.AN_Regular,
-    color: COLOR.alphaWhiteColor,
+    color: COLOR.alphaWhiteColor50,
     fontSize: 14,
   },
   info_container: {

@@ -48,6 +48,7 @@ const styles = StyleSheet.create({
     marginTop: 21,
     width: '100%',
     height: 1,
-    backgroundColor: COLOR.alphaWhiteColor,
+    borderRadius: 0.5,
+    backgroundColor: COLOR.alphaWhiteColor20,
   },
 });

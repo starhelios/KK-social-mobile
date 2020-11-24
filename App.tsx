@@ -15,6 +15,7 @@ import { SignUpAddProfilePictureScreen } from './src/screens/AuthScreens/SignUpA
 import { SignUpAddProfilePictureConfirmScreen } from './src/screens/AuthScreens/SignUpAddProfilePictureConfirmScreen';
 import { PaymentOptionsScreen } from './src/screens/ProfileScreens/PaymentOptionsScreen';
 import { WithdrawalScreen } from './src/screens/ProfileScreens/WithdrawalScreen';
+import { ExperiencesScreen } from './src/screens/ProfileScreens/ExperiencesScreen';
 
 // Sentry.init({
 //   dsn: 'https://3463daf0c4c047cdbda89c051aaed669@o300282.ingest.sentry.io/5212707',
@@ -41,6 +42,7 @@ const App = () => {
           <Stack.Screen name="SignUpAddProfilePictureConfirm" component={SignUpAddProfilePictureConfirmScreen} />
           <Stack.Screen name="PaymentOptions" component={PaymentOptionsScreen} />
           <Stack.Screen name="Withdrawal" component={WithdrawalScreen} />
+          <Stack.Screen name="Experiences" component={ExperiencesScreen} />
         </Stack.Navigator>
       </NavigationContainer>
     </Provider>

@@ -9,7 +9,7 @@ import {
   FlatList,
 } from 'react-native';
 import { Container } from 'native-base';
-import { useCallback, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
 
 // from app

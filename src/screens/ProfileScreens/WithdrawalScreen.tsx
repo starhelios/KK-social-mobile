@@ -6,10 +6,6 @@ import {
   View,
   Image,
   TouchableWithoutFeedback,
-  KeyboardAvoidingView,
-  Platform,
-  Keyboard,
-  TextInput,
   Dimensions,
   FlatList,
 } from 'react-native';
@@ -23,11 +19,10 @@ import {
   COLOR, 
   FONT, 
   Icon_Back, 
-  Icon_Detail_Right_Arrow, 
   Img_Auth_Background,
   MARGIN_TOP,
 } from '../../constants';
-import { BankButton } from '../../components/Button';
+import { BankButton, TitleArrowButton } from '../../components/Button';
 import { IBank } from '../../interfaces/app';
 
 const { width: viewportWidth, height: viewportHeight } = Dimensions.get('window');
@@ -41,6 +36,7 @@ export const WithdrawalScreen: React.FC = () => {
   useEffect(() => {
     var list: IBank[] = [];
       list.push({name: 'Chase Business Checking', number: 'Bank ** 0023'});
+      list.push({name: 'Chase Business Checking', number: 'Bank ** 0024'});
       list.push({name: 'Chase Business Checking', number: 'Bank ** 0025'});
       setBankList(list);
   }, [])
@@ -65,7 +61,7 @@ export const WithdrawalScreen: React.FC = () => {
             <View style={{width:'100%'}}>
               <Text style={styles.info_title}>Connected Account</Text>
               <FlatList
-                style={{width: '100%', marginTop: 5, marginBottom: 44, height: bankList.length * 78 <= viewportHeight - 500 ? bankList.length * 78 : viewportHeight - 500 }}
+                style={{width: '100%', marginTop: 5, height: bankList.length * 78 <= viewportHeight - 350 ? bankList.length * 78 : viewportHeight - 350 }}
                 contentContainerStyle={{paddingVertical: 0}}
                 showsHorizontalScrollIndicator={false}
                 horizontal={false}
@@ -75,21 +71,18 @@ export const WithdrawalScreen: React.FC = () => {
               />
             </View>
 
-            <View style={{width:'100%', marginTop: 22}}>
-              <Text style={styles.info_title}>Add Account</Text>
-              <Text style={styles.info_input}>Add Bank Account</Text>
-              <View style={styles.info_right_arrow}>
-                  <SvgXml width='100%' height='100%' xml={Icon_Detail_Right_Arrow} />
+            <TouchableWithoutFeedback onPress={() => onAddBankAccount() }>
+              <View style={{width:'100%', marginTop: 44}}>
+                <TitleArrowButton title={'Add Account'} name={'Add Bank Account'} showArrow={true} />
               </View>
-              <View style={styles.info_line} />
-            </View>
+            </TouchableWithoutFeedback>
           </View>
       </SafeAreaView>
     </Container>
   );
 
-  function onCreateAccount() {
-    console.log('create account');
+  function onAddBankAccount() {
+    console.log('Add Bank Account');
   }
 };
 
@@ -146,27 +139,5 @@ const styles = StyleSheet.create({
     fontFamily: FONT.AN_Regular,
     fontSize: 14,
     color: COLOR.systemWhiteColor,
-  },
-  info_input: {
-    marginTop: 15,
-    width: '100%',
-    height: 35,
-    lineHeight: 35,
-    fontFamily: FONT.AN_Bold,
-    fontSize: 16,
-    color: COLOR.systemWhiteColor,
-  },
-  info_right_arrow: {
-    position: 'absolute',
-    width: 5,
-    height: 10,
-    right: 0,
-    top: 50,
-  },
-  info_line: {
-    marginTop: 15,
-    width: '100%',
-    height: 1,
-    backgroundColor: COLOR.alphaWhiteColor,
   },
 });

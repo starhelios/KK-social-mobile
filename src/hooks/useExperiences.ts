@@ -27,10 +27,10 @@ export const useExperiences = () => {
 
       // test
       var result: IExperience[] = [];
-      result.push({ id: 1, title: 'Chef Ramsay Cooking', image: '', experience_icon: Icon_Category_Cooking, experience: 'Cooking', duration: '1hr', min_price: 150, count: 'person'});
-      result.push({ id: 2, title: 'Guitar Lessons', image: '', experience_icon: Icon_Category_Music, experience: 'Music', duration: '30min', min_price: 85, count: 'person'});
-      result.push({ id: 3, title: 'Sports Lessons', image: '', experience_icon: Icon_Category_Cooking, experience: 'Sports', duration: '2hr', min_price: 100, count: 'person'});
-      result.push({ id: 4, title: 'English Lessons', image: '', experience_icon: Icon_Category_Music, experience: 'Study', duration: '1hr 30min', min_price: 50, count: 'person'});
+      result.push({ id: 1, title: 'Chef Ramsay Cooking', image: '', experience_icon: Icon_Category_Cooking, experience: 'Cooking', duration: '1hr', min_price: 150, personal: 'person', rating: 3.5, rating_count: 120});
+      result.push({ id: 2, title: 'Guitar Lessons', image: '', experience_icon: Icon_Category_Music, experience: 'Music', duration: '30min', min_price: 85, personal: 'person', rating: 4.5, rating_count: 131});
+      result.push({ id: 3, title: 'Sports Lessons', image: '', experience_icon: Icon_Category_Cooking, experience: 'Sports', duration: '2hr', min_price: 100, personal: 'person', rating: 4.8, rating_count: 247});
+      result.push({ id: 4, title: 'English Lessons', image: '', experience_icon: Icon_Category_Music, experience: 'Study', duration: '1hr 30min', min_price: 50, personal: 'person', rating: 4.2, rating_count: 57});
 
       return Promise.resolve(result);
     } catch (err) {

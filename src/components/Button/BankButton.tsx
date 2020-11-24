@@ -43,7 +43,7 @@ const styles = StyleSheet.create({
     lineHeight: 16,
     fontFamily: FONT.AN_Regular,
     fontSize: 16,
-    color: COLOR.alphaWhiteColor,
+    color: COLOR.alphaWhiteColor50,
   },
   card_number: {
     marginTop: 8,
@@ -58,6 +58,7 @@ const styles = StyleSheet.create({
     marginTop: 21,
     width: '100%',
     height: 1,
-    backgroundColor: COLOR.alphaWhiteColor,
+    borderRadius: 0.5,
+    backgroundColor: COLOR.alphaWhiteColor20,
   },
 });

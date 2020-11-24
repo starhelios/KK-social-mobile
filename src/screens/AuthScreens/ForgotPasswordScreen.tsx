@@ -6,15 +6,12 @@ import {
   View,
   Image,
   TouchableWithoutFeedback,
-  KeyboardAvoidingView,
-  Platform,
   Keyboard,
   TextInput,
   Dimensions,
-  ScrollView,
 } from 'react-native';
 import { Container } from 'native-base';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { SvgXml } from 'react-native-svg';
 
@@ -27,6 +24,7 @@ import {
   MARGIN_TOP,
 } from '../../constants';
 import { ColorButton } from '../../components/Button';
+import GlobalStyle from '../../styles/global';
 
 const { width: viewportWidth, height: viewportHeight } = Dimensions.get('window');
 
@@ -58,35 +56,35 @@ export const ForgotPasswordScreen: React.FC = () => {
               <View style={{width:'100%', marginTop: 22}}>
                 <Text style={styles.info_title}>Email Address</Text>
                 <TextInput
-                  style={styles.info_input}
+                  style={GlobalStyle.auth_input}
                   keyboardType={'email-address'}
                   placeholder={'Email Address'}
                   placeholderTextColor={COLOR.alphaWhiteColor}
                   onChangeText={text => setEmailAddress(text)}
                   value={emailAddress}
                 />
-                <View style={styles.info_line} />
+                <View style={GlobalStyle.auth_line} />
               </View>
             </View>
+          </View>
+        </TouchableWithoutFeedback>
 
-            <View style={styles.bottom_container}>
+        <View style={styles.bottom_container}>
               <Text style={styles.bottom_description}>We will send a password reset email</Text>
               <Text style={styles.bottom_description}>to the address above.</Text>
 
-              <TouchableWithoutFeedback onPress={() => onLogIn() }>
+              <TouchableWithoutFeedback onPress={() => onConfirmPassword() }>
                 <View style={styles.bottom_button}>
                   <ColorButton title={'Confirm'} backgroundColor={COLOR.whiteColor} color={COLOR.blackColor} />
                 </View>
               </TouchableWithoutFeedback>
             </View>
-          </View>
-        </TouchableWithoutFeedback>
       </SafeAreaView>
     </Container>
   );
 
-  function onLogIn() {
-    console.log('log in');
+  function onConfirmPassword() {
+    console.log('confirm password');
   }
 };
 
@@ -144,21 +142,6 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: COLOR.systemWhiteColor,
   },
-  info_input: {
-    marginTop: 0,
-    width: '100%',
-    height: 45,
-    lineHeight: 40,
-    fontFamily: FONT.AN_Regular,
-    fontSize: 16,
-    color: COLOR.systemWhiteColor,
-  },
-  info_line: {
-    marginTop: 5,
-    width: '100%',
-    height: 1,
-    backgroundColor: COLOR.alphaWhiteColor,
-  },
   bottom_container: {
     position: 'absolute',
     flexDirection: 'column',
@@ -170,7 +153,7 @@ const styles = StyleSheet.create({
     lineHeight: 17,
     fontFamily: FONT.AN_Regular,
     fontSize: 14,
-    color: COLOR.alphaWhiteColor,
+    color: COLOR.alphaWhiteColor50,
     textAlign: 'center',
   },
   bottom_button: {

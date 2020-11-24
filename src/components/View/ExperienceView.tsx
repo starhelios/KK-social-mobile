@@ -42,7 +42,7 @@ export const ExperienceView: React.FC<props> = (props: props) => {
       </View>
       <View style={styles.priceContainer}>
         <Text style={styles.price}>{'From ' + props.experience.min_price + '$'}</Text>
-        <Text style={styles.count}>{' / ' + props.experience.count}</Text>
+        <Text style={styles.personal}>{' / ' + props.experience.personal}</Text>
       </View>
     </View>
   );
@@ -94,7 +94,7 @@ const styles = StyleSheet.create({
     fontFamily: FONT.AN_Bold,
     fontSize: 12,
   },
-  count: {
+  personal: {
     height: 12,
     lineHeight: 12,
     color: COLOR.systemWhiteColor,

@@ -10,5 +10,7 @@ export const COLOR = {
   whiteBorderColor: '#979797',
   selectedExperienceCategoryBackgroudnColor: '#9797973F',
   alphaBlackColor: '#0003',
-  alphaWhiteColor: '#FFF8',
+  alphaWhiteColor50: '#FFF8',
+  alphaWhiteColor75: '#FFFB',
+  alphaWhiteColor20: '#FFF3'
 };

@@ -1,8 +1,10 @@
+import { Platform } from "react-native";
+
 // Login Type
 export const EMAIL_LOGIN = 'Email';
 
 // Values
-export const MARGIN_TOP = 40;
+export const MARGIN_TOP = Platform.OS == "ios" ? 15 : 40;
 export const LOADING_TIME = 1500;
 
 

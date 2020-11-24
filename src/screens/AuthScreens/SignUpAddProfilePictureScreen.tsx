@@ -25,7 +25,7 @@ import {
   MARGIN_TOP,
 } from '../../constants';
 import { ColorButton } from '../../components/Button';
-import { IFile } from 'src/interfaces/app';
+import { IFile } from '../../interfaces/app';
 
 const { width: viewportWidth } = Dimensions.get('window');
 
@@ -38,7 +38,6 @@ export const SignUpAddProfilePictureScreen: React.FC = () => {
 
   return (
     <Container style={styles.background}>
-      
       <Image style={{width: '100%', height: '100%', resizeMode: 'cover'}} source={Img_Edit_Profile_Background} />
 
       <SafeAreaView style={styles.safe_area}>
