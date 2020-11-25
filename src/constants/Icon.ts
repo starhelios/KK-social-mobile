@@ -24,6 +24,8 @@ const Img_Rating_Empty = require('../assets/images/rating_empty.png')
 const Img_Edit_Profile_Background = require('../assets/images/bg_edit_profile.png')
 import Icon_Detail_Right_Arrow from '../assets/svg/detail_right_arrow'
 import Icon_Experience_Rating from '../assets/svg/experience_rating'
+import Icon_Camera from '../assets/svg/camera'
+import Icon_Search_White from '../assets/svg/search'
 
 // Auth
 import Icon_Back from '../assets/svg/back'
@@ -61,6 +63,8 @@ export {
   Img_Edit_Profile_Background,
   Icon_Detail_Right_Arrow,
   Icon_Experience_Rating,
+  Icon_Camera,
+  Icon_Search_White,
   // Auth
   Icon_Back,
   Img_Auth_Background,

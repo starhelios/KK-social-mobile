@@ -14,6 +14,8 @@ import { useNavigation } from '@react-navigation/native';
 // from app
 import { COLOR, LOGIN_USER_ID, setLoginUserID } from '../../constants';
 import { NotLoginProfileView, LoginProfileView } from '../../components/View';
+import { IUser } from '../../interfaces/app';
+import { useGlobalState } from '../../redux/Store';
 
 
 const { width: viewportWidth } = Dimensions.get('window');
@@ -21,22 +23,18 @@ const { width: viewportWidth } = Dimensions.get('window');
 export const ProfileScreen: React.FC = () => {
   
   const { navigate, goBack } = useNavigation();
-
-  const [ selectedTab, setSelectedTab ] = useState<number>(0);
+  const profile: IUser = useGlobalState('userInfo');
 
   useEffect(() => {
-    setLoginUserID(0);
   }, [])
-
-  var fetching = false;
 
   return (
     <Container style={{width: viewportWidth, flex: 1, backgroundColor: COLOR.blackColor}}>
       <SafeAreaView style={styles.safe_area}>
         {
-          LOGIN_USER_ID == 1
+          LOGIN_USER_ID == 0
           ? <NotLoginProfileView />
-          : <LoginProfileView />
+          : <LoginProfileView profile={profile} />
         }
       </SafeAreaView>
     </Container>

@@ -42,6 +42,6 @@ export default StyleSheet.create({
     width: '100%',
     height: 1,
     borderRadius: 0.5,
-    backgroundColor: COLOR.alphaWhiteColor50,
+    backgroundColor: COLOR.alphaWhiteColor20,
   },
 });

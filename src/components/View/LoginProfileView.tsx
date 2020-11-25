@@ -18,19 +18,22 @@ import {
   COLOR, 
   FONT, 
   Icon_Detail_Right_Arrow, 
+  Icon_Normal_Profile, 
   Img_Avatar_2, 
-  Img_Experience_2, 
   MARGIN_TOP, 
 } from '../../constants';
-import { ColorButton, TitleArrowButton } from '../Button';
-import { ContinueText } from '../Text';
-import { IProfileHelp } from '../../interfaces/app';
+import { TitleArrowButton } from '../Button';
+import { IProfileHelp, IUser } from '../../interfaces/app';
 import { useProfileHelps } from '../../hooks';
 import { SvgXml } from 'react-native-svg';
 
+interface props {
+  profile: IUser;
+}
+
 const { width: viewportWidth, height: viewportHeight } = Dimensions.get('window');
 
-export const LoginProfileView: React.FC = () => {
+export const LoginProfileView: React.FC<props> = (props: props) => {
 
   const { navigate } = useNavigation();
   const { profileHelps } = useProfileHelps();
@@ -38,7 +41,7 @@ export const LoginProfileView: React.FC = () => {
   const [profileHelpList, setProfileHelpList] = useState<IProfileHelp[]>([]);
   const [currentPage, setCurrentPage] = useState<number>(0);
 
-  var scrollViewRef: FlatList<IProfileHelp> | null;
+  const profile: IUser = props.profile;
 
   useEffect(() => {
     loadProfileList();
@@ -56,12 +59,20 @@ export const LoginProfileView: React.FC = () => {
       <ScrollView style={{width: '100%', height: '100%'}}>
         <View style={styles.profile_container}>
           <View style={styles.avatar}>
-            <Image style={{width: '100%', height: '100%', resizeMode: 'cover'}} source={Img_Avatar_2} />
+            {
+              profile.image != ''
+              ? <Image style={{width: '100%', height: '100%', resizeMode: 'cover'}} source={{uri: profile.image}} />
+              : <View style={styles.profile_icon}>
+                  <View style={{width: 20, height: 25}}>
+                    <SvgXml width='100%' height='100%' xml={Icon_Normal_Profile} />
+                  </View>
+                </View>
+            }
           </View>
 
-          <TouchableWithoutFeedback onPress={() => onViewProfile()}>
+          <TouchableWithoutFeedback onPress={() => navigate('BecomeAHost')}>
             <View style={styles.profile_info}>
-              <Text style={styles.user_name}>{'Hello, ' + 'Wayne'}</Text>
+              <Text style={styles.user_name}>{'Hello, ' + profile.username}</Text>
 
               <View style={styles.view_profile_container}>
                 <Text style={styles.view_profile_title}>View Profile</Text>
@@ -75,7 +86,7 @@ export const LoginProfileView: React.FC = () => {
 
         <View style={styles.content_container}>
           <Text style={{...styles.content_title, marginTop: 33}}>Account Settings</Text>
-          <TouchableWithoutFeedback onPress={() => onEditProfile() }>
+          <TouchableWithoutFeedback onPress={() => navigate('EditProfile')}>
             <View style={{width:'100%', marginTop: 22}}>
               <TitleArrowButton title={''} name={'Edit Profile'} showArrow={true} />
             </View>
@@ -117,14 +128,6 @@ export const LoginProfileView: React.FC = () => {
     </View>
   );
   
-  function onViewProfile() {
-    console.log('view profile');
-  }
-  
-  function onEditProfile() {
-
-  }
-
   function onTermsOfService() {
     console.log('Terms of Service');
   }
@@ -143,6 +146,16 @@ const styles = StyleSheet.create({
     width: 66,
     height: 66,
     borderRadius: 33,
+    alignItems: 'center',
+    justifyContent: 'space-evenly',
+  },
+  profile_icon: {
+    width: '100%',
+    height: '100%',
+    borderRadius: 33,
+    backgroundColor: COLOR.whiteColor,
+    alignItems: 'center',
+    justifyContent: 'space-evenly',
   },
   profile_info: {
     marginTop: 8,

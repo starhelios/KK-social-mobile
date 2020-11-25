@@ -11,36 +11,12 @@ import Reducer, {
 
 const initialState: State = {
   userInfo: {
-    token: '',
-    login_type: '',
-    user: {
-      id: 0,
-      username: '',
-      first_name: '',
-      last_name: '',
-      name: '',
-      email: '',
-      password: '',
-      avatar: '',
-    }
-  },
-
-  registerUser: {
+    id: 0,
     username: '',
+    image: '',
+    full_name: '',
     email: '',
-    password1: '',
-    password2: '',
-  },
-  
-  categoryList: [],
-
-  filter: {
-    genreID: '',
-    genre: '',
-    year: '',
-    author: '',
-    publisher: '',
-    rating: 0,
+    birthday: '', 
   },
 };
 
