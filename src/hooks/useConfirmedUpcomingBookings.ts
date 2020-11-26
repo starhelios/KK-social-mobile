@@ -30,19 +30,19 @@ export const useConfirmedUpcomingBookings = () => {
       result.push({ id: 1, image: '', experience_icon: Icon_Category_Cooking, experience: 'Surf Lessons with Kelly Slater'
         , date: 'September 15, 2020', hour: '1:00 PM', duration: '60min', rating: 5, is_host: true, is_joined: true
         , host: {id: 1, username: 'Jeff A.', image: '', experience_icon: '', experience: ''}
-        , showDate: null, paid: '$150', receive: '%120', completed: true });
+        , showDate: null, paid: '150', receive: '120', completed: true });
       result.push({ id: 2, image: '', experience_icon: Icon_Category_Cooking, experience: 'Surf Lessons with Kelly Slater'
         , date: 'September 15, 2020', hour: '3:00 PM', duration: '60min', rating: 5, is_host: true, is_joined: true
         , host: {id: 1, username: 'Teri B.', image: '', experience_icon: '', experience: ''}
-        , showDate: null, paid: '$120', receive: '%100', completed: true });
+        , showDate: null, paid: '120', receive: '100', completed: true });
       result.push({ id: 3, image: '', experience_icon: Icon_Category_Cooking, experience: 'Surf Lessons with Kelly Slater'
         , date: 'September 17, 2020', hour: '5:00 PM', duration: '60min', rating: 5, is_host: true, is_joined: true
         , host: {id: 1, username: 'Margo C.', image: '', experience_icon: '', experience: ''}
-        , showDate: null, paid: '$300', receive: '%250', completed: false });
+        , showDate: null, paid: '$300', receive: '250', completed: false });
       result.push({ id: 4, image: '', experience_icon: Icon_Category_Cooking, experience: 'Surf Lessons with Kelly Slater'
         , date: 'September 18, 2020', hour: '7:00 PM', duration: '60min', rating: 5, is_host: true, is_joined: false
         , host: {id: 1, username: 'Frank D.', image: '', experience_icon: '', experience: ''}
-        , showDate: null, paid: '$240', receive: '%200', completed: false });
+        , showDate: null, paid: '240', receive: '200', completed: false });
 
       return Promise.resolve(result);
     } catch (err) {

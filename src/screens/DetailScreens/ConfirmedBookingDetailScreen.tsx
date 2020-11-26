@@ -24,6 +24,7 @@ import {
 import { ColorButton } from '../../components/Button';
 import { IBooking } from '../../interfaces/app';
 import { ConfirmedBookingHostInfoView, ConfirmedBookingMainInfoView, ConfirmedBookingRatingInfoView } from '../../components/View';
+import GlobalStyle from '../../styles/global';
 
 const { width: viewportWidth } = Dimensions.get('window');
 
@@ -84,6 +85,15 @@ export const ConfirmedBookingDetailScreen: React.FC = ({route}) => {
               )
             }
           </View>
+
+          <View style={styles.bottom_container}>
+            <Text style={styles.bottom_content_title}>{booking.host?.username + ' Paid'}</Text>
+            <Text style={styles.bottom_content_info}>{'$ ' + booking.paid}</Text>
+            <View style={{...GlobalStyle.auth_line, marginTop: 22}} />
+            <Text style={styles.bottom_content_title}>You Received</Text>
+            <Text style={styles.bottom_content_info}>{'$ ' + booking.receive}</Text>
+          </View>
+
         </View>
       </SafeAreaView>
     </Container>
@@ -130,18 +140,19 @@ const styles = StyleSheet.create({
   container: {
     width: '100%',
     height: '100%',
+    flex: 1,
   },
   image_container: {
     marginLeft: 24,
     width: viewportWidth - 48,
     marginTop: 33,
-    marginBottom: 240,
+    marginBottom: 200,
     flexDirection: 'column',
     borderRadius: 22,
   },
   image: { 
     width: '100%', 
-    height: '100%', 
+    height: '100%',
     borderRadius: 22,
   },
   content_container: {
@@ -166,5 +177,30 @@ const styles = StyleSheet.create({
     marginTop: 24,
     marginRight: 24,
     height: 44,
+  },
+  bottom_container: {
+    position: 'absolute',
+    marginLeft: 24,
+    marginRight: 24,
+    width: viewportWidth - 48,
+    bottom: 33,
+  },
+  bottom_content_title: {
+    marginTop: 22,
+    marginLeft: 24,
+    height: 18, 
+    lineHeight: 18,
+    fontFamily: FONT.AN_Regular, 
+    fontSize: 12, 
+    color: COLOR.alphaWhiteColor75,
+  },
+  bottom_content_info: {
+    marginTop: 16,
+    marginLeft: 24,
+    height: 16, 
+    lineHeight: 16,
+    fontFamily: FONT.AN_Regular, 
+    fontSize: 16, 
+    color: COLOR.systemWhiteColor,
   },
 });
