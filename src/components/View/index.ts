@@ -8,3 +8,6 @@ export * from './LoginProfileView';
 export * from './MyExperienceView';
 export * from './ExperienceImageView';
 export * from './ConfirmedBookingView';
+export * from './ConfirmedBookingMainInfoView';
+export * from './ConfirmedBookingRatingInfoView';
+export * from './ConfirmedBookingHostInfoView';

@@ -17,7 +17,7 @@ interface props {
 export const ColorButton: React.FC<props> = (props: props) => {
   return (
     <View style={{ ...styles.button, backgroundColor: props.backgroundColor }}>
-      <Text style={{...styles.button_text, color: props.color }}>{props.title}</Text>
+      <Text style={{...styles.button_text, color: props.color }} numberOfLines={1}>{props.title}</Text>
     </View>
   );
 }

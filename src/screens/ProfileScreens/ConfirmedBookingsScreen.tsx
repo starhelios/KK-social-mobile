@@ -121,7 +121,7 @@ export const ConfirmedBookingsScreen: React.FC = () => {
           horizontal={false}
           data={selectedTab == 0 ? upcomingBookingList : completedBookingList}
           keyExtractor={item => item.id.toString()}
-          renderItem={({item}) => <ConfirmedBookingView booking={item} />}
+          renderItem={({item}) => <ConfirmedBookingView booking={item} isCompleted={selectedTab == 0 ? false : true} />}
         />
       </SafeAreaView>
     </Container>

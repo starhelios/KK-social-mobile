@@ -18,20 +18,19 @@ import { IBooking } from '../../interfaces/app';
 
 interface props {
   booking: IBooking;
+  isCompleted: boolean;
 }
 
-export const BookingRatingInfoView: React.FC<props> = (props: props) => {
+export const ConfirmedBookingRatingInfoView: React.FC<props> = (props: props) => {
 
   const booking: IBooking = props.booking;
+  const isCompleted: boolean = props.isCompleted;
 
   return (
     <View>
       <View style={styles.line} />
       <Text style={styles.rating_title}>
-        {
-          booking.is_host == true 
-          ? (booking.host != null ? 'Rate your host, ' + booking.host.username : 'Rate your host')
-          : 'Rate this experience:'}
+        { booking.host != null ? 'Rate ' + booking.host.username + ':' : 'Rate :' }
       </Text>
       <View style={styles.rating}>
         <Stars

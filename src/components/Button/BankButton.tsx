@@ -18,8 +18,8 @@ export const BankButton: React.FC<props> = (props: props) => {
   return (
     <TouchableWithoutFeedback onPress={() => onSelectBank() }>
       <View style={styles.container}>
-        <Text style={styles.card_name}>{props.card.name}</Text>
-        <Text style={styles.card_number}>{props.card.number}</Text>
+        <Text style={styles.card_name} numberOfLines={1}>{props.card.name}</Text>
+        <Text style={styles.card_number} numberOfLines={1}>{props.card.number}</Text>
         <View style={styles.info_line} />
       </View>
     </TouchableWithoutFeedback>

@@ -1,43 +1,51 @@
+import { useNavigation } from '@react-navigation/native';
 import * as React from 'react';
 import {
   StyleSheet,
   Text,
+  TouchableWithoutFeedback,
   View,
 } from 'react-native';
 import { SvgXml } from 'react-native-svg';
-import { IBooking } from 'src/interfaces/app';
 
 // from app
 import { COLOR, FONT, Icon_Detail_Right_Arrow } from '../../constants';
+import { IBooking } from '../../interfaces/app';
 
 interface props {
   booking: IBooking;
+  isCompleted: boolean;
 }
 
 export const ConfirmedBookingView: React.FC<props> = (props: props) => {
 
+  const { navigate } = useNavigation();
+
   const booking: IBooking = props.booking;
+  const isCompleted: boolean = props.isCompleted;
 
   return (
-    <View style={styles.container}>
-      {
-        booking.showDate != null && booking.showDate == true
-        ? <Text style={styles.date}>{booking.date}</Text>
-        : null
-      }
-      <View style={{...styles.info_container, marginTop: (booking.showDate != null && booking.showDate == true) ? 16 : 22}}>
-        <View style={{height: 40}}>
-          <Text style={styles.name}>{booking.hour + ' / ' + booking.host?.username}</Text>
-          <Text style={styles.experience}>{booking.experience + ' • ' + booking.duration}</Text>
+    <TouchableWithoutFeedback onPress={() => navigate('ConfirmedBookingDetail', { booking: booking, isCompleted: isCompleted }) }>
+      <View style={styles.container}>
+        {
+          booking.showDate != null && booking.showDate == true
+          ? <Text style={styles.date}>{booking.date}</Text>
+          : null
+        }
+        <View style={{...styles.info_container, marginTop: (booking.showDate != null && booking.showDate == true) ? 16 : 22}}>
+          <View style={{height: 40}}>
+            <Text style={styles.name}>{booking.hour + ' / ' + booking.host?.username}</Text>
+            <Text style={styles.experience}>{booking.experience + ' • ' + booking.duration}</Text>
+          </View>
+          
+          <View style={styles.arrow}>
+              <SvgXml width='100%' height='100%' xml={Icon_Detail_Right_Arrow} />
+          </View>
         </View>
-        
-        <View style={styles.arrow}>
-            <SvgXml width='100%' height='100%' xml={Icon_Detail_Right_Arrow} />
-        </View>
-      </View>
 
-      <View style={styles.info_line} />
-    </View>
+        <View style={styles.info_line} />
+      </View>
+    </TouchableWithoutFeedback>
   );
 }
 

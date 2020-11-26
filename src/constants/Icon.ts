@@ -22,7 +22,7 @@ import Icon_Add_Experience_Image_Background from '../assets/svg/bg_add_experienc
 import Icon_Delete_Black from '../assets/svg/delete_black'
 import Icon_Experience_Black from '../assets/svg/experience_black'
 import Icon_Guest_Minus from '../assets/svg/guest_minus'
-import Icon_Guest_Plust from '../assets/svg/guest_plus'
+import Icon_Guest_Plus from '../assets/svg/guest_plus'
 import Icon_Location_Black from '../assets/svg/location_black'
 import Icon_More_White from '../assets/svg/more_white'
 import Icon_Rating_Black from '../assets/svg/rating_black'
@@ -31,6 +31,7 @@ import Icon_Search_Black from '../assets/svg/search_black'
 import Icon_Share_Black from '../assets/svg/share_black'
 import Icon_Share_White from '../assets/svg/share_white'
 import Icon_Time_Black from '../assets/svg/time_black'
+import Icon_Dot_Menu_White from '../assets/svg/dot_menu_white'
 // PNG
 const Img_Auth_Background = require('../assets/images/bg_auth.png')
 const Img_Splash_Background = require('../assets/images/bg_splash.png')
@@ -71,7 +72,7 @@ export {
   Icon_Delete_Black,
   Icon_Experience_Black,
   Icon_Guest_Minus,
-  Icon_Guest_Plust,
+  Icon_Guest_Plus,
   Icon_Location_Black,
   Icon_More_White,
   Icon_Rating_Black,
@@ -80,6 +81,7 @@ export {
   Icon_Share_Black,
   Icon_Share_White,
   Icon_Time_Black,
+  Icon_Dot_Menu_White,
   // PNG
   Img_Auth_Background,
   Img_Splash_Background,

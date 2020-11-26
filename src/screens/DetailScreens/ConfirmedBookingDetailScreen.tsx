@@ -18,31 +18,31 @@ import {
   COLOR, 
   FONT, 
   Icon_Back,
-  Img_Edit_Profile_Background,
+  Img_Experience_2,
   MARGIN_TOP,
 } from '../../constants';
 import { ColorButton } from '../../components/Button';
-import { IFile } from '../../interfaces/app';
+import { IBooking } from '../../interfaces/app';
+import { ConfirmedBookingHostInfoView, ConfirmedBookingMainInfoView, ConfirmedBookingRatingInfoView } from '../../components/View';
 
 const { width: viewportWidth } = Dimensions.get('window');
 
-export const SignUpAddProfilePictureConfirmScreen: React.FC = ({route}) => {
+export const ConfirmedBookingDetailScreen: React.FC = ({route}) => {
 
   const { navigate, goBack } = useNavigation();
 
-  const profile_icon: IFile = route.params.profile_icon;
+  const booking: IBooking = route.params.booking;
+  const isCompleted: boolean = route.params.isCompleted;
 
   useEffect(() => {
   }, [])
 
   return (
     <Container style={styles.background}>
-      
-      <Image style={{width: '100%', height: '100%', resizeMode: 'cover'}} source={Img_Edit_Profile_Background} />
 
       <SafeAreaView style={styles.safe_area}>
         <View style={styles.navigation_bar}>
-          <Text style={styles.title}>Confirm Picture</Text>
+          <Text style={styles.title}>{isCompleted == true ? 'Completed' : 'Upcoming'}</Text>
 
           <TouchableWithoutFeedback onPress={() => goBack()}>
             <View style={styles.back_icon}>
@@ -51,30 +51,45 @@ export const SignUpAddProfilePictureConfirmScreen: React.FC = ({route}) => {
           </TouchableWithoutFeedback>
         </View>
 
-        <Text style={styles.description_text}>If you need to make a change,</Text>
-        <Text style={{...styles.description_text, marginTop: 0 }}>tap your profile picture below.</Text>
-
         <View style={styles.container}>
-          <View style={styles.profile_container}>
-            <TouchableWithoutFeedback onPress={() => goBack()}>
-              <Image style={styles.profile} source={{uri: profile_icon.uri}} />
-            </TouchableWithoutFeedback>
-          </View>
+          <View style={styles.image_container}>
+            <Image
+              style={styles.image}
+              source={(booking.image == null || booking.image == '') ? Img_Experience_2 : {uri: booking.image}}
+            />
+            {
+              isCompleted == true
+              ? <View style={{...styles.content_container, height: 209}}>
+                  <ConfirmedBookingMainInfoView booking={booking} isCompleted={isCompleted} />
+                  <ConfirmedBookingRatingInfoView booking={booking} isCompleted={isCompleted} />
+                </View>
+              : (
+                booking.is_joined == true
+                ? <View style={{...styles.content_container, height: 209}}>
+                    <ConfirmedBookingMainInfoView booking={booking} isCompleted={isCompleted} />
+                    <ConfirmedBookingHostInfoView booking={booking} isCompleted={isCompleted} />
+                  </View>
+                : <View style={{...styles.content_container, height: 300}}>
+                    <ConfirmedBookingMainInfoView booking={booking} isCompleted={isCompleted} />
+                    <ConfirmedBookingHostInfoView booking={booking} isCompleted={isCompleted} />
 
-          <View style={styles.bottom_container}>
-            <TouchableWithoutFeedback onPress={() => onContinue() }>
-              <View style={{ ...styles.bottom_button, marginTop: 0 }}>
-                <ColorButton title={'Continue'} backgroundColor={COLOR.whiteColor} color={COLOR.blackColor} />
-              </View>
-            </TouchableWithoutFeedback>
+                    <View style={styles.join_container}>
+                      <TouchableWithoutFeedback onPress={() => onJoinExperience()}>
+                        <View style={styles.join_button_container}>
+                          <ColorButton title={'Join Experience'} backgroundColor={COLOR.redColor} color={COLOR.systemWhiteColor} />
+                        </View>
+                      </TouchableWithoutFeedback>
+                    </View>
+                  </View>
+              )
+            }
           </View>
-          
         </View>
       </SafeAreaView>
     </Container>
   );
 
-  function onContinue() {
+  function onJoinExperience() {
   }
 };
 
@@ -112,56 +127,44 @@ const styles = StyleSheet.create({
     width: 20,
     height: '100%',
   },
-  description_text: {
-    marginTop: 33,
-    marginLeft: 24,
-    marginRight: 24,
-    height: 23,
-    lineHeight: 24,
-    textAlign: 'center',
-    fontFamily: FONT.AN_Regular,
-    fontSize: 14,
-    color: COLOR.systemWhiteColor,
-  },
   container: {
     width: '100%',
     height: '100%',
-    flex: 1,
   },
-  profile_container: {
+  image_container: {
+    marginLeft: 24,
+    width: viewportWidth - 48,
+    marginTop: 33,
+    marginBottom: 240,
+    flexDirection: 'column',
+    borderRadius: 22,
+  },
+  image: { 
+    width: '100%', 
+    height: '100%', 
+    borderRadius: 22,
+  },
+  content_container: {
     width: '100%',
-    height: '100%',
-    bottom: 134,
-    alignItems: 'center',
-    justifyContent: 'space-evenly',
-  },
-  profile: {
-    width: 150,
-    height: 150,
-    borderRadius: 75,
-    backgroundColor: COLOR.whiteColor,
-    alignItems: 'center',
-    justifyContent: 'space-evenly',
-  },
-  profile_icon: {
-    width: 46,
-    height: 58,
-  },
-  bottom_container: {
     position: 'absolute',
-    width: '100%',
-    height: 134,
-    flex: 1,
     bottom: 0,
-    flexDirection: 'row',
+    backgroundColor: COLOR.alphaBlackColor20,
+    borderBottomLeftRadius: 22,
+    borderBottomRightRadius: 22,
   },
-  bottom_button: {
+  join_container: {
+    width: '100%',
     position: 'absolute',
-    bottom: 33,
-    marginLeft: 48,
-    marginRight: 48,
-    width: viewportWidth - 96,
+    height: 91,
+    bottom: 0,
+    backgroundColor: COLOR.whiteColor,
+    borderBottomLeftRadius: 22,
+    borderBottomRightRadius: 22,
+  },
+  join_button_container: {
+    marginLeft: 24,
+    marginTop: 24,
+    marginRight: 24,
     height: 44,
-    flex: 1,
   },
 });

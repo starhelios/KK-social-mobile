@@ -20,11 +20,11 @@ export const TitleArrowButton: React.FC<props> = (props: props) => {
     <View style={styles.container}>
       {
         props.title != ''
-        ? <Text style={styles.title}>{props.title}</Text>
+        ? <Text style={styles.title} numberOfLines={1}>{props.title}</Text>
         : null
       }
       <View style={styles.info}>
-        <Text style={styles.name}>{props.name}</Text>
+        <Text style={styles.name} numberOfLines={1}>{props.name}</Text>
         <View style={styles.arrow}>
             <SvgXml width='100%' height='100%' xml={Icon_Detail_Right_Arrow} />
         </View>

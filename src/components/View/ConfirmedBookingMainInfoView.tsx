@@ -14,25 +14,20 @@ import {
 import { IBooking } from '../../interfaces/app';
 
 interface props {
-  completed_booking: boolean;
   booking: IBooking;
+  isCompleted: boolean;
 }
 
-export const BookingMainInfoView: React.FC<props> = (props: props) => {
+export const ConfirmedBookingMainInfoView: React.FC<props> = (props: props) => {
 
-  const completed_booking: boolean = props.completed_booking;
   const booking: IBooking = props.booking;
+  const isCompleted: boolean = props.isCompleted;
 
   return (
     <View>
-      <Text style={styles.experience}>{booking.experience}</Text>
+      <Text style={styles.experience} numberOfLines={1}>{booking.experience}</Text>
       <View style={styles.date_container}>
-        <Text style={styles.date}>{booking.date + ' • ' + booking.hour}</Text>
-        { 
-          completed_booking == false
-          ? <Text style={styles.duration}>{booking.duration}</Text>
-          : null
-        }
+        <Text style={styles.date} numberOfLines={1}>{booking.date + ' • ' + booking.hour}</Text>
       </View>
     </View>
   );

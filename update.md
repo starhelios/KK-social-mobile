@@ -51,21 +51,23 @@
 - Confirmed Bookings - Completed, Rate
 - Confirmed Bookings - Upcoming, More
 - Confirmed Bookings - Upcoming, Join
+
+### 2020.11.30
 - Experience Detail - Host View
 - Edit Experience
 
-### 2020.11.30
+### 2020.12.01
 - Search - Using Filters
 - Home - Date Filter
 - Date Filter Results
 
-### 2020.12.01
+### 2020.12.02
 - Experience Detail
 - Experience Detail - Scrolled
 
-### 2020.12.02
+### 2020.12.03
 - Experience Detail - Book
 - Experience Detail - Confirm & Pay
 
-### 2020.12.03
+### 2020.12.04
 - Host Detail
