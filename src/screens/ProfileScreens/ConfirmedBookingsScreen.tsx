@@ -7,6 +7,7 @@ import {
   Image,
   TouchableWithoutFeedback,
   Dimensions,
+  FlatList,
 } from 'react-native';
 import { Container } from 'native-base';
 import { useEffect, useState } from 'react';
@@ -18,31 +19,66 @@ import {
   COLOR, 
   FONT, 
   Icon_Back,
-  Img_Edit_Profile_Background,
   MARGIN_TOP,
 } from '../../constants';
-import { ColorButton } from '../../components/Button';
-import { IFile } from '../../interfaces/app';
+import { IBooking } from '../../interfaces/app';
+import { useConfirmedUpcomingBookings, useConfirmedCompletedBookings } from '../../hooks';
+import { ConfirmedBookingView } from '../../components/View';
 
 const { width: viewportWidth } = Dimensions.get('window');
 
-export const SignUpAddProfilePictureConfirmScreen: React.FC = ({route}) => {
+export const ConfirmedBookingsScreen: React.FC = () => {
 
   const { navigate, goBack } = useNavigation();
+  const { confirmedUpcomingBookings } = useConfirmedUpcomingBookings();
+  const { confirmedCompletedBookings } = useConfirmedCompletedBookings();
 
-  const profile_icon: IFile = route.params.profile_icon;
+  const [ selectedTab, setSelectedTab ] = useState<number>(0);
+  const [ upcomingBookingList, setUpcomingBookingList ] = useState<IBooking[]>([]);
+  const [ completedBookingList, setCompletedBookingList ] = useState<IBooking[]>([]);
 
   useEffect(() => {
+    loadUpcomingBookingList();
   }, [])
+
+  async function loadUpcomingBookingList() {
+    await confirmedUpcomingBookings()
+    .then(async (result: Promise<IBooking[]>) => {
+      var list: IBooking[] = [];
+      var currentDate = '';
+      for (let i = 0; i < (await result).length; i++) {
+        const booking = (await result)[i];
+        booking.showDate = booking.date == currentDate ? false : true;
+        currentDate = booking.date;
+        list.push(booking);
+      }
+      setUpcomingBookingList(list);
+    }).catch(() => {
+    });
+  }
+
+  async function loadCompletedBookingList() {
+    await confirmedCompletedBookings()
+    .then(async (result: Promise<IBooking[]>) => {
+      var list: IBooking[] = [];
+      var currentDate = '';
+      for (let i = 0; i < (await result).length; i++) {
+        const booking = (await result)[i];
+        booking.showDate = booking.date == currentDate ? false : true;
+        currentDate = booking.date;
+        list.push(booking);
+      }
+      setCompletedBookingList(list);
+    }).catch(() => {
+    });
+  }
 
   return (
     <Container style={styles.background}>
-      
-      <Image style={{width: '100%', height: '100%', resizeMode: 'cover'}} source={Img_Edit_Profile_Background} />
 
       <SafeAreaView style={styles.safe_area}>
         <View style={styles.navigation_bar}>
-          <Text style={styles.title}>Confirm Picture</Text>
+          <Text style={styles.title}>Bookings</Text>
 
           <TouchableWithoutFeedback onPress={() => goBack()}>
             <View style={styles.back_icon}>
@@ -51,30 +87,54 @@ export const SignUpAddProfilePictureConfirmScreen: React.FC = ({route}) => {
           </TouchableWithoutFeedback>
         </View>
 
-        <Text style={styles.description_text}>If you need to make a change,</Text>
-        <Text style={{...styles.description_text, marginTop: 0 }}>tap your profile picture below.</Text>
-
-        <View style={styles.container}>
-          <View style={styles.profile_container}>
-            <TouchableWithoutFeedback onPress={() => goBack()}>
-              <Image style={styles.profile} source={{uri: profile_icon.uri}} />
+        <View style={{alignItems: 'center'}}>
+          <View style={styles.tab_bar}>
+            <TouchableWithoutFeedback onPress={() => onShowUpcomingBookings()}>
+              <View style={{
+                ...styles.tab_upcoming,
+                backgroundColor: selectedTab == 0 ? COLOR.blackColor : COLOR.clearColor}}>
+                <Text style={{
+                  ...styles.tab_title, 
+                  color: selectedTab == 0 ? COLOR.whiteColor : COLOR.blackColor}}>
+                  Upcoming
+                </Text>
+              </View>
             </TouchableWithoutFeedback>
-          </View>
 
-          <View style={styles.bottom_container}>
-            <TouchableWithoutFeedback onPress={() => onContinue() }>
-              <View style={{ ...styles.bottom_button, marginTop: 0 }}>
-                <ColorButton title={'Continue'} backgroundColor={COLOR.whiteColor} color={COLOR.blackColor} />
+            <TouchableWithoutFeedback onPress={() => onShowCompletedBookings()}>
+              <View style={{
+                ...styles.tab_completed,
+                backgroundColor: selectedTab == 0 ? COLOR.clearColor : COLOR.blackColor }}>
+                <Text style={{
+                  ...styles.tab_title, 
+                  color: selectedTab == 0 ? COLOR.blackColor : COLOR.whiteColor}}>
+                  Completed
+                </Text>
               </View>
             </TouchableWithoutFeedback>
           </View>
-          
         </View>
+        
+        <FlatList
+          style={styles.booking_list}
+          showsVerticalScrollIndicator={false}
+          horizontal={false}
+          data={selectedTab == 0 ? upcomingBookingList : completedBookingList}
+          keyExtractor={item => item.id.toString()}
+          renderItem={({item}) => <ConfirmedBookingView booking={item} />}
+        />
       </SafeAreaView>
     </Container>
   );
 
-  function onContinue() {
+  function onShowUpcomingBookings() {
+    setSelectedTab(0);
+    loadUpcomingBookingList();
+  }
+
+  function onShowCompletedBookings() {
+    setSelectedTab(1);
+    loadCompletedBookingList();
   }
 };
 
@@ -112,56 +172,43 @@ const styles = StyleSheet.create({
     width: 20,
     height: '100%',
   },
-  description_text: {
+  tab_bar: {
     marginTop: 33,
-    marginLeft: 24,
-    marginRight: 24,
-    height: 23,
-    lineHeight: 24,
-    textAlign: 'center',
-    fontFamily: FONT.AN_Regular,
-    fontSize: 14,
-    color: COLOR.systemWhiteColor,
-  },
-  container: {
-    width: '100%',
-    height: '100%',
-    flex: 1,
-  },
-  profile_container: {
-    width: '100%',
-    height: '100%',
-    bottom: 134,
-    alignItems: 'center',
-    justifyContent: 'space-evenly',
-  },
-  profile: {
-    width: 150,
-    height: 150,
-    borderRadius: 75,
+    width: 236,
+    height: 48,
     backgroundColor: COLOR.whiteColor,
-    alignItems: 'center',
-    justifyContent: 'space-evenly',
-  },
-  profile_icon: {
-    width: 46,
-    height: 58,
-  },
-  bottom_container: {
-    position: 'absolute',
-    width: '100%',
-    height: 134,
-    flex: 1,
-    bottom: 0,
+    borderRadius: 24,
     flexDirection: 'row',
   },
-  bottom_button: {
-    position: 'absolute',
-    bottom: 33,
-    marginLeft: 48,
-    marginRight: 48,
-    width: viewportWidth - 96,
-    height: 44,
-    flex: 1,
+  tab_upcoming: {
+    marginLeft: 4,
+    marginTop: 4,
+    marginBottom: 4,
+    width: 110,
+    height: 40,
+    borderRadius: 20,
+    alignItems: 'center', 
+    justifyContent: 'space-evenly',
   },
+  tab_completed: {
+    position: 'absolute',
+    right: 4,
+    marginTop: 4,
+    marginBottom: 4,
+    width: 116,
+    height: 40,
+    borderRadius: 20,
+    alignItems: 'center', 
+    justifyContent: 'space-evenly',
+  },
+  tab_title: {
+    backgroundColor: COLOR.clearColor,
+    fontFamily: FONT.AN_Bold,
+    fontSize: 14,
+    textAlign: 'center',
+  },
+  booking_list: {
+    marginTop: 22,
+    width: '100%',
+  }
 });

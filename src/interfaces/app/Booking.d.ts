@@ -12,4 +12,10 @@ export interface IBooking {
 	is_host: boolean;
 	is_joined: boolean;
 	host: IHost | null;
+
+	paid: string | null;
+	receive: string | null;
+	completed: boolean | null;
+
+	showDate: boolean | null;
 }

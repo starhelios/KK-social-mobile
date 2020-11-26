@@ -99,13 +99,13 @@ export const LoginProfileView: React.FC<props> = (props: props) => {
           </TouchableWithoutFeedback>
 
           <Text style={{...styles.content_title, marginTop: 44}}>Hosting</Text>
-          <TouchableWithoutFeedback onPress={() => navigate('Experiences') }>
+          <TouchableWithoutFeedback onPress={() => navigate('HostAnExperience') }>
             <View style={{width:'100%', marginTop: 22}}>
               <TitleArrowButton title={''} name={'Host An Experience'} showArrow={true} />
             </View>
           </TouchableWithoutFeedback>
 
-          <TouchableWithoutFeedback onPress={() => navigate('PaymentOptions')}>
+          <TouchableWithoutFeedback onPress={() => navigate('ConfirmedBookings')}>
             <View style={{width:'100%', marginTop: 22}}>
               <TitleArrowButton title={''} name={'Confirmed Bookings'} showArrow={true} />
             </View>

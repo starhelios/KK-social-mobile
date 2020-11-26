@@ -59,7 +59,7 @@ export const ForgotPasswordScreen: React.FC = () => {
                   style={GlobalStyle.auth_input}
                   keyboardType={'email-address'}
                   placeholder={'Email Address'}
-                  placeholderTextColor={COLOR.alphaWhiteColor}
+                  placeholderTextColor={COLOR.alphaWhiteColor50}
                   onChangeText={text => setEmailAddress(text)}
                   value={emailAddress}
                 />

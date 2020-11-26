@@ -81,7 +81,7 @@ const styles = StyleSheet.create({
     width: '100%',
     position: 'absolute',
     bottom: 0,
-    backgroundColor: COLOR.alphaBlackColor,
+    backgroundColor: COLOR.alphaBlackColor20,
     borderBottomLeftRadius: 22,
     borderBottomRightRadius: 22,
   },

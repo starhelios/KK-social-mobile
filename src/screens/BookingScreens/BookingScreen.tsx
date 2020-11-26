@@ -59,7 +59,7 @@ export const BookingScreen: React.FC = () => {
         <Text style={styles.title}>Booking</Text>
 
         <View style={styles.tab_bar}>
-          <TouchableWithoutFeedback onPress={() => onShowUpcomingBooking()}>
+          <TouchableWithoutFeedback onPress={() => onShowUpcomingBookings()}>
             <View style={{
               ...styles.tab_upcoming,
               backgroundColor: selectedTab == 0 ? COLOR.blackColor : COLOR.clearColor}}>
@@ -71,7 +71,7 @@ export const BookingScreen: React.FC = () => {
             </View>
           </TouchableWithoutFeedback>
 
-          <TouchableWithoutFeedback onPress={() => onShowCompletedBooking()}>
+          <TouchableWithoutFeedback onPress={() => onShowCompletedBookings()}>
             <View style={{
               ...styles.tab_completed,
               backgroundColor: selectedTab == 0 ? COLOR.clearColor : COLOR.blackColor }}>
@@ -96,12 +96,12 @@ export const BookingScreen: React.FC = () => {
     </Container>
   );
 
-  function onShowUpcomingBooking() {
+  function onShowUpcomingBookings() {
     setSelectedTab(0);
     loadUpcomingBookingList();
   }
 
-  function onShowCompletedBooking() {
+  function onShowCompletedBookings() {
     setSelectedTab(1);
     loadCompletedBookingList();
   }

@@ -9,8 +9,10 @@ export const COLOR = {
   whiteColor: '#EAEAEA',
   whiteBorderColor: '#979797',
   selectedExperienceCategoryBackgroudnColor: '#9797973F',
-  alphaBlackColor: '#0003',
+  alphaBlackColor20: '#0003',
+  alphaBlackColor50: '#0008',
+  alphaBlackColor75: '#000B',
+  alphaWhiteColor20: '#FFF3',
   alphaWhiteColor50: '#FFF8',
   alphaWhiteColor75: '#FFFB',
-  alphaWhiteColor20: '#FFF3'
 };

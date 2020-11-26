@@ -205,8 +205,6 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
   },
   profile_help_image: {
-    borderTopLeftRadius: 22,
-    borderTopRightRadius: 22,
     width: viewportWidth - 48,
     height: '100%',
     resizeMode: 'cover',
@@ -217,7 +215,7 @@ const styles = StyleSheet.create({
     width: '100%',
     height: 60,
     bottom: 0,
-    backgroundColor: COLOR.alphaBlackColor,
+    backgroundColor: COLOR.alphaBlackColor20,
   },
   profile_help_description: {
     fontFamily: FONT.AN_Regular,

@@ -42,7 +42,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     height: 98,
     bottom: 0,
-    backgroundColor: COLOR.alphaBlackColor,
+    backgroundColor: COLOR.alphaBlackColor20,
     borderBottomLeftRadius: 22,
     borderBottomRightRadius: 22,
   },

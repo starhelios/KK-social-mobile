@@ -36,21 +36,21 @@
 - Profile screen
 - My Experiences Screen
 - Update the components
-- Fix the styles for android and android
+- Fix the styles for android
 
 ### 2020.11.25
 - Edit Profile screen
 - Become A Host screen
 
 ### 2020.11.26
+- Host an Experience screen
 - Confirmed Bookings - Upcoming screen
 - Confirmed Bookings - Completed screen
+
+### 2020.11.27
 - Confirmed Bookings - Completed, Rate
 - Confirmed Bookings - Upcoming, More
 - Confirmed Bookings - Upcoming, Join
-
-### 2020.11.27
-- Host an Experience screen
 - Experience Detail - Host View
 - Edit Experience
 

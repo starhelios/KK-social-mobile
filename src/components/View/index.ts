@@ -6,3 +6,5 @@ export * from './BookingRatingInfoView';
 export * from './NotLoginProfileView';
 export * from './LoginProfileView';
 export * from './MyExperienceView';
+export * from './ExperienceImageView';
+export * from './ConfirmedBookingView';
