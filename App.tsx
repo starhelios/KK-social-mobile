@@ -21,6 +21,8 @@ import { BecomeAHostScreen } from './src/screens/ProfileScreens/BecomeAHostScree
 import { HostAnExperienceScreen } from './src/screens/ProfileScreens/HostAnExperienceScreen';
 import { ConfirmedBookingsScreen } from './src/screens/ProfileScreens/ConfirmedBookingsScreen';
 import { ConfirmedBookingDetailScreen } from './src/screens/DetailScreens/ConfirmedBookingDetailScreen';
+import { ExperienceDetailScreen } from './src/screens/DetailScreens/ExperienceDetailScreen';
+import { EditExperienceScreen } from './src/screens/DetailScreens/EditExperienceScreen';
 
 // Sentry.init({
 //   dsn: 'https://3463daf0c4c047cdbda89c051aaed669@o300282.ingest.sentry.io/5212707',
@@ -53,6 +55,8 @@ const App = () => {
           <Stack.Screen name="HostAnExperience" component={HostAnExperienceScreen} />
           <Stack.Screen name="ConfirmedBookings" component={ConfirmedBookingsScreen} />
           <Stack.Screen name="ConfirmedBookingDetail" component={ConfirmedBookingDetailScreen} />
+          <Stack.Screen name="ExperienceDetail" component={ExperienceDetailScreen} />
+          <Stack.Screen name="EditExperience" component={EditExperienceScreen} />
         </Stack.Navigator>
       </NavigationContainer>
     </Provider>

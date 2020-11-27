@@ -7,82 +7,171 @@ import {
   Image,
   TouchableWithoutFeedback,
   Dimensions,
+  ScrollView,
 } from 'react-native';
 import { Container } from 'native-base';
 import { useEffect, useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { SvgXml } from 'react-native-svg';
+import { FlatList } from 'react-native-gesture-handler';
+import LinearGradient from 'react-native-linear-gradient';
+import PageControl from 'react-native-page-control';
 
 // from app
 import { 
   COLOR, 
   FONT, 
   Icon_Back,
+  Icon_Experience_Black,
+  Icon_Share_White,
+  Icon_Time_Black,
+  Img_Avatar_1,
   Img_Edit_Profile_Background,
+  Img_Experience_2,
   MARGIN_TOP,
 } from '../../constants';
 import { ColorButton } from '../../components/Button';
-import { IFile } from '../../interfaces/app';
+import { IExperience } from '../../interfaces/app';
+import GlobalStyle from '../../styles/global';
+
 
 const { width: viewportWidth } = Dimensions.get('window');
 
-export const SignUpAddProfilePictureConfirmScreen: React.FC = ({route}) => {
+export const ExperienceDetailScreen: React.FC = ({route}) => {
 
   const { navigate, goBack } = useNavigation();
 
-  const profile_icon: IFile = route.params.profile_icon;
+  const [currentPage, setCurrentPage] = useState<number>(0);
+
+  const experience: IExperience = route.params.experience;
+  var scrollViewRef: FlatList<string> | null;
 
   useEffect(() => {
   }, [])
 
   return (
     <Container style={styles.background}>
-      
-      <Image style={{width: '100%', height: '100%', resizeMode: 'cover'}} source={Img_Edit_Profile_Background} />
-
       <SafeAreaView style={styles.safe_area}>
-        <View style={styles.navigation_bar}>
-          <Text style={styles.title}>Confirm Picture</Text>
+        <ScrollView 
+          style={{position: 'absolute', width: '100%', height: '100%', bottom: 110, flex: 1}} 
+          bounces={false} 
+          showsVerticalScrollIndicator={false}>
 
+          <View style={styles.image_container}>
+            <FlatList
+              ref={ref => {
+                scrollViewRef = ref;
+              }}
+              style={{width: '100%', height: '100%'}}
+              contentContainerStyle={{paddingHorizontal: 0}}
+              showsHorizontalScrollIndicator={false}
+              pagingEnabled={true}
+              bounces={false}
+              horizontal={true}
+              data={experience.images}
+              keyExtractor={item => item}
+              onMomentumScrollEnd={({nativeEvent}) => { 
+                setCurrentPage(Math.round(nativeEvent.contentOffset.x / viewportWidth));
+              }}
+              renderItem={({item}) => <Image style={styles.image} source={Img_Experience_2} />}
+            />
+
+            <View style={styles.page_control_container}>  
+              <PageControl
+                style={styles.page_control}
+                numberOfPages={experience.images.length}
+                currentPage={currentPage}
+                hidesForSinglePage
+                pageIndicatorTintColor='gray'
+                currentPageIndicatorTintColor='white'
+                indicatorStyle={{borderRadius: 6}}
+                currentIndicatorStyle={{borderRadius: 6}}
+                indicatorSize={{width:6, height:6}}
+                onPageIndicatorPress={(page) => console.log(page)}
+              />
+            </View>
+          </View>
+
+          <View style={styles.content_container}>
+            <Text style={styles.title}>{experience.title}</Text>
+            <Text style={styles.location}>{experience.location}</Text>
+            <View style={{...GlobalStyle.auth_line, backgroundColor: COLOR.alphaBlackColor20, marginTop: 22}} />
+            
+            <View style={{marginTop: 12, flexDirection: 'row'}}>
+              <Text style={styles.host_name}>{'Hosted by ' + experience.host.username}</Text>
+              <Image style={styles.avatar} source={Img_Avatar_1} />
+            </View>
+
+            <View style={{marginTop: 12, height: 16, flexDirection: 'row'}}>
+              <SvgXml width={16} height={16} xml={Icon_Time_Black} />
+              <Text style={{...styles.location, marginTop: 1, marginLeft: 8}}>{experience.duration}</Text>
+            </View>
+
+            <View style={{marginTop: 12, height: 16, flexDirection: 'row'}}>
+              <SvgXml width={16} height={16} xml={Icon_Experience_Black} />
+              <Text style={{...styles.location, marginTop: 1, marginLeft: 8}}>{experience.experience}</Text>
+            </View>
+            <View style={{...GlobalStyle.auth_line, backgroundColor: COLOR.alphaBlackColor20, marginTop: 22}} />
+
+            <Text style={{...styles.host_name, marginTop: 22}}>About the experience</Text>
+            <Text style={styles.about}>{experience.description}</Text>            
+          </View>
+        </ScrollView>
+
+        <LinearGradient
+          colors={['#00000010', '#00000020']}
+          style={styles.gradient_container}
+          start={{x: 0.5, y: 0}}
+          end={{x: 0.5, y: 1}} >
+        </LinearGradient>
+
+        <View style={styles.navigation_bar}>
           <TouchableWithoutFeedback onPress={() => goBack()}>
             <View style={styles.back_icon}>
               <SvgXml width='100%' height='100%' xml={Icon_Back} />
             </View>
           </TouchableWithoutFeedback>
+
+          <TouchableWithoutFeedback onPress={() => onShare()}>
+            <View style={styles.share_icon}>
+              <SvgXml width='100%' height='100%' xml={Icon_Share_White} />
+            </View>
+          </TouchableWithoutFeedback>
         </View>
 
-        <Text style={styles.description_text}>If you need to make a change,</Text>
-        <Text style={{...styles.description_text, marginTop: 0 }}>tap your profile picture below.</Text>
-
-        <View style={styles.container}>
-          <View style={styles.profile_container}>
-            <TouchableWithoutFeedback onPress={() => goBack()}>
-              <Image style={styles.profile} source={{uri: profile_icon.uri}} />
-            </TouchableWithoutFeedback>
+        <View style={styles.bottom_container}>
+          <View style={styles.price_container}>
+            <Text style={styles.price}>{'From $' + experience.min_price}</Text>
+            <Text style={styles.personal}>{' / ' + experience.personal}</Text>
           </View>
 
-          <View style={styles.bottom_container}>
-            <TouchableWithoutFeedback onPress={() => onContinue() }>
-              <View style={{ ...styles.bottom_button, marginTop: 0 }}>
-                <ColorButton title={'Continue'} backgroundColor={COLOR.whiteColor} color={COLOR.blackColor} />
-              </View>
-            </TouchableWithoutFeedback>
-          </View>
-          
+          <TouchableWithoutFeedback onPress={() => navigate('EditExperience', {experience: experience})}>
+            <View style={styles.bottom_button}>
+              <ColorButton title={'Edit'} backgroundColor={COLOR.redColor} color={COLOR.systemWhiteColor} />
+            </View>
+          </TouchableWithoutFeedback>
         </View>
       </SafeAreaView>
     </Container>
   );
 
-  function onContinue() {
+  function onShare() {
+
   }
 };
 
 const styles = StyleSheet.create({
+  gradient_container: {
+    position: 'absolute',
+    top: 0,
+    width: '100%',
+    height: 120,
+    overflow: 'hidden',
+  },
   background: {
     width: '100%', 
     flex: 1, 
-    backgroundColor: COLOR.blackColor, 
+    backgroundColor: COLOR.whiteColor, 
     alignItems: 'center',
   },
   safe_area: {
@@ -97,71 +186,115 @@ const styles = StyleSheet.create({
     height: 33,
     flexDirection: 'row',
   },
-  title: {
-    width: '100%',
-    height: 33, 
-    lineHeight: 33,
-    fontFamily: FONT.AN_Bold, 
-    fontSize: 24, 
-    textAlign: 'center',
-    color: COLOR.systemWhiteColor,
-  },
   back_icon: {
     position: 'absolute',
     marginLeft: 24,
     width: 20,
     height: '100%',
   },
-  description_text: {
-    marginTop: 33,
+  share_icon: {
+    position: 'absolute',
+    right: 24,
+    width: 20,
+    height: '100%',
+  },
+  image_container: {
+    height: 375,
+    width: '100%',
+  },
+  image: {
+    width: viewportWidth,
+    height: '100%',
+    overflow: 'hidden',
+    resizeMode: 'cover',
+  },
+  page_control_container: {
+    position: 'absolute',
+    width: '100%', 
+    height: 60, 
+    bottom: 0,
+    alignContent: 'center',
+    backgroundColor: '#0001',
+  },
+  page_control: {
+    marginTop: 27,
+    bottom: 0,
+    height: 6,
+    width: '100%',
+  },
+  content_container: {
     marginLeft: 24,
     marginRight: 24,
-    height: 23,
+  },
+  title: {
+    marginTop: 22,
     lineHeight: 24,
-    textAlign: 'center',
+    fontFamily: FONT.AN_Regular,
+    fontSize: 24,
+    color: COLOR.blackColor,
+  },
+  location: {
+    marginTop: 12,
+    lineHeight: 14,
     fontFamily: FONT.AN_Regular,
     fontSize: 14,
-    color: COLOR.systemWhiteColor,
+    color: COLOR.alphaBlackColor75,
   },
-  container: {
-    width: '100%',
-    height: '100%',
-    flex: 1,
+  host_name: {
+    marginTop: 10,
+    lineHeight: 20,
+    fontFamily: FONT.AN_Regular,
+    fontSize: 20,
+    color: COLOR.blackColor,
   },
-  profile_container: {
-    width: '100%',
-    height: '100%',
-    bottom: 134,
-    alignItems: 'center',
-    justifyContent: 'space-evenly',
+  avatar: {
+    position: 'absolute',
+    right: 0,
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    overflow: 'hidden',
   },
-  profile: {
-    width: 150,
-    height: 150,
-    borderRadius: 75,
-    backgroundColor: COLOR.whiteColor,
-    alignItems: 'center',
-    justifyContent: 'space-evenly',
-  },
-  profile_icon: {
-    width: 46,
-    height: 58,
+  about: {
+    marginTop: 12,
+    lineHeight: 20,
+    fontFamily: FONT.AN_Regular,
+    fontSize: 14,
+    color: COLOR.alphaBlackColor75,
   },
   bottom_container: {
     position: 'absolute',
     width: '100%',
-    height: 134,
+    height: 110,
     flex: 1,
     bottom: 0,
     flexDirection: 'row',
   },
+  price_container: {
+    marginTop: 36,
+    marginLeft: 24,
+    height: 16,
+    flexDirection: 'row',
+  },
+  price: {
+    height: 16,
+    lineHeight: 16,
+    fontFamily: FONT.AN_Bold,
+    fontSize: 16,
+    color: COLOR.systemBlackColor,
+  },
+  personal: {
+    height: 16,
+    lineHeight: 16,
+    fontFamily: FONT.AN_Regular,
+    fontSize: 16,
+    color: COLOR.systemBlackColor,
+  },
   bottom_button: {
     position: 'absolute',
-    bottom: 33,
-    marginLeft: 48,
-    marginRight: 48,
-    width: viewportWidth - 96,
+    top: 22,
+    right: 24,
+    width: 140,
     height: 44,
-    flex: 1,
   },
 });

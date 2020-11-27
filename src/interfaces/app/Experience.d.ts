@@ -1,3 +1,5 @@
+import { IUser } from "./User";
+
 export interface IExperience {
 	id: number;
 	title: string;
@@ -9,4 +11,8 @@ export interface IExperience {
 	personal: string;
 	rating: number;
 	rating_count: number;
+	images: string[];
+	location: string;
+	host: IUser;
+	description: string;
 }

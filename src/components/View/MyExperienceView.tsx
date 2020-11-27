@@ -1,8 +1,10 @@
+import { useNavigation } from '@react-navigation/native';
 import * as React from 'react';
 import {
   Image,
   StyleSheet,
   Text,
+  TouchableWithoutFeedback,
   View,
 } from 'react-native';
 import { SvgXml } from 'react-native-svg';
@@ -25,35 +27,39 @@ interface props {
 
 export const MyExperienceView: React.FC<props> = (props: props) => {
 
+  const { navigate } = useNavigation();
+
   const experience: IExperience = props.experience;
   const width: number = props.width;
 
   return (
-    <View>
-      <View style={{flexDirection: 'row', marginTop: 22}}>
-        <Image
-          style={styles.image}
-          // source={(experience.image == null || experience.image == '') ? Img_Experience_1 : {uri: experience.image}}
-          // test
-          source={experience.experience == 'Music' || experience.experience == 'Sports' ? Img_Experience_2 : Img_Experience_1}
-        />
+    <TouchableWithoutFeedback onPress={() => navigate('ExperienceDetail' , {experience: experience}) }>
+      <View>
+        <View style={{flexDirection: 'row', marginTop: 22}}>
+          <Image
+            style={styles.image}
+            // source={(experience.image == null || experience.image == '') ? Img_Experience_1 : {uri: experience.image}}
+            // test
+            source={experience.experience == 'Music' || experience.experience == 'Sports' ? Img_Experience_2 : Img_Experience_1}
+          />
 
-        <View style={{...styles.content_container, width: width - 166}}>
-          <Text style={styles.title} numberOfLines={2}>{experience.title}</Text>
+          <View style={{...styles.content_container, width: width - 166}}>
+            <Text style={styles.title} numberOfLines={2}>{experience.title}</Text>
 
-          <View style={styles.rating_container}>
-            <SvgXml width={15} height={15} xml={Icon_Experience_Rating} />
-            <Text style={styles.rating_text} numberOfLines={1}>{experience.rating.toString() + ' (' + experience.rating_count.toString() + ')'}</Text>
+            <View style={styles.rating_container}>
+              <SvgXml width={15} height={15} xml={Icon_Experience_Rating} />
+              <Text style={styles.rating_text} numberOfLines={1}>{experience.rating.toString() + ' (' + experience.rating_count.toString() + ')'}</Text>
+            </View>
+          </View>
+
+          <View style={styles.arrow_container}>
+            <SvgXml width={5} height={10} xml={Icon_Detail_Right_Arrow} />
           </View>
         </View>
 
-        <View style={styles.arrow_container}>
-          <SvgXml width={5} height={10} xml={Icon_Detail_Right_Arrow} />
-        </View>
+        <View style={styles.info_line} />
       </View>
-
-      <View style={styles.info_line} />
-    </View>
+    </TouchableWithoutFeedback>
   );
 }
 

@@ -199,14 +199,14 @@ export const HomeScreen: React.FC = () => {
     console.log('select date filter');
   }
 
-  function onSelectExperneiceCategory(id: number, title: string) {
+  function onSelectExperienceCategory(id: number, title: string) {
     setSelectedExperienceCategoryID(id);
     console.log('select experience filter');
   }
 
   function renderExperienceCategoryView(id: number, title: string) {
     return (
-      <TouchableWithoutFeedback onPress={() => onSelectExperneiceCategory(id, title)}>
+      <TouchableWithoutFeedback onPress={() => onSelectExperienceCategory(id, title)}>
         {
           selectedExperienceCategoryID == id
           ? <View style={{...experienceCategoryStyles.container, backgroundColor: COLOR.selectedExperienceCategoryBackgroudnColor}}>

@@ -1,8 +1,10 @@
+import { useNavigation } from '@react-navigation/native';
 import * as React from 'react';
 import {
   Image,
   StyleSheet,
   Text,
+  TouchableWithoutFeedback,
   View,
 } from 'react-native';
 import { SvgUri, SvgXml } from 'react-native-svg';
@@ -21,30 +23,37 @@ interface props {
 }
 
 export const ExperienceView: React.FC<props> = (props: props) => {
+
+  const { navigate } = useNavigation();
+
+  const experience: IExperience = props.experience;
+  
   return (
-    <View style={styles.container}>
-      <Image
-        style={styles.image}
-        // source={(props.experience.image == null || props.experience.image == '') ? Img_Experience_1 : {uri: props.experience.image}}
-        // test
-        source={props.experience.experience == 'Music' || props.experience.experience == 'Sports' ? Img_Experience_2 : Img_Experience_1}
-      />
-      <Text style={styles.title}>{props.experience.title}</Text>
-      <View style={styles.experienceContainer}>
-        {/* {
-          props.experience.experience_icon != null && props.experience.experience_icon != ''
-          ? <SvgUri width='100%' height='100%' uri={props.experience.experience_icon} />
-          : null
-        } */}
-        {/* // test */}
-        <SvgXml height='100%' xml={props.experience.experience_icon} />
-        <Text style={styles.experience}>{props.experience.experience + ' • ' + props.experience.duration}</Text>
+    <TouchableWithoutFeedback onPress={() => navigate('ExperienceDetail' , {experience: experience}) }>
+      <View style={styles.container}>
+        <Image
+          style={styles.image}
+          // source={(props.experience.image == null || props.experience.image == '') ? Img_Experience_1 : {uri: props.experience.image}}
+          // test
+          source={props.experience.experience == 'Music' || props.experience.experience == 'Sports' ? Img_Experience_2 : Img_Experience_1}
+        />
+        <Text style={styles.title}>{props.experience.title}</Text>
+        <View style={styles.experienceContainer}>
+          {/* {
+            props.experience.experience_icon != null && props.experience.experience_icon != ''
+            ? <SvgUri width='100%' height='100%' uri={props.experience.experience_icon} />
+            : null
+          } */}
+          {/* // test */}
+          <SvgXml height='100%' xml={props.experience.experience_icon} />
+          <Text style={styles.experience}>{props.experience.experience + ' • ' + props.experience.duration}</Text>
+        </View>
+        <View style={styles.priceContainer}>
+          <Text style={styles.price}>{'From ' + props.experience.min_price + '$'}</Text>
+          <Text style={styles.personal}>{' / ' + props.experience.personal}</Text>
+        </View>
       </View>
-      <View style={styles.priceContainer}>
-        <Text style={styles.price}>{'From ' + props.experience.min_price + '$'}</Text>
-        <Text style={styles.personal}>{' / ' + props.experience.personal}</Text>
-      </View>
-    </View>
+    </TouchableWithoutFeedback>
   );
 }
 
