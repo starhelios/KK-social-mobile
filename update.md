@@ -60,12 +60,14 @@
 ### 2020.12.01
 - Search - Using Filters
 - Home - Date Filter
-- Date Filter Results
 
 ### 2020.12.02
 - Experience Detail - Scrolled
 - Experience Detail - Book
+- Date Filter Results
 
 ### 2020.12.03
 - Experience Detail - Confirm & Pay
+
+### 2020.12.04
 - Host Detail
