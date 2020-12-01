@@ -10,3 +10,4 @@ declare module '*.jpg'
 
 declare module 'react-native-stars';
 declare module 'react-native-user-defaults';
+declare module 'rn-range-slider';

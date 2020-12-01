@@ -55,6 +55,7 @@
 ### 2020.11.30
 - Experience Detail - Host View
 - Edit Experience
+- Experience Detail
 
 ### 2020.12.01
 - Search - Using Filters
@@ -62,12 +63,9 @@
 - Date Filter Results
 
 ### 2020.12.02
-- Experience Detail
 - Experience Detail - Scrolled
+- Experience Detail - Book
 
 ### 2020.12.03
-- Experience Detail - Book
 - Experience Detail - Confirm & Pay
-
-### 2020.12.04
 - Host Detail

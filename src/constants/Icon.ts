@@ -32,6 +32,10 @@ import Icon_Share_Black from '../assets/svg/share_black'
 import Icon_Share_White from '../assets/svg/share_white'
 import Icon_Time_Black from '../assets/svg/time_black'
 import Icon_Dot_Menu_White from '../assets/svg/dot_menu_white'
+import Icon_Close_Black from '../assets/svg/close_black'
+import Icon_Location from '../assets/svg/location'
+import Icon_Slider_Left from '../assets/svg/slider_left'
+import Icon_Slider_Right from '../assets/svg/slider_right'
 // PNG
 const Img_Auth_Background = require('../assets/images/bg_auth.png')
 const Img_Splash_Background = require('../assets/images/bg_splash.png')
@@ -82,6 +86,10 @@ export {
   Icon_Share_White,
   Icon_Time_Black,
   Icon_Dot_Menu_White,
+  Icon_Close_Black,
+  Icon_Location,
+  Icon_Slider_Left,
+  Icon_Slider_Right,
   // PNG
   Img_Auth_Background,
   Img_Splash_Background,

@@ -9,6 +9,7 @@ import {
   FlatList,
   TextInput,
   ScrollView,
+  Modal,
 } from 'react-native';
 import { Container } from 'native-base';
 import { useEffect, useState } from 'react';
@@ -19,7 +20,7 @@ import { SvgXml } from 'react-native-svg';
 import { COLOR, FONT, Icon_Filter, Icon_Search, MARGIN_TOP, setLoginUserID } from '../../constants';
 import { useExperienceCategories, useExperiences, useHosts } from '../../hooks';
 import { IExperience, IExperienceCategory, IHost } from '../../interfaces/app';
-import { ExperienceView, HostView } from '../../components/View';
+import { ExperienceView, FiltersView, HostView, SelectDatesView } from '../../components/View';
 import { useDispatch } from '../../redux/Store';
 import { ActionType } from '../../redux/Reducer';
 
@@ -39,6 +40,8 @@ export const HomeScreen: React.FC = () => {
   const [hostList, setHostList] = useState<IHost[]>([]);
   const [selectedDate, setSelectedDate] = useState<string>('');
   const [selectedExperienceCategoryID, setSelectedExperienceCategoryID] = useState<number>(-1);
+  const [showFilters, setShowFilters] = useState<boolean>(false);
+  const [showSelectDates, setShowSelectDates] = useState<boolean>(false);
 
   var fetching = false;
   var isSearchResult = false;
@@ -113,7 +116,7 @@ export const HomeScreen: React.FC = () => {
               value={searchText} />
           </View>
 
-          <TouchableWithoutFeedback onPress={() => onSearch()}>
+          <TouchableWithoutFeedback onPress={() => setShowFilters(true)}>
             <View style={styles.filter_container}>
               <SvgXml width={14} height={14} xml={Icon_Filter} />
             </View>
@@ -186,6 +189,18 @@ export const HomeScreen: React.FC = () => {
           />
 
         </ScrollView>
+
+        <Modal animationType = {"slide"} transparent = {true}
+          visible = {showSelectDates}
+          onRequestClose = {() => { console.log("Modal has been closed.") } }>
+          <SelectDatesView onCloseView={setShowSelectDates} />
+        </Modal>
+
+        <Modal animationType = {"slide"} transparent = {true}
+          visible = {showFilters}
+          onRequestClose = {() => { console.log("Modal has been closed.") } }>
+          <FiltersView onCloseView={setShowFilters} />
+        </Modal>
       </SafeAreaView>
     </Container>
   );
@@ -195,8 +210,9 @@ export const HomeScreen: React.FC = () => {
   }
 
   function onSelectDateFilter() {
-    setSelectedExperienceCategoryID(0);
-    console.log('select date filter');
+    // setSelectedExperienceCategoryID(0);
+    // navigate('SelectDates');
+    setShowSelectDates(true);
   }
 
   function onSelectExperienceCategory(id: number, title: string) {
