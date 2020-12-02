@@ -37,7 +37,7 @@ import GlobalStyle from '../../styles/global';
 
 const { width: viewportWidth } = Dimensions.get('window');
 
-export const ExperienceDetailScreen: React.FC = ({route}) => {
+export const ExperienceDetailHostScreen: React.FC = ({route}) => {
 
   const { navigate, goBack } = useNavigation();
 
@@ -147,7 +147,7 @@ export const ExperienceDetailScreen: React.FC = ({route}) => {
 
           <TouchableWithoutFeedback onPress={() => navigate('EditExperience', {experience: experience})}>
             <View style={styles.bottom_button}>
-              <ColorButton title={'Book'} backgroundColor={COLOR.redColor} color={COLOR.systemWhiteColor} />
+              <ColorButton title={'Edit'} backgroundColor={COLOR.redColor} color={COLOR.systemWhiteColor} />
             </View>
           </TouchableWithoutFeedback>
         </View>

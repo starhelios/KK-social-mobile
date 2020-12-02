@@ -62,12 +62,13 @@
 - Home - Date Filter
 
 ### 2020.12.02
+- Experience Detail
 - Experience Detail - Scrolled
-- Experience Detail - Book
 - Date Filter Results
 
 ### 2020.12.03
 - Experience Detail - Confirm & Pay
+- Experience Detail - Book
 
 ### 2020.12.04
 - Host Detail

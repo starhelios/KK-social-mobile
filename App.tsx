@@ -22,6 +22,7 @@ import { HostAnExperienceScreen } from './src/screens/ProfileScreens/HostAnExper
 import { ConfirmedBookingsScreen } from './src/screens/ProfileScreens/ConfirmedBookingsScreen';
 import { ConfirmedBookingDetailScreen } from './src/screens/DetailScreens/ConfirmedBookingDetailScreen';
 import { ExperienceDetailScreen } from './src/screens/DetailScreens/ExperienceDetailScreen';
+import { ExperienceDetailHostScreen } from './src/screens/DetailScreens/ExperienceDetailHostScreen';
 import { EditExperienceScreen } from './src/screens/DetailScreens/EditExperienceScreen';
 
 // Sentry.init({
@@ -56,6 +57,7 @@ const App = () => {
           <Stack.Screen name="ConfirmedBookings" component={ConfirmedBookingsScreen} />
           <Stack.Screen name="ConfirmedBookingDetail" component={ConfirmedBookingDetailScreen} />
           <Stack.Screen name="ExperienceDetail" component={ExperienceDetailScreen} />
+          <Stack.Screen name="ExperienceDetailHost" component={ExperienceDetailHostScreen} />
           <Stack.Screen name="EditExperience" component={EditExperienceScreen} />
         </Stack.Navigator>
       </NavigationContainer>

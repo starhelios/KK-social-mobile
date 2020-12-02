@@ -33,7 +33,7 @@ export const MyExperienceView: React.FC<props> = (props: props) => {
   const width: number = props.width;
 
   return (
-    <TouchableWithoutFeedback onPress={() => navigate('ExperienceDetail' , {experience: experience}) }>
+    <TouchableWithoutFeedback onPress={() => navigate('ExperienceDetailHost' , {experience: experience}) }>
       <View>
         <View style={{flexDirection: 'row', marginTop: 22}}>
           <Image
