@@ -15,4 +15,7 @@ export interface IExperience {
 	location: string;
 	host: IUser;
 	description: string;
+
+	show_date: boolean | null;
+	date: string | null;
 }

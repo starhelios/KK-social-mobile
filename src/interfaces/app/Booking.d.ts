@@ -17,5 +17,5 @@ export interface IBooking {
 	receive: string | null;
 	completed: boolean | null;
 
-	showDate: boolean | null;
+	show_date: boolean | null;
 }

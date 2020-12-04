@@ -15,6 +15,7 @@ import { Container } from 'native-base';
 import { useEffect, useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { SvgXml } from 'react-native-svg';
+import Moment from 'moment';
 
 // from app
 import { COLOR, FONT, Icon_Filter, Icon_Search, MARGIN_TOP, setLoginUserID } from '../../constants';
@@ -38,10 +39,10 @@ export const HomeScreen: React.FC = () => {
   const [experienceCategoryList, setExperienceCategoryList] = useState<IExperienceCategory[]>([]);
   const [experienceList, setExperienceList] = useState<IExperience[]>([]);
   const [hostList, setHostList] = useState<IHost[]>([]);
-  const [selectedDate, setSelectedDate] = useState<string>('');
   const [selectedExperienceCategoryID, setSelectedExperienceCategoryID] = useState<number>(-1);
   const [showFilters, setShowFilters] = useState<boolean>(false);
   const [showSelectDates, setShowSelectDates] = useState<boolean>(false);
+  const [selectedDate, setSelectedDate] = useState<string>('');
 
   var fetching = false;
   var isSearchResult = false;
@@ -126,19 +127,11 @@ export const HomeScreen: React.FC = () => {
         <ScrollView style={{width: '100%', marginTop: 16}}>
           <View style={styles.experience_category_list}>
             <TouchableWithoutFeedback onPress={() => onSelectDateFilter()}>
-              {
-                selectedExperienceCategoryID == 0
-                ? <View style={{...experienceCategoryStyles.container, backgroundColor: COLOR.selectedExperienceCategoryBackgroudnColor}}>
-                    <Text style={experienceCategoryStyles.title}>
-                      { selectedDate == '' ? 'Dates' : selectedDate }
-                    </Text>
-                  </View>
-              : <View style={{...experienceCategoryStyles.container, backgroundColor: COLOR.clearColor}}>
-                  <Text style={experienceCategoryStyles.title}>
-                    { selectedDate == '' ? 'Dates' : selectedDate }
-                  </Text>
-                </View>
-              }
+              <View style={{...experienceCategoryStyles.container, backgroundColor: selectedExperienceCategoryID == 0 ? COLOR.selectedExperienceCategoryBackgroudnColor : COLOR.clearColor}}>
+                <Text style={experienceCategoryStyles.title}>
+                  { getVisibleDate() }
+                </Text>
+              </View>
             </TouchableWithoutFeedback>
 
             <View style={{width: 1, height: '100%', backgroundColor: COLOR.whiteBorderColor}} />
@@ -168,7 +161,7 @@ export const HomeScreen: React.FC = () => {
             horizontal={true}
             data={experienceList}
             keyExtractor={item => item.id.toString()}
-            renderItem={({item}) => <ExperienceView experience={item} />}
+            renderItem={({item}) => <ExperienceView experience={item} white_color={true} />}
           />
 
           <Text style={styles.list_title}>
@@ -193,7 +186,7 @@ export const HomeScreen: React.FC = () => {
         <Modal animationType = {"slide"} transparent = {true}
           visible = {showSelectDates}
           onRequestClose = {() => { console.log("Modal has been closed.") } }>
-          <SelectDatesView onCloseView={setShowSelectDates} />
+          <SelectDatesView selectedDate={selectedDate} onCloseView={setShowSelectDates} onSelectDate={onSelectDate} />
         </Modal>
 
         <Modal animationType = {"slide"} transparent = {true}
@@ -213,6 +206,20 @@ export const HomeScreen: React.FC = () => {
     // setSelectedExperienceCategoryID(0);
     // navigate('SelectDates');
     setShowSelectDates(true);
+  }
+
+  function onSelectDate(selectedDate: string,) {
+    setSelectedDate(selectedDate);
+    setShowSelectDates(false);
+  }
+
+  function getVisibleDate() {
+    var visibleDateString = 'Dates';
+    if (selectedDate != '') {
+      const date = Moment(selectedDate, 'YYYY-MM-DD', true).format();
+      visibleDateString = Moment(date).format('MMMM D');
+    }
+    return visibleDateString;
   }
 
   function onSelectExperienceCategory(id: number, title: string) {

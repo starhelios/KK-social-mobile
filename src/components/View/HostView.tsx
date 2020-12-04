@@ -1,8 +1,10 @@
+import { useNavigation } from '@react-navigation/native';
 import * as React from 'react';
 import {
   Image,
   StyleSheet,
   Text,
+  TouchableWithoutFeedback,
   View,
 } from 'react-native';
 import { SvgUri, SvgXml } from 'react-native-svg';
@@ -21,28 +23,33 @@ interface props {
 }
 
 export const HostView: React.FC<props> = (props: props) => {
+
+  const { navigate } = useNavigation();
+
   return (
-    <View style={styles.container}>
-      <Image
-        style={styles.image}
-        // source={(props.host.image == null || props.host.image == '') ? Img_Avatar_1 : {uri: props.host.image}}
-        // test
-        source={props.host.experience == 'Music' || props.host.experience == 'Sports' ? Img_Avatar_1 : Img_Avatar_2}
-      />
-      <Text style={styles.title}>{props.host.username}</Text>
-      <View style={styles.experienceContainer}>
-        <View style={{flex: 1, flexDirection: 'row'}}>
-          {/* {
-            props.host.experience_icon != null && props.host.experience_icon != ''
-            ? <SvgUri width='100%' height='100%' uri={props.host.experience_icon} />
-            : null
-          } */}
-          {/* // test */}
-          <SvgXml height={12} xml={props.host.experience_icon} />
-          <Text style={styles.experience}>{props.host.experience}</Text>
+    <TouchableWithoutFeedback onPress={() => navigate('HostDetail', {host: props.host})}>
+      <View style={styles.container}>
+        <Image
+          style={styles.image}
+          // source={(props.host.image == null || props.host.image == '') ? Img_Avatar_1 : {uri: props.host.image}}
+          // test
+          source={props.host.experience == 'Music' || props.host.experience == 'Sports' ? Img_Avatar_1 : Img_Avatar_2}
+        />
+        <Text style={styles.title}>{props.host.username}</Text>
+        <View style={styles.experienceContainer}>
+          <View style={{flex: 1, flexDirection: 'row'}}>
+            {/* {
+              props.host.experience_icon != null && props.host.experience_icon != ''
+              ? <SvgUri width='100%' height='100%' uri={props.host.experience_icon} />
+              : null
+            } */}
+            {/* // test */}
+            <SvgXml height={12} xml={props.host.experience_icon} />
+            <Text style={styles.experience}>{props.host.experience}</Text>
+          </View>
         </View>
       </View>
-    </View>
+    </TouchableWithoutFeedback>
   );
 }
 

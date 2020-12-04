@@ -73,7 +73,7 @@ export const WithdrawalScreen: React.FC = () => {
 
             <TouchableWithoutFeedback onPress={() => onAddBankAccount() }>
               <View style={{width:'100%', marginTop: 44}}>
-                <TitleArrowButton title={'Add Account'} name={'Add Bank Account'} showArrow={true} />
+                <TitleArrowButton title={'Add Account'} name={'Add Bank Account'} showArrow={true} white_color={true} />
               </View>
             </TouchableWithoutFeedback>
           </View>

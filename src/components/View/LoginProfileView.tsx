@@ -17,9 +17,8 @@ import { useNavigation } from '@react-navigation/native';
 import { 
   COLOR, 
   FONT, 
-  Icon_Detail_Right_Arrow, 
+  Icon_Detail_Right_Arrow_White, 
   Icon_Normal_Profile, 
-  Img_Avatar_2, 
   MARGIN_TOP, 
 } from '../../constants';
 import { TitleArrowButton } from '../Button';
@@ -77,7 +76,7 @@ export const LoginProfileView: React.FC<props> = (props: props) => {
               <View style={styles.view_profile_container}>
                 <Text style={styles.view_profile_title}>View Profile</Text>
                 <View style={styles.view_profile_arrow}>
-                  <SvgXml width='100%' height='100%' xml={Icon_Detail_Right_Arrow} />
+                  <SvgXml width='100%' height='100%' xml={Icon_Detail_Right_Arrow_White} />
                 </View>
               </View>
             </View>
@@ -88,39 +87,39 @@ export const LoginProfileView: React.FC<props> = (props: props) => {
           <Text style={{...styles.content_title, marginTop: 33}}>Account Settings</Text>
           <TouchableWithoutFeedback onPress={() => navigate('EditProfile')}>
             <View style={{width:'100%', marginTop: 22}}>
-              <TitleArrowButton title={''} name={'Edit Profile'} showArrow={true} />
+              <TitleArrowButton title={''} name={'Edit Profile'} showArrow={true} white_color={true} />
             </View>
           </TouchableWithoutFeedback>
 
           <TouchableWithoutFeedback onPress={() => navigate('PaymentOptions')}>
             <View style={{width:'100%', marginTop: 22}}>
-              <TitleArrowButton title={''} name={'Payment Methods'} showArrow={true} />
+              <TitleArrowButton title={''} name={'Payment Methods'} showArrow={true} white_color={true} />
             </View>
           </TouchableWithoutFeedback>
 
           <Text style={{...styles.content_title, marginTop: 44}}>Hosting</Text>
           <TouchableWithoutFeedback onPress={() => navigate('HostAnExperience') }>
             <View style={{width:'100%', marginTop: 22}}>
-              <TitleArrowButton title={''} name={'Host An Experience'} showArrow={true} />
+              <TitleArrowButton title={''} name={'Host An Experience'} showArrow={true} white_color={true} />
             </View>
           </TouchableWithoutFeedback>
 
           <TouchableWithoutFeedback onPress={() => navigate('ConfirmedBookings')}>
             <View style={{width:'100%', marginTop: 22}}>
-              <TitleArrowButton title={''} name={'Confirmed Bookings'} showArrow={true} />
+              <TitleArrowButton title={''} name={'Confirmed Bookings'} showArrow={true} white_color={true} />
             </View>
           </TouchableWithoutFeedback>
 
           <TouchableWithoutFeedback onPress={() => navigate('Withdrawal')}>
             <View style={{width:'100%', marginTop: 22}}>
-              <TitleArrowButton title={''} name={'Withdrawal Options'} showArrow={true} />
+              <TitleArrowButton title={''} name={'Withdrawal Options'} showArrow={true} white_color={true} />
             </View>
           </TouchableWithoutFeedback>
 
           <Text style={{...styles.content_title, marginTop: 44}}>Legal</Text>
           <TouchableWithoutFeedback onPress={() => onTermsOfService() }>
             <View style={{width:'100%', marginTop: 22}}>
-              <TitleArrowButton title={''} name={'Terms of Service'} showArrow={true} />
+              <TitleArrowButton title={''} name={'Terms of Service'} showArrow={true} white_color={true} />
             </View>
           </TouchableWithoutFeedback>
         </View>

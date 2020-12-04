@@ -225,6 +225,7 @@ const styles = StyleSheet.create({
   content_container: {
     marginLeft: 24,
     marginRight: 24,
+    marginBottom: 20,
   },
   title: {
     marginTop: 22,

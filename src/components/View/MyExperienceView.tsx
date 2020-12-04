@@ -13,7 +13,7 @@ import { SvgXml } from 'react-native-svg';
 import { 
   COLOR, 
   FONT, 
-  Icon_Detail_Right_Arrow, 
+  Icon_Detail_Right_Arrow_White, 
   Icon_Experience_Rating, 
   Img_Experience_1, 
   Img_Experience_2, 
@@ -53,7 +53,7 @@ export const MyExperienceView: React.FC<props> = (props: props) => {
           </View>
 
           <View style={styles.arrow_container}>
-            <SvgXml width={5} height={10} xml={Icon_Detail_Right_Arrow} />
+            <SvgXml width={5} height={10} xml={Icon_Detail_Right_Arrow_White} />
           </View>
         </View>
 

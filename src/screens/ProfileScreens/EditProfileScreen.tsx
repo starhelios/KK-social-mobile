@@ -122,7 +122,7 @@ export const EditProfileScreen: React.FC = () => {
 
                   <TouchableWithoutFeedback onPress={() => navigate('Experiences') }>
                     <View style={{width:'100%', marginTop: 44}}>
-                      <TitleArrowButton title={'Security'} name={'Change Password'} showArrow={true} />
+                      <TitleArrowButton title={'Security'} name={'Change Password'} showArrow={true} white_color={true} />
                     </View>
                   </TouchableWithoutFeedback>
                 </View>

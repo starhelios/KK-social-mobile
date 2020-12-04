@@ -48,7 +48,7 @@ export const ConfirmedBookingsScreen: React.FC = () => {
       var currentDate = '';
       for (let i = 0; i < (await result).length; i++) {
         const booking = (await result)[i];
-        booking.showDate = booking.date == currentDate ? false : true;
+        booking.show_date = booking.date == currentDate ? false : true;
         currentDate = booking.date;
         list.push(booking);
       }
@@ -64,7 +64,7 @@ export const ConfirmedBookingsScreen: React.FC = () => {
       var currentDate = '';
       for (let i = 0; i < (await result).length; i++) {
         const booking = (await result)[i];
-        booking.showDate = booking.date == currentDate ? false : true;
+        booking.show_date = booking.date == currentDate ? false : true;
         currentDate = booking.date;
         list.push(booking);
       }

@@ -20,6 +20,7 @@ import { IExperience } from '../../interfaces/app';
 
 interface props {
   experience: IExperience;
+  white_color: boolean;
 }
 
 export const ExperienceView: React.FC<props> = (props: props) => {
@@ -27,6 +28,7 @@ export const ExperienceView: React.FC<props> = (props: props) => {
   const { navigate } = useNavigation();
 
   const experience: IExperience = props.experience;
+  const white_color: boolean = props.white_color;
   
   return (
     <TouchableWithoutFeedback onPress={() => navigate('ExperienceDetail' , {experience: experience}) }>
@@ -37,7 +39,7 @@ export const ExperienceView: React.FC<props> = (props: props) => {
           // test
           source={props.experience.experience == 'Music' || props.experience.experience == 'Sports' ? Img_Experience_2 : Img_Experience_1}
         />
-        <Text style={styles.title}>{props.experience.title}</Text>
+        <Text style={{...styles.title, color: white_color == true ? COLOR.systemWhiteColor : COLOR.blackColor}}>{props.experience.title}</Text>
         <View style={styles.experienceContainer}>
           {/* {
             props.experience.experience_icon != null && props.experience.experience_icon != ''
@@ -46,11 +48,11 @@ export const ExperienceView: React.FC<props> = (props: props) => {
           } */}
           {/* // test */}
           <SvgXml height='100%' xml={props.experience.experience_icon} />
-          <Text style={styles.experience}>{props.experience.experience + ' • ' + props.experience.duration}</Text>
+          <Text style={{...styles.experience, color: white_color == true ? COLOR.systemWhiteColor : COLOR.blackColor}}>{props.experience.experience + ' • ' + props.experience.duration}</Text>
         </View>
         <View style={styles.priceContainer}>
-          <Text style={styles.price}>{'From ' + props.experience.min_price + '$'}</Text>
-          <Text style={styles.personal}>{' / ' + props.experience.personal}</Text>
+          <Text style={{...styles.price, color: white_color == true ? COLOR.systemWhiteColor : COLOR.blackColor}}>{'From ' + props.experience.min_price + '$'}</Text>
+          <Text style={{...styles.personal, color: white_color == true ? COLOR.systemWhiteColor : COLOR.blackColor}}>{' / ' + props.experience.personal}</Text>
         </View>
       </View>
     </TouchableWithoutFeedback>

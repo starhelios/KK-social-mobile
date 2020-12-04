@@ -6,7 +6,6 @@ import {
   View,
   TouchableWithoutFeedback,
   Dimensions,
-  Image,
   Platform,
   TextInput,
   ScrollView,
@@ -17,22 +16,19 @@ import { useEffect, useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { SvgXml } from 'react-native-svg';
 import ImagePicker from 'react-native-image-crop-picker';
-import LinearGradient from 'react-native-linear-gradient';
 
 // from app
 import { 
   COLOR, 
   FONT, 
   Icon_Back_Black,
-  Icon_Camera,
-  Icon_Normal_Profile,
   Icon_Search_Black,
   Icon_Share_Black,
   MARGIN_TOP,
 } from '../../constants';
 import { ColorButton } from '../../components/Button';
 import { useGlobalState } from '../../redux/Store';
-import { IExperience, IFile, IHost, IUser } from '../../interfaces/app';
+import { IExperience, IFile, IUser } from '../../interfaces/app';
 import { ExperienceImageView } from '../../components/View';
 import GlobalStyle from '../../styles/global';
 
@@ -211,7 +207,7 @@ export const EditExperienceScreen: React.FC = ({route}) => {
             ? image.path
             : image.path.replace('file://', ''),
       };
-      setImage(file.uri);
+      // setImage(file.uri);
     })
     .catch((e) => {});
   }
@@ -233,7 +229,7 @@ export const EditExperienceScreen: React.FC = ({route}) => {
             ? image.path
             : image.path.replace('file://', ''),
       };
-      setImage(file.uri);
+      // setImage(file.uri);
     })
     .catch((e) => {
     });

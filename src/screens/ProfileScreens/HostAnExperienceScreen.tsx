@@ -199,7 +199,7 @@ export const HostAnExperienceScreen: React.FC = () => {
             ? image.path
             : image.path.replace('file://', ''),
       };
-      setImage(file.uri);
+      // setImage(file.uri);
     })
     .catch((e) => {});
   }
@@ -221,7 +221,7 @@ export const HostAnExperienceScreen: React.FC = () => {
             ? image.path
             : image.path.replace('file://', ''),
       };
-      setImage(file.uri);
+      // setImage(file.uri);
     })
     .catch((e) => {
     });

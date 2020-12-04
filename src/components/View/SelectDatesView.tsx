@@ -6,9 +6,10 @@ import {
   TouchableWithoutFeedback,
   View,
 } from 'react-native';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { SvgXml } from 'react-native-svg';
 import { Calendar, LocaleConfig } from 'react-native-calendars';
+import Moment from 'moment';
 
 // from app
 import { 
@@ -20,15 +21,30 @@ import GlobalStyle from '../../styles/global';
 import { ColorButton } from '../Button';
 
 interface props {
+  selectedDate: string;
   onCloseView: (visible: boolean) => void;
+  onSelectDate: (selectedDate: string) => void;
 }
 
 const { width: viewportWidth } = Dimensions.get('window');
 
 export const SelectDatesView: React.FC<props> = (props: props) => {
 
+  const [currentDate, setCurrentDate] = useState<string>('')
+  const [selectedDate, setSelectedDate] = useState<string>(props.selectedDate);
+  const [markedDates, setMarkedDates] = useState<any>();
+
   useEffect(() => {
     // LocaleConfig.defaultLocale = 'en';
+    Moment.locale('en');
+    
+    setSelectedDate(props.selectedDate);
+    if (props.selectedDate != '') {
+      updateMarkerDate(props.selectedDate);
+    }
+
+    const currentDate = Moment(new Date()).format('YYYY-MM-DD');
+    setCurrentDate(currentDate);
   }, []);
 
   return (
@@ -52,11 +68,8 @@ export const SelectDatesView: React.FC<props> = (props: props) => {
 
         <View style={styles.calendar}>
           <Calendar
-            current={'2020-12-01'}
-            markedDates={{
-              '2020-12-14': {selected: true, selectedColor: 'blue'},
-              '2020-12-15': {selected: true, selectedColor: 'blue'},
-            }}
+            current={ currentDate }
+            markedDates={ markedDates }
             style={{backgroundColor: COLOR.clearColor}}
             theme={{
               backgroundColor: COLOR.clearColor,
@@ -70,7 +83,10 @@ export const SelectDatesView: React.FC<props> = (props: props) => {
               monthTextColor: COLOR.systemBlackColor,
               indicatorColor: COLOR.systemBlackColor,
             }}
-            onDayPress={(day) => { console.log('selected day', day) }}
+            onDayPress={(day) => {
+              setSelectedDate(day.dateString);
+              updateMarkerDate(day.dateString);
+            }}
             onDayLongPress={(day) => { console.log('selected day', day) }}
             onMonthChange={(month) => { console.log('month changed', month) }}
             enableSwipeMonths={true}
@@ -78,7 +94,7 @@ export const SelectDatesView: React.FC<props> = (props: props) => {
         </View>
         
         
-        <TouchableWithoutFeedback onPress={() => props.onCloseView(false)}>
+        <TouchableWithoutFeedback onPress={() => props.onSelectDate(selectedDate)}>
           <View style={styles.bottom_button}>
             <ColorButton title={'Apply'} backgroundColor={COLOR.systemBlackColor} color={COLOR.systemWhiteColor} />
           </View>
@@ -86,6 +102,16 @@ export const SelectDatesView: React.FC<props> = (props: props) => {
       </View>
     </View>
   );
+
+  function updateMarkerDate(dateString: string) {
+    if (dateString != '') {
+      const newMarkedDate: {[key:string]: {selected: boolean, selectedColor: string}} = {};
+      newMarkedDate[dateString] = {selected: true, selectedColor: 'blue'};
+      setMarkedDates(newMarkedDate);
+    } else {
+      setMarkedDates(null);
+    }
+  }
 }
 
 const styles = StyleSheet.create({

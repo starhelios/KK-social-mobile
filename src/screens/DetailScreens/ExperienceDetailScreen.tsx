@@ -8,6 +8,8 @@ import {
   TouchableWithoutFeedback,
   Dimensions,
   ScrollView,
+  NativeSyntheticEvent,
+  NativeScrollEvent,
 } from 'react-native';
 import { Container } from 'native-base';
 import { useEffect, useState } from 'react';
@@ -22,11 +24,13 @@ import {
   COLOR, 
   FONT, 
   Icon_Back,
+  Icon_Back_Black,
   Icon_Experience_Black,
+  Icon_Review_Black,
+  Icon_Share_Black,
   Icon_Share_White,
   Icon_Time_Black,
   Img_Avatar_1,
-  Img_Edit_Profile_Background,
   Img_Experience_2,
   MARGIN_TOP,
 } from '../../constants';
@@ -42,26 +46,35 @@ export const ExperienceDetailScreen: React.FC = ({route}) => {
   const { navigate, goBack } = useNavigation();
 
   const [currentPage, setCurrentPage] = useState<number>(0);
+  const [experienceImages, setExperienceImages] = useState<string[]>([]);
+  const [isBlackHeader, setIsBlackHeader] = useState<boolean>(true)
 
   const experience: IExperience = route.params.experience;
-  var scrollViewRef: FlatList<string> | null;
+  var scrollViewRef: ScrollView | null;
 
   useEffect(() => {
+    // test
+    var images: string[] = [];
+    images.push('1');
+    images.push('2');
+    images.push('3');
+    images.push('4');
+    images.push('5');
+    setExperienceImages(images);
   }, [])
 
   return (
     <Container style={styles.background}>
       <SafeAreaView style={styles.safe_area}>
         <ScrollView 
+          ref={ref => { scrollViewRef = ref }}
           style={{position: 'absolute', width: '100%', height: '100%', bottom: 110, flex: 1}} 
           bounces={false} 
+          onScrollEndDrag={(event: NativeSyntheticEvent<NativeScrollEvent>) => handleScroll(event)}
           showsVerticalScrollIndicator={false}>
 
           <View style={styles.image_container}>
             <FlatList
-              ref={ref => {
-                scrollViewRef = ref;
-              }}
               style={{width: '100%', height: '100%'}}
               contentContainerStyle={{paddingHorizontal: 0}}
               showsHorizontalScrollIndicator={false}
@@ -114,27 +127,62 @@ export const ExperienceDetailScreen: React.FC = ({route}) => {
             <View style={{...GlobalStyle.auth_line, backgroundColor: COLOR.alphaBlackColor20, marginTop: 22}} />
 
             <Text style={{...styles.host_name, marginTop: 22}}>About the experience</Text>
-            <Text style={styles.about}>{experience.description}</Text>            
+            <Text style={styles.about}>{experience.description}</Text>
+            <View style={{...GlobalStyle.auth_line, backgroundColor: COLOR.alphaBlackColor20, marginTop: 22}} />
+
+            <View style={{marginTop: 22, flexDirection: 'row'}}>
+              <View style={{width: viewportWidth - 100}}>
+                <Text style={styles.host_name}>{'Say Hello! to ' + experience.host.username}</Text>
+                <Text style={styles.joined_date}>{'Joined in ' + 'May 2020'}</Text>
+              </View>
+              <Image style={styles.avatar} source={Img_Avatar_1} />
+            </View>
+
+            <View style={{marginTop: 22, flexDirection: 'row', height: 16}}>
+              <SvgXml width={16} height='100%' xml={Icon_Review_Black} />
+              <Text style={styles.review_count}>{'18 Reviews'}</Text>
+            </View>
+
+            <Text style={styles.about}>{experience.description}</Text>
+            <View style={{...GlobalStyle.auth_line, backgroundColor: COLOR.alphaBlackColor20, marginTop: 22}} />
+
+            <Text style={{...styles.host_name, marginTop: 22}}>{experience.host.username + '\'s Experiences'}</Text>
           </View>
+
+          <FlatList
+            style={{width: '100%', height: 206, marginTop: 22, marginBottom: 20 }}
+            contentContainerStyle={{paddingHorizontal: 24}}
+            showsHorizontalScrollIndicator={false}
+            horizontal={true}
+            data={experienceImages}
+            keyExtractor={item => item}
+            renderItem={({item}) => renderExperienceImage(item) }
+          />
         </ScrollView>
 
-        <LinearGradient
-          colors={['#00000010', '#00000020']}
-          style={styles.gradient_container}
-          start={{x: 0.5, y: 0}}
-          end={{x: 0.5, y: 1}} >
-        </LinearGradient>
-
+        {
+          isBlackHeader == true 
+          ? <LinearGradient
+              colors={['#00000010', '#00000020']}
+              style={styles.gradient_container}
+              start={{x: 0.5, y: 0}}
+              end={{x: 0.5, y: 1}} >
+            </LinearGradient>
+          : <View style={{...styles.gradient_container, backgroundColor: COLOR.whiteColor, height: 104}}>
+              <Text style={styles.navigation_title}>{experience.title}</Text>
+            </View>
+        }
+        
         <View style={styles.navigation_bar}>
           <TouchableWithoutFeedback onPress={() => goBack()}>
             <View style={styles.back_icon}>
-              <SvgXml width='100%' height='100%' xml={Icon_Back} />
+              <SvgXml width='100%' height='100%' xml={isBlackHeader == true ? Icon_Back : Icon_Back_Black} />
             </View>
           </TouchableWithoutFeedback>
 
           <TouchableWithoutFeedback onPress={() => onShare()}>
             <View style={styles.share_icon}>
-              <SvgXml width='100%' height='100%' xml={Icon_Share_White} />
+              <SvgXml width='100%' height='100%' xml={isBlackHeader == true ? Icon_Share_White : Icon_Share_Black} />
             </View>
           </TouchableWithoutFeedback>
         </View>
@@ -145,7 +193,7 @@ export const ExperienceDetailScreen: React.FC = ({route}) => {
             <Text style={styles.personal}>{' / ' + experience.personal}</Text>
           </View>
 
-          <TouchableWithoutFeedback onPress={() => navigate('EditExperience', {experience: experience})}>
+          <TouchableWithoutFeedback onPress={() => navigate('ExperienceDetailBook', {experience: experience})}>
             <View style={styles.bottom_button}>
               <ColorButton title={'Book'} backgroundColor={COLOR.redColor} color={COLOR.systemWhiteColor} />
             </View>
@@ -155,8 +203,25 @@ export const ExperienceDetailScreen: React.FC = ({route}) => {
     </Container>
   );
 
+  function handleScroll(event: NativeSyntheticEvent<NativeScrollEvent>) {
+    console.log(event.nativeEvent.contentOffset.y);
+    if (event.nativeEvent.contentOffset.y < 280) {
+      setIsBlackHeader(true);
+    } else {
+      setIsBlackHeader(false);
+    }
+  }
+
   function onShare() {
 
+  }
+
+  function renderExperienceImage(uri: string) {
+    return (
+      <View style={experience_image_styles.container}>
+        <Image source={Img_Experience_2} style={experience_image_styles.image}/>
+      </View>
+    );
   }
 };
 
@@ -183,8 +248,19 @@ const styles = StyleSheet.create({
   navigation_bar: {
     marginTop: MARGIN_TOP,
     width: '100%',
-    height: 33,
+    height: 24,
     flexDirection: 'row',
+  },
+  navigation_title: {
+    marginTop: 63,
+    lineHeight: 14,
+    height: 14,
+    marginLeft: 55,
+    width: viewportWidth - 110,
+    textAlign: 'center',
+    fontFamily: FONT.AN_Regular,
+    fontSize: 14,
+    color: COLOR.blackColor,
   },
   back_icon: {
     position: 'absolute',
@@ -296,5 +372,37 @@ const styles = StyleSheet.create({
     right: 24,
     width: 140,
     height: 44,
+  },
+  joined_date: {
+    marginTop: 8,
+    height: 12,
+    lineHeight: 12,
+    color: COLOR.alphaBlackColor50,
+    fontFamily: FONT.AN_Regular,
+    fontSize: 12,
+  },
+  review_count: {
+    marginLeft: 9,
+    height: 16,
+    lineHeight: 16,
+    color: COLOR.alphaBlackColor75,
+    fontFamily: FONT.AN_Regular,
+    fontSize: 14,
+  },
+});
+
+const experience_image_styles = StyleSheet.create({
+  container: {
+    width: 156, 
+    height: 206, 
+    borderRadius: 10, 
+    marginRight: 16,
+  },
+  image: {
+    resizeMode: 'cover', 
+    overflow: 'hidden', 
+    width: '100%', 
+    height: '100%', 
+    borderRadius: 10,
   },
 });

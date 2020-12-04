@@ -29,14 +29,14 @@ export const useCompletedBookings = () => {
       var result: IBooking[] = [];
       result.push({ id: 1, image: '', experience_icon: Icon_Category_Music, experience: 'Cheese Plate Course'
         , date: 'Aug 8, 2020', hour: '12:30pm', duration:'', rating: 2, is_host: false, is_joined: true
-        , host: null, showDate: null, paid: null, receive: null, completed: null });
+        , host: null, show_date: null, paid: null, receive: null, completed: null });
       result.push({ id: 2, image: '', experience_icon: Icon_Category_Cooking, experience: 'Cheese Plate Course'
         , date: 'Aug 8, 2020', hour: '12:30pm', duration:'', rating: 5, is_host: true, is_joined: true
         , host: {id: 1, username: 'Megan Tester', image: '', experience_icon: '', experience: ''}
-        , showDate: null, paid: null, receive: null, completed: null });
+        , show_date: null, paid: null, receive: null, completed: null });
       result.push({ id: 3, image: '', experience_icon: Icon_Category_Music, experience: 'Cheese Plate Course'
         , date: 'Aug 8, 2020', hour: '12:30pm', duration:'', rating: 3, is_host: false, is_joined: false
-        , host: null, showDate: null, paid: null, receive: null, completed: null });
+        , host: null, show_date: null, paid: null, receive: null, completed: null });
 
       return Promise.resolve(result);
     } catch (err) {

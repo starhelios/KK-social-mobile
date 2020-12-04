@@ -7,12 +7,13 @@ import {
 import { SvgXml } from 'react-native-svg';
 
 // from app
-import { COLOR, FONT, Icon_Detail_Right_Arrow } from '../../constants';
+import { COLOR, FONT, Icon_Detail_Right_Arrow_Black, Icon_Detail_Right_Arrow_White } from '../../constants';
 
 interface props {
   title: string;
   name: string;
   showArrow: boolean;
+  white_color: boolean;
 }
 
 export const TitleArrowButton: React.FC<props> = (props: props) => {
@@ -20,16 +21,23 @@ export const TitleArrowButton: React.FC<props> = (props: props) => {
     <View style={styles.container}>
       {
         props.title != ''
-        ? <Text style={styles.title} numberOfLines={1}>{props.title}</Text>
+        ? <Text style={{
+            ...styles.title, 
+            color: props.white_color == true ? COLOR.systemWhiteColor : COLOR.alphaBlackColor75,
+            height: props.white_color == true ? 23 : 18,
+            lineHeight: props.white_color == true ? 23 : 18,
+            marginBottom: props.white_color == true ? 22 : 16,
+            fontFamily: FONT.AN_Regular,
+            fontSize: props.white_color == true ? 14 : 12}} numberOfLines={1}>{props.title}</Text>
         : null
       }
       <View style={styles.info}>
-        <Text style={styles.name} numberOfLines={1}>{props.name}</Text>
+        <Text style={{...styles.name, color: props.white_color == true ? COLOR.systemWhiteColor : COLOR.blackColor}} numberOfLines={1}>{props.name}</Text>
         <View style={styles.arrow}>
-            <SvgXml width='100%' height='100%' xml={Icon_Detail_Right_Arrow} />
+            <SvgXml width='100%' height='100%' xml={props.white_color == true ? Icon_Detail_Right_Arrow_White : Icon_Detail_Right_Arrow_Black} />
         </View>
       </View>
-      <View style={styles.info_line} />
+      <View style={{...styles.info_line, backgroundColor: props.white_color ? COLOR.alphaWhiteColor20 : COLOR.alphaBlackColor20}} />
     </View>
   );
 }

@@ -29,16 +29,16 @@ export const useUpcomingBookings = () => {
       var result: IBooking[] = [];
       result.push({ id: 1, image: '', experience_icon: Icon_Category_Cooking, experience: 'Chef Ramsay Cooking'
         , date: 'Sept 1, 2020', hour: '2pm', duration:'1hr', rating: 0, is_host: false, is_joined: false, host: null
-        , showDate: null, paid: null, receive: null, completed: null });
+        , show_date: null, paid: null, receive: null, completed: null });
       result.push({ id: 2, image: '', experience_icon: Icon_Category_Music, experience: 'Chef Ramsay Music'
         , date: 'Nov 10, 2020', hour: '2:30pm', duration:'1hr 30min', rating: 0, is_host: true, is_joined: false, host: null
-        , showDate: null, paid: null, receive: null, completed: null });
+        , show_date: null, paid: null, receive: null, completed: null });
       result.push({ id: 3, image: '', experience_icon: Icon_Category_Cooking, experience: 'Chef Ramsay Sports'
         , date: 'Sept 28, 2020', hour: '2pm', duration:'2hr', rating: 0, is_host: false, is_joined: false, host: null
-        , showDate: null, paid: null, receive: null, completed: null });
+        , show_date: null, paid: null, receive: null, completed: null });
       result.push({ id: 4, image: '', experience_icon: Icon_Category_Music, experience: 'Chef Ramsay Study'
         , date: 'Nov 15, 2020', hour: '2:30pm', duration:'2hr', rating: 0, is_host: true, is_joined: false, host: null
-        , showDate: null, paid: null, receive: null, completed: null });
+        , show_date: null, paid: null, receive: null, completed: null });
 
       return Promise.resolve(result);
     } catch (err) {

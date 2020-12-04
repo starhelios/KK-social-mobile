@@ -13,3 +13,4 @@ export * from './ConfirmedBookingRatingInfoView';
 export * from './ConfirmedBookingHostInfoView';
 export * from './SelectDatesView';
 export * from './FiltersView';
+export * from './ExperienceDetailBookView';

@@ -22,7 +22,6 @@ import {
   COLOR, 
   FONT, 
   Icon_Back, 
-  Icon_Detail_Right_Arrow, 
   Img_Auth_Background,
   MARGIN_TOP,
 } from '../../constants';
@@ -77,7 +76,7 @@ export const PaymentOptionsScreen: React.FC = () => {
 
           <TouchableWithoutFeedback onPress={() => onAddPaymentMethod() }>
             <View style={{width:'100%', marginTop: 44}}>
-              <TitleArrowButton title={'Add Card'} name={'Add Payment Method'} showArrow={true} />
+              <TitleArrowButton title={'Add Card'} name={'Add Payment Method'} showArrow={true} white_color={true} />
             </View>
           </TouchableWithoutFeedback>
         </View>

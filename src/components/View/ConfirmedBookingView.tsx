@@ -9,7 +9,7 @@ import {
 import { SvgXml } from 'react-native-svg';
 
 // from app
-import { COLOR, FONT, Icon_Detail_Right_Arrow } from '../../constants';
+import { COLOR, FONT, Icon_Detail_Right_Arrow_White } from '../../constants';
 import { IBooking } from '../../interfaces/app';
 
 interface props {
@@ -28,18 +28,18 @@ export const ConfirmedBookingView: React.FC<props> = (props: props) => {
     <TouchableWithoutFeedback onPress={() => navigate('ConfirmedBookingDetail', { booking: booking, isCompleted: isCompleted }) }>
       <View style={styles.container}>
         {
-          booking.showDate != null && booking.showDate == true
+          booking.show_date != null && booking.show_date == true
           ? <Text style={styles.date}>{booking.date}</Text>
           : null
         }
-        <View style={{...styles.info_container, marginTop: (booking.showDate != null && booking.showDate == true) ? 16 : 22}}>
+        <View style={{...styles.info_container, marginTop: (booking.show_date != null && booking.show_date == true) ? 16 : 22}}>
           <View style={{height: 40}}>
             <Text style={styles.name}>{booking.hour + ' / ' + booking.host?.username}</Text>
             <Text style={styles.experience}>{booking.experience + ' • ' + booking.duration}</Text>
           </View>
           
           <View style={styles.arrow}>
-              <SvgXml width='100%' height='100%' xml={Icon_Detail_Right_Arrow} />
+              <SvgXml width='100%' height='100%' xml={Icon_Detail_Right_Arrow_White} />
           </View>
         </View>
 

@@ -10,7 +10,8 @@ import Icon_Tab_Bar_Profile_Normal from '../assets/svg/tab_bar_profile_normal'
 import Icon_Tab_Bar_Profile_Select from '../assets/svg/tab_bar_profile_select'
 import Icon_Search from '../assets/svg/search_bar_icon'
 import Icon_Filter from '../assets/svg/search_bar_filter'
-import Icon_Detail_Right_Arrow from '../assets/svg/detail_right_arrow'
+import Icon_Detail_Right_Arrow_White from '../assets/svg/detail_right_arrow_white'
+import Icon_Detail_Right_Arrow_Black from '../assets/svg/detail_right_arrow_black'
 import Icon_Experience_Rating from '../assets/svg/experience_rating'
 import Icon_Camera from '../assets/svg/camera'
 import Icon_Search_White from '../assets/svg/search'
@@ -64,7 +65,8 @@ export {
   Icon_Tab_Bar_Profile_Select,
   Icon_Search,
   Icon_Filter,
-  Icon_Detail_Right_Arrow,
+  Icon_Detail_Right_Arrow_White,
+  Icon_Detail_Right_Arrow_Black,
   Icon_Experience_Rating,
   Icon_Camera,
   Icon_Search_White,
