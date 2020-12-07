@@ -18,7 +18,7 @@ import { SvgXml } from 'react-native-svg';
 import Moment from 'moment';
 
 // from app
-import { COLOR, FONT, Icon_Filter, Icon_Search, MARGIN_TOP, setLoginUserID } from '../../constants';
+import { COLOR, FONT, Icon_Filter, Icon_Search, MARGIN_TOP } from '../../constants';
 import { useExperienceCategories, useExperiences, useHosts } from '../../hooks';
 import { IExperience, IExperienceCategory, IHost } from '../../interfaces/app';
 import { ExperienceView, FiltersView, HostView, SelectDatesView } from '../../components/View';
@@ -51,19 +51,6 @@ export const HomeScreen: React.FC = () => {
     loadExperienceCategoryList();
     loadExperienceList();
     loadHostList();
-
-    setLoginUserID(1);
-    dispatch({
-      type: ActionType.SET_USER_INFO,
-      payload: {
-        id: 1,
-        username: 'Wayne', 
-        image: '', 
-        full_name: 'Jared McNally', 
-        email: 'jmcnally@gmail.com', 
-        birthday: 'March 15, 1990',
-      },
-    });
   }, [])
 
   async function loadExperienceCategoryList() {

@@ -1,7 +1,6 @@
 import * as React from 'react';
 import {
   Dimensions,
-  FlatList,
   Image,
   ScrollView,
   StyleSheet,
@@ -10,8 +9,8 @@ import {
   View,
 } from 'react-native';
 import { useEffect, useState } from 'react';
-import PageControl from 'react-native-page-control';
 import { useNavigation } from '@react-navigation/native';
+import { SvgXml } from 'react-native-svg';
 
 // from app
 import { 
@@ -24,15 +23,11 @@ import {
 import { TitleArrowButton } from '../Button';
 import { IProfileHelp, IUser } from '../../interfaces/app';
 import { useProfileHelps } from '../../hooks';
-import { SvgXml } from 'react-native-svg';
-
-interface props {
-  profile: IUser;
-}
+import { useGlobalState } from '../../redux/Store';
 
 const { width: viewportWidth, height: viewportHeight } = Dimensions.get('window');
 
-export const LoginProfileView: React.FC<props> = (props: props) => {
+export const LoginProfileView: React.FC = () => {
 
   const { navigate } = useNavigation();
   const { profileHelps } = useProfileHelps();
@@ -40,11 +35,11 @@ export const LoginProfileView: React.FC<props> = (props: props) => {
   const [profileHelpList, setProfileHelpList] = useState<IProfileHelp[]>([]);
   const [currentPage, setCurrentPage] = useState<number>(0);
 
-  const profile: IUser = props.profile;
+  const profile: IUser = useGlobalState('userInfo');
 
   useEffect(() => {
     loadProfileList();
-  }, []);
+  }, [profile]);
 
   async function loadProfileList() {
     await profileHelps()
@@ -71,7 +66,7 @@ export const LoginProfileView: React.FC<props> = (props: props) => {
 
           <TouchableWithoutFeedback onPress={() => navigate('BecomeAHost')}>
             <View style={styles.profile_info}>
-              <Text style={styles.user_name}>{'Hello, ' + profile.username}</Text>
+              <Text style={styles.user_name}>{'Hello, ' + profile.fullname}</Text>
 
               <View style={styles.view_profile_container}>
                 <Text style={styles.view_profile_title}>View Profile</Text>

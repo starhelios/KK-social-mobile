@@ -12,31 +12,50 @@ import {
   TextInput,
   Dimensions,
   ScrollView,
+  Alert,
 } from 'react-native';
 import { Container } from 'native-base';
 import { useEffect, useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { SvgXml } from 'react-native-svg';
+import DefaultPreference from 'react-native-default-preference';
 
 // from app
 import { 
   COLOR, 
+  EMAIL_LOGIN, 
+  ERROR_MESSAGE, 
   FONT, 
   Icon_Back, 
-  Img_Auth_Background,
-  MARGIN_TOP,
+  Img_Auth_Background, 
+  IS_FIRST_LOGIN, 
+  LOGIN_TYPE, 
+  MARGIN_TOP, 
+  PASSWORD, 
+  setUserToken, 
+  USER_EMAIL, 
 } from '../../constants';
 import { ColorButton } from '../../components/Button';
+import { useDispatch } from '../../redux/Store';
+import { useAuthentication } from '../../hooks';
+import { IApiError } from '../../interfaces/api';
+import { ActionType } from '../../redux/Reducer';
+import { ILoginUser } from '../../interfaces/app';
 import GlobalStyle from '../../styles/global';
+
 
 const { width: viewportWidth, height: viewportHeight } = Dimensions.get('window');
 
 export const LogInScreen: React.FC = () => {
 
   const { navigate, goBack } = useNavigation();
+  const { loginUser } = useAuthentication();
+  const dispatch = useDispatch();
 
   const [emailAddress, setEmailAddress] = useState('');
   const [password, setPassword] = useState('');
+
+  var fetching = false;
 
   useEffect(() => {
   }, [])
@@ -44,7 +63,7 @@ export const LogInScreen: React.FC = () => {
   return (
     <Container style={styles.background}>
       
-      <Image style={{width: viewportWidth, height: viewportHeight, resizeMode: 'cover'}} source={Img_Auth_Background} />
+      <Image style={styles.background_image} source={Img_Auth_Background} />
 
       <SafeAreaView style={styles.safe_area}>
         <View style={styles.navigation_bar}>
@@ -109,7 +128,51 @@ export const LogInScreen: React.FC = () => {
   );
 
   function onLogIn() {
-    console.log('log in');
+    if (fetching == true) {
+      return;
+    } else if (emailAddress == '') {
+      Alert.alert(ERROR_MESSAGE.EMPTY_EMAIL_ADDRESS);
+      return;
+    } else if (password == '') {
+      Alert.alert(ERROR_MESSAGE.EMPTY_PASSWORD);
+      return;
+    }
+    fetching = true;
+
+    loginUser(emailAddress, password)
+    .then(async (result: Promise<ILoginUser>) => {
+      const user = (await result).user;
+      dispatch({
+        type: ActionType.SET_USER_INFO,
+        payload: {
+          id: user.id,
+          isHost: user.isHost,
+          email: user.email,
+          fullname: user.fullname,
+          status: user.status,
+          image: user.image,
+          birthday: user.birthday,
+        },
+      });
+      DefaultPreference.set(LOGIN_TYPE, EMAIL_LOGIN).then(function() { });
+      DefaultPreference.set(USER_EMAIL, emailAddress).then(function() { });
+      DefaultPreference.set(PASSWORD, password).then(function() { });
+      DefaultPreference.get(IS_FIRST_LOGIN).then(function(is_first_login) {
+        if (is_first_login != null && is_first_login == 'false') {
+        } else {
+          DefaultPreference.set(IS_FIRST_LOGIN, 'false').then(function() { });
+        }
+      });
+      setUserToken((await result).tokens.access.token);
+      fetching = false;
+      goBack();
+    }).catch(async (error: Promise<IApiError>) => {
+      fetching = false;
+      Alert.alert((await error).error.message);
+    }).catch(async (errorMessage: Promise<string>) => {
+      fetching = false;
+      Alert.alert((await errorMessage));
+    });
   }
 };
 
@@ -119,6 +182,11 @@ const styles = StyleSheet.create({
     flex: 1, 
     backgroundColor: COLOR.blackColor, 
     alignItems: 'center',
+  },
+  background_image: {
+    width: viewportWidth, 
+    height: viewportHeight, 
+    resizeMode: 'cover',
   },
   safe_area: {
     position: 'absolute',

@@ -1,7 +1,8 @@
+import { IApiErrorDetail } from ".";
+
 export interface IApiSuccess {
-  code: number;
-  status: string;
-  data: any;
+  payload: any;
+  error: IApiErrorDetail;
 }
 
 export interface IApiSuccessData {

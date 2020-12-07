@@ -72,3 +72,12 @@
 
 ### 2020.12.04
 - Host Detail
+
+### 2020.12.07
+- /auth/register api.
+- /auth/login api.
+- /auth/logout api.
+- change profile screen.
+- change login screen.
+- change splash screen.
+- change signup screen.

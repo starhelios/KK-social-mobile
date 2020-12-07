@@ -12,6 +12,7 @@ import {
   TextInput,
   Dimensions,
   ScrollView,
+  Alert,
 } from 'react-native';
 import { Container } from 'native-base';
 import { useEffect, useState } from 'react';
@@ -19,32 +20,35 @@ import { useNavigation } from '@react-navigation/native';
 import { SvgXml } from 'react-native-svg';
 
 // from app
-import { 
-  COLOR, 
-  FONT, 
-  Icon_Back, 
-  Img_Auth_Background,
-  MARGIN_TOP,
-} from '../../constants';
+import { COLOR, ERROR_MESSAGE, FONT, Icon_Back, Img_Auth_Background, MARGIN_TOP, setUserToken } from '../../constants';
 import { ColorButton } from '../../components/Button';
+import { useAuthentication } from '../../hooks';
+import { IApiError } from '../../interfaces/api';
+import { ILoginUser } from '../../interfaces/app';
+import { useDispatch } from '../../redux/Store';
+import { ActionType } from '../../redux/Reducer';
 import GlobalStyle from '../../styles/global';
+
 
 const { width: viewportWidth, height: viewportHeight } = Dimensions.get('window');
 
 export const SignUpScreen: React.FC = () => {
 
   const { navigate, goBack } = useNavigation();
+  const { registerUser } = useAuthentication();
+  const dispatch = useDispatch();
 
   const [fullName, setFullName] = useState('');
   const [emailAddress, setEmailAddress] = useState('');
   const [password, setPassword] = useState('');
+
+  var fetching = false;
 
   useEffect(() => {
   }, [])
 
   return (
     <Container style={styles.background}>
-      
       <Image style={{width: viewportWidth, height: viewportHeight, resizeMode: 'cover'}} source={Img_Auth_Background} />
 
       <SafeAreaView style={styles.safe_area}>
@@ -118,8 +122,45 @@ export const SignUpScreen: React.FC = () => {
   );
 
   function onCreateAccount() {
-    console.log('create account');
-    navigate('SignUpAddProfilePicture');
+    if (fetching == true) {
+      return;
+    } if (fullName == '') {
+      Alert.alert(ERROR_MESSAGE.EMPTY_FULL_NAME);
+      return;
+    } else if (emailAddress == '') {
+      Alert.alert(ERROR_MESSAGE.EMPTY_EMAIL_ADDRESS);
+      return;
+    } else if (password == '') {
+      Alert.alert(ERROR_MESSAGE.EMPTY_PASSWORD);
+      return;
+    }
+    fetching = true;
+
+    registerUser(fullName, emailAddress, password)
+    .then(async (result: Promise<ILoginUser>) => {
+      const user = (await result).user;
+      dispatch({
+        type: ActionType.SET_USER_INFO,
+        payload: {
+          id: user.id,
+          isHost: user.isHost,
+          email: user.email,
+          fullname: user.fullname,
+          status: user.status,
+          image: user.image,
+          birthday: user.birthday,
+        },
+      });
+      setUserToken((await result).tokens.access.token);
+      fetching = false;
+      navigate('SignUpAddProfilePicture');
+    }).catch(async (error: Promise<IApiError>) => {
+      fetching = false;
+      Alert.alert((await error).error.message);
+    }).catch(async (errorMessage: Promise<string>) => {
+      fetching = false;
+      Alert.alert((await errorMessage));
+    });
   }
 };
 

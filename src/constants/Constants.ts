@@ -2,6 +2,17 @@ import { Platform } from "react-native";
 
 // Login Type
 export const EMAIL_LOGIN = 'Email';
+export const GOOGLE_LOGIN = 'Google';
+export const FACEBOOK_LOGIN = 'Facebook';
+export const APPLE_LOGIN = 'Apple';
+
+// User Defaults Keys
+export const LOGIN_TYPE = 'Login_Type';
+export const USER_EMAIL = 'Email';
+export const PASSWORD = 'Password';
+export const ACCESS_TOKEN = 'Access_Token';
+export const CODE = 'Code';
+export const IS_FIRST_LOGIN = 'Is_First_Login';
 
 // Values
 export const MARGIN_TOP = Platform.OS == "ios" ? 15 : 40;
@@ -12,9 +23,4 @@ export const LOADING_TIME = 1500;
 export var LOGIN_USER_TOKEN = '';
 export const setUserToken = (token: string) => {
   LOGIN_USER_TOKEN = token;
-};
-
-export var LOGIN_USER_ID = 0;
-export const setLoginUserID = (id: number) => {
-  LOGIN_USER_ID = id;
 };

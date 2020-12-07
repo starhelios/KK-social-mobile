@@ -1,8 +1,10 @@
 export interface IUser {
-	id: number;
-	username: string;
-	image: string;
-	full_name: string;
+	id: string;
+	fullname: string;
+	status: string;
 	email: string;
+	isHost: boolean;
+
+	image: string;
 	birthday: string;
 }

@@ -1,3 +1,6 @@
+// Authentication
+export * from './useAuthentication';
+
 export * from './useExperienceCategories';
 export * from './useExperiences';
 export * from './useHosts';

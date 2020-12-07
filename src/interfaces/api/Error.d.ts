@@ -1,10 +1,8 @@
 export interface IApiError {
-  code: number;
-  status: string;
-  errors: Array<IApiErrorDetail>;
+  error: IApiErrorDetail;
 }
 
 export interface IApiErrorDetail {
-  source: string;
-  detail: string;
+  status: string;
+  message: string;
 }

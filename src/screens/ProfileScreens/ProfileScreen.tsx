@@ -2,17 +2,13 @@ import * as React from 'react';
 import {
   StyleSheet,
   Dimensions,
-  View,
-  Text,
   SafeAreaView,
-  TouchableWithoutFeedback,
 } from 'react-native';
 import { Container } from 'native-base';
-import { useEffect, useState } from 'react';
-import { useNavigation } from '@react-navigation/native';
+import { useEffect } from 'react';
 
 // from app
-import { COLOR, LOGIN_USER_ID, setLoginUserID } from '../../constants';
+import { COLOR, LOGIN_USER_TOKEN } from '../../constants';
 import { NotLoginProfileView, LoginProfileView } from '../../components/View';
 import { IUser } from '../../interfaces/app';
 import { useGlobalState } from '../../redux/Store';
@@ -21,8 +17,7 @@ import { useGlobalState } from '../../redux/Store';
 const { width: viewportWidth } = Dimensions.get('window');
 
 export const ProfileScreen: React.FC = () => {
-  
-  const { navigate, goBack } = useNavigation();
+
   const profile: IUser = useGlobalState('userInfo');
 
   useEffect(() => {
@@ -32,9 +27,9 @@ export const ProfileScreen: React.FC = () => {
     <Container style={{width: viewportWidth, flex: 1, backgroundColor: COLOR.blackColor}}>
       <SafeAreaView style={styles.safe_area}>
         {
-          LOGIN_USER_ID == 0
+          profile.fullname == ''
           ? <NotLoginProfileView />
-          : <LoginProfileView profile={profile} />
+          : <LoginProfileView />
         }
       </SafeAreaView>
     </Container>

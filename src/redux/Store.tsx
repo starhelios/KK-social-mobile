@@ -11,11 +11,13 @@ import Reducer, {
 
 const initialState: State = {
   userInfo: {
-    id: 0,
-    username: '',
-    image: '',
-    full_name: '',
+    id: "",
+    fullname: '',
+    isHost: false,
     email: '',
+    status: '',
+    
+    image: '',
     birthday: '', 
   },
 };
