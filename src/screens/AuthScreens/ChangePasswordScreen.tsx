@@ -20,18 +20,24 @@ import { SvgXml } from 'react-native-svg';
 import { COLOR, ERROR_MESSAGE, FONT, Icon_Back, Img_Auth_Background, MARGIN_TOP } from '../../constants';
 import { ColorButton } from '../../components/Button';
 import { useAuthentication } from '../../hooks';
+import { IApiError, IApiSuccess } from '../../interfaces/api';
+import { IUser } from '../../interfaces/app';
+import { useGlobalState } from '../../redux/Store';
 import GlobalStyle from '../../styles/global';
-import { IApiError, IApiSuccessMessage } from 'src/interfaces/api';
 
 
 const { width: viewportWidth, height: viewportHeight } = Dimensions.get('window');
 
-export const ForgotPasswordScreen: React.FC = () => {
+export const ChangePasswordScreen: React.FC = () => {
 
   const { goBack } = useNavigation();
-  const { forgotPassword } = useAuthentication();
+  const { changePassword } = useAuthentication();
 
-  const [emailAddress, setEmailAddress] = useState('');
+  const [currentPassword, setCurrentPassword] = useState<string>('');
+  const [newPassword, setNewPassword] = useState<string>('');
+  const [confirmPassword, setConfirmPassword] = useState<string>('');
+
+  const userInfo: IUser = useGlobalState('userInfo');
 
   var fetching = false;
 
@@ -42,7 +48,7 @@ export const ForgotPasswordScreen: React.FC = () => {
 
       <SafeAreaView style={styles.safe_area}>
         <View style={styles.navigation_bar}>
-          <Text style={styles.title}>Forgot Password</Text>
+          <Text style={styles.title}>Change Password</Text>
 
           <TouchableWithoutFeedback onPress={() => goBack() }>
             <View style={styles.back_icon}>
@@ -55,14 +61,40 @@ export const ForgotPasswordScreen: React.FC = () => {
           <View style={styles.container}>
             <View style={styles.input_container}>
               <View style={{width:'100%', marginTop: 22}}>
-                <Text style={styles.info_title}>Email Address</Text>
+                <Text style={styles.info_title}>Current Password</Text>
                 <TextInput
                   style={GlobalStyle.auth_input}
-                  keyboardType={'email-address'}
-                  placeholder={'Email Address'}
+                  placeholder={'Current Password'}
+                  secureTextEntry={true}
                   placeholderTextColor={COLOR.alphaWhiteColor50}
-                  onChangeText={text => setEmailAddress(text)}
-                  value={emailAddress}
+                  onChangeText={text => setCurrentPassword(text)}
+                  value={currentPassword}
+                />
+                <View style={GlobalStyle.auth_line} />
+              </View>
+
+              <View style={{width:'100%', marginTop: 22}}>
+                <Text style={styles.info_title}>New Password</Text>
+                <TextInput
+                  style={GlobalStyle.auth_input}
+                  placeholder={'New Password'}
+                  secureTextEntry={true}
+                  placeholderTextColor={COLOR.alphaWhiteColor50}
+                  onChangeText={text => setNewPassword(text)}
+                  value={newPassword}
+                />
+                <View style={GlobalStyle.auth_line} />
+              </View>
+
+              <View style={{width:'100%', marginTop: 22}}>
+                <Text style={styles.info_title}>Confirm Password</Text>
+                <TextInput
+                  style={GlobalStyle.auth_input}
+                  placeholder={'Confirm Password'}
+                  secureTextEntry={true}
+                  placeholderTextColor={COLOR.alphaWhiteColor50}
+                  onChangeText={text => setConfirmPassword(text)}
+                  value={confirmPassword}
                 />
                 <View style={GlobalStyle.auth_line} />
               </View>
@@ -71,10 +103,7 @@ export const ForgotPasswordScreen: React.FC = () => {
         </TouchableWithoutFeedback>
 
         <View style={styles.bottom_container}>
-          <Text style={styles.bottom_description}>We will send a password reset email</Text>
-          <Text style={styles.bottom_description}>to the address above.</Text>
-
-          <TouchableWithoutFeedback onPress={() => onForgotPassword() }>
+          <TouchableWithoutFeedback onPress={() => onChangePassword() }>
             <View style={styles.bottom_button}>
               <ColorButton title={'Confirm'} backgroundColor={COLOR.whiteColor} color={COLOR.blackColor} />
             </View>
@@ -84,29 +113,41 @@ export const ForgotPasswordScreen: React.FC = () => {
     </Container>
   );
 
-  function onForgotPassword() {
+  function onChangePassword() {
     if (fetching == true) {
       return;
-    } else if (emailAddress == '') {
-      Alert.alert(ERROR_MESSAGE.EMPTY_EMAIL_ADDRESS);
+    } else if (currentPassword == '') {
+      Alert.alert(ERROR_MESSAGE.EMPTY_CURRENT_PASSWORD);
+      return;
+    } else if (newPassword == '') {
+      Alert.alert(ERROR_MESSAGE.EMPTY_NEW_PASSWORD);
+      return;
+    } else if (confirmPassword == '') {
+      Alert.alert(ERROR_MESSAGE.EMPTY_CONFIRM_PASSWORD);
+      return;
+    } else if (newPassword != confirmPassword) {
+      Alert.alert(ERROR_MESSAGE.MISMATCH_PASSWORD);
       return;
     }
     fetching = true;
 
-    forgotPassword(emailAddress)
-    .then(async (result: Promise<IApiSuccessMessage>) => {
+    changePassword(userInfo.id, currentPassword, newPassword, true)
+    .then(async (result: Promise<IApiSuccess>) => {
       fetching = false;
-      if ((await result).error == false) {
-        Alert.alert((await result).message);
+      if ((await result).error.status == false) {
+        setCurrentPassword('');
+        setNewPassword('');
+        setConfirmPassword('');
+        Alert.alert((await result).error.message);
       } else {
-        Alert.alert((await result).message);
+        Alert.alert((await result).error.message);
       }
     }).catch(async (error: Promise<IApiError>) => {
       fetching = false;
       Alert.alert((await error).error.message);
     }).catch(() => {
       fetching = false;
-      Alert.alert(ERROR_MESSAGE.FORGOT_PASSWORD_FAIL);
+      Alert.alert(ERROR_MESSAGE.CHANGE_PASSWORD_FAIL);
     });
   }
 };

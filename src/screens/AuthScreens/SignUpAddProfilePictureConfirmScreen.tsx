@@ -14,15 +14,10 @@ import { useNavigation } from '@react-navigation/native';
 import { SvgXml } from 'react-native-svg';
 
 // from app
-import { 
-  COLOR, 
-  FONT, 
-  Icon_Back,
-  Img_Edit_Profile_Background,
-  MARGIN_TOP,
-} from '../../constants';
+import { COLOR, FONT, Icon_Back, Img_Edit_Profile_Background, MARGIN_TOP } from '../../constants';
 import { ColorButton } from '../../components/Button';
 import { IFile } from '../../interfaces/app';
+
 
 const { width: viewportWidth } = Dimensions.get('window');
 

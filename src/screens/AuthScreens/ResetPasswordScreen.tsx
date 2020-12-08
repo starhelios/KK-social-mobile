@@ -20,18 +20,24 @@ import { SvgXml } from 'react-native-svg';
 import { COLOR, ERROR_MESSAGE, FONT, Icon_Back, Img_Auth_Background, MARGIN_TOP } from '../../constants';
 import { ColorButton } from '../../components/Button';
 import { useAuthentication } from '../../hooks';
+import { IApiError, IApiSuccess, IApiSuccessMessage } from '../../interfaces/api';
+import { IToken } from '../../interfaces/app';
+import { useGlobalState } from '../../redux/Store';
 import GlobalStyle from '../../styles/global';
-import { IApiError, IApiSuccessMessage } from 'src/interfaces/api';
 
 
 const { width: viewportWidth, height: viewportHeight } = Dimensions.get('window');
 
-export const ForgotPasswordScreen: React.FC = () => {
+export const ResetPasswordScreen: React.FC = () => {
 
   const { goBack } = useNavigation();
-  const { forgotPassword } = useAuthentication();
+  const { resetPassword } = useAuthentication();
 
-  const [emailAddress, setEmailAddress] = useState('');
+  const [newPassword, setNewPassword] = useState<string>('');
+  const [confirmPassword, setConfirmPassword] = useState<string>('');
+
+  const accessToken: IToken = useGlobalState('accessToken');
+  const refreshToken: IToken = useGlobalState('refreshToken');
 
   var fetching = false;
 
@@ -42,7 +48,7 @@ export const ForgotPasswordScreen: React.FC = () => {
 
       <SafeAreaView style={styles.safe_area}>
         <View style={styles.navigation_bar}>
-          <Text style={styles.title}>Forgot Password</Text>
+          <Text style={styles.title}>Reset Password</Text>
 
           <TouchableWithoutFeedback onPress={() => goBack() }>
             <View style={styles.back_icon}>
@@ -55,14 +61,27 @@ export const ForgotPasswordScreen: React.FC = () => {
           <View style={styles.container}>
             <View style={styles.input_container}>
               <View style={{width:'100%', marginTop: 22}}>
-                <Text style={styles.info_title}>Email Address</Text>
+                <Text style={styles.info_title}>New Password</Text>
                 <TextInput
                   style={GlobalStyle.auth_input}
-                  keyboardType={'email-address'}
-                  placeholder={'Email Address'}
+                  placeholder={'New Password'}
+                  secureTextEntry={true}
                   placeholderTextColor={COLOR.alphaWhiteColor50}
-                  onChangeText={text => setEmailAddress(text)}
-                  value={emailAddress}
+                  onChangeText={text => setNewPassword(text)}
+                  value={newPassword}
+                />
+                <View style={GlobalStyle.auth_line} />
+              </View>
+
+              <View style={{width:'100%', marginTop: 22}}>
+                <Text style={styles.info_title}>Confirm Password</Text>
+                <TextInput
+                  style={GlobalStyle.auth_input}
+                  placeholder={'Confirm Password'}
+                  secureTextEntry={true}
+                  placeholderTextColor={COLOR.alphaWhiteColor50}
+                  onChangeText={text => setConfirmPassword(text)}
+                  value={confirmPassword}
                 />
                 <View style={GlobalStyle.auth_line} />
               </View>
@@ -71,10 +90,7 @@ export const ForgotPasswordScreen: React.FC = () => {
         </TouchableWithoutFeedback>
 
         <View style={styles.bottom_container}>
-          <Text style={styles.bottom_description}>We will send a password reset email</Text>
-          <Text style={styles.bottom_description}>to the address above.</Text>
-
-          <TouchableWithoutFeedback onPress={() => onForgotPassword() }>
+          <TouchableWithoutFeedback onPress={() => onResetPassword() }>
             <View style={styles.bottom_button}>
               <ColorButton title={'Confirm'} backgroundColor={COLOR.whiteColor} color={COLOR.blackColor} />
             </View>
@@ -84,19 +100,27 @@ export const ForgotPasswordScreen: React.FC = () => {
     </Container>
   );
 
-  function onForgotPassword() {
+  function onResetPassword() {
     if (fetching == true) {
       return;
-    } else if (emailAddress == '') {
-      Alert.alert(ERROR_MESSAGE.EMPTY_EMAIL_ADDRESS);
+    } else if (newPassword == '') {
+      Alert.alert(ERROR_MESSAGE.EMPTY_NEW_PASSWORD);
+      return;
+    } else if (confirmPassword == '') {
+      Alert.alert(ERROR_MESSAGE.EMPTY_CONFIRM_PASSWORD);
+      return;
+    } else if (newPassword != confirmPassword) {
+      Alert.alert(ERROR_MESSAGE.MISMATCH_PASSWORD);
       return;
     }
     fetching = true;
 
-    forgotPassword(emailAddress)
+    resetPassword(accessToken.token, newPassword)
     .then(async (result: Promise<IApiSuccessMessage>) => {
       fetching = false;
       if ((await result).error == false) {
+        setNewPassword('');
+        setConfirmPassword('');
         Alert.alert((await result).message);
       } else {
         Alert.alert((await result).message);
@@ -106,7 +130,7 @@ export const ForgotPasswordScreen: React.FC = () => {
       Alert.alert((await error).error.message);
     }).catch(() => {
       fetching = false;
-      Alert.alert(ERROR_MESSAGE.FORGOT_PASSWORD_FAIL);
+      Alert.alert(ERROR_MESSAGE.RESET_PASSWORD_FAIL);
     });
   }
 };

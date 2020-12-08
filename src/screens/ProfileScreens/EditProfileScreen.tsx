@@ -120,9 +120,15 @@ export const EditProfileScreen: React.FC = () => {
                     <View style={GlobalStyle.auth_line} />
                   </View>
 
-                  <TouchableWithoutFeedback onPress={() => navigate('Experiences') }>
+                  <TouchableWithoutFeedback onPress={() => navigate('ChangePassword') }>
                     <View style={{width:'100%', marginTop: 44}}>
                       <TitleArrowButton title={'Security'} name={'Change Password'} showArrow={true} white_color={true} />
+                    </View>
+                  </TouchableWithoutFeedback>
+
+                  <TouchableWithoutFeedback onPress={() => navigate('ResetPassword') }>
+                    <View style={{width:'100%', marginTop: 22}}>
+                      <TitleArrowButton title={''} name={'Reset Password'} showArrow={true} white_color={true} />
                     </View>
                   </TouchableWithoutFeedback>
                 </View>

@@ -32,15 +32,11 @@ import {
   LOGIN_TYPE, 
   MARGIN_TOP, 
   PASSWORD, 
-  setUserToken, 
   USER_EMAIL, 
 } from '../../constants';
 import { ColorButton } from '../../components/Button';
-import { useDispatch } from '../../redux/Store';
 import { useAuthentication } from '../../hooks';
 import { IApiError } from '../../interfaces/api';
-import { ActionType } from '../../redux/Reducer';
-import { ILoginUser } from '../../interfaces/app';
 import GlobalStyle from '../../styles/global';
 
 
@@ -50,7 +46,6 @@ export const LogInScreen: React.FC = () => {
 
   const { navigate, goBack } = useNavigation();
   const { loginUser } = useAuthentication();
-  const dispatch = useDispatch();
 
   const [emailAddress, setEmailAddress] = useState('');
   const [password, setPassword] = useState('');
@@ -140,38 +135,32 @@ export const LogInScreen: React.FC = () => {
     fetching = true;
 
     loginUser(emailAddress, password)
-    .then(async (result: Promise<ILoginUser>) => {
-      const user = (await result).user;
-      dispatch({
-        type: ActionType.SET_USER_INFO,
-        payload: {
-          id: user.id,
-          isHost: user.isHost,
-          email: user.email,
-          fullname: user.fullname,
-          status: user.status,
-          image: user.image,
-          birthday: user.birthday,
-        },
-      });
-      DefaultPreference.set(LOGIN_TYPE, EMAIL_LOGIN).then(function() { });
-      DefaultPreference.set(USER_EMAIL, emailAddress).then(function() { });
-      DefaultPreference.set(PASSWORD, password).then(function() { });
-      DefaultPreference.get(IS_FIRST_LOGIN).then(function(is_first_login) {
-        if (is_first_login != null && is_first_login == 'false') {
-        } else {
-          DefaultPreference.set(IS_FIRST_LOGIN, 'false').then(function() { });
-        }
-      });
-      setUserToken((await result).tokens.access.token);
+    .then(async (result: Promise<boolean>) => {
       fetching = false;
-      goBack();
+      if ((await result) == true) {
+        saveUserInfo();
+        goBack();
+      } else {
+        Alert.alert(ERROR_MESSAGE.LOGIN_FAIL);
+      }
     }).catch(async (error: Promise<IApiError>) => {
       fetching = false;
       Alert.alert((await error).error.message);
-    }).catch(async (errorMessage: Promise<string>) => {
+    }).catch(() => {
       fetching = false;
-      Alert.alert((await errorMessage));
+      Alert.alert(ERROR_MESSAGE.LOGIN_FAIL);
+    });
+  }
+
+  function saveUserInfo() {
+    DefaultPreference.set(LOGIN_TYPE, EMAIL_LOGIN).then(function() { });
+    DefaultPreference.set(USER_EMAIL, emailAddress).then(function() { });
+    DefaultPreference.set(PASSWORD, password).then(function() { });
+    DefaultPreference.get(IS_FIRST_LOGIN).then(function(is_first_login) {
+      if (is_first_login != null && is_first_login == 'false') {
+      } else {
+        DefaultPreference.set(IS_FIRST_LOGIN, 'false').then(function() { });
+      }
     });
   }
 };

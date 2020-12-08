@@ -81,3 +81,11 @@
 - change login screen.
 - change splash screen.
 - change signup screen.
+
+### 2020.12.08
+- /auth/refresh-tokens api.
+- /auth/change-password api.
+- /auth/forgot-password api.
+- /auth/reset-password api.
+- add Reset Password screen.
+- add Change Password screen. 

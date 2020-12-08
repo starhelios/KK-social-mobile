@@ -20,6 +20,14 @@ const initialState: State = {
     image: '',
     birthday: '', 
   },
+  accessToken: {
+    token: '',
+    expires: '',
+  },
+  refreshToken: {
+    token: '',
+    expires: '',
+  }
 };
 
 const StoreContext = createContext<State>(initialState);

@@ -16,16 +16,10 @@ import { SvgXml } from 'react-native-svg';
 import ImagePicker from 'react-native-image-crop-picker';
 
 // from app
-import { 
-  COLOR, 
-  FONT, 
-  Icon_Back,
-  Icon_Normal_Profile,
-  Img_Edit_Profile_Background,
-  MARGIN_TOP,
-} from '../../constants';
+import { COLOR, FONT, Icon_Back, Icon_Normal_Profile, Img_Edit_Profile_Background, MARGIN_TOP } from '../../constants';
 import { ColorButton } from '../../components/Button';
 import { IFile } from '../../interfaces/app';
+
 
 const { width: viewportWidth } = Dimensions.get('window');
 

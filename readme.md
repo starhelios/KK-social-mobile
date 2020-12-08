@@ -73,3 +73,8 @@ npm i -g npm-check-updates
 ncu -u
 npm install
 ```
+
+Alert.alert((await result).message, "", 
+          [ { text: "OK", onPress: () => goBack() }],
+          { cancelable: false }
+        );

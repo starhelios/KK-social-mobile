@@ -8,11 +8,15 @@ import { createStackNavigator } from '@react-navigation/stack';
 import { Provider } from './src/redux/Store';
 import { SplashScreen } from './src/screens/AuthScreens/SplashScreen';
 import TabBarNavigator from './src/navigators/TabBarNavigator';
+
 import { LogInScreen } from './src/screens/AuthScreens/LogInScreen';
-import { ForgotPasswordScreen } from './src/screens/AuthScreens/ForgotPasswordScreen';
 import { SignUpScreen } from './src/screens/AuthScreens/SignUpScreen';
 import { SignUpAddProfilePictureScreen } from './src/screens/AuthScreens/SignUpAddProfilePictureScreen';
 import { SignUpAddProfilePictureConfirmScreen } from './src/screens/AuthScreens/SignUpAddProfilePictureConfirmScreen';
+import { ForgotPasswordScreen } from './src/screens/AuthScreens/ForgotPasswordScreen';
+import { ChangePasswordScreen } from './src/screens/AuthScreens/ChangePasswordScreen';
+import { ResetPasswordScreen } from './src/screens/AuthScreens/ResetPasswordScreen';
+
 import { PaymentOptionsScreen } from './src/screens/ProfileScreens/PaymentOptionsScreen';
 import { WithdrawalScreen } from './src/screens/ProfileScreens/WithdrawalScreen';
 import { ExperiencesScreen } from './src/screens/ProfileScreens/ExperiencesScreen';
@@ -46,11 +50,15 @@ const App = () => {
         <Stack.Navigator screenOptions={{headerShown: false}}>
           <Stack.Screen name="Splash" component={SplashScreen} />
           <Stack.Screen name="TabBar" component={TabBarNavigator} />
+          
           <Stack.Screen name="LogIn" component={LogInScreen} />
-          <Stack.Screen name="ForgotPassword" component={ForgotPasswordScreen} />
           <Stack.Screen name="SignUp" component={SignUpScreen} />
           <Stack.Screen name="SignUpAddProfilePicture" component={SignUpAddProfilePictureScreen} />
           <Stack.Screen name="SignUpAddProfilePictureConfirm" component={SignUpAddProfilePictureConfirmScreen} />
+          <Stack.Screen name="ForgotPassword" component={ForgotPasswordScreen} />
+          <Stack.Screen name="ChangePassword" component={ChangePasswordScreen} />
+          <Stack.Screen name="ResetPassword" component={ResetPasswordScreen} />
+          
           <Stack.Screen name="PaymentOptions" component={PaymentOptionsScreen} />
           <Stack.Screen name="Withdrawal" component={WithdrawalScreen} />
           <Stack.Screen name="Experiences" component={ExperiencesScreen} />

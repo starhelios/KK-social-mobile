@@ -18,15 +18,24 @@ import { Container } from 'native-base';
 import { useEffect, useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { SvgXml } from 'react-native-svg';
+import DefaultPreference from 'react-native-default-preference';
 
 // from app
-import { COLOR, ERROR_MESSAGE, FONT, Icon_Back, Img_Auth_Background, MARGIN_TOP, setUserToken } from '../../constants';
+import { 
+  COLOR, 
+  EMAIL_LOGIN, 
+  ERROR_MESSAGE, 
+  FONT, Icon_Back, 
+  Img_Auth_Background, 
+  IS_FIRST_LOGIN, 
+  LOGIN_TYPE, 
+  MARGIN_TOP, 
+  PASSWORD, 
+  USER_EMAIL, 
+} from '../../constants';
 import { ColorButton } from '../../components/Button';
 import { useAuthentication } from '../../hooks';
 import { IApiError } from '../../interfaces/api';
-import { ILoginUser } from '../../interfaces/app';
-import { useDispatch } from '../../redux/Store';
-import { ActionType } from '../../redux/Reducer';
 import GlobalStyle from '../../styles/global';
 
 
@@ -36,7 +45,6 @@ export const SignUpScreen: React.FC = () => {
 
   const { navigate, goBack } = useNavigation();
   const { registerUser } = useAuthentication();
-  const dispatch = useDispatch();
 
   const [fullName, setFullName] = useState('');
   const [emailAddress, setEmailAddress] = useState('');
@@ -137,29 +145,32 @@ export const SignUpScreen: React.FC = () => {
     fetching = true;
 
     registerUser(fullName, emailAddress, password)
-    .then(async (result: Promise<ILoginUser>) => {
-      const user = (await result).user;
-      dispatch({
-        type: ActionType.SET_USER_INFO,
-        payload: {
-          id: user.id,
-          isHost: user.isHost,
-          email: user.email,
-          fullname: user.fullname,
-          status: user.status,
-          image: user.image,
-          birthday: user.birthday,
-        },
-      });
-      setUserToken((await result).tokens.access.token);
+    .then(async (result: Promise<Boolean>) => {
       fetching = false;
-      navigate('SignUpAddProfilePicture');
+      if ((await result) == true) {
+        saveUserInfo();
+        navigate('SignUpAddProfilePicture');
+      } else {
+        Alert.alert(ERROR_MESSAGE.REGISTER_FAIL);
+      }
     }).catch(async (error: Promise<IApiError>) => {
       fetching = false;
       Alert.alert((await error).error.message);
-    }).catch(async (errorMessage: Promise<string>) => {
+    }).catch(() => {
       fetching = false;
-      Alert.alert((await errorMessage));
+      Alert.alert(ERROR_MESSAGE.REGISTER_FAIL);
+    });
+  }
+
+  function saveUserInfo() {
+    DefaultPreference.set(LOGIN_TYPE, EMAIL_LOGIN).then(function() { });
+    DefaultPreference.set(USER_EMAIL, emailAddress).then(function() { });
+    DefaultPreference.set(PASSWORD, password).then(function() { });
+    DefaultPreference.get(IS_FIRST_LOGIN).then(function(is_first_login) {
+      if (is_first_login != null && is_first_login == 'false') {
+      } else {
+        DefaultPreference.set(IS_FIRST_LOGIN, 'false').then(function() { });
+      }
     });
   }
 };
