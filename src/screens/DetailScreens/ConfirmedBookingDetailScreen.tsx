@@ -18,7 +18,7 @@ import {
   COLOR, 
   FONT, 
   Icon_Back,
-  Img_Experience_2,
+  Img_Category,
   MARGIN_TOP,
 } from '../../constants';
 import { ColorButton } from '../../components/Button';
@@ -56,7 +56,7 @@ export const ConfirmedBookingDetailScreen: React.FC = ({route}) => {
           <View style={styles.image_container}>
             <Image
               style={styles.image}
-              source={(booking.image == null || booking.image == '') ? Img_Experience_2 : {uri: booking.image}}
+              source={(booking.image == null || booking.image == '') ? Img_Category : {uri: booking.image}}
             />
             {
               isCompleted == true
@@ -87,7 +87,7 @@ export const ConfirmedBookingDetailScreen: React.FC = ({route}) => {
           </View>
 
           <View style={styles.bottom_container}>
-            <Text style={styles.bottom_content_title}>{booking.host?.username + ' Paid'}</Text>
+            <Text style={styles.bottom_content_title}>{booking.host?.fullname + ' Paid'}</Text>
             <Text style={styles.bottom_content_info}>{'$ ' + booking.paid}</Text>
             <View style={{...GlobalStyle.auth_line, marginTop: 22}} />
             <Text style={styles.bottom_content_title}>You Received</Text>

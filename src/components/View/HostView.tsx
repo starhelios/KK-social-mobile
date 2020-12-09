@@ -1,22 +1,19 @@
-import { useNavigation } from '@react-navigation/native';
 import * as React from 'react';
-import {
-  Image,
-  StyleSheet,
-  Text,
-  TouchableWithoutFeedback,
-  View,
+import { 
+  Image, 
+  StyleSheet, 
+  Text, 
+  TouchableWithoutFeedback, 
+  View, 
 } from 'react-native';
-import { SvgUri, SvgXml } from 'react-native-svg';
+import { SvgXml } from 'react-native-svg';
+import { useNavigation } from '@react-navigation/native';
 
 // from app
-import { 
-  COLOR, 
-  FONT, 
-  Img_Avatar_1, 
-  Img_Avatar_2, 
-} from '../../constants';
+import { COLOR, FONT, Icon_Category, Img_User_Avatar } from '../../constants';
 import { IHost } from '../../interfaces/app';
+import { useHosts } from '../../hooks';
+
 
 interface props {
   host: IHost;
@@ -25,32 +22,38 @@ interface props {
 export const HostView: React.FC<props> = (props: props) => {
 
   const { navigate } = useNavigation();
+  const { getHostInformation } = useHosts();
+  const host: IHost = props.host;
 
   return (
-    <TouchableWithoutFeedback onPress={() => navigate('HostDetail', {host: props.host})}>
+    <TouchableWithoutFeedback onPress={() => goHostDetailScreen()}>
       <View style={styles.container}>
         <Image
           style={styles.image}
-          // source={(props.host.image == null || props.host.image == '') ? Img_Avatar_1 : {uri: props.host.image}}
-          // test
-          source={props.host.experience == 'Music' || props.host.experience == 'Sports' ? Img_Avatar_1 : Img_Avatar_2}
+          source={(host.avatarUrl == null || host.avatarUrl == '') ? Img_User_Avatar : {uri: host.avatarUrl}}
         />
-        <Text style={styles.title}>{props.host.username}</Text>
+        <Text style={styles.title}>{host.fullname}</Text>
         <View style={styles.experienceContainer}>
           <View style={{flex: 1, flexDirection: 'row'}}>
-            {/* {
-              props.host.experience_icon != null && props.host.experience_icon != ''
-              ? <SvgUri width='100%' height='100%' uri={props.host.experience_icon} />
-              : null
-            } */}
-            {/* // test */}
-            <SvgXml height={12} xml={props.host.experience_icon} />
-            <Text style={styles.experience}>{props.host.experience}</Text>
+            {
+              host.categoryIcon != null && host.categoryIcon != ''
+              ? <Image style={{width: '100%', height: '100%'}} source={{uri: host.categoryIcon}} />
+              : <SvgXml height={12} xml={Icon_Category} />
+            }
+            <Text style={styles.experience}>{host.categoryName}</Text>
           </View>
         </View>
       </View>
     </TouchableWithoutFeedback>
   );
+
+  async function goHostDetailScreen() {
+    await getHostInformation(host.id)
+    .then(async (hostDetail: Promise<IHost>) => {
+      navigate('HostDetail', {host: hostDetail});
+    }).catch(() => {
+    });
+  }
 }
 
 const styles = StyleSheet.create({
@@ -64,6 +67,7 @@ const styles = StyleSheet.create({
     width: '100%', 
     height: 154, 
     borderRadius: 77,
+    resizeMode: 'cover',
   },
   title: {
     width: '100%',
@@ -79,7 +83,6 @@ const styles = StyleSheet.create({
     marginTop: 6,
     height: 12,
     flex: 1,
-    // flexDirection: 'row',
     alignItems: 'center',
   },
   experience: {

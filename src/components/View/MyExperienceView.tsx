@@ -15,8 +15,7 @@ import {
   FONT, 
   Icon_Detail_Right_Arrow_White, 
   Icon_Experience_Rating, 
-  Img_Experience_1, 
-  Img_Experience_2, 
+  Img_Category
 } from '../../constants';
 import { IExperience } from '../../interfaces/app';
 
@@ -40,7 +39,7 @@ export const MyExperienceView: React.FC<props> = (props: props) => {
             style={styles.image}
             // source={(experience.image == null || experience.image == '') ? Img_Experience_1 : {uri: experience.image}}
             // test
-            source={experience.experience == 'Music' || experience.experience == 'Sports' ? Img_Experience_2 : Img_Experience_1}
+            source={Img_Category}
           />
 
           <View style={{...styles.content_container, width: width - 166}}>

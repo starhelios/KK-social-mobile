@@ -1,7 +1,14 @@
 export interface IHost {
-	id: number;
-	username: string;
-	image: string;
-	experience_icon: string;
-	experience: string;
+	id: string,
+	status: string,
+	isHost: boolean,
+	email: string,
+	fullname: string,
+	avatarUrl: string,
+	aboutMe: string,
+	categoryName: string,
+	dateOfBirth: string,
+
+	// test
+	categoryIcon: string,
 }

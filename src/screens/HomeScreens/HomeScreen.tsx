@@ -18,21 +18,19 @@ import { SvgXml } from 'react-native-svg';
 import Moment from 'moment';
 
 // from app
-import { COLOR, FONT, Icon_Filter, Icon_Search, MARGIN_TOP } from '../../constants';
+import { API_CONFIG, COLOR, FONT, Icon_Filter, Icon_Search, MARGIN_TOP } from '../../constants';
 import { useExperienceCategories, useExperiences, useHosts } from '../../hooks';
-import { IExperience, IExperienceCategory, IHost } from '../../interfaces/app';
+import { IExperience, IExperienceCategory, IHost, IHostList } from '../../interfaces/app';
 import { ExperienceView, FiltersView, HostView, SelectDatesView } from '../../components/View';
 import { useDispatch } from '../../redux/Store';
-import { ActionType } from '../../redux/Reducer';
 
-const { width: viewportWidth } = Dimensions.get('window');
 
 export const HomeScreen: React.FC = () => {
   
   const { navigate, goBack } = useNavigation();
   const { experienceCategories } = useExperienceCategories();
   const { experiences } = useExperiences();
-  const { hosts } = useHosts();
+  const { getHostList } = useHosts();
   const dispatch = useDispatch();
 
   const [searchText, setSearchText] = useState<string>('');
@@ -51,7 +49,7 @@ export const HomeScreen: React.FC = () => {
     loadExperienceCategoryList();
     loadExperienceList();
     loadHostList();
-  }, [])
+  }, [API_CONFIG])
 
   async function loadExperienceCategoryList() {
     await experienceCategories()
@@ -70,9 +68,9 @@ export const HomeScreen: React.FC = () => {
   }
 
   async function loadHostList() {
-    await hosts()
-    .then(async (result: Promise<IHost[]>) => {
-      setHostList(await result);
+    await getHostList()
+    .then(async (result: Promise<IHostList>) => {
+      setHostList((await result).results);
     }).catch(() => {
     });
   }

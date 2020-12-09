@@ -16,7 +16,7 @@ import { useNavigation } from '@react-navigation/native';
 import { 
   COLOR, 
   FONT, 
-  Img_Experience_2, 
+  Img_Category, 
   MARGIN_TOP, 
 } from '../../constants';
 import { ColorButton } from '../Button';
@@ -152,7 +152,7 @@ export const NotLoginProfileView: React.FC = () => {
     return <View>
       {/* <Image style={styles.profile_help_image} source={item.image} /> */}
       {/* // test */}
-      <Image style={styles.profile_help_image} source={Img_Experience_2} />
+      <Image style={styles.profile_help_image} source={Img_Category} />
 
       {/* <View style={styles.profile_help_description_container}>
         <Text style={styles.profile_help_description}>{item.title}</Text>

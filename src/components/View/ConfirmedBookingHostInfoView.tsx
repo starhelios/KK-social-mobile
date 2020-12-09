@@ -14,7 +14,7 @@ import {
   COLOR, 
   FONT,
   Icon_Dot_Menu_White,
-  Img_Avatar_1,
+  Img_User_Avatar,
 } from '../../constants';
 import { IBooking } from '../../interfaces/app';
 
@@ -35,10 +35,10 @@ export const ConfirmedBookingHostInfoView: React.FC<props> = (props: props) => {
       <View style={styles.line} />
       <View style={styles.host_container}>
         <View style={styles.avatar}>
-          <Image style={{width: '100%', height: '100%'}} source={booking.host?.image == '' ? Img_Avatar_1 : {uri: booking.host?.image}} />
+          <Image style={{width: '100%', height: '100%'}} source={booking.host?.avatarUrl == '' ? Img_User_Avatar : {uri: booking.host?.avatarUrl}} />
         </View>
         
-        <Text style={styles.username} numberOfLines={1}>{ booking.host?.username }</Text>
+        <Text style={styles.username} numberOfLines={1}>{ booking.host?.fullname }</Text>
 
         <TouchableWithoutFeedback onPress={() => onMenu()}>
             <View style={styles.dot_menu}>

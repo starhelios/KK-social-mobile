@@ -12,9 +12,8 @@ import { SvgUri, SvgXml } from 'react-native-svg';
 // from app
 import { 
   COLOR, 
-  FONT, 
-  Img_Experience_1, 
-  Img_Experience_2, 
+  FONT,
+  Img_Category
 } from '../../constants';
 import { IExperience } from '../../interfaces/app';
 
@@ -37,7 +36,7 @@ export const ExperienceView: React.FC<props> = (props: props) => {
           style={styles.image}
           // source={(props.experience.image == null || props.experience.image == '') ? Img_Experience_1 : {uri: props.experience.image}}
           // test
-          source={props.experience.experience == 'Music' || props.experience.experience == 'Sports' ? Img_Experience_2 : Img_Experience_1}
+          source={Img_Category}
         />
         <Text style={{...styles.title, color: white_color == true ? COLOR.systemWhiteColor : COLOR.blackColor}}>{props.experience.title}</Text>
         <View style={styles.experienceContainer}>

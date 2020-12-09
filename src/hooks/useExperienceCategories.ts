@@ -1,7 +1,7 @@
-import axios, { AxiosRequestConfig } from 'axios';
+import axios from 'axios';
 
 // from app
-import { API_ENDPOINT, LOGIN_USER_TOKEN } from '../constants';
+import { API_ENDPOINT, API_CONFIG } from '../constants';
 import { IApiSuccess } from '../interfaces/api';
 import { IExperienceCategory } from '../interfaces/app';
 
@@ -10,18 +10,10 @@ export const useExperienceCategories = () => {
   const experienceCategories = async (
   ): Promise<any> => {
     var url = API_ENDPOINT.EXPERIENCE_CATEGORY_LIST;
-  
-    const HEADER_CONFIG: AxiosRequestConfig = {
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-        'Authorization': 'JWT ' + LOGIN_USER_TOKEN,
-      },
-    };
 
     try {
       /*
-      const { data } = await axios.get<IApiSuccess>(url, HEADER_CONFIG);
+      const { data } = await axios.get<IApiSuccess>(url, API_CONFIG);
       const result: IExperienceCategory[] = data.data;
       */
 

@@ -1,6 +1,3 @@
-import { AxiosRequestConfig } from 'axios';
-import { LOGIN_USER_TOKEN } from '.';
-
 const API_HOST = 'https://kloutkast-backend.herokuapp.com/v1';
 
 export const API_ENDPOINT = {
@@ -13,25 +10,11 @@ export const API_ENDPOINT = {
   USER_FORGOT_PASSWORD  : `${API_HOST}/auth/forgot-password`,
   USER_RESET_PASSWORD   : `${API_HOST}/auth/reset-password`,
   
+  // Users
 
+  // Categories
+  CATEGORIES : `${API_HOST}/categories/`,
 
-  // Home Tab
-  EXPERIENCE_CATEGORY_LIST  : `${API_HOST}/rest-auth/login/`,
-  EXPERIENCE_LIST           : `${API_HOST}/rest-auth/login/`,
-  HOST_LIST                 : `${API_HOST}/rest-auth/login/`,
-
-  // Booking Tab
-  COMPLETED_BOOKING_LIST    : `${API_HOST}/rest-auth/login/`,
-  UPCOMING_BOOKING_LIST     : `${API_HOST}/rest-auth/login/`,
-
-  // Profile Tab
-  PROFILE_HELP              : `${API_HOST}/rest-auth/login/`,
-};
-
-export const API_CONFIG: AxiosRequestConfig = {
-  headers: {
-    'accept': 'application/json',
-    'Content-Type': 'application/json',
-    'Authorization': 'JWT ' + LOGIN_USER_TOKEN,
-  },
+  // Hosts
+  HOSTS : `${API_HOST}/hosts/`,
 };

@@ -10,7 +10,7 @@ import {
 // from app
 import { 
   COLOR, 
-  Img_Experience_2, 
+  Img_Category, 
 } from '../../constants';
 import { IBooking } from '../../interfaces/app';
 import { ColorButton } from '../Button';
@@ -29,7 +29,7 @@ export const BookingView: React.FC<props> = (props: props) => {
     <View style={styles.container}>
       <Image
         style={styles.image}
-        source={(props.booking.image == null || props.booking.image == '') ? Img_Experience_2 : {uri: props.booking.image}}
+        source={(props.booking.image == null || props.booking.image == '') ? Img_Category : {uri: props.booking.image}}
       />
       {
         props.completed_booking == false

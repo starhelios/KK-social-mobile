@@ -25,7 +25,7 @@ import {
   APPLE_LOGIN,
   ACCESS_TOKEN,
   CODE,
-  setUserToken,
+  setApiConfig,
 } from '../../constants';
 import { useAuthentication } from '../../hooks';
 import { ILoginUser } from '../../interfaces/app';
@@ -91,7 +91,7 @@ export const SplashScreen: React.FC = () => {
           birthday: user.birthday,
         },
       });
-      setUserToken((await result).tokens.access.token);
+      setApiConfig((await result).tokens.access.token);
       goMainScreen();
     }).catch(() => {
       goMainScreen();

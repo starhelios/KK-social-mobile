@@ -89,3 +89,10 @@
 - /auth/reset-password api.
 - add Reset Password screen.
 - add Change Password screen. 
+
+### 2020.12.09
+- /hosts api
+- /hosts/{userId} api
+- change the header setting function of all apis
+- change host detail screen
+- change home tab screen

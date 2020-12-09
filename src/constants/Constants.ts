@@ -1,3 +1,4 @@
+import { AxiosRequestConfig } from "axios";
 import { Platform } from "react-native";
 
 // Login Type
@@ -20,7 +21,13 @@ export const LOADING_TIME = 1500;
 
 
 // Global Values
-export var LOGIN_USER_TOKEN = '';
-export const setUserToken = (token: string) => {
-  LOGIN_USER_TOKEN = token;
-};
+export var API_CONFIG: AxiosRequestConfig;
+export const setApiConfig = (token: string) => {
+  API_CONFIG = {
+    headers: {
+      'accept': 'application/json',
+      'Content-Type': 'application/json',
+      'Authorization': 'JWT ' + token,
+    },
+  }
+}

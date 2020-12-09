@@ -30,7 +30,7 @@ export const ConfirmedBookingRatingInfoView: React.FC<props> = (props: props) =>
     <View>
       <View style={styles.line} />
       <Text style={styles.rating_title}>
-        { booking.host != null ? 'Rate ' + booking.host.username + ':' : 'Rate :' }
+        { booking.host != null ? 'Rate ' + booking.host.fullname + ':' : 'Rate :' }
       </Text>
       <View style={styles.rating}>
         <Stars

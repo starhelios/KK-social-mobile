@@ -8,7 +8,7 @@ import { Container } from 'native-base';
 import { useEffect } from 'react';
 
 // from app
-import { COLOR, LOGIN_USER_TOKEN } from '../../constants';
+import { COLOR } from '../../constants';
 import { NotLoginProfileView, LoginProfileView } from '../../components/View';
 import { IUser } from '../../interfaces/app';
 import { useGlobalState } from '../../redux/Store';

@@ -14,6 +14,7 @@ import { Container } from 'native-base';
 import { useEffect, useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { SvgXml } from 'react-native-svg';
+import Moment from 'moment';
 
 // from app
 import { 
@@ -22,13 +23,13 @@ import {
   Icon_Back_Black,
   Icon_Location_Black,
   Icon_Rating_Black,
-  Img_Avatar_1,
+  Img_User_Avatar,
   MARGIN_TOP,
 } from '../../constants';
 import { IExperience, IHost } from '../../interfaces/app';
-import GlobalStyle from '../../styles/global';
 import { ExperienceView } from '../../components/View';
 import { useExperiences } from '../../hooks';
+import GlobalStyle from '../../styles/global';
 
 
 const { width: viewportWidth } = Dimensions.get('window');
@@ -37,10 +38,9 @@ export const HostDetailScreen: React.FC = ({route}) => {
 
   const { navigate, goBack } = useNavigation();
   const { experiences } = useExperiences();
-  
-  const [experienceList, setExperienceList] = useState<IExperience[]>([]);
-
   const host: IHost = route.params.host;
+
+  const [experienceList, setExperienceList] = useState<IExperience[]>([]);
 
   useEffect(() => {
     loadExperienceList();
@@ -59,7 +59,7 @@ export const HostDetailScreen: React.FC = ({route}) => {
       <SafeAreaView style={styles.safe_area}>
 
         <View style={styles.navigation_bar}>
-          <Text style={styles.navigation_title}>{'Say Hello! to ' + host.username}</Text>
+          <Text style={styles.navigation_title}>{'Say Hello! to ' + host.fullname}</Text>
 
           <TouchableWithoutFeedback onPress={() => goBack()}>
             <View style={styles.back_icon}>
@@ -76,29 +76,31 @@ export const HostDetailScreen: React.FC = ({route}) => {
           <View style={styles.container}>
             <View style={{marginTop: 33, flexDirection: 'row'}}>
               <View style={{width: viewportWidth - 100}}>
-                <Text style={styles.host_name}>{'Hey, I\'m ' + host.username}</Text>
-                <Text style={styles.joined_date}>{'Joined in ' + 'May 2020'}</Text>
+                <Text style={styles.host_name}>{'Hey, I\'m ' + host.fullname}</Text>
+                <Text style={styles.joined_date}>{'Joined in ' + Moment(host.dateOfBirth).format('MMMM DD, YYYY')}</Text>
               </View>
-              <Image style={styles.avatar} source={Img_Avatar_1} />
+              <Image
+                style={styles.avatar}
+                source={(host.avatarUrl == null || host.avatarUrl == '') ? Img_User_Avatar : {uri: host.avatarUrl}} />
             </View>
             <View style={{...GlobalStyle.auth_line, backgroundColor: COLOR.alphaBlackColor20, marginTop: 22}} />
 
             <Text style={{...styles.content_title, marginTop: 22}}>{'About this host'}</Text>
             <View style={{marginTop: 22, height: 16, flexDirection: 'row'}}>
               <SvgXml width={16} height={16} xml={Icon_Location_Black} />
-              <Text style={{...styles.location, marginTop: 1, marginLeft: 8}}>{'Brooklyn, NY'}</Text>
+              <Text style={{...styles.location, marginTop: 1, marginLeft: 8}}>{host.email}</Text>
             </View>
 
             <View style={{marginTop: 12, height: 16, flexDirection: 'row'}}>
               <SvgXml width={16} height={16} xml={Icon_Rating_Black} />
-              <Text style={{...styles.location, marginTop: 1, marginLeft: 8}}>{'4.4 Stars • 127 Ratings'}</Text>
+              <Text style={{...styles.location, marginTop: 1, marginLeft: 8}}>{host.categoryName}</Text>
             </View>
             <View style={{...GlobalStyle.auth_line, backgroundColor: COLOR.alphaBlackColor20, marginTop: 22}} />
 
-            <Text style={styles.description}>{'I am an American professional surfer, author, actor, model, businessman, and innovator, best known for my unprecedented 11 world surfing championships. I am widely regarded as the greatest professional surfer of all time.'}</Text>
+            <Text style={styles.description}>{host.aboutMe}</Text>
             <View style={{...GlobalStyle.auth_line, backgroundColor: COLOR.alphaBlackColor20, marginTop: 22}} />
 
-            <Text style={{...styles.content_title, marginTop: 22}}>{host.username + '\'s Experiences'}</Text>
+            <Text style={{...styles.content_title, marginTop: 22}}>{host.fullname + '\'s Experiences'}</Text>
           </View>
 
           <FlatList
@@ -177,7 +179,8 @@ const styles = StyleSheet.create({
     right: 0,
     width: 60,
     height: 60,
-    borderRadius: 20,
+    resizeMode: 'cover',
+    borderRadius: 30,
     overflow: 'hidden',
   },
   content_title: {

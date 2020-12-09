@@ -27,15 +27,13 @@ import {
   FONT, 
   Icon_Back_Black,
   Icon_Camera,
-  Icon_Category_Cooking,
-  Icon_Category_Music,
+  Icon_Category,
   Icon_Guest_Minus,
   Icon_Guest_Plus,
   Icon_Normal_Profile,
   Icon_Search_Black,
   Icon_Share_Black,
-  Img_Experience_1,
-  Img_Experience_2,
+  Img_Category,
   MARGIN_TOP,
 } from '../../constants';
 import { ColorButton } from '../../components/Button';
@@ -58,21 +56,6 @@ export const ExperienceDetailBookScreen: React.FC = () => {
   const [guestCount, setGuestCount] = useState<number>(0)
 
   useEffect(() => {
-    var experiences: IExperience[] = [];
-      experiences.push({ id: 1, title: 'Chef Ramsay Cooking', location: 'Hawaii, United States', image: '', description: 'More than 1,000 five stars reviews. We just got mentioned on Conde Nast Travel, Business Insider and Forbes Mexico! We are a National Coffee Judge and also Airbnb Experiences Community Leader in Mexico City, and two chemical engineers. This experience combines our 2 biggest passions: coffee and hosting. And we will be still running it for a limited time.'
-        , host: {id: 1, username: 'Jeff A.', image: '', full_name: '', email: '', birthday: ''}
-        , experience_icon: Icon_Category_Cooking, experience: 'Cooking', duration: '1hr', min_price: 150, personal: 'person', rating: 3.5, rating_count: 120, images: [Img_Experience_1, Img_Experience_2], show_date: true, date: 'Tue, Sept 7'});
-      experiences.push({ id: 2, title: 'Guitar Lessons', location: 'Hawaii, United States', image: '', description: 'More than 1,000 five stars reviews. We just got mentioned on Conde Nast Travel, Business Insider and Forbes Mexico! We are a National Coffee Judge and also Airbnb Experiences Community Leader in Mexico City, and two chemical engineers. This experience combines our 2 biggest passions: coffee and hosting. And we will be still running it for a limited time.'
-        , host: {id: 1, username: 'Jeff B.', image: '', full_name: '', email: '', birthday: ''}
-        , experience_icon: Icon_Category_Music, experience: 'Music', duration: '30min', min_price: 85, personal: 'person', rating: 4.5, rating_count: 131, images: [Img_Experience_1, Img_Experience_2], show_date: false, date: null});
-      experiences.push({ id: 3, title: 'Sports Lessons', location: 'Hawaii, United States', image: '', description: 'More than 1,000 five stars reviews. We just got mentioned on Conde Nast Travel, Business Insider and Forbes Mexico! We are a National Coffee Judge and also Airbnb Experiences Community Leader in Mexico City, and two chemical engineers. This experience combines our 2 biggest passions: coffee and hosting. And we will be still running it for a limited time.'
-        , host: {id: 1, username: 'Jeff C.', image: '', full_name: '', email: '', birthday: ''}
-        , experience_icon: Icon_Category_Cooking, experience: 'Sports', duration: '2hr', min_price: 100, personal: 'person', rating: 4.8, rating_count: 247, images: [Img_Experience_1, Img_Experience_2], show_date: true, date: 'Tue, Sept 15'});
-      experiences.push({ id: 4, title: 'English Lessons', location: 'Hawaii, United States', image: '', description: 'More than 1,000 five stars reviews. We just got mentioned on Conde Nast Travel, Business Insider and Forbes Mexico! We are a National Coffee Judge and also Airbnb Experiences Community Leader in Mexico City, and two chemical engineers. This experience combines our 2 biggest passions: coffee and hosting. And we will be still running it for a limited time.'
-        , host: {id: 1, username: 'Jeff D.', image: '', full_name: '', email: '', birthday: ''}
-        , experience_icon: Icon_Category_Music, experience: 'Study', duration: '1hr 30min', min_price: 50, personal: 'person', rating: 4.2, rating_count: 57, images: [Img_Experience_1, Img_Experience_2], show_date: false, date: null});
-
-        setExperienceList(experiences);
   }, []);
 
   return (

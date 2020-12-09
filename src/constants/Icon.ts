@@ -37,20 +37,16 @@ import Icon_Close_Black from '../assets/svg/close_black'
 import Icon_Location from '../assets/svg/location'
 import Icon_Slider_Left from '../assets/svg/slider_left'
 import Icon_Slider_Right from '../assets/svg/slider_right'
+import Icon_Category from '../assets/svg/category_icon'
+
 // PNG
 const Img_Auth_Background = require('../assets/images/bg_auth.png')
 const Img_Splash_Background = require('../assets/images/bg_splash.png')
 const Img_Rating_Full = require('../assets/images/rating_full.png')
 const Img_Rating_Empty = require('../assets/images/rating_empty.png')
 const Img_Edit_Profile_Background = require('../assets/images/bg_edit_profile.png')
-
-// Development
-import Icon_Category_Cooking from '../assets/dev/category_cooking'
-import Icon_Category_Music from '../assets/dev/category_music'
-const Img_Avatar_1 = require('../assets/dev/img_avatar_1.png')
-const Img_Avatar_2 = require('../assets/dev/img_avatar_2.png')
-const Img_Experience_1 = require('../assets/dev/img_experience_1.png')
-const Img_Experience_2 = require('../assets/dev/img_experience_2.png')
+const Img_User_Avatar = require('../assets/images/user_avatar.png')
+const Img_Category = require('../assets/images/ic_category.png')
 
 export {
   // SVG
@@ -92,17 +88,14 @@ export {
   Icon_Location,
   Icon_Slider_Left,
   Icon_Slider_Right,
+  Icon_Category,
+
   // PNG
   Img_Auth_Background,
   Img_Splash_Background,
   Img_Rating_Full,
   Img_Rating_Empty,
   Img_Edit_Profile_Background,
-  // Development
-  Icon_Category_Cooking,
-  Icon_Category_Music,
-  Img_Avatar_1,
-  Img_Avatar_2,
-  Img_Experience_1,
-  Img_Experience_2,
+  Img_User_Avatar,
+  Img_Category,
 }

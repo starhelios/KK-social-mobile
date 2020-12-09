@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 // from app
-import { API_CONFIG, API_ENDPOINT, setUserToken } from '../constants';
+import { API_CONFIG, API_ENDPOINT, setApiConfig } from '../constants';
 import { ILoginUser, IToken, ITokens } from '../interfaces/app';
 import { handleError } from '../utils';
 import { IApiSuccess, IApiSuccessMessage } from '../interfaces/api';
@@ -213,7 +213,7 @@ export const useAuthentication = () => {
         expires: token.expires, 
       },
     });
-    setUserToken(token.token);
+    setApiConfig(token.token);
   };
 
   const setRefreshToken = (token: IToken) => {
