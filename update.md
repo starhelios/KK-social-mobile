@@ -96,3 +96,12 @@
 - change the header setting function of all apis
 - change host detail screen
 - change home tab screen
+
+### 2020.12.10
+- /categories api
+- /categories/search api
+- /experiences api
+- /experiences/{id} api
+- change home tab screen
+- change experience detail screen
+- change experience book screen

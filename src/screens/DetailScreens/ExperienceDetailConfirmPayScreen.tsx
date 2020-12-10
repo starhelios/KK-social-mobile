@@ -6,17 +6,13 @@ import {
   View,
   TouchableWithoutFeedback,
   Dimensions,
-  Platform,
-  TextInput,
   ScrollView,
-  FlatList,
   Image,
 } from 'react-native';
 import { Container } from 'native-base';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { SvgXml } from 'react-native-svg';
-import ImagePicker from 'react-native-image-crop-picker';
 
 // from app
 import { 
@@ -24,33 +20,23 @@ import {
   FONT, 
   Icon_Back_Black,
   Icon_Experience_Rating,
-  Icon_Search_Black,
-  Icon_Share_Black,
-  Img_Experience_1,
-  Img_Experience_2,
+  Img_Experience,
   MARGIN_TOP,
 } from '../../constants';
-import { ColorButton, TitleArrowButton, YourCardButton } from '../../components/Button';
+import { ColorButton, TitleArrowButton } from '../../components/Button';
 import { useGlobalState } from '../../redux/Store';
-import { IExperience, IFile, IHost, IUser } from '../../interfaces/app';
-import { ExperienceImageView } from '../../components/View';
-import GlobalStyle from '../../styles/global';
+import { IAvailableDate, IExperience, IHost, IUser } from '../../interfaces/app';
 
-const { width: viewportWidth, height: viewportHeight } = Dimensions.get('window');
+
+const { width: viewportWidth } = Dimensions.get('window');
 
 export const ExperienceDetailConfirmPayScreen: React.FC = ({route}) => {
 
   const { goBack, navigate } = useNavigation();
 
-  const profile: IUser = useGlobalState('userInfo');
   const experience: IExperience = route.params.experience;
-
-  const [images, setImages] = useState<IFile[]>([]);
-  const [title, setTitle] = useState<string>(experience.title);
-  const [description, setDescription] = useState<string>(experience.description);
-  const [duration, setDuration] = useState<string>(experience.duration);
-  const [price, setPrice] = useState<string>(experience.min_price.toString());
-  const [category, setCategory] = useState<string>('');
+  const availableDate: IAvailableDate = route.params.availableDate;
+  const guestCount: number = route.params.guestCount;
 
   useEffect(() => {
   }, []);
@@ -73,18 +59,15 @@ export const ExperienceDetailConfirmPayScreen: React.FC = ({route}) => {
           <View style={image_styles.container}>
             <Image
               style={image_styles.image}
-              // source={(experience.image == null || experience.image == '') ? Img_Experience_1 : {uri: experience.image}}
-              // test
-              source={experience.experience == 'Music' || experience.experience == 'Sports' ? Img_Experience_2 : Img_Experience_1}
-            />
+              source={experience.images.length > 0 ? {uri: experience.images[0]} : Img_Experience} />
 
             <View style={{...image_styles.content_container, width: viewportWidth - 89}}>
               <Text style={image_styles.title} numberOfLines={2}>{experience.title}</Text>
 
               <View style={image_styles.rating_container}>
                 <SvgXml width={15} height={15} xml={Icon_Experience_Rating} />
-                <Text style={image_styles.rating_text} numberOfLines={1}>{experience.rating.toString()}</Text>
-                <Text style={{...image_styles.rating_text, color: COLOR.alphaBlackColor50}} numberOfLines={1}>{'(' + experience.rating_count.toString() + ')'}</Text>
+                <Text style={image_styles.rating_text} numberOfLines={1}>{experience.categoryName}</Text>
+                {/* <Text style={{...image_styles.rating_text, color: COLOR.alphaBlackColor50}} numberOfLines={1}>{'(' + experience.rating_count.toString() + ')'}</Text> */}
               </View>
             </View>
           </View>
@@ -92,17 +75,17 @@ export const ExperienceDetailConfirmPayScreen: React.FC = ({route}) => {
           <Text style={styles.info_title}>Details</Text>
 
           <Text style={styles.info_detail_title}>Date</Text>
-          <Text style={styles.info_detail_content}>{'Tue, Sept 7 4:00 PM - 5:00 PM (EDT)'}</Text>
+          <Text style={styles.info_detail_content}>{availableDate.day + ' ' + availableDate.startTime + ' - ' + availableDate.endTime}</Text>
           <View style={styles.line} />
 
           <Text style={styles.info_detail_title}>Guest</Text>
-          <Text style={styles.info_detail_content}>{'1 person'}</Text>
+          <Text style={styles.info_detail_content}>{guestCount.toString() + ' person'}</Text>
           <View style={styles.line} />
 
           <Text style={styles.info_detail_title}>Price Detail</Text>
           <View style={{flexDirection: 'row'}}>
-            <Text style={styles.info_detail_content}>{'$150.00 x 1 person'}</Text>
-            <Text style={styles.price_unit}>{'$150.00'}</Text>
+            <Text style={styles.info_detail_content}>{'$' + experience.price + ' x ' + guestCount.toString() + ' person'}</Text>
+            <Text style={styles.price_unit}>{'$' + Math.floor(experience.price * guestCount).toString()}</Text>
           </View>
           <View style={styles.line} />
 

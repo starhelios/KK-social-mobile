@@ -46,7 +46,7 @@ const Img_Rating_Full = require('../assets/images/rating_full.png')
 const Img_Rating_Empty = require('../assets/images/rating_empty.png')
 const Img_Edit_Profile_Background = require('../assets/images/bg_edit_profile.png')
 const Img_User_Avatar = require('../assets/images/user_avatar.png')
-const Img_Category = require('../assets/images/ic_category.png')
+const Img_Experience = require('../assets/images/ic_experience.png')
 
 export {
   // SVG
@@ -97,5 +97,5 @@ export {
   Img_Rating_Empty,
   Img_Edit_Profile_Background,
   Img_User_Avatar,
-  Img_Category,
+  Img_Experience,
 }

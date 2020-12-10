@@ -1,7 +1,7 @@
 // Authentication
 export * from './useAuthentication';
 
-export * from './useExperienceCategories';
+export * from './useCategories';
 export * from './useExperiences';
 export * from './useHosts';
 export * from './useUpcomingBookings';

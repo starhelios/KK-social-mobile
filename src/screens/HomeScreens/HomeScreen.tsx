@@ -1,7 +1,6 @@
 import * as React from 'react';
 import {
   StyleSheet,
-  Dimensions,
   View,
   Text,
   SafeAreaView,
@@ -13,54 +12,49 @@ import {
 } from 'react-native';
 import { Container } from 'native-base';
 import { useEffect, useState } from 'react';
-import { useNavigation } from '@react-navigation/native';
 import { SvgXml } from 'react-native-svg';
 import Moment from 'moment';
 
 // from app
-import { API_CONFIG, COLOR, FONT, Icon_Filter, Icon_Search, MARGIN_TOP } from '../../constants';
-import { useExperienceCategories, useExperiences, useHosts } from '../../hooks';
-import { IExperience, IExperienceCategory, IHost, IHostList } from '../../interfaces/app';
+import { API_CONFIG, COLOR, FONT, Icon_Filter, Icon_Search, MARGIN_TOP, setHost } from '../../constants';
+import { useCategories, useExperiences, useHosts } from '../../hooks';
+import { ICategory, IExperience, IHost, IHostList } from '../../interfaces/app';
 import { ExperienceView, FiltersView, HostView, SelectDatesView } from '../../components/View';
-import { useDispatch } from '../../redux/Store';
 
 
 export const HomeScreen: React.FC = () => {
   
-  const { navigate, goBack } = useNavigation();
-  const { experienceCategories } = useExperienceCategories();
-  const { experiences } = useExperiences();
+  const { getCategoryList } = useCategories();
+  const { getExperienceList } = useExperiences();
   const { getHostList } = useHosts();
-  const dispatch = useDispatch();
 
   const [searchText, setSearchText] = useState<string>('');
-  const [experienceCategoryList, setExperienceCategoryList] = useState<IExperienceCategory[]>([]);
+  const [categoryList, setCategoryList] = useState<ICategory[]>([]);
   const [experienceList, setExperienceList] = useState<IExperience[]>([]);
   const [hostList, setHostList] = useState<IHost[]>([]);
-  const [selectedExperienceCategoryID, setSelectedExperienceCategoryID] = useState<number>(-1);
+  const [selectedCategoryID, setSelectedCategoryID] = useState<string>('');
   const [showFilters, setShowFilters] = useState<boolean>(false);
   const [showSelectDates, setShowSelectDates] = useState<boolean>(false);
   const [selectedDate, setSelectedDate] = useState<string>('');
 
-  var fetching = false;
   var isSearchResult = false;
 
   useEffect(() => {
-    loadExperienceCategoryList();
+    loadCategoryList();
     loadExperienceList();
     loadHostList();
   }, [API_CONFIG])
 
-  async function loadExperienceCategoryList() {
-    await experienceCategories()
-    .then(async (result: Promise<IExperienceCategory[]>) => {
-      setExperienceCategoryList(await result);
+  async function loadCategoryList() {
+    await getCategoryList('')
+    .then(async (result: Promise<ICategory[]>) => {
+      setCategoryList(await result);
     }).catch(() => {
     });
   }
 
   async function loadExperienceList() {
-    await experiences()
+    await getExperienceList()
     .then(async (result: Promise<IExperience[]>) => {
       setExperienceList(await result);
     }).catch(() => {
@@ -71,6 +65,9 @@ export const HomeScreen: React.FC = () => {
     await getHostList()
     .then(async (result: Promise<IHostList>) => {
       setHostList((await result).results);
+
+      // test
+      setHost((await result).results[0]);
     }).catch(() => {
     });
   }
@@ -112,7 +109,7 @@ export const HomeScreen: React.FC = () => {
         <ScrollView style={{width: '100%', marginTop: 16}}>
           <View style={styles.experience_category_list}>
             <TouchableWithoutFeedback onPress={() => onSelectDateFilter()}>
-              <View style={{...experienceCategoryStyles.container, backgroundColor: selectedExperienceCategoryID == 0 ? COLOR.selectedExperienceCategoryBackgroudnColor : COLOR.clearColor}}>
+              <View style={{...experienceCategoryStyles.container, backgroundColor: selectedCategoryID == '' ? COLOR.selectedCategoryBackgroundColor : COLOR.clearColor}}>
                 <Text style={experienceCategoryStyles.title}>
                   { getVisibleDate() }
                 </Text>
@@ -125,9 +122,9 @@ export const HomeScreen: React.FC = () => {
               style={{width: '100%', height: 40, marginLeft: 12}}
               showsHorizontalScrollIndicator={false}
               horizontal={true}
-              data={experienceCategoryList}
+              data={categoryList}
               keyExtractor={item => item.id.toString()}
-              renderItem={({item}) => renderExperienceCategoryView(item.id, item.title)}
+              renderItem={({item}) => renderCategoryView(item)}
             />
 
           </View>
@@ -207,23 +204,16 @@ export const HomeScreen: React.FC = () => {
     return visibleDateString;
   }
 
-  function onSelectExperienceCategory(id: number, title: string) {
-    setSelectedExperienceCategoryID(id);
-    console.log('select experience filter');
+  function onSelectCategory(category: ICategory) {
+    setSelectedCategoryID(category.id);
   }
 
-  function renderExperienceCategoryView(id: number, title: string) {
+  function renderCategoryView(category: ICategory) {
     return (
-      <TouchableWithoutFeedback onPress={() => onSelectExperienceCategory(id, title)}>
-        {
-          selectedExperienceCategoryID == id
-          ? <View style={{...experienceCategoryStyles.container, backgroundColor: COLOR.selectedExperienceCategoryBackgroudnColor}}>
-              <Text style={experienceCategoryStyles.title}>{ title }</Text>
-            </View>
-        : <View style={{...experienceCategoryStyles.container, backgroundColor: COLOR.clearColor}}>
-            <Text style={experienceCategoryStyles.title}>{ title }</Text>
-          </View>
-        }
+      <TouchableWithoutFeedback onPress={() => onSelectCategory(category)}>
+        <View style={{...experienceCategoryStyles.container, backgroundColor: selectedCategoryID == category.id ? COLOR.selectedCategoryBackgroundColor : COLOR.clearColor}}>
+          <Text style={experienceCategoryStyles.title}>{ category.name }</Text>
+        </View>
       </TouchableWithoutFeedback>
     );
   }

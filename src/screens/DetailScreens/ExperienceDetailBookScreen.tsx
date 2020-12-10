@@ -6,10 +6,6 @@ import {
   View,
   TouchableWithoutFeedback,
   Dimensions,
-  Image,
-  Platform,
-  TextInput,
-  ScrollView,
   FlatList,
   Modal,
 } from 'react-native';
@@ -17,8 +13,6 @@ import { Container } from 'native-base';
 import { useEffect, useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { SvgXml } from 'react-native-svg';
-import ImagePicker from 'react-native-image-crop-picker';
-import LinearGradient from 'react-native-linear-gradient';
 import Moment from 'moment';
 
 // from app
@@ -26,36 +20,43 @@ import {
   COLOR, 
   FONT, 
   Icon_Back_Black,
-  Icon_Camera,
-  Icon_Category,
   Icon_Guest_Minus,
   Icon_Guest_Plus,
-  Icon_Normal_Profile,
-  Icon_Search_Black,
   Icon_Share_Black,
-  Img_Category,
   MARGIN_TOP,
 } from '../../constants';
-import { ColorButton } from '../../components/Button';
-import { useGlobalState } from '../../redux/Store';
-import { IExperience, IFile, IUser } from '../../interfaces/app';
+import { IAvailableDate, IExperience } from '../../interfaces/app';
 import { ExperienceDetailBookView, SelectDatesView } from '../../components/View';
-import GlobalStyle from '../../styles/global';
+
 
 const { width: viewportWidth, height: viewportHeight } = Dimensions.get('window');
 
-export const ExperienceDetailBookScreen: React.FC = () => {
+export const ExperienceDetailBookScreen: React.FC = ({route}) => {
 
   const { goBack, navigate } = useNavigation();
+  const experience: IExperience = route.params.experience;
 
-  const profile: IUser = useGlobalState('userInfo');
-
-  const [experienceList, setExperienceList] = useState<IExperience[]>([]);
   const [selectedDate, setSelectedDate] = useState<string>('');
   const [showSelectDates, setShowSelectDates] = useState<boolean>(false);
   const [guestCount, setGuestCount] = useState<number>(0)
+  const [allAvailableDates, setAllAvailableDates] = useState<IAvailableDate[]>([]);
+  const [availableDates, setAvailableDates] = useState<IAvailableDate[]>([]);
 
   useEffect(() => {
+    var availableDates: IAvailableDate[] = [];
+    var beforeDate = '';
+    for (let i = 0; i < experience.dateAvaibility.length; i++) {
+      var availableDate = experience.dateAvaibility[i];
+      if (availableDate.day != beforeDate) {
+        availableDate.show_date = true;
+        beforeDate = availableDate.day;
+      } else {
+        availableDate.show_date = false;
+      }
+      availableDates.push(availableDate);
+    }
+    setAllAvailableDates(availableDates);
+    setAvailableDates(availableDates);
   }, []);
 
   return (
@@ -106,9 +107,9 @@ export const ExperienceDetailBookScreen: React.FC = () => {
           style={styles.list}
           showsVerticalScrollIndicator={false}
           horizontal={false}
-          data={experienceList}
-          keyExtractor={item => item.id.toString()}
-          renderItem={({item}) => <ExperienceDetailBookView experience={item} onChooseDate={onChooseDate} />}
+          data={availableDates}
+          keyExtractor={item => item._id}
+          renderItem={({item}) => <ExperienceDetailBookView experience={experience} availableDate={item} onChooseDate={onChooseDate} />}
         />
       </SafeAreaView>
 
@@ -124,8 +125,8 @@ export const ExperienceDetailBookScreen: React.FC = () => {
 
   }
 
-  function onChooseDate(experience: IExperience, time: string) {
-    navigate('ExperienceDetailConfirmPay', {experience: experience, time: time});
+  function onChooseDate(availableDate: IAvailableDate) {
+    navigate('ExperienceDetailConfirmPay', {experience: experience, availableDate: availableDate, guestCount: guestCount});
   }
 
   function getVisibleDate() {
@@ -138,6 +139,21 @@ export const ExperienceDetailBookScreen: React.FC = () => {
   }
 
   function onSelectDate(selectedDate: string) {
+    if (selectedDate == '') {
+      setAvailableDates(allAvailableDates);
+    } else {
+      const date = Moment(selectedDate, 'YYYY-MM-DD', true).format();
+      const filterDateString = Moment(date).format('MMMM DD, YYYY');
+
+      var availableDates: IAvailableDate[] = [];
+      for (let i = 0; i < experience.dateAvaibility.length; i++) {
+        var availableDate = experience.dateAvaibility[i];
+        if (availableDate.day == filterDateString) {
+          availableDates.push(availableDate);
+        }
+      }
+      setAvailableDates(availableDates);
+    }
     setSelectedDate(selectedDate);
     setShowSelectDates(false);
   }

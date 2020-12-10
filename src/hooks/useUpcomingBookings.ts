@@ -9,7 +9,7 @@ export const useUpcomingBookings = () => {
 
   const upcomingBookings = async (
   ): Promise<any> => {
-    var url = API_ENDPOINT.UPCOMING_BOOKING_LIST;
+    const url = API_ENDPOINT.UPCOMING_BOOKING_LIST;
 
     try {
       /*

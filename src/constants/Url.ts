@@ -11,10 +11,15 @@ export const API_ENDPOINT = {
   USER_RESET_PASSWORD   : `${API_HOST}/auth/reset-password`,
   
   // Users
+  USERS : `${API_HOST}/users`,
 
   // Categories
-  CATEGORIES : `${API_HOST}/categories/`,
+  CATEGORIES        : `${API_HOST}/categories`,
+  CATEGORIES_SEARCH : `${API_HOST}/categories/search`,
+
+  // Experiences
+  EXPERIENCES : `${API_HOST}/experiences`,
 
   // Hosts
-  HOSTS : `${API_HOST}/hosts/`,
+  HOSTS : `${API_HOST}/hosts`,
 };

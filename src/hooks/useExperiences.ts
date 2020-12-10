@@ -3,22 +3,68 @@ import axios from 'axios';
 // from app
 import { API_ENDPOINT, API_CONFIG } from '../constants';
 import { IApiSuccess } from '../interfaces/api';
-import { IExperience } from '../interfaces/app';
+import { IAvailableDateForCreate, IExperience, IFile } from '../interfaces/app';
 
 export const useExperiences = () => {
 
-  const experiences = async (
+  const getExperienceList = async (
   ): Promise<any> => {
-    var url = API_ENDPOINT.EXPERIENCE_LIST;
-
+    const url = API_ENDPOINT.EXPERIENCES;
     try {
       const { data } = await axios.get<IApiSuccess>(url, API_CONFIG);
-      const result: IExperienceCategory[] = data.data;
+      const result: IExperience[] = data.payload;
       return Promise.resolve(result);
     } catch (err) {
       return Promise.reject(null);
     }
   };
 
-  return { experiences };
+  const getExperienceInformation = async (
+    id: string,
+  ): Promise<any> => {
+    const url = API_ENDPOINT.EXPERIENCES + '/' + id;
+    try {
+      const { data } = await axios.get<IApiSuccess>(url, API_CONFIG);
+      const result: IExperience = data.payload;
+      return Promise.resolve(result);
+    } catch (err) {
+      return Promise.reject(null);
+    }
+  };
+
+  const createExperience = async (
+    title: string,
+    description: string,
+    duration: number,
+    price: number,
+    categoryName: string,
+    startDay: string,
+    endDay: string,
+    userId: string,
+    images: IFile[],
+    dateAvaibility: IAvailableDateForCreate[],
+  ): Promise<any> => {
+    const url = API_ENDPOINT.EXPERIENCES;
+    const body = {
+      title,
+      description,
+      duration,
+      price,
+      categoryName,
+      startDay,
+      endDay,
+      userId,
+      images,
+      dateAvaibility,
+    }
+    try {
+      const { data } = await axios.get<IApiSuccess>(url, API_CONFIG);
+      const result: IExperience = data.payload;
+      return Promise.resolve(result);
+    } catch (err) {
+      return Promise.reject(null);
+    }
+  };
+
+  return { getExperienceList, getExperienceInformation, createExperience };
 };

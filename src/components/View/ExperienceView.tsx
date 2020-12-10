@@ -1,4 +1,3 @@
-import { useNavigation } from '@react-navigation/native';
 import * as React from 'react';
 import {
   Image,
@@ -7,15 +6,14 @@ import {
   TouchableWithoutFeedback,
   View,
 } from 'react-native';
-import { SvgUri, SvgXml } from 'react-native-svg';
+import { SvgXml } from 'react-native-svg';
+import { useNavigation } from '@react-navigation/native';
 
 // from app
-import { 
-  COLOR, 
-  FONT,
-  Img_Category
-} from '../../constants';
+import { COLOR, FONT, getDurationString, HOST, Icon_Category, Img_Experience } from '../../constants';
 import { IExperience } from '../../interfaces/app';
+import { useExperiences } from '../../hooks';
+
 
 interface props {
   experience: IExperience;
@@ -25,37 +23,45 @@ interface props {
 export const ExperienceView: React.FC<props> = (props: props) => {
 
   const { navigate } = useNavigation();
-
+  const { getExperienceInformation } = useExperiences();
   const experience: IExperience = props.experience;
   const white_color: boolean = props.white_color;
   
   return (
-    <TouchableWithoutFeedback onPress={() => navigate('ExperienceDetail' , {experience: experience}) }>
+    <TouchableWithoutFeedback onPress={() => goExperienceDetailScreen() }>
       <View style={styles.container}>
         <Image
           style={styles.image}
-          // source={(props.experience.image == null || props.experience.image == '') ? Img_Experience_1 : {uri: props.experience.image}}
-          // test
-          source={Img_Category}
-        />
-        <Text style={{...styles.title, color: white_color == true ? COLOR.systemWhiteColor : COLOR.blackColor}}>{props.experience.title}</Text>
+          source={experience.images.length > 0 ? {uri: experience.images[0]} : Img_Experience} />
+        <Text style={{...styles.title, color: white_color == true ? COLOR.systemWhiteColor : COLOR.blackColor}}>{experience.title}</Text>
         <View style={styles.experienceContainer}>
-          {/* {
-            props.experience.experience_icon != null && props.experience.experience_icon != ''
-            ? <SvgUri width='100%' height='100%' uri={props.experience.experience_icon} />
-            : null
-          } */}
-          {/* // test */}
-          <SvgXml height='100%' xml={props.experience.experience_icon} />
-          <Text style={{...styles.experience, color: white_color == true ? COLOR.systemWhiteColor : COLOR.blackColor}}>{props.experience.experience + ' • ' + props.experience.duration}</Text>
+          
+          {
+            experience.icon != null && experience.icon != ''
+            ? <Image
+                style={{width: '100%', height: '100%', resizeMode: 'cover', overflow: 'hidden'}}
+                source={{uri: experience.icon}} />
+            : <SvgXml height='100%' xml={Icon_Category} />
+          }          
+          <Text style={{...styles.experience, color: white_color == true ? COLOR.systemWhiteColor : COLOR.blackColor}}>{experience.categoryName + ' • ' + getDurationString(experience.duration)}</Text>
         </View>
         <View style={styles.priceContainer}>
-          <Text style={{...styles.price, color: white_color == true ? COLOR.systemWhiteColor : COLOR.blackColor}}>{'From ' + props.experience.min_price + '$'}</Text>
-          <Text style={{...styles.personal, color: white_color == true ? COLOR.systemWhiteColor : COLOR.blackColor}}>{' / ' + props.experience.personal}</Text>
+          <Text style={{...styles.price, color: white_color == true ? COLOR.systemWhiteColor : COLOR.blackColor}}>{'From ' + experience.price.toString() + '$'}</Text>
+          {/* <Text style={{...styles.personal, color: white_color == true ? COLOR.systemWhiteColor : COLOR.blackColor}}>{' / ' + experience.personal}</Text> */}
         </View>
       </View>
     </TouchableWithoutFeedback>
   );
+
+  async function goExperienceDetailScreen() {
+    // test
+    navigate('ExperienceDetail' , {experience: experience, host: HOST})
+    // await getExperienceInformation(experience.id)
+    // .then(async (experienceDetail: Promise<IExperience>) => {
+    //   navigate('ExperienceDetail' , {experience: experienceDetail})
+    // }).catch(() => {
+    // });
+  }
 }
 
 const styles = StyleSheet.create({

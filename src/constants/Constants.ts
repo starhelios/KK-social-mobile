@@ -1,5 +1,6 @@
 import { AxiosRequestConfig } from "axios";
 import { Platform } from "react-native";
+import { IHost } from "src/interfaces/app";
 
 // Login Type
 export const EMAIL_LOGIN = 'Email';
@@ -29,5 +30,24 @@ export const setApiConfig = (token: string) => {
       'Content-Type': 'application/json',
       'Authorization': 'JWT ' + token,
     },
+  }
+}
+
+export var HOST: IHost;
+export const setHost = (host: IHost) => {
+  HOST = host;
+}
+
+export const getDurationString = (duration: number) => {
+  let hour = Math.floor(duration / 60);
+  let min = duration % 60;
+  if (hour > 0) {
+    if (min > 0) {
+      return hour.toString() + 'hr ' + min.toString() + 'min';
+    } else {
+      return hour.toString() + 'hr';
+    }
+  } else {
+    return min.toString() + 'min';
   }
 }

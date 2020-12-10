@@ -84,8 +84,13 @@ export const SelectDatesView: React.FC<props> = (props: props) => {
               indicatorColor: COLOR.systemBlackColor,
             }}
             onDayPress={(day) => {
-              setSelectedDate(day.dateString);
-              updateMarkerDate(day.dateString);
+              if (day.dateString != selectedDate) {
+                setSelectedDate(day.dateString);
+                updateMarkerDate(day.dateString);
+              } else {
+                setSelectedDate('');
+                updateMarkerDate('');
+              }
             }}
             onDayLongPress={(day) => { console.log('selected day', day) }}
             onMonthChange={(month) => { console.log('month changed', month) }}

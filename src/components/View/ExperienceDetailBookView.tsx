@@ -1,4 +1,3 @@
-import { useNavigation } from '@react-navigation/native';
 import * as React from 'react';
 import {
   Dimensions,
@@ -7,19 +6,19 @@ import {
   TouchableWithoutFeedback,
   View,
 } from 'react-native';
+import { useState } from 'react';
 
 // from app
-import { 
-  COLOR, 
-  FONT,
-} from '../../constants';
-import { IExperience } from '../../interfaces/app';
+import { COLOR, FONT } from '../../constants';
+import { IAvailableDate, IExperience } from '../../interfaces/app';
 import { ColorButton } from '../Button';
 import GlobalStyle from '../../styles/global';
 
+
 interface props {
   experience: IExperience;
-  onChooseDate: (experience: IExperience, time: string) => void;
+  availableDate: IAvailableDate;
+  onChooseDate: (availableDate: IAvailableDate) => void;
 }
 
 const { width: viewportWidth } = Dimensions.get('window');
@@ -27,25 +26,26 @@ const { width: viewportWidth } = Dimensions.get('window');
 export const ExperienceDetailBookView: React.FC<props> = (props: props) => {
 
   const experience: IExperience = props.experience;
+  const availableDate: IAvailableDate = props.availableDate;
 
   return (
     <View>
     {
-      experience.show_date == true
-      ? <Text style={styles.date}>{experience.date}</Text>
+      availableDate.show_date == true
+      ? <Text style={styles.date}>{availableDate.day}</Text>
       : null
     }
 
       <View style={styles.container}>
         <View>
-          <Text style={styles.time}>{'4:00 PM - 5:00 PM (EDT)'}</Text>
+          <Text style={styles.time}>{availableDate.startTime + ' - ' + availableDate.endTime + ' (EDT)'}</Text>
           <View style={styles.price_container}>
-            <Text style={{...styles.time, fontFamily: FONT.AN_Bold}}>{'$150'}</Text>
-            <Text style={styles.time}>{' / person'}</Text>
+            <Text style={{...styles.time, fontFamily: FONT.AN_Bold}}>{'$' + experience.price}</Text>
+            {/* <Text style={styles.time}>{' / person'}</Text> */}
           </View>
         </View>
 
-        <TouchableWithoutFeedback onPress={() => props.onChooseDate(experience, experience.personal) }>
+        <TouchableWithoutFeedback onPress={() => props.onChooseDate(availableDate) }>
           <View style={styles.button_container}>
             <ColorButton title='Choose' color={COLOR.systemWhiteColor} backgroundColor={COLOR.redColor} />
           </View>

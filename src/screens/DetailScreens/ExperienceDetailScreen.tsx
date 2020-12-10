@@ -18,11 +18,13 @@ import { SvgXml } from 'react-native-svg';
 import { FlatList } from 'react-native-gesture-handler';
 import LinearGradient from 'react-native-linear-gradient';
 import PageControl from 'react-native-page-control';
+import Moment from 'moment';
 
 // from app
 import { 
   COLOR, 
   FONT, 
+  getDurationString, 
   Icon_Back,
   Icon_Back_Black,
   Icon_Experience_Black,
@@ -30,12 +32,11 @@ import {
   Icon_Share_Black,
   Icon_Share_White,
   Icon_Time_Black,
-  Img_Avatar_1,
-  Img_Experience_2,
+  Img_User_Avatar,
   MARGIN_TOP,
 } from '../../constants';
 import { ColorButton } from '../../components/Button';
-import { IExperience } from '../../interfaces/app';
+import { IExperience, IHost } from '../../interfaces/app';
 import GlobalStyle from '../../styles/global';
 
 
@@ -46,21 +47,13 @@ export const ExperienceDetailScreen: React.FC = ({route}) => {
   const { navigate, goBack } = useNavigation();
 
   const [currentPage, setCurrentPage] = useState<number>(0);
-  const [experienceImages, setExperienceImages] = useState<string[]>([]);
   const [isBlackHeader, setIsBlackHeader] = useState<boolean>(true)
 
   const experience: IExperience = route.params.experience;
+  const host: IHost = route.params.host;
   var scrollViewRef: ScrollView | null;
 
   useEffect(() => {
-    // test
-    var images: string[] = [];
-    images.push('1');
-    images.push('2');
-    images.push('3');
-    images.push('4');
-    images.push('5');
-    setExperienceImages(images);
   }, [])
 
   return (
@@ -86,7 +79,7 @@ export const ExperienceDetailScreen: React.FC = ({route}) => {
               onMomentumScrollEnd={({nativeEvent}) => { 
                 setCurrentPage(Math.round(nativeEvent.contentOffset.x / viewportWidth));
               }}
-              renderItem={({item}) => <Image style={styles.image} source={Img_Experience_2} />}
+              renderItem={({item}) => <Image style={styles.image} source={{uri: item}} />}
             />
 
             <View style={styles.page_control_container}>  
@@ -107,22 +100,22 @@ export const ExperienceDetailScreen: React.FC = ({route}) => {
 
           <View style={styles.content_container}>
             <Text style={styles.title}>{experience.title}</Text>
-            <Text style={styles.location}>{experience.location}</Text>
+            <Text style={styles.location}>{host.email}</Text>
             <View style={{...GlobalStyle.auth_line, backgroundColor: COLOR.alphaBlackColor20, marginTop: 22}} />
             
             <View style={{marginTop: 12, flexDirection: 'row'}}>
-              <Text style={styles.host_name}>{'Hosted by ' + experience.host.username}</Text>
-              <Image style={styles.avatar} source={Img_Avatar_1} />
+              <Text style={styles.host_name}>{'Hosted by ' + host.fullname}</Text>
+              <Image style={styles.avatar} source={host.avatarUrl != null && host.avatarUrl != '' ? {uri: host.avatarUrl} : Img_User_Avatar} />
             </View>
 
             <View style={{marginTop: 12, height: 16, flexDirection: 'row'}}>
               <SvgXml width={16} height={16} xml={Icon_Time_Black} />
-              <Text style={{...styles.location, marginTop: 1, marginLeft: 8}}>{experience.duration}</Text>
+              <Text style={{...styles.location, marginTop: 1, marginLeft: 8}}>{getDurationString(experience.duration)}</Text>
             </View>
 
             <View style={{marginTop: 12, height: 16, flexDirection: 'row'}}>
               <SvgXml width={16} height={16} xml={Icon_Experience_Black} />
-              <Text style={{...styles.location, marginTop: 1, marginLeft: 8}}>{experience.experience}</Text>
+              <Text style={{...styles.location, marginTop: 1, marginLeft: 8}}>{experience.categoryName}</Text>
             </View>
             <View style={{...GlobalStyle.auth_line, backgroundColor: COLOR.alphaBlackColor20, marginTop: 22}} />
 
@@ -132,10 +125,10 @@ export const ExperienceDetailScreen: React.FC = ({route}) => {
 
             <View style={{marginTop: 22, flexDirection: 'row'}}>
               <View style={{width: viewportWidth - 100}}>
-                <Text style={styles.host_name}>{'Say Hello! to ' + experience.host.username}</Text>
-                <Text style={styles.joined_date}>{'Joined in ' + 'May 2020'}</Text>
+                <Text style={styles.host_name}>{'Say Hello! to ' + host.fullname}</Text>
+                <Text style={styles.joined_date}>{'Joined in ' + Moment(host.dateOfBirth).format('MMMM DD, YYYY')}</Text>
               </View>
-              <Image style={styles.avatar} source={Img_Avatar_1} />
+              <Image style={styles.avatar} source={host.avatarUrl != null && host.avatarUrl != '' ? {uri: host.avatarUrl} : Img_User_Avatar} />
             </View>
 
             <View style={{marginTop: 22, flexDirection: 'row', height: 16}}>
@@ -146,7 +139,7 @@ export const ExperienceDetailScreen: React.FC = ({route}) => {
             <Text style={styles.about}>{experience.description}</Text>
             <View style={{...GlobalStyle.auth_line, backgroundColor: COLOR.alphaBlackColor20, marginTop: 22}} />
 
-            <Text style={{...styles.host_name, marginTop: 22}}>{experience.host.username + '\'s Experiences'}</Text>
+            <Text style={{...styles.host_name, marginTop: 22}}>{host.fullname + '\'s Experiences'}</Text>
           </View>
 
           <FlatList
@@ -154,7 +147,7 @@ export const ExperienceDetailScreen: React.FC = ({route}) => {
             contentContainerStyle={{paddingHorizontal: 24}}
             showsHorizontalScrollIndicator={false}
             horizontal={true}
-            data={experienceImages}
+            data={experience.images}
             keyExtractor={item => item}
             renderItem={({item}) => renderExperienceImage(item) }
           />
@@ -189,8 +182,8 @@ export const ExperienceDetailScreen: React.FC = ({route}) => {
 
         <View style={styles.bottom_container}>
           <View style={styles.price_container}>
-            <Text style={styles.price}>{'From $' + experience.min_price}</Text>
-            <Text style={styles.personal}>{' / ' + experience.personal}</Text>
+            <Text style={styles.price}>{'From $' + experience.price}</Text>
+            {/* <Text style={styles.personal}>{' / ' + experience.personal}</Text> */}
           </View>
 
           <TouchableWithoutFeedback onPress={() => navigate('ExperienceDetailBook', {experience: experience})}>
@@ -219,7 +212,7 @@ export const ExperienceDetailScreen: React.FC = ({route}) => {
   function renderExperienceImage(uri: string) {
     return (
       <View style={experience_image_styles.container}>
-        <Image source={Img_Experience_2} style={experience_image_styles.image}/>
+        <Image style={experience_image_styles.image} source={{uri: uri}} />
       </View>
     );
   }
@@ -329,6 +322,7 @@ const styles = StyleSheet.create({
     width: 40,
     height: 40,
     borderRadius: 20,
+    resizeMode: 'cover',
     overflow: 'hidden',
   },
   about: {

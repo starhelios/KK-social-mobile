@@ -38,10 +38,14 @@ export const SplashScreen: React.FC = () => {
   const { loginUser } = useAuthentication();
   const dispatch = useDispatch();
 
+  var fetching = false;
+
   useEffect(() => {
-    if (loadAutoLoginInformation() == false) {
-      goMainScreen();
-    };
+    setTimeout(() => {
+      if (fetching == false) {
+        navigate('TabBar');
+      }
+    }, LOADING_TIME);
   }, [])
 
   function loadAutoLoginInformation() {
@@ -52,7 +56,6 @@ export const SplashScreen: React.FC = () => {
             DefaultPreference.get(PASSWORD).then(function(passwordString) {
               if (passwordString != null && passwordString != '') {
                 onAutoLoginByEmail(emailAddress, passwordString);
-                return true;
               }
             });
           }
@@ -64,18 +67,17 @@ export const SplashScreen: React.FC = () => {
             DefaultPreference.get(CODE).then(function(code) {
               if (code != null && code != '') {
                 onAutoLoginBySocial(loginType, accessToken, code);
-                return true;
               }
             });
           }
         });
       }
     });
-
-    return false;
   }
 
   const onAutoLoginByEmail = useCallback(async (emailAddress: string, passwordString: string): Promise<void> => {
+    fetching = true;
+
     loginUser(emailAddress, passwordString)
     .then(async (result: Promise<ILoginUser>) => {
       const user = (await result).user;
@@ -99,6 +101,8 @@ export const SplashScreen: React.FC = () => {
   }, []);
 
   const onAutoLoginBySocial = useCallback(async (loginType: string, accessToken: string, code: string): Promise<void> => {
+    fetching = true;
+
     goMainScreen();
   }, []);
 

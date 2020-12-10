@@ -34,7 +34,7 @@ const TabBarNavigator: React.FC = () => (
       options={{index: 0}}
       component={HomeNavigator}
     />
-    {/* <TabStack.Screen
+    <TabStack.Screen
       name="BookingTap"
       options={{index: 1}}
       component={BookingNavigator}
@@ -43,7 +43,7 @@ const TabBarNavigator: React.FC = () => (
       name="ProfileTap"
       options={{index: 2}}
       component={ProfileNavigator}
-    /> */}
+    />
   </TabStack.Navigator>
 );
 

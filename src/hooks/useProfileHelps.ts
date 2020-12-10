@@ -9,7 +9,7 @@ export const useProfileHelps = () => {
 
   const profileHelps = async (
   ): Promise<any> => {
-    var url = API_ENDPOINT.PROFILE_HELP;
+    const url = API_ENDPOINT.PROFILE_HELP;
 
     try {
       /*
