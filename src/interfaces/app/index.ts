@@ -1,26 +1,31 @@
 // Authentication
 export * from './LoginUser';
-export * from './User';
 export * from './Tokens';
 
 // Users
+export * from './User';
+export * from './UserList';
 
 // Categories
 export * from './Category';
 
 // Experiences
 export * from './Experience';
+export * from './ExperienceDetail';
 export * from './AvailableDate';
 
 // Hosts
 export * from './Host';
+export * from './HostDetail';
 export * from './HostList';
 
+// Common
 export * from './File';
+export * from './ColorText';
+
+
 
 export * from './Booking';
-export * from './ColorText';
 export * from './ProfileHelp';
 export * from './Bank';
 export * from './Card';
-export * from './User';

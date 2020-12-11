@@ -3,7 +3,7 @@ import axios from 'axios';
 // from app
 import { API_ENDPOINT, API_CONFIG } from '../constants';
 import { IApiSuccess } from '../interfaces/api';
-import { ICategory } from '../interfaces/app';
+import { ICategory, IFile } from '../interfaces/app';
 
 export const useCategories = () => {
 
@@ -27,10 +27,12 @@ export const useCategories = () => {
 
   const createCategory = async (
     name: string,
+    icon: IFile,
   ): Promise<any> => {
     const url = API_ENDPOINT.CATEGORIES;
     const body = {
       name,
+      icon,
     }
     try {
       const { data } = await axios.post<IApiSuccess>(url, body, API_CONFIG);

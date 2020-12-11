@@ -1,10 +1,9 @@
 export interface IUser {
-	id: string;
-	fullname: string;
-	status: string;
-	email: string;
-	isHost: boolean;
-
-	image: string;
-	birthday: string;
+	id: string,
+	status: string,
+	isHost: boolean,
+	email: string,
+	fullname: string,
+	avatarUrl: string,
+	dateOfBirth: string,
 }

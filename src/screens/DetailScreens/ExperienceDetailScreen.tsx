@@ -24,7 +24,7 @@ import Moment from 'moment';
 import { 
   COLOR, 
   FONT, 
-  getDurationString, 
+  GetHostDetail, 
   Icon_Back,
   Icon_Back_Black,
   Icon_Experience_Black,
@@ -36,7 +36,7 @@ import {
   MARGIN_TOP,
 } from '../../constants';
 import { ColorButton } from '../../components/Button';
-import { IExperience, IHost } from '../../interfaces/app';
+import { IExperience, IExperienceDetail, IHost, IHostDetail } from '../../interfaces/app';
 import GlobalStyle from '../../styles/global';
 
 
@@ -49,8 +49,10 @@ export const ExperienceDetailScreen: React.FC = ({route}) => {
   const [currentPage, setCurrentPage] = useState<number>(0);
   const [isBlackHeader, setIsBlackHeader] = useState<boolean>(true)
 
-  const experience: IExperience = route.params.experience;
-  const host: IHost = route.params.host;
+  const experienceDetail: IExperienceDetail = route.params.experienceDetail;
+  const experience: IExperience = experienceDetail.experience;
+  const hostDetail: IHostDetail = route.params.hostDetail;
+  const host: IHost = hostDetail._doc;
   var scrollViewRef: ScrollView | null;
 
   useEffect(() => {
@@ -110,7 +112,7 @@ export const ExperienceDetailScreen: React.FC = ({route}) => {
 
             <View style={{marginTop: 12, height: 16, flexDirection: 'row'}}>
               <SvgXml width={16} height={16} xml={Icon_Time_Black} />
-              <Text style={{...styles.location, marginTop: 1, marginLeft: 8}}>{getDurationString(experience.duration)}</Text>
+              <Text style={{...styles.location, marginTop: 1, marginLeft: 8}}>{GetHostDetail(experience.duration)}</Text>
             </View>
 
             <View style={{marginTop: 12, height: 16, flexDirection: 'row'}}>
@@ -133,10 +135,10 @@ export const ExperienceDetailScreen: React.FC = ({route}) => {
 
             <View style={{marginTop: 22, flexDirection: 'row', height: 16}}>
               <SvgXml width={16} height='100%' xml={Icon_Review_Black} />
-              <Text style={styles.review_count}>{'18 Reviews'}</Text>
+              <Text style={styles.review_count}>{hostDetail.ratingCount.toString() + ' Reviews'}</Text>
             </View>
 
-            <Text style={styles.about}>{experience.description}</Text>
+            <Text style={styles.about}>{host.aboutMe}</Text>
             <View style={{...GlobalStyle.auth_line, backgroundColor: COLOR.alphaBlackColor20, marginTop: 22}} />
 
             <Text style={{...styles.host_name, marginTop: 22}}>{host.fullname + '\'s Experiences'}</Text>

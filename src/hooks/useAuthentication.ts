@@ -1,8 +1,8 @@
 import axios from 'axios';
 
 // from app
-import { API_CONFIG, API_ENDPOINT, setApiConfig } from '../constants';
-import { ILoginUser, IToken, ITokens } from '../interfaces/app';
+import { API_CONFIG, API_ENDPOINT, SetApiConfig } from '../constants';
+import { ILoginUser, IToken, ITokens, IUser } from '../interfaces/app';
 import { handleError } from '../utils';
 import { IApiSuccess, IApiSuccessMessage } from '../interfaces/api';
 import { ActionType } from '../redux/Reducer';
@@ -29,7 +29,7 @@ export const useAuthentication = () => {
     try {
       const { data } = await axios.post<IApiSuccess>(url, body, API_CONFIG);
       const result: ILoginUser = data.payload;
-      setLoginUser(result);
+      setLoginUserInfo(result);
       return Promise.resolve(true);
     } catch (err) {
       const apiError = handleError(err);
@@ -55,7 +55,7 @@ export const useAuthentication = () => {
     try {
       const { data } = await axios.post<IApiSuccess>(url, body, API_CONFIG);
       const result: ILoginUser = data.payload;
-      setLoginUser(result);
+      setLoginUserInfo(result);
       return Promise.resolve(true);
     } catch (err) {
       const apiError = handleError(err);
@@ -186,24 +186,27 @@ export const useAuthentication = () => {
     }
   };
 
-  const setLoginUser = (loginUser: ILoginUser) => {
-    dispatch({
-      type: ActionType.SET_USER_INFO,
-      payload: {
-        id: loginUser.user.id,
-        fullname: loginUser.user.fullname,
-        isHost: loginUser.user.isHost,
-        email: loginUser.user.email,
-        status: loginUser.user.status,
-        
-        image: loginUser.user.image,
-        birthday: loginUser.user.birthday, 
-      },
-    });
-
+  const setLoginUserInfo = (loginUser: ILoginUser) => {
+    setLoginUser(loginUser.user);
     setAccessToken(loginUser.tokens.access);
     setRefreshToken(loginUser.tokens.refresh);
   };
+
+  const setLoginUser = (user: IUser) => {
+    dispatch({
+      type: ActionType.SET_USER_INFO,
+      payload: {
+        id: user.id,
+        fullname: user.fullname,
+        isHost: user.isHost,
+        email: user.email,
+        status: user.status,
+        
+        avatarUrl: user.avatarUrl,
+        dateOfBirth: user.dateOfBirth, 
+      },
+    });
+  }
 
   const setAccessToken = (token: IToken) => {
     dispatch({
@@ -213,7 +216,7 @@ export const useAuthentication = () => {
         expires: token.expires, 
       },
     });
-    setApiConfig(token.token);
+    SetApiConfig(token.token);
   };
 
   const setRefreshToken = (token: IToken) => {
@@ -226,5 +229,5 @@ export const useAuthentication = () => {
     });
   };
 
-  return { registerUser, loginUser, logoutUser, refreshTokens, changePassword, forgotPassword, resetPassword };
+  return { registerUser, loginUser, logoutUser, refreshTokens, changePassword, forgotPassword, resetPassword, setLoginUser };
 };

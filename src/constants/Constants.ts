@@ -1,6 +1,8 @@
 import { AxiosRequestConfig } from "axios";
 import { Platform } from "react-native";
-import { IHost } from "src/interfaces/app";
+
+// from app
+import { IUser } from "../interfaces/app";
 
 // Login Type
 export const EMAIL_LOGIN = 'Email';
@@ -16,29 +18,33 @@ export const ACCESS_TOKEN = 'Access_Token';
 export const CODE = 'Code';
 export const IS_FIRST_LOGIN = 'Is_First_Login';
 
+export const DAY_OF_WEEK = Object.freeze({
+  Sunday: 0,
+  Monday: 1,
+  Tuesday: 2,
+  Wednesday: 3,
+  Thursday: 4,
+  Friday: 5,
+  Saturday: 6,
+});
+
 // Values
 export const MARGIN_TOP = Platform.OS == "ios" ? 15 : 40;
 export const LOADING_TIME = 1500;
 
-
 // Global Values
 export var API_CONFIG: AxiosRequestConfig;
-export const setApiConfig = (token: string) => {
+export const SetApiConfig = (token: string) => {
   API_CONFIG = {
     headers: {
       'accept': 'application/json',
       'Content-Type': 'application/json',
-      'Authorization': 'JWT ' + token,
+      'Authorization': 'Bearer ' + token,
     },
   }
 }
 
-export var HOST: IHost;
-export const setHost = (host: IHost) => {
-  HOST = host;
-}
-
-export const getDurationString = (duration: number) => {
+export const GetHostDetail = (duration: number) => {
   let hour = Math.floor(duration / 60);
   let min = duration % 60;
   if (hour > 0) {

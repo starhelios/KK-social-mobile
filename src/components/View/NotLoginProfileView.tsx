@@ -9,16 +9,11 @@ import {
   View,
 } from 'react-native';
 import { useEffect, useState } from 'react';
-import PageControl from 'react-native-page-control';
 import { useNavigation } from '@react-navigation/native';
+import PageControl from 'react-native-page-control';
 
 // from app
-import { 
-  COLOR, 
-  FONT, 
-  Img_Category, 
-  MARGIN_TOP, 
-} from '../../constants';
+import { COLOR, FONT, Img_Experience, MARGIN_TOP } from '../../constants';
 import { ColorButton } from '../Button';
 import { ContinueText } from '../Text';
 import { IProfileHelp } from '../../interfaces/app';
@@ -152,7 +147,7 @@ export const NotLoginProfileView: React.FC = () => {
     return <View>
       {/* <Image style={styles.profile_help_image} source={item.image} /> */}
       {/* // test */}
-      <Image style={styles.profile_help_image} source={Img_Category} />
+      <Image style={styles.profile_help_image} source={Img_Experience} />
 
       {/* <View style={styles.profile_help_description_container}>
         <Text style={styles.profile_help_description}>{item.title}</Text>

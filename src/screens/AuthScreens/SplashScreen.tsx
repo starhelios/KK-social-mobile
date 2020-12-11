@@ -8,6 +8,8 @@ import { Container } from 'native-base';
 import { useCallback, useEffect } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { SvgXml } from 'react-native-svg';
+import { Calendar, LocaleConfig } from 'react-native-calendars';
+import Moment from 'moment';
 import DefaultPreference from 'react-native-default-preference';
 
 // from app
@@ -25,22 +27,23 @@ import {
   APPLE_LOGIN,
   ACCESS_TOKEN,
   CODE,
-  setApiConfig,
 } from '../../constants';
 import { useAuthentication } from '../../hooks';
 import { ILoginUser } from '../../interfaces/app';
-import { ActionType } from '../../redux/Reducer';
-import { useDispatch } from '../../redux/Store';
 
 export const SplashScreen: React.FC = () => {
 
   const { navigate } = useNavigation();
   const { loginUser } = useAuthentication();
-  const dispatch = useDispatch();
 
   var fetching = false;
 
   useEffect(() => {
+    // LocaleConfig.defaultLocale = 'en';
+    Moment.locale('en');
+
+    loadAutoLoginInformation();
+
     setTimeout(() => {
       if (fetching == false) {
         navigate('TabBar');
@@ -80,20 +83,6 @@ export const SplashScreen: React.FC = () => {
 
     loginUser(emailAddress, passwordString)
     .then(async (result: Promise<ILoginUser>) => {
-      const user = (await result).user;
-      dispatch({
-        type: ActionType.SET_USER_INFO,
-        payload: {
-          id: user.id,
-          isHost: user.isHost,
-          email: user.email,
-          fullname: user.fullname,
-          status: user.status,
-          image: user.image,
-          birthday: user.birthday,
-        },
-      });
-      setApiConfig((await result).tokens.access.token);
       goMainScreen();
     }).catch(() => {
       goMainScreen();

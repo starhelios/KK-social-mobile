@@ -18,7 +18,7 @@ import {
   COLOR, 
   FONT, 
   Icon_Back,
-  Img_Category,
+  Img_Experience,
   MARGIN_TOP,
 } from '../../constants';
 import { ColorButton } from '../../components/Button';
@@ -56,7 +56,7 @@ export const ConfirmedBookingDetailScreen: React.FC = ({route}) => {
           <View style={styles.image_container}>
             <Image
               style={styles.image}
-              source={(booking.image == null || booking.image == '') ? Img_Category : {uri: booking.image}}
+              source={(booking.image == null || booking.image == '') ? Img_Experience : {uri: booking.image}}
             />
             {
               isCompleted == true

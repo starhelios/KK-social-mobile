@@ -21,8 +21,8 @@ import {
   MARGIN_TOP, 
 } from '../../constants';
 import { TitleArrowButton } from '../Button';
-import { IProfileHelp, IUser } from '../../interfaces/app';
-import { useProfileHelps } from '../../hooks';
+import { IUser } from '../../interfaces/app';
+import { useUsers } from '../../hooks';
 import { useGlobalState } from '../../redux/Store';
 
 const { width: viewportWidth, height: viewportHeight } = Dimensions.get('window');
@@ -30,23 +30,15 @@ const { width: viewportWidth, height: viewportHeight } = Dimensions.get('window'
 export const LoginProfileView: React.FC = () => {
 
   const { navigate } = useNavigation();
-  const { profileHelps } = useProfileHelps();
+  const { getUserInformation } = useUsers();
 
-  const [profileHelpList, setProfileHelpList] = useState<IProfileHelp[]>([]);
   const [currentPage, setCurrentPage] = useState<number>(0);
 
   const profile: IUser = useGlobalState('userInfo');
 
   useEffect(() => {
-    loadProfileList();
-  }, [profile]);
 
-  async function loadProfileList() {
-    await profileHelps()
-    .then(async (result: Promise<IProfileHelp[]>) => {
-      setProfileHelpList(await result);
-    });
-  }
+  }, [profile]);
 
   return (
     <View style={{flex: 1}}>
@@ -54,8 +46,8 @@ export const LoginProfileView: React.FC = () => {
         <View style={styles.profile_container}>
           <View style={styles.avatar}>
             {
-              profile.image != ''
-              ? <Image style={{width: '100%', height: '100%', resizeMode: 'cover'}} source={{uri: profile.image}} />
+              profile.avatarUrl != ''
+              ? <Image style={{...styles.avatar, resizeMode: 'cover'}} source={{uri: profile.avatarUrl}} />
               : <View style={styles.profile_icon}>
                   <View style={{width: 20, height: 25}}>
                     <SvgXml width='100%' height='100%' xml={Icon_Normal_Profile} />

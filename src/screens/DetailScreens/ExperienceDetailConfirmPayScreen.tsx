@@ -13,6 +13,7 @@ import { Container } from 'native-base';
 import { useEffect } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { SvgXml } from 'react-native-svg';
+import Moment from 'moment';
 
 // from app
 import { 
@@ -24,8 +25,7 @@ import {
   MARGIN_TOP,
 } from '../../constants';
 import { ColorButton, TitleArrowButton } from '../../components/Button';
-import { useGlobalState } from '../../redux/Store';
-import { IAvailableDate, IExperience, IHost, IUser } from '../../interfaces/app';
+import { IAvailableDate, IExperience } from '../../interfaces/app';
 
 
 const { width: viewportWidth } = Dimensions.get('window');
@@ -75,7 +75,7 @@ export const ExperienceDetailConfirmPayScreen: React.FC = ({route}) => {
           <Text style={styles.info_title}>Details</Text>
 
           <Text style={styles.info_detail_title}>Date</Text>
-          <Text style={styles.info_detail_content}>{availableDate.day + ' ' + availableDate.startTime + ' - ' + availableDate.endTime}</Text>
+          <Text style={styles.info_detail_content}>{Moment(availableDate.day).format('ddd, MMM d') + '    ' + availableDate.startTime + ' - ' + availableDate.endTime}</Text>
           <View style={styles.line} />
 
           <Text style={styles.info_detail_title}>Guest</Text>

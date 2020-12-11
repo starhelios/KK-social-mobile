@@ -1,5 +1,6 @@
 import * as React from 'react';
 import {
+  Alert,
   Image,
   StyleSheet,
   Text,
@@ -10,9 +11,16 @@ import { SvgXml } from 'react-native-svg';
 import { useNavigation } from '@react-navigation/native';
 
 // from app
-import { COLOR, FONT, getDurationString, HOST, Icon_Category, Img_Experience } from '../../constants';
-import { IExperience } from '../../interfaces/app';
-import { useExperiences } from '../../hooks';
+import { 
+  COLOR, 
+  ERROR_MESSAGE, 
+  FONT, 
+  GetHostDetail, 
+  Icon_Category, 
+  Img_Experience,
+} from '../../constants';
+import { IExperience, IExperienceDetail, IHostDetail } from '../../interfaces/app';
+import { useExperiences, useHosts } from '../../hooks';
 
 
 interface props {
@@ -23,7 +31,8 @@ interface props {
 export const ExperienceView: React.FC<props> = (props: props) => {
 
   const { navigate } = useNavigation();
-  const { getExperienceInformation } = useExperiences();
+  const { getExperienceDetail } = useExperiences();
+  const { getHostDetail } = useHosts();
   const experience: IExperience = props.experience;
   const white_color: boolean = props.white_color;
   
@@ -43,7 +52,7 @@ export const ExperienceView: React.FC<props> = (props: props) => {
                 source={{uri: experience.icon}} />
             : <SvgXml height='100%' xml={Icon_Category} />
           }          
-          <Text style={{...styles.experience, color: white_color == true ? COLOR.systemWhiteColor : COLOR.blackColor}}>{experience.categoryName + ' • ' + getDurationString(experience.duration)}</Text>
+          <Text style={{...styles.experience, color: white_color == true ? COLOR.systemWhiteColor : COLOR.blackColor}}>{experience.categoryName + ' • ' + GetHostDetail(experience.duration)}</Text>
         </View>
         <View style={styles.priceContainer}>
           <Text style={{...styles.price, color: white_color == true ? COLOR.systemWhiteColor : COLOR.blackColor}}>{'From ' + experience.price.toString() + '$'}</Text>
@@ -54,13 +63,21 @@ export const ExperienceView: React.FC<props> = (props: props) => {
   );
 
   async function goExperienceDetailScreen() {
-    // test
-    navigate('ExperienceDetail' , {experience: experience, host: HOST})
-    // await getExperienceInformation(experience.id)
-    // .then(async (experienceDetail: Promise<IExperience>) => {
-    //   navigate('ExperienceDetail' , {experience: experienceDetail})
-    // }).catch(() => {
-    // });
+    await getExperienceDetail(experience.id)
+    .then(async (experienceDetail: Promise<IExperienceDetail>) => {
+      getHostDetailInformation(await experienceDetail);
+    }).catch(() => {
+      Alert.alert(ERROR_MESSAGE.GET_EXPERIENCE_DETAIL_FAIL);
+    });
+  }
+
+  async function getHostDetailInformation(experienceDetail: IExperienceDetail) {
+    await getHostDetail(experience.userId)
+    .then(async (hostDetail: Promise<IHostDetail>) => {
+      navigate('ExperienceDetail' , {experienceDetail: experienceDetail, hostDetail: hostDetail});
+    }).catch(() => {
+      Alert.alert(ERROR_MESSAGE.GET_HOST_DETAIL_FAIL);
+    });
   }
 }
 

@@ -105,3 +105,11 @@
 - change home tab screen
 - change experience detail screen
 - change experience book screen
+
+### 2020.12.11
+- /users get api
+- /users/{userId} get api
+- /users/{userId} delete api
+- /users/{userId} patch api
+- change host detail screen
+- change profile edit screen

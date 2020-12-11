@@ -6,7 +6,7 @@ import {
   TouchableWithoutFeedback,
   View,
 } from 'react-native';
-import { useState } from 'react';
+import Moment from 'moment';
 
 // from app
 import { COLOR, FONT } from '../../constants';
@@ -32,7 +32,7 @@ export const ExperienceDetailBookView: React.FC<props> = (props: props) => {
     <View>
     {
       availableDate.show_date == true
-      ? <Text style={styles.date}>{availableDate.day}</Text>
+      ? <Text style={styles.date}>{Moment(availableDate.day).format('ddd, MMM d')}</Text>
       : null
     }
 

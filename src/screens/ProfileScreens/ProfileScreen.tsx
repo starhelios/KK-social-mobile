@@ -5,7 +5,7 @@ import {
   SafeAreaView,
 } from 'react-native';
 import { Container } from 'native-base';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 // from app
 import { COLOR } from '../../constants';
@@ -20,14 +20,17 @@ export const ProfileScreen: React.FC = () => {
 
   const profile: IUser = useGlobalState('userInfo');
 
+  const [userID, setUserID] = useState<string>(profile.id);
+
   useEffect(() => {
-  }, [])
+    setUserID(profile.id);
+  }, [profile])
 
   return (
     <Container style={{width: viewportWidth, flex: 1, backgroundColor: COLOR.blackColor}}>
       <SafeAreaView style={styles.safe_area}>
         {
-          profile.fullname == ''
+          userID == ''
           ? <NotLoginProfileView />
           : <LoginProfileView />
         }

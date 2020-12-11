@@ -12,4 +12,8 @@ export const ERROR_MESSAGE = {
   FORGOT_PASSWORD_FAIL: 'Failed to send the email for forgot password.',
   CHANGE_PASSWORD_FAIL: 'Failed to send change password.',
   RESET_PASSWORD_FAIL: 'Failed to send reset password.',
+  GET_EXPERIENCE_DETAIL_FAIL: 'Experience can\'t be found.',
+  GET_HOST_DETAIL_FAIL: 'Host can\'t be found.',
+  EMPTY_GUEST_COUNT: 'Please select guest count.',
+  UPDATE_USER_PROFILE_FAIL: 'Failed to update profile.',
 };

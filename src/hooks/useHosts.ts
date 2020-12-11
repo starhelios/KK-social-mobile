@@ -3,7 +3,7 @@ import axios from 'axios';
 // from app
 import { API_ENDPOINT, API_CONFIG } from '../constants';
 import { IApiSuccess } from '../interfaces/api';
-import { IHost, IHostList } from '../interfaces/app';
+import { IHost, IHostDetail, IHostList } from '../interfaces/app';
 
 export const useHosts = () => {
 
@@ -19,18 +19,18 @@ export const useHosts = () => {
     }
   };
 
-  const getHostInformation = async (
+  const getHostDetail = async (
     userId: string,
   ): Promise<any> => {
     const url = API_ENDPOINT.HOSTS + '/' + userId;
     try {
       const { data } = await axios.get<IApiSuccess>(url, API_CONFIG);
-      const result: IHost = data.payload;
+      const result: IHostDetail = data.payload;
       return Promise.resolve(result);
     } catch (err) {
       return Promise.reject(null);
     }
   };
 
-  return { getHostList, getHostInformation };
+  return { getHostList, getHostDetail };
 };

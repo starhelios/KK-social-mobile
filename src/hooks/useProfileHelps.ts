@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 // from app
-import { API_ENDPOINT, Icon_Category_Cooking, Icon_Category_Music, API_CONFIG } from '../constants';
+import { API_ENDPOINT } from '../constants';
 import { IApiSuccess } from '../interfaces/api';
 import { IProfileHelp } from '../interfaces/app';
 
@@ -9,7 +9,7 @@ export const useProfileHelps = () => {
 
   const profileHelps = async (
   ): Promise<any> => {
-    const url = API_ENDPOINT.PROFILE_HELP;
+    const url = API_ENDPOINT.USERS;
 
     try {
       /*

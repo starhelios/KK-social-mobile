@@ -10,6 +10,8 @@ import {
   TextInput,
   ScrollView,
   FlatList,
+  Keyboard,
+  KeyboardAvoidingView,
 } from 'react-native';
 import { Container } from 'native-base';
 import { useEffect, useState } from 'react';
@@ -44,8 +46,8 @@ export const EditExperienceScreen: React.FC = ({route}) => {
   const [images, setImages] = useState<IFile[]>([]);
   const [title, setTitle] = useState<string>(experience.title);
   const [description, setDescription] = useState<string>(experience.description);
-  const [duration, setDuration] = useState<string>(experience.duration);
-  const [price, setPrice] = useState<string>(experience.min_price.toString());
+  const [duration, setDuration] = useState<string>(experience.duration.toString());
+  const [price, setPrice] = useState<string>(experience.price.toString());
   const [category, setCategory] = useState<string>('');
 
   useEffect(() => {
@@ -61,128 +63,132 @@ export const EditExperienceScreen: React.FC = ({route}) => {
   return (
     <Container style={{...styles.background, backgroundColor: COLOR.whiteColor}}>
 
-      <SafeAreaView style={styles.safe_area}>
-        <View style={styles.navigation_bar}>
-          <Text style={styles.title}>Edit Experience</Text>
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+        <SafeAreaView style={styles.safe_area}>
+          <View style={styles.navigation_bar}>
+            <Text style={styles.title}>Edit Experience</Text>
 
-          <TouchableWithoutFeedback onPress={() => goBack()}>
-            <View style={styles.back_icon}>
-              <SvgXml width='100%' height='100%' xml={Icon_Back_Black} />
-            </View>
-          </TouchableWithoutFeedback>
-
-          <TouchableWithoutFeedback onPress={() => onShare()}>
-            <View style={styles.share_icon}>
-              <SvgXml width='100%' height='100%' xml={Icon_Share_Black} />
-            </View>
-          </TouchableWithoutFeedback>
-        </View>
-
-        <View style={{flex: 1}}>
-          <View style={styles.container}>
-            <ScrollView bounces={false}>
-              <View style={styles.profile_container}>
-                <View style={{width:'100%'}}>
-                  <Text style={{...styles.info_title, marginLeft: 24}}>Photos</Text>
-                  <FlatList
-                    style={{height: 75, marginTop: 16 }}
-                    contentContainerStyle={{paddingHorizontal: 24}}
-                    showsHorizontalScrollIndicator={false}
-                    horizontal={true}
-                    data={images}
-                    keyExtractor={item => item.name}
-                    renderItem={({item}) => <ExperienceImageView image={item} showPlusIcon={true} />}
-                  />
-                </View>
+            <TouchableWithoutFeedback onPress={() => goBack()}>
+              <View style={styles.back_icon}>
+                <SvgXml width='100%' height='100%' xml={Icon_Back_Black} />
               </View>
+            </TouchableWithoutFeedback>
 
-              <View style={{marginLeft: 24, marginRight: 24, width: viewportWidth - 48}}>
-                  <View style={{width:'100%', marginTop: 33}}>
-                    <Text style={styles.info_title}>Title</Text>
-                    <TextInput
-                      style={{...GlobalStyle.auth_input, color: COLOR.systemBlackColor}}
-                      numberOfLines={1}
-                      placeholder={'Title'}
-                      placeholderTextColor={COLOR.alphaBlackColor75}
-                      onChangeText={text => setTitle(text)}
-                      value={title}
-                    />
-                    <View style={{...GlobalStyle.auth_line, backgroundColor: COLOR.alphaBlackColor20}} />
-                  </View>
+            <TouchableWithoutFeedback onPress={() => onShare()}>
+              <View style={styles.share_icon}>
+                <SvgXml width='100%' height='100%' xml={Icon_Share_Black} />
+              </View>
+            </TouchableWithoutFeedback>
+          </View>
 
-                  <View style={{width:'100%', marginTop: 22}}>
-                    <Text style={styles.info_title}>Description</Text>
-                    <TextInput
-                      style={{...GlobalStyle.auth_input, color: COLOR.systemBlackColor}}
-                      placeholder={'Description'}
-                      numberOfLines={1}
-                      placeholderTextColor={COLOR.alphaBlackColor75}
-                      onChangeText={text => setDescription(text)}
-                      value={description}
-                    />
-                    <View style={{...GlobalStyle.auth_line, backgroundColor: COLOR.alphaBlackColor20}} />
-                  </View>
-
-                  <View style={{width:'100%', marginTop: 22}}>
-                    <Text style={styles.info_title}>Duration (in minutes)</Text>
-                    <TextInput
-                      style={{...GlobalStyle.auth_input, color: COLOR.systemBlackColor}}
-                      keyboardType={'numeric'}
-                      numberOfLines={1}
-                      placeholder={'Duration'}
-                      placeholderTextColor={COLOR.alphaBlackColor75}
-                      onChangeText={text => setDuration(text)}
-                      value={duration}
-                    />
-                    <View style={{...GlobalStyle.auth_line, backgroundColor: COLOR.alphaBlackColor20}} />
-                  </View>
-
-                  <View style={{width:'100%', marginTop: 22}}>
-                    <Text style={styles.info_title}>Price / Person</Text>
-                    <View style={{flexDirection: 'row'}}>
-                      <Text style={styles.price}>$</Text>
-                      <TextInput
-                        style={{...GlobalStyle.auth_input, color: COLOR.systemBlackColor}}
-                        keyboardType={'numeric'}
-                        placeholder={'Price'}
-                        numberOfLines={1}
-                        placeholderTextColor={COLOR.alphaBlackColor75}
-                        onChangeText={text => setPrice(text)}
-                        value={price}
+          <KeyboardAvoidingView behavior={Platform.OS == "ios" ? "padding" : "height"} >
+            <View style={{flex: 1}}>
+              <View style={styles.container}>
+                <ScrollView bounces={false}>
+                  <View style={styles.profile_container}>
+                    <View style={{width:'100%'}}>
+                      <Text style={{...styles.info_title, marginLeft: 24}}>Photos</Text>
+                      <FlatList
+                        style={{height: 75, marginTop: 16 }}
+                        contentContainerStyle={{paddingHorizontal: 24}}
+                        showsHorizontalScrollIndicator={false}
+                        horizontal={true}
+                        data={images}
+                        keyExtractor={item => item.name}
+                        renderItem={({item}) => <ExperienceImageView image={item} showPlusIcon={true} />}
                       />
                     </View>
-                    <View style={{...GlobalStyle.auth_line, backgroundColor: COLOR.alphaBlackColor20}} />
                   </View>
 
-                  <View style={{width:'100%', marginTop: 22}}>
-                    <Text style={styles.info_title}>Category</Text>
-                    <TextInput
-                      style={{...GlobalStyle.auth_input, paddingLeft: 25, color: COLOR.systemBlackColor}}
-                      placeholder={'Search Categories'}
-                      placeholderTextColor={COLOR.alphaBlackColor75}
-                      onChangeText={text => setCategory(text)}
-                      value={category}
-                    />
-                    <View style={{...GlobalStyle.auth_line, backgroundColor: COLOR.alphaBlackColor20}} />
-
-                    <TouchableWithoutFeedback onPress={() => onSearchCategory()}>
-                      <View style={{position: 'absolute', top: 40, left: 0, width: 14, height: 14}}>
-                        <SvgXml width='100%' height='100%' xml={Icon_Search_Black} />
+                  <View style={{marginLeft: 24, marginRight: 24, width: viewportWidth - 48}}>
+                      <View style={{width:'100%', marginTop: 33}}>
+                        <Text style={styles.info_title}>Title</Text>
+                        <TextInput
+                          style={{...GlobalStyle.auth_input, color: COLOR.systemBlackColor}}
+                          numberOfLines={1}
+                          placeholder={'Title'}
+                          placeholderTextColor={COLOR.alphaBlackColor75}
+                          onChangeText={text => setTitle(text)}
+                          value={title}
+                        />
+                        <View style={{...GlobalStyle.auth_line, backgroundColor: COLOR.alphaBlackColor20}} />
                       </View>
-                    </TouchableWithoutFeedback>
-                  </View>
-                </View>
-            </ScrollView>
-          </View>
-        </View>
 
-        <TouchableWithoutFeedback onPress={() => onSaveExperience() }>
-          <View style={styles.bottom_button}>
-            <ColorButton title={'Save'} backgroundColor={COLOR.redColor} color={COLOR.systemWhiteColor} />
-          </View>
-        </TouchableWithoutFeedback>
-        
-      </SafeAreaView>
+                      <View style={{width:'100%', marginTop: 22}}>
+                        <Text style={styles.info_title}>Description</Text>
+                        <TextInput
+                          style={{...GlobalStyle.auth_input, color: COLOR.systemBlackColor}}
+                          placeholder={'Description'}
+                          numberOfLines={1}
+                          placeholderTextColor={COLOR.alphaBlackColor75}
+                          onChangeText={text => setDescription(text)}
+                          value={description}
+                        />
+                        <View style={{...GlobalStyle.auth_line, backgroundColor: COLOR.alphaBlackColor20}} />
+                      </View>
+
+                      <View style={{width:'100%', marginTop: 22}}>
+                        <Text style={styles.info_title}>Duration (in minutes)</Text>
+                        <TextInput
+                          style={{...GlobalStyle.auth_input, color: COLOR.systemBlackColor}}
+                          keyboardType={'numeric'}
+                          numberOfLines={1}
+                          placeholder={'Duration'}
+                          placeholderTextColor={COLOR.alphaBlackColor75}
+                          onChangeText={text => setDuration(text)}
+                          value={duration}
+                        />
+                        <View style={{...GlobalStyle.auth_line, backgroundColor: COLOR.alphaBlackColor20}} />
+                      </View>
+
+                      <View style={{width:'100%', marginTop: 22}}>
+                        <Text style={styles.info_title}>Price / Person</Text>
+                        <View style={{flexDirection: 'row'}}>
+                          <Text style={styles.price}>$</Text>
+                          <TextInput
+                            style={{...GlobalStyle.auth_input, color: COLOR.systemBlackColor}}
+                            keyboardType={'numeric'}
+                            placeholder={'Price'}
+                            numberOfLines={1}
+                            placeholderTextColor={COLOR.alphaBlackColor75}
+                            onChangeText={text => setPrice(text)}
+                            value={price}
+                          />
+                        </View>
+                        <View style={{...GlobalStyle.auth_line, backgroundColor: COLOR.alphaBlackColor20}} />
+                      </View>
+
+                      <View style={{width:'100%', marginTop: 22}}>
+                        <Text style={styles.info_title}>Category</Text>
+                        <TextInput
+                          style={{...GlobalStyle.auth_input, paddingLeft: 25, color: COLOR.systemBlackColor}}
+                          placeholder={'Search Categories'}
+                          placeholderTextColor={COLOR.alphaBlackColor75}
+                          onChangeText={text => setCategory(text)}
+                          value={category}
+                        />
+                        <View style={{...GlobalStyle.auth_line, backgroundColor: COLOR.alphaBlackColor20}} />
+
+                        <TouchableWithoutFeedback onPress={() => onSearchCategory()}>
+                          <View style={{position: 'absolute', top: 40, left: 0, width: 14, height: 14}}>
+                            <SvgXml width='100%' height='100%' xml={Icon_Search_Black} />
+                          </View>
+                        </TouchableWithoutFeedback>
+                      </View>
+                    </View>
+                </ScrollView>
+              </View>
+            </View>
+          </KeyboardAvoidingView>
+
+          <TouchableWithoutFeedback onPress={() => onSaveExperience() }>
+            <View style={styles.bottom_button}>
+              <ColorButton title={'Save'} backgroundColor={COLOR.redColor} color={COLOR.systemWhiteColor} />
+            </View>
+          </TouchableWithoutFeedback>
+          
+        </SafeAreaView>
+      </TouchableWithoutFeedback>
     </Container>
   );
 

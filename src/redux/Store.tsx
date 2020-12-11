@@ -1,13 +1,5 @@
-import React, { 
-  createContext, 
-  useReducer, 
-  useContext,
-} from 'react';
-
-import Reducer, { 
-  State, 
-  Action,
-} from './Reducer';
+import React, { createContext, useReducer, useContext } from 'react';
+import Reducer, { State, Action } from './Reducer';
 
 const initialState: State = {
   userInfo: {
@@ -17,8 +9,8 @@ const initialState: State = {
     email: '',
     status: '',
     
-    image: '',
-    birthday: '', 
+    avatarUrl: '',
+    dateOfBirth: '', 
   },
   accessToken: {
     token: '',
@@ -35,7 +27,8 @@ const DispatchContext = createContext<React.Dispatch<Action>>(() => true);
 
 /** Provider */
 const Provider = (props: any) => {
-  const {children} = props;
+  
+  const { children } = props;
 
   const [state, dispatch] = useReducer(Reducer, initialState);
 
@@ -57,4 +50,4 @@ const useGlobalState = <K extends keyof State>(property: K) => {
   return state[property];
 };
 
-export {StoreContext, DispatchContext, Provider, useDispatch, useGlobalState};
+export { StoreContext, DispatchContext, Provider, useDispatch, useGlobalState };

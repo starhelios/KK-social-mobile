@@ -8,6 +8,7 @@ import {
   Dimensions,
   FlatList,
   Modal,
+  Alert,
 } from 'react-native';
 import { Container } from 'native-base';
 import { useEffect, useState } from 'react';
@@ -18,6 +19,7 @@ import Moment from 'moment';
 // from app
 import { 
   COLOR, 
+  ERROR_MESSAGE, 
   FONT, 
   Icon_Back_Black,
   Icon_Guest_Minus,
@@ -126,6 +128,11 @@ export const ExperienceDetailBookScreen: React.FC = ({route}) => {
   }
 
   function onChooseDate(availableDate: IAvailableDate) {
+    if (guestCount == 0) {
+      Alert.alert(ERROR_MESSAGE.EMPTY_GUEST_COUNT);
+      return;
+    }
+    
     navigate('ExperienceDetailConfirmPay', {experience: experience, availableDate: availableDate, guestCount: guestCount});
   }
 

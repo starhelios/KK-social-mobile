@@ -8,7 +8,7 @@ import {
 } from 'react-native';
 import { useEffect, useState } from 'react';
 import { SvgXml } from 'react-native-svg';
-import { Calendar, LocaleConfig } from 'react-native-calendars';
+import { Calendar } from 'react-native-calendars';
 import Moment from 'moment';
 
 // from app
@@ -35,8 +35,7 @@ export const SelectDatesView: React.FC<props> = (props: props) => {
   const [markedDates, setMarkedDates] = useState<any>();
 
   useEffect(() => {
-    // LocaleConfig.defaultLocale = 'en';
-    Moment.locale('en');
+    
     
     setSelectedDate(props.selectedDate);
     if (props.selectedDate != '') {

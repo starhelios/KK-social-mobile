@@ -75,6 +75,6 @@ npm install
 ```
 
 Alert.alert((await result).message, "", 
-          [ { text: "OK", onPress: () => goBack() }],
-          { cancelable: false }
-        );
+  [ { text: "OK", onPress: () => goBack() }],
+  { cancelable: false }
+);

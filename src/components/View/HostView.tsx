@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { 
+  Alert,
   Image, 
   StyleSheet, 
   Text, 
@@ -10,8 +11,8 @@ import { SvgXml } from 'react-native-svg';
 import { useNavigation } from '@react-navigation/native';
 
 // from app
-import { COLOR, FONT, Icon_Category, Img_User_Avatar } from '../../constants';
-import { IHost } from '../../interfaces/app';
+import { COLOR, ERROR_MESSAGE, FONT, Icon_Category, Img_User_Avatar } from '../../constants';
+import { IHost, IHostDetail } from '../../interfaces/app';
 import { useHosts } from '../../hooks';
 
 
@@ -22,7 +23,7 @@ interface props {
 export const HostView: React.FC<props> = (props: props) => {
 
   const { navigate } = useNavigation();
-  const { getHostInformation } = useHosts();
+  const { getHostDetail } = useHosts();
   const host: IHost = props.host;
 
   return (
@@ -48,10 +49,11 @@ export const HostView: React.FC<props> = (props: props) => {
   );
 
   async function goHostDetailScreen() {
-    await getHostInformation(host.id)
-    .then(async (hostDetail: Promise<IHost>) => {
-      navigate('HostDetail', {host: hostDetail});
+    await getHostDetail(host.id)
+    .then(async (hostDetail: Promise<IHostDetail>) => {
+      navigate('HostDetail', {hostDetail: hostDetail});
     }).catch(() => {
+      Alert.alert(ERROR_MESSAGE.GET_HOST_DETAIL_FAIL);
     });
   }
 }

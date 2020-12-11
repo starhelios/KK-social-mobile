@@ -3,7 +3,7 @@ import axios from 'axios';
 // from app
 import { API_ENDPOINT, API_CONFIG } from '../constants';
 import { IApiSuccess } from '../interfaces/api';
-import { IAvailableDateForCreate, IExperience, IFile } from '../interfaces/app';
+import { IAvailableDateForCreate, IExperience, IExperienceDetail, IFile } from '../interfaces/app';
 
 export const useExperiences = () => {
 
@@ -19,13 +19,13 @@ export const useExperiences = () => {
     }
   };
 
-  const getExperienceInformation = async (
+  const getExperienceDetail = async (
     id: string,
   ): Promise<any> => {
     const url = API_ENDPOINT.EXPERIENCES + '/' + id;
     try {
       const { data } = await axios.get<IApiSuccess>(url, API_CONFIG);
-      const result: IExperience = data.payload;
+      const result: IExperienceDetail = data.payload;
       return Promise.resolve(result);
     } catch (err) {
       return Promise.reject(null);
@@ -66,5 +66,5 @@ export const useExperiences = () => {
     }
   };
 
-  return { getExperienceList, getExperienceInformation, createExperience };
+  return { getExperienceList, getExperienceDetail, createExperience };
 };

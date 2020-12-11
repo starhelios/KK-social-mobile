@@ -26,7 +26,7 @@ import {
   Img_User_Avatar,
   MARGIN_TOP,
 } from '../../constants';
-import { IExperience, IHost } from '../../interfaces/app';
+import { IExperience, IHost, IHostDetail } from '../../interfaces/app';
 import { ExperienceView } from '../../components/View';
 import { useExperiences } from '../../hooks';
 import GlobalStyle from '../../styles/global';
@@ -37,8 +37,10 @@ const { width: viewportWidth } = Dimensions.get('window');
 export const HostDetailScreen: React.FC = ({route}) => {
 
   const { navigate, goBack } = useNavigation();
-  const { experiences } = useExperiences();
-  const host: IHost = route.params.host;
+  const { getExperienceList } = useExperiences();
+
+  const hostDetail: IHostDetail = route.params.hostDetail;
+  const host: IHost = hostDetail._doc;
 
   const [experienceList, setExperienceList] = useState<IExperience[]>([]);
 
@@ -47,7 +49,7 @@ export const HostDetailScreen: React.FC = ({route}) => {
   }, [])
 
   async function loadExperienceList() {
-    await experiences()
+    await getExperienceList()
     .then(async (result: Promise<IExperience[]>) => {
       setExperienceList(await result);
     }).catch(() => {

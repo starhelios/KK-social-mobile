@@ -10,6 +10,9 @@ import {
   Platform,
   TextInput,
   ScrollView,
+  Keyboard,
+  KeyboardAvoidingView,
+  Animated,
 } from 'react-native';
 import { Container } from 'native-base';
 import { useEffect, useState } from 'react';
@@ -41,10 +44,10 @@ export const BecomeAHostScreen: React.FC = () => {
 
   const profile: IUser = useGlobalState('userInfo');
 
-  const [image, setImage] = useState<string>(profile.image);
-  const [fullName, setFullName] = useState<string>(profile.full_name);
+  const [image, setImage] = useState<string>(profile.avatarUrl);
+  const [fullName, setFullName] = useState<string>(profile.fullname);
   const [emailAddress, setEmailAddress] = useState<string>(profile.email);
-  const [birthday, setBirthday] = useState<string>(profile.birthday);
+  const [birthday, setBirthday] = useState<string>(profile.dateOfBirth);
   const [aboutMe, setAboutMe] = useState<string>();
   const [location, setLocation] = useState<string>();
   const [category, setCategory] = useState<string>();
@@ -52,130 +55,134 @@ export const BecomeAHostScreen: React.FC = () => {
   return (
     <Container style={styles.background}>
 
-      <SafeAreaView style={styles.safe_area}>
-        <View style={styles.navigation_bar}>
-          <Text style={styles.title}>Become A Host</Text>
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+        <SafeAreaView style={styles.safe_area}>
+          <View style={styles.navigation_bar}>
+            <Text style={styles.title}>Become A Host</Text>
 
-          <TouchableWithoutFeedback onPress={() => goBack()}>
-            <View style={styles.back_icon}>
-              <SvgXml width='100%' height='100%' xml={Icon_Back} />
+            <TouchableWithoutFeedback onPress={() => goBack()}>
+              <View style={styles.back_icon}>
+                <SvgXml width='100%' height='100%' xml={Icon_Back} />
+              </View>
+            </TouchableWithoutFeedback>
+          </View>
+
+          <View style={{flex: 1}}>
+            <View style={styles.container}>
+              <KeyboardAvoidingView behavior={Platform.OS == "ios" ? "padding" : "height"} >
+                <ScrollView bounces={false}>
+                  <View style={styles.profile_container}>
+                    <TouchableWithoutFeedback onPress={() => onSelectPhoto()}>
+                      <View style={styles.profile}>
+                        {
+                          image != ''
+                          ? <Image style={{width: '100%', height: '100%'}} source={{uri: image}} />
+                          : <View style={styles.profile_no_image}>
+                              <SvgXml width={46} height={58} xml={Icon_Normal_Profile} />
+                            </View>
+                        }
+                        <LinearGradient
+                          colors={['#00000010', '#00000070']}
+                          style={styles.camera_container}
+                          start={{x: 0.5, y: 0}}
+                          end={{x: 0.5, y: 1}} >
+                          <View style={styles.camera_icon}>
+                            <SvgXml width='100%' height='100%' xml={Icon_Camera} />
+                          </View>
+                        </LinearGradient>
+                      </View>
+                    </TouchableWithoutFeedback>
+                  </View>
+
+                  <View style={{marginLeft: 24, marginRight: 24, width: viewportWidth - 48}}>
+                      <View style={{width:'100%', marginTop: 33}}>
+                        <Text style={styles.info_title}>Full Name</Text>
+                        <TextInput
+                          style={GlobalStyle.auth_input}
+                          placeholder={'Full Name'}
+                          placeholderTextColor={COLOR.alphaWhiteColor50}
+                          onChangeText={text => setFullName(text)}
+                          value={fullName}
+                        />
+                        <View style={GlobalStyle.auth_line} />
+                      </View>
+
+                      <View style={{width:'100%', marginTop: 22}}>
+                        <Text style={styles.info_title}>Email Address</Text>
+                        <TextInput
+                          style={GlobalStyle.auth_input}
+                          keyboardType={'email-address'}
+                          placeholder={'Email Address'}
+                          placeholderTextColor={COLOR.alphaWhiteColor50}
+                          onChangeText={text => setEmailAddress(text)}
+                          value={emailAddress}
+                        />
+                        <View style={GlobalStyle.auth_line} />
+                      </View>
+
+                      <View style={{width:'100%', marginTop: 22}}>
+                        <Text style={styles.info_title}>Date of Birth</Text>
+                        <TouchableWithoutFeedback onPress={() => onSelectBirthday()}>
+                          <Text style={{...GlobalStyle.auth_input, lineHeight: 45}}>{birthday}</Text>
+                        </TouchableWithoutFeedback>
+                        <View style={GlobalStyle.auth_line} />
+                      </View>
+
+                      <View style={{width:'100%', marginTop: 22}}>
+                        <Text style={styles.info_title}>About Me</Text>
+                        <TextInput
+                          style={GlobalStyle.auth_input}
+                          placeholder={'About Me'}
+                          placeholderTextColor={COLOR.alphaWhiteColor50}
+                          onChangeText={text => setAboutMe(text)}
+                          value={aboutMe}
+                        />
+                        <View style={GlobalStyle.auth_line} />
+                      </View>
+
+                      <View style={{width:'100%', marginTop: 22}}>
+                        <Text style={styles.info_title}>Location</Text>
+                        <TextInput
+                          style={GlobalStyle.auth_input}
+                          placeholder={'Location'}
+                          placeholderTextColor={COLOR.alphaWhiteColor50}
+                          onChangeText={text => setLocation(text)}
+                          value={location}
+                        />
+                        <View style={GlobalStyle.auth_line} />
+                      </View>
+
+                      <View style={{width:'100%', marginTop: 22}}>
+                        <Text style={styles.info_title}>Category</Text>
+                        <TextInput
+                          style={{...GlobalStyle.auth_input, paddingLeft: 25}}
+                          placeholder={'Search Categories'}
+                          placeholderTextColor={COLOR.alphaWhiteColor50}
+                          onChangeText={text => setCategory(text)}
+                          value={category}
+                        />
+                        <View style={GlobalStyle.auth_line} />
+
+                        <TouchableWithoutFeedback onPress={() => onSearchCategory()}>
+                          <View style={{position: 'absolute', top: 40, left: 0, width: 14, height: 14}}>
+                            <SvgXml width='100%' height='100%' xml={Icon_Search_White} />
+                          </View>
+                        </TouchableWithoutFeedback>
+                      </View>
+                    </View>
+                </ScrollView>
+              </KeyboardAvoidingView>
+            </View>
+          </View>
+          
+          <TouchableWithoutFeedback onPress={() => onBecomeAHost() }>
+            <View style={styles.bottom_button}>
+              <ColorButton title={'Become A Host'} backgroundColor={COLOR.whiteColor} color={COLOR.blackColor} />
             </View>
           </TouchableWithoutFeedback>
-        </View>
-
-        <View style={{flex: 1}}>
-          <View style={styles.container}>
-            <ScrollView bounces={false}>
-              <View style={styles.profile_container}>
-                <TouchableWithoutFeedback onPress={() => onSelectPhoto()}>
-                  <View style={styles.profile}>
-                    {
-                      image != ''
-                      ? <Image style={{width: '100%', height: '100%'}} source={{uri: image}} />
-                      : <View style={styles.profile_no_image}>
-                          <SvgXml width={46} height={58} xml={Icon_Normal_Profile} />
-                        </View>
-                    }
-                    <LinearGradient
-                      colors={['#00000010', '#00000070']}
-                      style={styles.camera_container}
-                      start={{x: 0.5, y: 0}}
-                      end={{x: 0.5, y: 1}} >
-                      <View style={styles.camera_icon}>
-                        <SvgXml width='100%' height='100%' xml={Icon_Camera} />
-                      </View>
-                    </LinearGradient>
-                  </View>
-                </TouchableWithoutFeedback>
-              </View>
-
-              <View style={{marginLeft: 24, marginRight: 24, width: viewportWidth - 48}}>
-                  <View style={{width:'100%', marginTop: 33}}>
-                    <Text style={styles.info_title}>Full Name</Text>
-                    <TextInput
-                      style={GlobalStyle.auth_input}
-                      placeholder={'Full Name'}
-                      placeholderTextColor={COLOR.alphaWhiteColor50}
-                      onChangeText={text => setFullName(text)}
-                      value={fullName}
-                    />
-                    <View style={GlobalStyle.auth_line} />
-                  </View>
-
-                  <View style={{width:'100%', marginTop: 22}}>
-                    <Text style={styles.info_title}>Email Address</Text>
-                    <TextInput
-                      style={GlobalStyle.auth_input}
-                      keyboardType={'email-address'}
-                      placeholder={'Email Address'}
-                      placeholderTextColor={COLOR.alphaWhiteColor50}
-                      onChangeText={text => setEmailAddress(text)}
-                      value={emailAddress}
-                    />
-                    <View style={GlobalStyle.auth_line} />
-                  </View>
-
-                  <View style={{width:'100%', marginTop: 22}}>
-                    <Text style={styles.info_title}>Date of Birth</Text>
-                    <TouchableWithoutFeedback onPress={() => onSelectBirthday()}>
-                      <Text style={{...GlobalStyle.auth_input, lineHeight: 45}}>{birthday}</Text>
-                    </TouchableWithoutFeedback>
-                    <View style={GlobalStyle.auth_line} />
-                  </View>
-
-                  <View style={{width:'100%', marginTop: 22}}>
-                    <Text style={styles.info_title}>About Me</Text>
-                    <TextInput
-                      style={GlobalStyle.auth_input}
-                      placeholder={'About Me'}
-                      placeholderTextColor={COLOR.alphaWhiteColor50}
-                      onChangeText={text => setAboutMe(text)}
-                      value={aboutMe}
-                    />
-                    <View style={GlobalStyle.auth_line} />
-                  </View>
-
-                  <View style={{width:'100%', marginTop: 22}}>
-                    <Text style={styles.info_title}>Location</Text>
-                    <TextInput
-                      style={GlobalStyle.auth_input}
-                      placeholder={'Location'}
-                      placeholderTextColor={COLOR.alphaWhiteColor50}
-                      onChangeText={text => setLocation(text)}
-                      value={location}
-                    />
-                    <View style={GlobalStyle.auth_line} />
-                  </View>
-
-                  <View style={{width:'100%', marginTop: 22}}>
-                    <Text style={styles.info_title}>Category</Text>
-                    <TextInput
-                      style={{...GlobalStyle.auth_input, paddingLeft: 25}}
-                      placeholder={'Search Categories'}
-                      placeholderTextColor={COLOR.alphaWhiteColor50}
-                      onChangeText={text => setCategory(text)}
-                      value={category}
-                    />
-                    <View style={GlobalStyle.auth_line} />
-
-                    <TouchableWithoutFeedback onPress={() => onSearchCategory()}>
-                      <View style={{position: 'absolute', top: 40, left: 0, width: 14, height: 14}}>
-                        <SvgXml width='100%' height='100%' xml={Icon_Search_White} />
-                      </View>
-                    </TouchableWithoutFeedback>
-                  </View>
-                </View>
-            </ScrollView>
-          </View>
-        </View>
-
-        <TouchableWithoutFeedback onPress={() => onBecomeAHost() }>
-          <View style={styles.bottom_button}>
-            <ColorButton title={'Become A Host'} backgroundColor={COLOR.whiteColor} color={COLOR.blackColor} />
-          </View>
-        </TouchableWithoutFeedback>
-        
-      </SafeAreaView>
+          
+        </SafeAreaView>
+      </TouchableWithoutFeedback>
     </Container>
   );
 

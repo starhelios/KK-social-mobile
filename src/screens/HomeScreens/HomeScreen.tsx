@@ -16,7 +16,7 @@ import { SvgXml } from 'react-native-svg';
 import Moment from 'moment';
 
 // from app
-import { API_CONFIG, COLOR, FONT, Icon_Filter, Icon_Search, MARGIN_TOP, setHost } from '../../constants';
+import { API_CONFIG, COLOR, FONT, Icon_Filter, Icon_Search, MARGIN_TOP } from '../../constants';
 import { useCategories, useExperiences, useHosts } from '../../hooks';
 import { ICategory, IExperience, IHost, IHostList } from '../../interfaces/app';
 import { ExperienceView, FiltersView, HostView, SelectDatesView } from '../../components/View';
@@ -65,11 +65,46 @@ export const HomeScreen: React.FC = () => {
     await getHostList()
     .then(async (result: Promise<IHostList>) => {
       setHostList((await result).results);
-
-      // test
-      setHost((await result).results[0]);
     }).catch(() => {
     });
+  }
+
+  function onSearch() {
+    console.log('search home');
+  }
+
+  function onSelectDateFilter() {
+    // setSelectedExperienceCategoryID(0);
+    // navigate('SelectDates');
+    setShowSelectDates(true);
+  }
+
+  function onSelectDate(selectedDate: string,) {
+    setSelectedDate(selectedDate);
+    setShowSelectDates(false);
+  }
+
+  function getVisibleDate() {
+    var visibleDateString = 'Dates';
+    if (selectedDate != '') {
+      const date = Moment(selectedDate, 'YYYY-MM-DD', true).format();
+      visibleDateString = Moment(date).format('MMMM D');
+    }
+    return visibleDateString;
+  }
+
+  function onSelectCategory(category: ICategory) {
+    setSelectedCategoryID(category.id);
+  }
+
+  function renderCategoryView(category: ICategory) {
+    return (
+      <TouchableWithoutFeedback onPress={() => onSelectCategory(category)}>
+        <View style={{...experienceCategoryStyles.container, backgroundColor: selectedCategoryID == category.id ? COLOR.selectedCategoryBackgroundColor : COLOR.clearColor}}>
+          <Text style={experienceCategoryStyles.title}>{ category.name }</Text>
+        </View>
+      </TouchableWithoutFeedback>
+    );
   }
 
   return (
@@ -85,14 +120,12 @@ export const HomeScreen: React.FC = () => {
           </TouchableWithoutFeedback>
 
           <View style={styles.search_text_container}>
-            { 
-              searchText == ''
-              ? <View style={styles.search_text_placeholder}>
-                <Text style={styles.placeholder_search}>Search</Text>
-                <Text style={styles.placeholder_kloutkast}>KloutKast</Text>
-              </View>
-              : null
-            }
+          { searchText == '' && (
+            <View style={styles.search_text_placeholder}>
+              <Text style={styles.placeholder_search}>Search</Text>
+              <Text style={styles.placeholder_kloutkast}>KloutKast</Text>
+            </View>
+          )}
             <TextInput 
               style={styles.search_text}
               onChangeText={text => setSearchText(text)}
@@ -147,11 +180,11 @@ export const HomeScreen: React.FC = () => {
           />
 
           <Text style={styles.list_title}>
-            {
-              isSearchResult == false 
-              ? 'Popular Hosts' 
-              : hostList.length + ' Hosts'
-            }
+          {
+            isSearchResult == false 
+            ? 'Popular Hosts' 
+            : hostList.length + ' Hosts'
+          }
           </Text>
           <FlatList
             style={{width: '100%', height: 211, marginTop: 22, marginBottom: 20 }}
@@ -162,7 +195,6 @@ export const HomeScreen: React.FC = () => {
             keyExtractor={item => item.id.toString()}
             renderItem={({item}) => <HostView host={item} />}
           />
-
         </ScrollView>
 
         <Modal animationType = {"slide"} transparent = {true}
@@ -170,53 +202,15 @@ export const HomeScreen: React.FC = () => {
           onRequestClose = {() => { console.log("Modal has been closed.") } }>
           <SelectDatesView selectedDate={selectedDate} onCloseView={setShowSelectDates} onSelectDate={onSelectDate} />
         </Modal>
-
+       
         <Modal animationType = {"slide"} transparent = {true}
           visible = {showFilters}
           onRequestClose = {() => { console.log("Modal has been closed.") } }>
           <FiltersView onCloseView={setShowFilters} />
-        </Modal>
+        </Modal> 
       </SafeAreaView>
     </Container>
   );
-
-  function onSearch() {
-    console.log('search home');
-  }
-
-  function onSelectDateFilter() {
-    // setSelectedExperienceCategoryID(0);
-    // navigate('SelectDates');
-    setShowSelectDates(true);
-  }
-
-  function onSelectDate(selectedDate: string,) {
-    setSelectedDate(selectedDate);
-    setShowSelectDates(false);
-  }
-
-  function getVisibleDate() {
-    var visibleDateString = 'Dates';
-    if (selectedDate != '') {
-      const date = Moment(selectedDate, 'YYYY-MM-DD', true).format();
-      visibleDateString = Moment(date).format('MMMM D');
-    }
-    return visibleDateString;
-  }
-
-  function onSelectCategory(category: ICategory) {
-    setSelectedCategoryID(category.id);
-  }
-
-  function renderCategoryView(category: ICategory) {
-    return (
-      <TouchableWithoutFeedback onPress={() => onSelectCategory(category)}>
-        <View style={{...experienceCategoryStyles.container, backgroundColor: selectedCategoryID == category.id ? COLOR.selectedCategoryBackgroundColor : COLOR.clearColor}}>
-          <Text style={experienceCategoryStyles.title}>{ category.name }</Text>
-        </View>
-      </TouchableWithoutFeedback>
-    );
-  }
 };
 
 const styles = StyleSheet.create({
