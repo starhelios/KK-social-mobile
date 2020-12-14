@@ -11,6 +11,7 @@ import {
 import { useEffect, useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { SvgXml } from 'react-native-svg';
+import DefaultPreference from 'react-native-default-preference';
 
 // from app
 import { 
@@ -18,19 +19,25 @@ import {
   FONT, 
   Icon_Detail_Right_Arrow_White, 
   Icon_Normal_Profile, 
-  MARGIN_TOP, 
+  LOGIN_TYPE, 
+  MARGIN_TOP,
+  PASSWORD,
+  SetApiConfig,
+  USER_EMAIL, 
 } from '../../constants';
-import { TitleArrowButton } from '../Button';
+import { ColorButton, TitleArrowButton } from '../Button';
 import { IUser } from '../../interfaces/app';
 import { useUsers } from '../../hooks';
-import { useGlobalState } from '../../redux/Store';
+import { useDispatch, useGlobalState } from '../../redux/Store';
+import { ActionType } from '../../redux/Reducer';
 
 const { width: viewportWidth, height: viewportHeight } = Dimensions.get('window');
 
 export const LoginProfileView: React.FC = () => {
 
-  const { navigate } = useNavigation();
+  const { navigate, goBack } = useNavigation();
   const { getUserInformation } = useUsers();
+  const dispatch = useDispatch();
 
   const [currentPage, setCurrentPage] = useState<number>(0);
 
@@ -42,7 +49,7 @@ export const LoginProfileView: React.FC = () => {
 
   return (
     <View style={{flex: 1}}>
-      <ScrollView style={{width: '100%', height: '100%'}}>
+      <ScrollView style={{width: '100%', height: '100%', marginBottom: 20}}>
         <View style={styles.profile_container}>
           <View style={styles.avatar}>
             {
@@ -109,6 +116,12 @@ export const LoginProfileView: React.FC = () => {
               <TitleArrowButton title={''} name={'Terms of Service'} showArrow={true} white_color={true} />
             </View>
           </TouchableWithoutFeedback>
+
+          <TouchableWithoutFeedback onPress={() => onLogOut() }>
+            <View style={{width:'100%', marginTop: 22}}>
+              <ColorButton title={'Log Out'} backgroundColor={COLOR.redColor} color={COLOR.systemWhiteColor} />
+            </View>
+          </TouchableWithoutFeedback>
         </View>
       </ScrollView>
     </View>
@@ -116,6 +129,44 @@ export const LoginProfileView: React.FC = () => {
   
   function onTermsOfService() {
     console.log('Terms of Service');
+  }
+
+  function onLogOut() {
+    DefaultPreference.set(LOGIN_TYPE, '').then(function() { });
+    DefaultPreference.set(USER_EMAIL, '').then(function() { });
+    DefaultPreference.set(PASSWORD, '').then(function() { });
+
+    dispatch({
+      type: ActionType.SET_USER_INFO,
+      payload: {
+        id: 0,
+        fullname: '',
+        isHost: false,
+        email: '',
+        status: '',
+        avatarUrl: '',
+        dateOfBirth: '', 
+      },
+    });
+  
+    dispatch({
+      type: ActionType.SET_ACCESS_TOKEN,
+      payload: {
+        token: '',
+        expires: '', 
+      },
+    });
+    SetApiConfig('');
+
+    dispatch({
+      type: ActionType.SET_ACCESS_TOKEN,
+      payload: {
+        token: '',
+        expires: '', 
+      },
+    });
+
+    goBack();
   }
 }
 

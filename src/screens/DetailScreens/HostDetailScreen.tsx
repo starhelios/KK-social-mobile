@@ -40,7 +40,7 @@ export const HostDetailScreen: React.FC = ({route}) => {
   const { getExperienceList } = useExperiences();
 
   const hostDetail: IHostDetail = route.params.hostDetail;
-  const host: IHost = hostDetail._doc;
+  const host: IHost = hostDetail.user;
 
   const [experienceList, setExperienceList] = useState<IExperience[]>([]);
 
