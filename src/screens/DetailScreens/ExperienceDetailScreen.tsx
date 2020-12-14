@@ -52,7 +52,7 @@ export const ExperienceDetailScreen: React.FC = ({route}) => {
   const experienceDetail: IExperienceDetail = route.params.experienceDetail;
   const experience: IExperience = experienceDetail.experience;
   const hostDetail: IHostDetail = route.params.hostDetail;
-  const host: IHost = hostDetail._doc;
+  const host: IHost = hostDetail.user;
   var scrollViewRef: ScrollView | null;
 
   useEffect(() => {

@@ -26,6 +26,7 @@ export const useHosts = () => {
     try {
       const { data } = await axios.get<IApiSuccess>(url, API_CONFIG);
       const result: IHostDetail = data.payload;
+      console.log(result);
       return Promise.resolve(result);
     } catch (err) {
       return Promise.reject(null);
