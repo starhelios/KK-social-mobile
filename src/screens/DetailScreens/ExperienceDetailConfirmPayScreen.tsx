@@ -163,7 +163,7 @@ const styles = StyleSheet.create({
   },
   container: {
     width: '100%',  
-    marginBottom: 50,
+    marginBottom: 85,
   },
   profile_container: {
     width: '100%',

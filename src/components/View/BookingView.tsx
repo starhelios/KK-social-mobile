@@ -33,14 +33,9 @@ export const BookingView: React.FC<props> = (props: props) => {
       />
       {
         props.completed_booking == false
-        ? <View style={{...styles.content_container, height: 98}}>
-            <BookingMainInfoView booking={props.booking} completed_booking={props.completed_booking} />
-          </View>
-        : (
-          props.booking.is_host == true || props.booking.is_joined == true
-          ? <View style={{...styles.content_container, height: 209}}>
+        ? ( props.booking.is_joined == true
+          ? <View style={{...styles.content_container, height: 98}}>
               <BookingMainInfoView booking={props.booking} completed_booking={props.completed_booking} />
-              <BookingRatingInfoView booking={props.booking} />
             </View>
           : <View style={{...styles.content_container, height: 190}}>
               <BookingMainInfoView booking={props.booking} completed_booking={props.completed_booking} />
@@ -54,6 +49,10 @@ export const BookingView: React.FC<props> = (props: props) => {
               </View>
             </View>
         )
+        : <View style={{...styles.content_container, height: 209}}>
+            <BookingMainInfoView booking={props.booking} completed_booking={props.completed_booking} />
+            <BookingRatingInfoView booking={props.booking} />
+          </View>
       }
       
     </View>
