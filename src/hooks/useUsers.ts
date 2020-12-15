@@ -3,7 +3,7 @@ import axios from 'axios';
 // from app
 import { API_ENDPOINT, API_CONFIG } from '../constants';
 import { IApiSuccess } from '../interfaces/api';
-import { IUser, IUserList } from '../interfaces/app';
+import { IFile, IUser, IUserList } from '../interfaces/app';
 import { handleError } from '../utils';
 
 export const useUsers = () => {
@@ -48,7 +48,7 @@ export const useUsers = () => {
     userId: string,
     email: string,
     fullname: string,
-    avatarUrl: string,
+    avatarUrl: IFile,
     categoryName: string,
     aboutMe: string,
   ): Promise<any> => {

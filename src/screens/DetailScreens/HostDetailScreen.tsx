@@ -95,7 +95,7 @@ export const HostDetailScreen: React.FC = ({route}) => {
 
             <View style={{marginTop: 12, height: 16, flexDirection: 'row'}}>
               <SvgXml width={16} height={16} xml={Icon_Rating_Black} />
-              <Text style={{...styles.location, marginTop: 1, marginLeft: 8}}>{host.categoryName}</Text>
+              <Text style={{...styles.location, marginTop: 1, marginLeft: 8}}>{hostDetail.ratingMark + ' Stars • ' + hostDetail.ratingCount + ' Ratings'}</Text>
             </View>
             <View style={{...GlobalStyle.auth_line, backgroundColor: COLOR.alphaBlackColor20, marginTop: 22}} />
 

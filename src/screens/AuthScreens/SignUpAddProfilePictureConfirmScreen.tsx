@@ -7,6 +7,7 @@ import {
   Image,
   TouchableWithoutFeedback,
   Dimensions,
+  Alert,
 } from 'react-native';
 import { Container } from 'native-base';
 import { useEffect, useState } from 'react';
@@ -14,9 +15,11 @@ import { useNavigation } from '@react-navigation/native';
 import { SvgXml } from 'react-native-svg';
 
 // from app
-import { COLOR, FONT, Icon_Back, Img_Edit_Profile_Background, MARGIN_TOP } from '../../constants';
+import { COLOR, ERROR_MESSAGE, FONT, Icon_Back, Img_Edit_Profile_Background, MARGIN_TOP, SUCCESS_MESSAGE } from '../../constants';
 import { ColorButton } from '../../components/Button';
-import { IFile } from '../../interfaces/app';
+import { IFile, IUser } from '../../interfaces/app';
+import { useAuthentication, useUsers } from '../../hooks';
+import { useGlobalState } from '../../redux/Store';
 
 
 const { width: viewportWidth } = Dimensions.get('window');
@@ -24,8 +27,11 @@ const { width: viewportWidth } = Dimensions.get('window');
 export const SignUpAddProfilePictureConfirmScreen: React.FC = ({route}) => {
 
   const { navigate, goBack } = useNavigation();
+  const { updateUserInformation } = useUsers();
+  const { setLoginUser } = useAuthentication();
 
   const profile_icon: IFile = route.params.profile_icon;
+  const userInfo: IUser = useGlobalState('userInfo');
 
   useEffect(() => {
   }, [])
@@ -70,6 +76,13 @@ export const SignUpAddProfilePictureConfirmScreen: React.FC = ({route}) => {
   );
 
   function onContinue() {
+    updateUserInformation(userInfo.id, userInfo.email, userInfo.fullname, profile_icon, '', '')
+    .then(async (result: Promise<IUser>) => {
+      setLoginUser(await result);
+      Alert.alert(SUCCESS_MESSAGE.UPDATE_USER_PROFILE_SUCCESS);
+    }).catch(() => {
+      Alert.alert(ERROR_MESSAGE.UPDATE_USER_PROFILE_FAIL);
+    });
   }
 };
 
