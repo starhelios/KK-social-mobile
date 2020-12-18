@@ -8,17 +8,29 @@ const initialState: State = {
     isHost: false,
     email: '',
     status: '',
-    
+    aboutMe: '',
+    location: '',
+    categoryName: '',  
     avatarUrl: '',
     dateOfBirth: '', 
   },
+
   accessToken: {
     token: '',
     expires: '',
   },
+
   refreshToken: {
     token: '',
     expires: '',
+  },
+
+  filter: {
+    minPrice: null,
+    maxPrice: null,
+    startDay: null,
+    endDay: null,
+    categoryName: [],
   }
 };
 

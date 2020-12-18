@@ -13,6 +13,7 @@ export * from './Category';
 export * from './Experience';
 export * from './ExperienceDetail';
 export * from './AvailableDate';
+export * from './Filter';
 
 // Hosts
 export * from './Host';

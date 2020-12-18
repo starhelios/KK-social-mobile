@@ -66,6 +66,7 @@ export const ChangePasswordScreen: React.FC = () => {
                   style={GlobalStyle.auth_input}
                   placeholder={'Current Password'}
                   secureTextEntry={true}
+                  autoCapitalize='none'
                   placeholderTextColor={COLOR.alphaWhiteColor50}
                   onChangeText={text => setCurrentPassword(text)}
                   value={currentPassword}
@@ -79,6 +80,7 @@ export const ChangePasswordScreen: React.FC = () => {
                   style={GlobalStyle.auth_input}
                   placeholder={'New Password'}
                   secureTextEntry={true}
+                  autoCapitalize='none'
                   placeholderTextColor={COLOR.alphaWhiteColor50}
                   onChangeText={text => setNewPassword(text)}
                   value={newPassword}
@@ -92,6 +94,7 @@ export const ChangePasswordScreen: React.FC = () => {
                   style={GlobalStyle.auth_input}
                   placeholder={'Confirm Password'}
                   secureTextEntry={true}
+                  autoCapitalize='none'
                   placeholderTextColor={COLOR.alphaWhiteColor50}
                   onChangeText={text => setConfirmPassword(text)}
                   value={confirmPassword}

@@ -1,4 +1,5 @@
 import { 
+  IFilter,
   IToken,
   IUser,
 } from "../interfaces/app";
@@ -7,6 +8,7 @@ export enum ActionType {
   SET_USER_INFO = 'SET_USER_INFO',
   SET_REFRESH_TOKEN = 'SET_REFRESH_TOKEN',
   SET_ACCESS_TOKEN = 'SET_ACCESS_TOKEN',
+  SET_FILTER = 'SET_FILTER',
 }
 
 export interface Action {
@@ -19,6 +21,7 @@ export interface State {
   userInfo: IUser;
   accessToken: IToken;
   refreshToken: IToken;
+  filter: IFilter;
 }
 
 /** Reducer */
@@ -34,6 +37,9 @@ const Reducer = (state: State, action: Action): any => {
 
     case ActionType.SET_ACCESS_TOKEN:
       return {...state, refreshToken: payload};
+
+    case ActionType.SET_FILTER:
+      return {...state, filter: payload};
 
     default:
       break;

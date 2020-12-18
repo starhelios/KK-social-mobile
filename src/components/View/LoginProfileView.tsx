@@ -2,6 +2,7 @@ import * as React from 'react';
 import {
   Dimensions,
   Image,
+  Platform,
   ScrollView,
   StyleSheet,
   Text,
@@ -11,12 +12,20 @@ import {
 import { useEffect, useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { SvgXml } from 'react-native-svg';
+import { GoogleSignin } from '@react-native-community/google-signin';
+import { appleAuth, appleAuthAndroid } from '@invertase/react-native-apple-authentication';
 import DefaultPreference from 'react-native-default-preference';
 
 // from app
 import { 
+  ACCESS_TOKEN,
+  APPLE_LOGIN,
+  CODE,
   COLOR, 
+  EMAIL_LOGIN, 
+  FACEBOOK_LOGIN, 
   FONT, 
+  GOOGLE_LOGIN, 
   Icon_Detail_Right_Arrow_White, 
   Icon_Normal_Profile, 
   LOGIN_TYPE, 
@@ -132,9 +141,26 @@ export const LoginProfileView: React.FC = () => {
   }
 
   function onLogOut() {
+    DefaultPreference.get(LOGIN_TYPE).then(function(loginType) {
+      if (loginType == EMAIL_LOGIN) {
+      } else if (loginType == FACEBOOK_LOGIN) {
+      } else if (loginType == GOOGLE_LOGIN) {
+        googleSignOut();
+      } else if (loginType == APPLE_LOGIN) {
+        appleSignOut();
+      } else {
+      }
+      clearData();
+      goBack();
+    });
+  }
+
+  function clearData() {
     DefaultPreference.set(LOGIN_TYPE, '').then(function() { });
     DefaultPreference.set(USER_EMAIL, '').then(function() { });
     DefaultPreference.set(PASSWORD, '').then(function() { });
+    DefaultPreference.set(ACCESS_TOKEN, '').then(function() { });
+    DefaultPreference.set(CODE, '').then(function() { });
 
     dispatch({
       type: ActionType.SET_USER_INFO,
@@ -165,8 +191,36 @@ export const LoginProfileView: React.FC = () => {
         expires: '', 
       },
     });
+  }
 
-    goBack();
+  async function googleSignOut() {
+    try {
+      await GoogleSignin.revokeAccess();
+      await GoogleSignin.signOut();
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  async function appleSignOut() {
+    if (Platform.OS == 'ios') {
+      const appleAuthRequestResponse = await appleAuth.performRequest({
+        requestedOperation: appleAuth.Operation.LOGOUT,
+      });
+    } else {
+      appleAuthAndroid.configure({
+        clientId: '620619163089-c5qvumalbru6ovtdbr567kqs8hp9p69d.apps.googleusercontent.com',
+        redirectUri: 'https://example.com/auth/callback',
+        responseType: appleAuthAndroid.ResponseType.ALL,
+        scope: appleAuthAndroid.Scope.ALL,
+        nonce: rawNonce,
+        state,
+      });
+  
+      const response = await appleAuthAndroid.sigsigIn();
+      console.log('apple response');
+      console.log(response);
+    }
   }
 }
 

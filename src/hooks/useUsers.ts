@@ -48,17 +48,38 @@ export const useUsers = () => {
     userId: string,
     email: string,
     fullname: string,
-    avatarUrl: IFile,
+    avatarUrl: IFile | null,
     categoryName: string,
     aboutMe: string,
   ): Promise<any> => {
     const url = API_ENDPOINT.USERS + '/' + userId;
-    const body = {
-      email,
-      fullname,
-      avatarUrl,
-      // categoryName,
-      // aboutMe,
+    /*
+    var body = new FormData();
+    body.append('userId', userId);
+    body.append('email', email);
+    body.append('fullname', fullname);
+    body.append('categoryName', categoryName);
+    body.append('aboutMe', aboutMe);
+    if (avatarUrl != null) {
+      body.append('avatarUrl', avatarUrl);
+    }
+*/
+    var body;
+    if (avatarUrl == null) {
+     body = {
+        email,
+        fullname,
+        categoryName,
+        aboutMe,
+      }
+    } else {
+      body = {
+        email,
+        fullname,
+        // avatarUrl,
+        categoryName,
+        aboutMe,
+      }
     }
     try {
       const { data } = await axios.patch<any>(url, body, API_CONFIG);

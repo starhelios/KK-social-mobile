@@ -14,6 +14,7 @@ import {
 import { useCallback, useEffect, useState } from 'react';
 import { SvgXml } from 'react-native-svg';
 import RangeSlider from 'rn-range-slider';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 // from app
 import { 
@@ -26,8 +27,9 @@ import {
   Icon_Slider_Right,
 } from '../../constants';
 import { ColorButton } from '../Button';
+import { useDispatch } from '../../redux/Store';
 import GlobalStyle from '../../styles/global';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { ActionType } from '../../redux/Reducer';
 
 interface props {
   onCloseView: (visible: boolean) => void;
@@ -37,6 +39,7 @@ const { width: viewportWidth } = Dimensions.get('window');
 
 export const FiltersView: React.FC<props> = (props: props) => {
 
+  const dispatch = useDispatch();
   const [searchLocation, setSearchLocation] = useState<string>('');
   const [lowPrice, setLowPrice] = useState<number>(0);
   const [highPrice, setHighPrice] = useState<number>(1000);
@@ -74,68 +77,66 @@ export const FiltersView: React.FC<props> = (props: props) => {
 
           <View style={{...GlobalStyle.auth_line, backgroundColor: COLOR.alphaBlackColor20, marginLeft: 24, marginRight: 24, width: viewportWidth - 48, marginTop: 0}} />
           
-          <KeyboardAvoidingView behavior={Platform.OS == "ios" ? "padding" : "height"} >
-            <ScrollView style={{marginBottom: 80}}>
-              <View style={styles.content_container}>
-                <Text style={{...styles.content_title, marginTop: 33}}>Price</Text>
+          {/* <KeyboardAvoidingView behavior={Platform.OS == "ios" ? "padding" : "height"} > */}
+            <View style={styles.content_container}>
+              <Text style={{...styles.content_title, marginTop: 33}}>Price</Text>
 
-                <View style={styles.slider_value_container}>
-                  <Text style={{...styles.slider_value, textAlign: 'left'}}>$1</Text>
-                  <Text style={{...styles.slider_value, textAlign: 'right', position: 'absolute', right: 0,}}>$1,000+</Text>
-                </View>
-
-                <RangeSlider
-                  style={styles.slider}
-                  min={0}
-                  max={100}
-                  step={1}
-                  floatingLabel
-                  renderThumb={renderThumb}
-                  renderRail={renderRail}
-                  renderRailSelected={renderRailSelected}
-                  renderLabel={renderLabel}
-                  renderNotch={renderNotch}
-                  onValueChanged={handleValueChange}
-                />
-                <View style={{...GlobalStyle.auth_line, backgroundColor: COLOR.alphaBlackColor20, marginTop: 22}} />
-
-                <Text style={{...styles.content_title, marginTop: 44}}>Location</Text>
-
-                <View style={{width:'100%', marginTop: 22, flexDirection: 'row'}}>
-                  <TouchableWithoutFeedback onPress={() => onSearchLocation()}>
-                    <View style={{position: 'absolute', left: 0, width: 14, height: 45}}>
-                      <SvgXml width='100%' height='100%' xml={Icon_Search_Black} />
-                    </View>
-                  </TouchableWithoutFeedback>
-
-                  <TextInput
-                    style={{...GlobalStyle.auth_input, paddingLeft: 25, color: COLOR.systemBlackColor}}
-                    placeholder={'Search Location'}
-                    placeholderTextColor={COLOR.alphaBlackColor75}
-                    onChangeText={text => setSearchLocation(text)}
-                    value={searchLocation}
-                  />
-                  
-                  <TouchableWithoutFeedback onPress={() => onSelectLocation()}>
-                    <View style={{position: 'absolute', right: 0, width: 14, height: 45}}>
-                      <SvgXml width='100%' height='100%' xml={Icon_Location} />
-                    </View>
-                  </TouchableWithoutFeedback>
-                  
-                </View>
-
-                <View style={{...GlobalStyle.auth_line, backgroundColor: COLOR.alphaBlackColor20, marginTop: 0}} />
-                <Text style={styles.content_text}>New Orleans, LA</Text>
-                <View style={{...GlobalStyle.auth_line, backgroundColor: COLOR.alphaBlackColor20, marginTop: 22}} />
-                <Text style={styles.content_text}>Nashville, TN</Text>
-                <View style={{...GlobalStyle.auth_line, backgroundColor: COLOR.alphaBlackColor20, marginTop: 22}} />
-                <Text style={styles.content_text}>New York, NY</Text>
-
+              <View style={styles.slider_value_container}>
+                <Text style={{...styles.slider_value, textAlign: 'left'}}>{'$' + lowPrice.toString()}</Text>
+                <Text style={{...styles.slider_value, textAlign: 'right', position: 'absolute', right: 0,}}>{'$' + (highPrice == 1000 ? '1000+' : highPrice.toString())}</Text>
               </View>
-            </ScrollView>
-          </KeyboardAvoidingView>
 
-          <TouchableWithoutFeedback onPress={() => props.onCloseView(false)}>
+              <RangeSlider
+                style={styles.slider}
+                min={0}
+                max={1000}
+                step={50}
+                floatingLabel
+                renderThumb={renderThumb}
+                renderRail={renderRail}
+                renderRailSelected={renderRailSelected}
+                renderLabel={renderLabel}
+                renderNotch={renderNotch}
+                onValueChanged={handleValueChange}
+              />
+              <View style={{...GlobalStyle.auth_line, backgroundColor: COLOR.alphaBlackColor20, marginTop: 22}} />
+
+              <Text style={{...styles.content_title, marginTop: 44}}>Location</Text>
+
+              <View style={{width:'100%', marginTop: 22, flexDirection: 'row'}}>
+                <TouchableWithoutFeedback onPress={() => onSearchLocation()}>
+                  <View style={{position: 'absolute', left: 0, width: 14, height: 45}}>
+                    <SvgXml width='100%' height='100%' xml={Icon_Search_Black} />
+                  </View>
+                </TouchableWithoutFeedback>
+
+                <TextInput
+                  style={{...GlobalStyle.auth_input, paddingLeft: 25, color: COLOR.systemBlackColor}}
+                  placeholder={'Search Location'}
+                  placeholderTextColor={COLOR.alphaBlackColor75}
+                  onChangeText={text => setSearchLocation(text)}
+                  value={searchLocation}
+                />
+                
+                <TouchableWithoutFeedback onPress={() => onSelectLocation()}>
+                  <View style={{position: 'absolute', right: 0, width: 14, height: 45}}>
+                    <SvgXml width='100%' height='100%' xml={Icon_Location} />
+                  </View>
+                </TouchableWithoutFeedback>
+                
+              </View>
+
+              <View style={{...GlobalStyle.auth_line, backgroundColor: COLOR.alphaBlackColor20, marginTop: 0}} />
+              <Text style={styles.content_text}>New Orleans, LA</Text>
+              <View style={{...GlobalStyle.auth_line, backgroundColor: COLOR.alphaBlackColor20, marginTop: 22}} />
+              <Text style={styles.content_text}>Nashville, TN</Text>
+              <View style={{...GlobalStyle.auth_line, backgroundColor: COLOR.alphaBlackColor20, marginTop: 22}} />
+              <Text style={styles.content_text}>New York, NY</Text>
+
+            </View>
+          {/* </KeyboardAvoidingView> */}
+
+          <TouchableWithoutFeedback onPress={() => onApplyFilter()}>
             <View style={styles.bottom_button}>
               <ColorButton title={'Apply Filters'} backgroundColor={COLOR.systemBlackColor} color={COLOR.systemWhiteColor} />
             </View>
@@ -151,6 +152,22 @@ export const FiltersView: React.FC<props> = (props: props) => {
 
   function onSelectLocation() {
 
+  }
+
+  function onApplyFilter() {
+    dispatch({
+      type: ActionType.SET_FILTER,
+      payload: {
+        id: 0,
+        fullname: '',
+        isHost: false,
+        email: '',
+        status: '',
+        avatarUrl: '',
+        dateOfBirth: '', 
+      },
+    });
+    props.onCloseView(false);
   }
 
   function renderSliderLabel(value: number) {

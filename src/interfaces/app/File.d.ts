@@ -1,5 +1,5 @@
 export interface IFile {
 	name: string,
-    type: string,
+	type: string,
 	uri: string,
 }

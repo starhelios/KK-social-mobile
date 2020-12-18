@@ -9,6 +9,7 @@ export const API_ENDPOINT = {
   USER_CHANGE_PASSWORD  : `${API_HOST}/auth/change-password`,
   USER_FORGOT_PASSWORD  : `${API_HOST}/auth/forgot-password`,
   USER_RESET_PASSWORD   : `${API_HOST}/auth/reset-password`,
+  USER_LOGIN_GOOGLE     : `${API_HOST}/auth/google-login`,
   
   // Users
   USERS : `${API_HOST}/users`,
@@ -18,7 +19,8 @@ export const API_ENDPOINT = {
   CATEGORIES_SEARCH : `${API_HOST}/categories/search`,
 
   // Experiences
-  EXPERIENCES : `${API_HOST}/experiences`,
+  EXPERIENCES         : `${API_HOST}/experiences`,
+  EXPERIENCES_FILTER  : `${API_HOST}/experiences/filter`,
 
   // Hosts
   HOSTS : `${API_HOST}/hosts`,

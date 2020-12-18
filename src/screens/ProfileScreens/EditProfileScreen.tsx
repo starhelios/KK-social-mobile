@@ -54,6 +54,7 @@ export const EditProfileScreen: React.FC = () => {
   const profile: IUser = useGlobalState('userInfo');
 
   const [image, setImage] = useState<string>(profile.avatarUrl);
+  const [avatarFile, setAvatarFile] = useState<IFile | null>(null);
   const [fullName, setFullName] = useState<string>(profile.fullname);
   const [emailAddress, setEmailAddress] = useState<string>(profile.email);
   const [birthday, setBirthday] = useState<string>(profile.dateOfBirth);
@@ -121,7 +122,7 @@ export const EditProfileScreen: React.FC = () => {
                     </TouchableWithoutFeedback>
                   </View>
 
-                  <View style={{marginLeft: 24, marginRight: 24, width: viewportWidth - 48}}>
+                  <View style={{marginLeft: 24, marginRight: 24, width: viewportWidth - 48, paddingBottom: 10}}>
                       <View style={{width:'100%', marginTop: 33}}>
                         <Text style={styles.info_title}>Full Name</Text>
                         <TextInput
@@ -228,6 +229,7 @@ export const EditProfileScreen: React.FC = () => {
             ? image.path
             : image.path.replace('file://', ''),
       };
+      setAvatarFile(file);
       setImage(file.uri);
     })
     .catch((e) => {});
@@ -250,6 +252,7 @@ export const EditProfileScreen: React.FC = () => {
             ? image.path
             : image.path.replace('file://', ''),
       };
+      setAvatarFile(file);
       setImage(file.uri);
     })
     .catch((e) => {
@@ -276,7 +279,7 @@ export const EditProfileScreen: React.FC = () => {
   }
 
   function onSave() {
-    updateUserInformation(profile.id, emailAddress, fullName, image, '', '')
+    updateUserInformation(profile.id, emailAddress, fullName, avatarFile, '', '')
     .then(async (result: Promise<IUser>) => {
       setLoginUser(await result);
       Alert.alert(SUCCESS_MESSAGE.UPDATE_USER_PROFILE_SUCCESS);

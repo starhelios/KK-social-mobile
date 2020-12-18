@@ -9,10 +9,13 @@
     "test": "jest",
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
     "iosx": "npx react-native run-ios --simulator=\"iPhone Xs Max\"",
+    "ios6": "npx react-native run-ios --simulator=\"iPhone 6s\"",
     "build:ios": "react-native bundle --entry-file='index.js' --bundle-output='./ios/main.jsbundle' --dev=false --platform='ios'"
   },
   "dependencies": {
+    "@invertase/react-native-apple-authentication": "^2.1.0",
     "@react-native-community/datetimepicker": "^3.0.8",
+    "@react-native-community/google-signin": "^5.0.0",
     "@react-native-community/masked-view": "^0.1.10",
     "@react-navigation/bottom-tabs": "^5.9.2",
     "@react-navigation/native": "^5.7.6",
@@ -31,6 +34,7 @@
     "react-dom": "^16.13.1",
     "react-native": "^0.63.3",
     "react-native-autocomplete-input": "^4.2.0",
+    "react-native-calendar-picker": "^7.0.6",
     "react-native-calendars": "^1.505.0",
     "react-native-default-preference": "^1.4.3",
     "react-native-dynamic-vector-icons": "^1.1.4",
@@ -59,15 +63,18 @@
     "redux-logger": "^3.0.6",
     "redux-persist": "^6.0.0",
     "redux-thunk": "^2.3.0",
-    "rn-range-slider": "^2.0.3"
+    "rn-range-slider": "^2.0.3",
+    "uuid": "^8.3.2"
   },
   "devDependencies": {
     "@babel/core": "^7.12.0",
     "@babel/runtime": "^7.12.0",
     "@types/jest": "^26.0.14",
     "@types/react-native": "^0.63.25",
+    "@types/react-native-calendar-picker": "^7.0.0",
     "@types/react-redux": "^7.1.9",
     "@types/react-test-renderer": "16.9.3",
+    "@types/uuid": "^8.3.0",
     "babel-jest": "^26.5.2",
     "jest": "^26.5.3",
     "metro-react-native-babel-preset": "^0.63.0",

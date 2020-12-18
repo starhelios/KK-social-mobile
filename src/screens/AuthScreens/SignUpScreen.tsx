@@ -95,6 +95,7 @@ export const SignUpScreen: React.FC = () => {
                       style={GlobalStyle.auth_input}
                       keyboardType={'email-address'}
                       placeholder={'Email Address'}
+                      autoCapitalize='none'
                       placeholderTextColor={COLOR.alphaWhiteColor50}
                       onChangeText={text => setEmailAddress(text)}
                       value={emailAddress}
@@ -107,6 +108,7 @@ export const SignUpScreen: React.FC = () => {
                     <TextInput
                       style={GlobalStyle.auth_input}
                       placeholder={'Password'}
+                      autoCapitalize='none'
                       secureTextEntry={true}
                       placeholderTextColor={COLOR.alphaWhiteColor50}
                       onChangeText={text => setPassword(text)}

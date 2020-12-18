@@ -113,3 +113,15 @@
 - /users/{userId} patch api
 - change host detail screen
 - change profile edit screen
+
+### 2020.12.14
+- Fix ui errors
+
+### 2020.12.15
+- Add logout button
+- Change home tab screen
+
+### 2020.12.18
+- Change updating user profile
+- Add google login
+- Change experience filter

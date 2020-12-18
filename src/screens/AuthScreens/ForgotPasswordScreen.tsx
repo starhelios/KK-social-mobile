@@ -20,8 +20,8 @@ import { SvgXml } from 'react-native-svg';
 import { COLOR, ERROR_MESSAGE, FONT, Icon_Back, Img_Auth_Background, MARGIN_TOP } from '../../constants';
 import { ColorButton } from '../../components/Button';
 import { useAuthentication } from '../../hooks';
+import { IApiError, IApiSuccessMessage } from '../../interfaces/api';
 import GlobalStyle from '../../styles/global';
-import { IApiError, IApiSuccessMessage } from 'src/interfaces/api';
 
 
 const { width: viewportWidth, height: viewportHeight } = Dimensions.get('window');
@@ -60,6 +60,7 @@ export const ForgotPasswordScreen: React.FC = () => {
                   style={GlobalStyle.auth_input}
                   keyboardType={'email-address'}
                   placeholder={'Email Address'}
+                  autoCapitalize='none'
                   placeholderTextColor={COLOR.alphaWhiteColor50}
                   onChangeText={text => setEmailAddress(text)}
                   value={emailAddress}

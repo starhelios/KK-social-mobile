@@ -21,9 +21,9 @@ export const useAuthentication = () => {
   ): Promise<any> => {
     const url = API_ENDPOINT.USER_REGISTER;
     const body = {
-      fullname: fullname,
-      email: email,
-      password: password,
+      fullname,
+      email,
+      password,
     }
 
     try {
@@ -48,8 +48,8 @@ export const useAuthentication = () => {
   ): Promise<any> => {
     const url = API_ENDPOINT.USER_LOGIN;
     const body = {
-      email: email,
-      password: password,
+      email,
+      password,
     }
 
     try {
@@ -73,7 +73,7 @@ export const useAuthentication = () => {
   ): Promise<any> => {
     const url = API_ENDPOINT.USER_LOGOUT;
     const body = {
-      refreshToken: refreshToken,
+      refreshToken,
     }
 
     try {
@@ -95,7 +95,7 @@ export const useAuthentication = () => {
   ): Promise<any> => {
     const url = API_ENDPOINT.USER_REFRESH_TOKEN;
     const body = {
-      refreshToken: refreshToken,
+      refreshToken,
     }
 
     try {
@@ -119,7 +119,7 @@ export const useAuthentication = () => {
   ): Promise<any> => {
     const url = API_ENDPOINT.USER_FORGOT_PASSWORD;
     const body = {
-      email: email,
+      email,
     }
 
     try {
@@ -144,10 +144,10 @@ export const useAuthentication = () => {
   ): Promise<any> => {
     const url = API_ENDPOINT.USER_CHANGE_PASSWORD;
     const body = {
-      userId: userId,
-      password: password,
-      newPassword: newPassword,
-      setFirstPass: setFirstPass,
+      userId,
+      password,
+      newPassword,
+      setFirstPass,
     }
 
     try {
@@ -170,7 +170,7 @@ export const useAuthentication = () => {
   ): Promise<any> => {
     const url = API_ENDPOINT.USER_RESET_PASSWORD + "?token=" + token;
     const body = {
-      password: password,
+      password,
     }
 
     try {
@@ -229,5 +229,36 @@ export const useAuthentication = () => {
     });
   };
 
-  return { registerUser, loginUser, logoutUser, refreshTokens, changePassword, forgotPassword, resetPassword, setLoginUser };
+  const loginByGoogle = async (
+    code: string,
+  ): Promise<any> => {
+    const url = API_ENDPOINT.USER_LOGIN_GOOGLE;
+    const body = {
+      code,
+    }
+
+    try {
+      const { data } = await axios.post<IApiSuccess>(url, body, API_CONFIG);
+      return Promise.resolve(true);
+    } catch (err) {
+      const apiError = handleError(err);
+      if (apiError) {
+        return Promise.reject(apiError);
+      } else {
+        return Promise.resolve(false);
+      }
+    }
+  };
+
+  return { 
+    registerUser, 
+    loginUser, 
+    logoutUser, 
+    refreshTokens, 
+    changePassword, 
+    forgotPassword, 
+    resetPassword, 
+    setLoginUser, 
+    loginByGoogle, 
+  };
 };

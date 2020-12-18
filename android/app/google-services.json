@@ -1,0 +1,54 @@
+{
+  "project_info": {
+    "project_number": "620619163089",
+    "project_id": "kloutkast-b2507",
+    "storage_bucket": "kloutkast-b2507.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:620619163089:android:1dc2611c7ce1cd5d5aecf0",
+        "android_client_info": {
+          "package_name": "com.kloutkast"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "620619163089-c5qvumalbru6ovtdbr567kqs8hp9p69d.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.kloutkast",
+            "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"
+          }
+        },
+        {
+          "client_id": "620619163089-q7es5q6snv0pq27ljn5kje4uoaha1f9j.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDjM_MmfvOfeEsLEsBGHqV-JkkUvQesXgU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "620619163089-q7es5q6snv0pq27ljn5kje4uoaha1f9j.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "620619163089-pm3clc8bqt1i83h2on0f3if7957qhv5t.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "org.name.KloutKast"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

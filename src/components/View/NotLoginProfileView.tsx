@@ -1,8 +1,10 @@
 import * as React from 'react';
 import {
+  Alert,
   Dimensions,
   FlatList,
   Image,
+  Platform,
   StyleSheet,
   Text,
   TouchableWithoutFeedback,
@@ -10,14 +12,19 @@ import {
 } from 'react-native';
 import { useEffect, useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
+import { GoogleSignin, statusCodes, User } from '@react-native-community/google-signin';
+import { appleAuth, appleAuthAndroid } from '@invertase/react-native-apple-authentication';
+import { v4 as uuid } from 'uuid'
 import PageControl from 'react-native-page-control';
+import DefaultPreference from 'react-native-default-preference';
 
 // from app
-import { COLOR, FONT, Img_Experience, MARGIN_TOP } from '../../constants';
+import { ACCESS_TOKEN, CODE, COLOR, ERROR_MESSAGE, FONT, GOOGLE_LOGIN, Img_Experience, LOGIN_TYPE, MARGIN_TOP } from '../../constants';
 import { ColorButton } from '../Button';
 import { ContinueText } from '../Text';
 import { IProfileHelp } from '../../interfaces/app';
-import { useProfileHelps } from '../../hooks';
+import { useAuthentication, useProfileHelps } from '../../hooks';
+import { IApiError } from '../../interfaces/api';
 
 const { width: viewportWidth, height: viewportHeight } = Dimensions.get('window');
 
@@ -25,15 +32,27 @@ export const NotLoginProfileView: React.FC = () => {
 
   const { navigate } = useNavigation();
   const { profileHelps } = useProfileHelps();
+  const { loginByGoogle } = useAuthentication();
 
   const [profileHelpList, setProfileHelpList] = useState<IProfileHelp[]>([]);
   const [currentPage, setCurrentPage] = useState<number>(0);
+  const [loginType, setLoginType] = useState<string>('');
+  const [accessToken, setAccessToken] = useState<string>('');
+  const [code, setCode] = useState<string>('');
 
   var scrollViewRef: FlatList<IProfileHelp> | null;
 
   useEffect(() => {
     loadProfileList();
   }, []);
+
+  useEffect(() => {
+    if (accessToken != '' || code != '') {
+      console.log(accessToken);
+      console.log(code);
+      
+    }
+  }, [loginType])
 
   async function loadProfileList() {
     await profileHelps()
@@ -121,11 +140,14 @@ export const NotLoginProfileView: React.FC = () => {
             </View>
           </TouchableWithoutFeedback>
 
-          <TouchableWithoutFeedback onPress={() => onSignUpWithApple()}>
-            <View style={styles.social_button}>
-              <ColorButton title={'Sign Up With Apple'} backgroundColor={COLOR.systemBlackColor} color={COLOR.systemWhiteColor} />
-            </View>
-          </TouchableWithoutFeedback>
+          { (Platform.OS == 'ios' || appleAuthAndroid.isSupported) && (
+            <TouchableWithoutFeedback onPress={() => onSignUpWithApple()}>
+              <View style={styles.social_button}>
+                <ColorButton title={'Sign Up With Apple'} backgroundColor={COLOR.systemBlackColor} color={COLOR.systemWhiteColor} />
+              </View>
+            </TouchableWithoutFeedback>
+          )}
+
         </View>
       </View>
     </View>
@@ -135,12 +157,68 @@ export const NotLoginProfileView: React.FC = () => {
     console.log('Connect With Facebook');
   }
 
-  function onConnectWithGoogle() {
-    console.log('Connect With Google');
+  async function onConnectWithGoogle() {
+    try {
+      await GoogleSignin.hasPlayServices();
+      const userInfo = await GoogleSignin.signIn()
+      .then((data) => {
+        const currentUser = GoogleSignin.getTokens()
+        .then((res) => {
+          loginByGoogle(res.accessToken)
+          .then(async (result: Promise<boolean>) => {
+            if ((await result) == true) {
+              DefaultPreference.set(LOGIN_TYPE, GOOGLE_LOGIN).then(function() { }); 
+              DefaultPreference.set(ACCESS_TOKEN, res.accessToken).then(function() { });
+              DefaultPreference.set(CODE, res.idToken).then(function() { });
+            } else {
+              Alert.alert(ERROR_MESSAGE.LOGIN_FAIL);
+            }
+          }).catch(async (error: Promise<IApiError>) => {
+            Alert.alert((await error).error.message);
+          }).catch(() => {
+            Alert.alert(ERROR_MESSAGE.LOGIN_FAIL);
+          });
+        })
+      });
+    } catch (error) {
+      if (error.code === statusCodes.SIGN_IN_CANCELLED) {
+      } else if (error.code === statusCodes.IN_PROGRESS) {
+      } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
+      } else {
+      }
+    }
   }
 
-  function onSignUpWithApple() {
-    console.log('Sign Up With Apple');
+  async function onSignUpWithApple() {
+    if (Platform.OS == 'ios') {
+      const appleAuthRequestResponse = await appleAuth.performRequest({
+        requestedOperation: appleAuth.Operation.LOGIN,
+        requestedScopes: [appleAuth.Scope.EMAIL, appleAuth.Scope.FULL_NAME],
+      });
+  
+      const credentialState = await appleAuth.getCredentialStateForUser(appleAuthRequestResponse.user);
+      console.log(credentialState);
+      if (credentialState === appleAuth.State.AUTHORIZED) {
+        console.log('apple response');
+        
+      }
+    } else {
+      const rawNonce = uuid();
+      const state = uuid();
+  
+      appleAuthAndroid.configure({
+        clientId: '620619163089-c5qvumalbru6ovtdbr567kqs8hp9p69d.apps.googleusercontent.com',
+        redirectUri: 'https://example.com/auth/callback',
+        responseType: appleAuthAndroid.ResponseType.ALL,
+        scope: appleAuthAndroid.Scope.ALL,
+        nonce: rawNonce,
+        state,
+      });
+  
+      const response = await appleAuthAndroid.signIn();
+      console.log('apple response');
+      console.log(response);
+    }
   }
 
   function renderFlatItemView(item: IProfileHelp) {

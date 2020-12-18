@@ -15,7 +15,7 @@ import {
   Alert,
 } from 'react-native';
 import { Container } from 'native-base';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { SvgXml } from 'react-native-svg';
 import DefaultPreference from 'react-native-default-preference';
@@ -52,9 +52,6 @@ export const LogInScreen: React.FC = () => {
 
   var fetching = false;
 
-  useEffect(() => {
-  }, [])
-
   return (
     <Container style={styles.background}>
       
@@ -82,6 +79,7 @@ export const LogInScreen: React.FC = () => {
                       style={GlobalStyle.auth_input}
                       keyboardType={'email-address'}
                       placeholder={'Email Address'}
+                      autoCapitalize='none'
                       placeholderTextColor={COLOR.alphaWhiteColor50}
                       onChangeText={text => setEmailAddress(text)}
                       value={emailAddress}
@@ -95,6 +93,7 @@ export const LogInScreen: React.FC = () => {
                       style={GlobalStyle.auth_input}
                       placeholder={'Password'}
                       secureTextEntry={true}
+                      autoCapitalize='none'
                       placeholderTextColor={COLOR.alphaWhiteColor50}
                       onChangeText={text => setPassword(text)}
                       value={password}

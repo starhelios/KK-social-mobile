@@ -66,5 +66,29 @@ export const useExperiences = () => {
     }
   };
 
-  return { getExperienceList, getExperienceDetail, createExperience };
+  const filterExperience = async (
+    minPrice: number | null,
+    maxPrice: number | null,
+    startDay: string | null,
+    endDay: string | null,
+    categoryName: string[],
+  ): Promise<any> => {
+    const url = API_ENDPOINT.EXPERIENCES_FILTER;
+    const body = {
+      minPrice,
+      maxPrice,
+      startDay,
+      endDay,
+      categoryName,
+    }
+    try {
+      const { data } = await axios.get<IApiSuccess>(url, API_CONFIG);
+      const result: IExperience[] = data.payload;
+      return Promise.resolve(result);
+    } catch (err) {
+      return Promise.reject(null);
+    }
+  };
+
+  return { getExperienceList, getExperienceDetail, createExperience, filterExperience };
 };
