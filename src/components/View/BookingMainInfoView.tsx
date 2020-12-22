@@ -7,10 +7,7 @@ import {
 } from 'react-native';
 
 // from app
-import { 
-  COLOR, 
-  FONT, 
-} from '../../constants';
+import { COLOR, FONT, GetDurationString } from '../../constants';
 import { IBooking } from '../../interfaces/app';
 
 interface props {
@@ -30,7 +27,7 @@ export const BookingMainInfoView: React.FC<props> = (props: props) => {
         <Text style={styles.date}>{booking.date + ' • ' + booking.hour}</Text>
         { 
           completed_booking == false
-          ? <Text style={styles.duration}>{booking.duration}</Text>
+          ? <Text style={styles.duration}>{GetDurationString(booking.duration)}</Text>
           : null
         }
       </View>
@@ -81,7 +78,7 @@ const styles = StyleSheet.create({
     lineHeight: 16,
     color: COLOR.systemWhiteColor,
     fontFamily: FONT.AN_Regular,
-    fontSize: 16,
+    fontSize: 14,
     flexWrap: 'wrap'
   },
 });

@@ -47,10 +47,7 @@ export const NotLoginProfileView: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    if (accessToken != '' || code != '') {
-      console.log(accessToken);
-      console.log(code);
-      
+    if (accessToken != '' || code != '') {      
     }
   }, [loginType])
 
@@ -97,7 +94,7 @@ export const NotLoginProfileView: React.FC = () => {
             bounces={false}
             horizontal={true}
             data={profileHelpList}
-            keyExtractor={item => item.id.toString()}
+            keyExtractor={(item, index) => index.toString()}
             onMomentumScrollEnd={({nativeEvent}) => { 
               setCurrentPage(Math.round(nativeEvent.contentOffset.x / viewportWidth));
             }}
@@ -121,7 +118,7 @@ export const NotLoginProfileView: React.FC = () => {
                 indicatorStyle={{borderRadius: 5}}
                 currentIndicatorStyle={{borderRadius: 5}}
                 indicatorSize={{width:8, height:8}}
-                onPageIndicatorPress={(page) => console.log(page)}
+                onPageIndicatorPress={(page) => {}}
               />
             </View>
           : null
@@ -154,7 +151,6 @@ export const NotLoginProfileView: React.FC = () => {
   );
   
   function onConnectWithFacebook() {
-    console.log('Connect With Facebook');
   }
 
   async function onConnectWithGoogle() {
@@ -164,6 +160,8 @@ export const NotLoginProfileView: React.FC = () => {
       .then((data) => {
         const currentUser = GoogleSignin.getTokens()
         .then((res) => {
+          console.log(res.accessToken);
+          console.log(res.idToken);
           loginByGoogle(res.accessToken)
           .then(async (result: Promise<boolean>) => {
             if ((await result) == true) {
@@ -197,10 +195,7 @@ export const NotLoginProfileView: React.FC = () => {
       });
   
       const credentialState = await appleAuth.getCredentialStateForUser(appleAuthRequestResponse.user);
-      console.log(credentialState);
-      if (credentialState === appleAuth.State.AUTHORIZED) {
-        console.log('apple response');
-        
+      if (credentialState === appleAuth.State.AUTHORIZED) {        
       }
     } else {
       const rawNonce = uuid();
@@ -216,8 +211,6 @@ export const NotLoginProfileView: React.FC = () => {
       });
   
       const response = await appleAuthAndroid.signIn();
-      console.log('apple response');
-      console.log(response);
     }
   }
 

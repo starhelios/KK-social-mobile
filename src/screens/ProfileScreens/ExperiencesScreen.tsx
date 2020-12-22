@@ -31,7 +31,7 @@ const { width: viewportWidth, height: viewportHeight } = Dimensions.get('window'
 export const ExperiencesScreen: React.FC = () => {
 
   const { navigate, goBack } = useNavigation();
-  const { experiences } = useExperiences();
+  const { getExperienceList } = useExperiences();
 
 
   const [experienceList, setExperienceList] = useState<IExperience[]>([]);
@@ -41,7 +41,7 @@ export const ExperiencesScreen: React.FC = () => {
   }, [])
 
   async function loadExperienceList() {
-    await experiences()
+    await getExperienceList()
     .then(async (result: Promise<IExperience[]>) => {
       setExperienceList(await result);
     }).catch(() => {
@@ -73,7 +73,7 @@ export const ExperiencesScreen: React.FC = () => {
                 showsHorizontalScrollIndicator={false}
                 horizontal={false}
                 data={experienceList}
-                keyExtractor={item => item.id.toString()}
+                keyExtractor={(item, index) => index.toString()}
                 renderItem={({item}) => <MyExperienceView experience={item} width={viewportWidth - 48} />}
               />
             </View>
@@ -83,7 +83,6 @@ export const ExperiencesScreen: React.FC = () => {
   );
 
   function onAddBankAccount() {
-    console.log('Add Bank Account');
   }
 };
 

@@ -9,7 +9,7 @@ import {
 import { SvgXml } from 'react-native-svg';
 
 // from app
-import { COLOR, FONT, Icon_Detail_Right_Arrow_White } from '../../constants';
+import { COLOR, FONT, GetDurationString, Icon_Detail_Right_Arrow_White } from '../../constants';
 import { IBooking } from '../../interfaces/app';
 
 interface props {
@@ -35,7 +35,7 @@ export const ConfirmedBookingView: React.FC<props> = (props: props) => {
         <View style={{...styles.info_container, marginTop: (booking.show_date != null && booking.show_date == true) ? 16 : 22}}>
           <View style={{height: 40}}>
             <Text style={styles.name}>{booking.hour + ' / ' + booking.host?.fullname}</Text>
-            <Text style={styles.experience}>{booking.experience + ' • ' + booking.duration}</Text>
+            <Text style={styles.experience}>{booking.experience + ' • ' + GetDurationString(booking.duration)}</Text>
           </View>
           
           <View style={styles.arrow}>

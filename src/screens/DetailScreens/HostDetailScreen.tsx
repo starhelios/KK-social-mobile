@@ -29,12 +29,16 @@ import {
 import { IExperience, IHost, IHostDetail } from '../../interfaces/app';
 import { ExperienceView } from '../../components/View';
 import { useExperiences } from '../../hooks';
+import { useGlobalState } from '../../redux/Store';
 import GlobalStyle from '../../styles/global';
+import Spinner from 'react-native-loading-spinner-overlay';
 
 
 const { width: viewportWidth } = Dimensions.get('window');
 
 export const HostDetailScreen: React.FC = ({route}) => {
+
+  const experienceList = useGlobalState('experienceList');
 
   const { navigate, goBack } = useNavigation();
   const { getExperienceList } = useExperiences();
@@ -42,18 +46,28 @@ export const HostDetailScreen: React.FC = ({route}) => {
   const hostDetail: IHostDetail = route.params.hostDetail;
   const host: IHost = hostDetail.user;
 
-  const [experienceList, setExperienceList] = useState<IExperience[]>([]);
+  const [hostExperienceList, setHostExperienceList] = useState<IExperience[]>([]);
+  const [fetchingData, setFetchingData] = useState<boolean>(false);
 
   useEffect(() => {
     loadExperienceList();
   }, [])
 
   async function loadExperienceList() {
-    await getExperienceList()
-    .then(async (result: Promise<IExperience[]>) => {
-      setExperienceList(await result);
-    }).catch(() => {
-    });
+    // await getExperienceList()
+    // .then(async (result: Promise<IExperience[]>) => {
+    //   setExperienceList(await result);
+    // }).catch(() => {
+    // });
+
+    var experiences: IExperience[] = [];
+    for (let i = 0; i < experienceList.length; i++) {
+      let experience = experienceList[i];
+      if (experience.userId == host.id) {
+        experiences.push(experience);
+      }
+    }
+    setHostExperienceList(experiences);
   }
 
   return (
@@ -79,7 +93,7 @@ export const HostDetailScreen: React.FC = ({route}) => {
             <View style={{marginTop: 33, flexDirection: 'row'}}>
               <View style={{width: viewportWidth - 100}}>
                 <Text style={styles.host_name}>{'Hey, I\'m ' + host.fullname}</Text>
-                <Text style={styles.joined_date}>{'Joined in ' + Moment(host.dateOfBirth).format('MMMM DD, YYYY')}</Text>
+                <Text style={styles.joined_date}>{'Joined in ' + Moment(host.dateOfBirth).format('MMMM D, YYYY')}</Text>
               </View>
               <Image
                 style={styles.avatar}
@@ -110,12 +124,18 @@ export const HostDetailScreen: React.FC = ({route}) => {
             contentContainerStyle={{paddingHorizontal: 24}}
             showsHorizontalScrollIndicator={false}
             horizontal={true}
-            data={experienceList}
-            keyExtractor={item => item.id.toString()}
-            renderItem={({item}) => <ExperienceView experience={item} white_color={false} />}
+            data={hostExperienceList}
+            keyExtractor={(item, index) => index.toString()}
+            renderItem={({item}) => <ExperienceView experience={item} white_color={false} onFetchingData={setFetchingData} />}
           />
         </ScrollView>
       </SafeAreaView>
+
+      <Spinner
+        visible={fetchingData}
+        textContent={''}
+        textStyle={{color: COLOR.systemWhiteColor}}
+      />
     </Container>
   );
 

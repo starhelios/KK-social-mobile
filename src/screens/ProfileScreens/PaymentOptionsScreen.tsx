@@ -69,7 +69,7 @@ export const PaymentOptionsScreen: React.FC = () => {
                 showsHorizontalScrollIndicator={false}
                 horizontal={false}
                 data={cardList}
-                keyExtractor={item => item.number}
+                keyExtractor={(item, index) => index.toString()}
                 renderItem={({item}) => <YourCardButton card={item} />}
             />
           </View>
@@ -85,7 +85,6 @@ export const PaymentOptionsScreen: React.FC = () => {
   );
 
   function onAddPaymentMethod() {
-    console.log('Add Payment Method');
   }
 };
 

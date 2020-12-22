@@ -10,7 +10,6 @@ import {
   Alert,
 } from 'react-native';
 import { Container } from 'native-base';
-import { useEffect, useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { SvgXml } from 'react-native-svg';
 
@@ -32,9 +31,6 @@ export const SignUpAddProfilePictureConfirmScreen: React.FC = ({route}) => {
 
   const profile_icon: IFile = route.params.profile_icon;
   const userInfo: IUser = useGlobalState('userInfo');
-
-  useEffect(() => {
-  }, [])
 
   return (
     <Container style={styles.background}>

@@ -269,7 +269,6 @@ export const EditProfileScreen: React.FC = () => {
 
   function onSelectBirthday() {
     setPickerDate(birthday != undefined && birthday != '' ? new Date(birthday) : new Date());
-    console.log(pickerDate);
     setShowDatePicker(true);
   }
   

@@ -137,7 +137,6 @@ export const LoginProfileView: React.FC = () => {
   );
   
   function onTermsOfService() {
-    console.log('Terms of Service');
   }
 
   function onLogOut() {
@@ -165,13 +164,15 @@ export const LoginProfileView: React.FC = () => {
     dispatch({
       type: ActionType.SET_USER_INFO,
       payload: {
-        id: 0,
+        id: '',
         fullname: '',
         isHost: false,
         email: '',
         status: '',
         avatarUrl: '',
         dateOfBirth: '', 
+        aboutMe: '',
+        location: '',
       },
     });
   
@@ -208,18 +209,16 @@ export const LoginProfileView: React.FC = () => {
         requestedOperation: appleAuth.Operation.LOGOUT,
       });
     } else {
-      appleAuthAndroid.configure({
-        clientId: '620619163089-c5qvumalbru6ovtdbr567kqs8hp9p69d.apps.googleusercontent.com',
-        redirectUri: 'https://example.com/auth/callback',
-        responseType: appleAuthAndroid.ResponseType.ALL,
-        scope: appleAuthAndroid.Scope.ALL,
-        nonce: rawNonce,
-        state,
-      });
+      // appleAuthAndroid.configure({
+      //   clientId: '620619163089-c5qvumalbru6ovtdbr567kqs8hp9p69d.apps.googleusercontent.com',
+      //   redirectUri: 'https://example.com/auth/callback',
+      //   responseType: appleAuthAndroid.ResponseType.ALL,
+      //   scope: appleAuthAndroid.Scope.ALL,
+      //   nonce: rawNonce,
+      //   state,
+      // });
   
-      const response = await appleAuthAndroid.sigsigIn();
-      console.log('apple response');
-      console.log(response);
+      // const response = await appleAuthAndroid.sigsigIn();
     }
   }
 }

@@ -27,7 +27,6 @@ export const BankButton: React.FC<props> = (props: props) => {
   );
 
   function onSelectBank() {
-    console.log("select Bank : " + props.card.number);
   }
 }
 

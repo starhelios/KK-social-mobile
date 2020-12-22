@@ -59,7 +59,6 @@ export const BookingView: React.FC<props> = (props: props) => {
   );
 
   function onJoinExperience() {
-    console.log('join experience');
   }
 }
 

@@ -10,7 +10,6 @@ import {
   Platform,
 } from 'react-native';
 import { Container } from 'native-base';
-import { useEffect } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { SvgXml } from 'react-native-svg';
 import ImagePicker from 'react-native-image-crop-picker';
@@ -25,10 +24,7 @@ const { width: viewportWidth } = Dimensions.get('window');
 
 export const SignUpAddProfilePictureScreen: React.FC = () => {
 
-  const { navigate, goBack } = useNavigation();
-
-  useEffect(() => {
-  }, [])
+  const { navigate, goBack, reset } = useNavigation();
 
   return (
     <Container style={styles.background}>
@@ -83,8 +79,10 @@ export const SignUpAddProfilePictureScreen: React.FC = () => {
   );
 
   function onSkip() {
-    console.log('skip profile image');
-    navigate('TabBar');
+    reset({
+      index: 0,
+      routes: [{ name: 'TabBar' }],
+    });
   }
 
   function onChoosePhoto() {

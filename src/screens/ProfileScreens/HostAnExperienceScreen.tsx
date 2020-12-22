@@ -85,7 +85,7 @@ export const HostAnExperienceScreen: React.FC = () => {
                         showsHorizontalScrollIndicator={false}
                         horizontal={true}
                         data={images}
-                        keyExtractor={item => item.name}
+                        keyExtractor={(item, index) => index.toString()}
                         renderItem={({item}) => <ExperienceImageView image={item} showPlusIcon={true} />}
                       />
                     </View>

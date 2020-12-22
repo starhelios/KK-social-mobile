@@ -11,6 +11,7 @@ export * from './ConfirmedBookingView';
 export * from './ConfirmedBookingMainInfoView';
 export * from './ConfirmedBookingRatingInfoView';
 export * from './ConfirmedBookingHostInfoView';
-export * from './SelectDatesView';
+export * from './SelectDateView';
+export * from './SelectDateRangeView';
 export * from './FiltersView';
 export * from './ExperienceDetailBookView';

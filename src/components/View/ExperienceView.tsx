@@ -15,7 +15,7 @@ import {
   COLOR, 
   ERROR_MESSAGE, 
   FONT, 
-  GetHostDetail, 
+  GetDurationString, 
   Icon_Category, 
   Img_Experience,
 } from '../../constants';
@@ -26,15 +26,17 @@ import { useExperiences, useHosts } from '../../hooks';
 interface props {
   experience: IExperience;
   white_color: boolean;
+  onFetchingData: (fetching: boolean) => void;
 }
 
 export const ExperienceView: React.FC<props> = (props: props) => {
 
+  const experience: IExperience = props.experience;
+  const white_color: boolean = props.white_color;
+
   const { navigate } = useNavigation();
   const { getExperienceDetail } = useExperiences();
   const { getHostDetail } = useHosts();
-  const experience: IExperience = props.experience;
-  const white_color: boolean = props.white_color;
   
   return (
     <TouchableWithoutFeedback onPress={() => goExperienceDetailScreen() }>
@@ -44,7 +46,6 @@ export const ExperienceView: React.FC<props> = (props: props) => {
           source={experience.images.length > 0 ? {uri: experience.images[0]} : Img_Experience} />
         <Text style={{...styles.title, color: white_color == true ? COLOR.systemWhiteColor : COLOR.blackColor}}>{experience.title}</Text>
         <View style={styles.experienceContainer}>
-          
           {
             experience.icon != null && experience.icon != ''
             ? <Image
@@ -52,7 +53,7 @@ export const ExperienceView: React.FC<props> = (props: props) => {
                 source={{uri: experience.icon}} />
             : <SvgXml height='100%' xml={Icon_Category} />
           }          
-          <Text style={{...styles.experience, color: white_color == true ? COLOR.systemWhiteColor : COLOR.blackColor}}>{experience.categoryName + ' • ' + GetHostDetail(experience.duration)}</Text>
+          <Text style={{...styles.experience, color: white_color == true ? COLOR.systemWhiteColor : COLOR.blackColor}}>{experience.categoryName + ' • ' + GetDurationString(experience.duration)}</Text>
         </View>
         <View style={styles.priceContainer}>
           <Text style={{...styles.price, color: white_color == true ? COLOR.systemWhiteColor : COLOR.blackColor}}>{'From ' + experience.price.toString() + '$'}</Text>
@@ -63,10 +64,12 @@ export const ExperienceView: React.FC<props> = (props: props) => {
   );
 
   async function goExperienceDetailScreen() {
+    props.onFetchingData(true);
     await getExperienceDetail(experience.id)
     .then(async (experienceDetail: Promise<IExperienceDetail>) => {
       getHostDetailInformation(await experienceDetail);
     }).catch(() => {
+      props.onFetchingData(false);
       Alert.alert(ERROR_MESSAGE.GET_EXPERIENCE_DETAIL_FAIL);
     });
   }
@@ -74,8 +77,10 @@ export const ExperienceView: React.FC<props> = (props: props) => {
   async function getHostDetailInformation(experienceDetail: IExperienceDetail) {
     await getHostDetail(experience.userId)
     .then(async (hostDetail: Promise<IHostDetail>) => {
+      props.onFetchingData(false);
       navigate('ExperienceDetail' , {experienceDetail: experienceDetail, hostDetail: hostDetail});
     }).catch(() => {
+      props.onFetchingData(false);
       Alert.alert(ERROR_MESSAGE.GET_HOST_DETAIL_FAIL);
     });
   }

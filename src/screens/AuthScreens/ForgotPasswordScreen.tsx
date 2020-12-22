@@ -15,6 +15,7 @@ import { Container } from 'native-base';
 import { useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { SvgXml } from 'react-native-svg';
+import Spinner from 'react-native-loading-spinner-overlay';
 
 // from app
 import { COLOR, ERROR_MESSAGE, FONT, Icon_Back, Img_Auth_Background, MARGIN_TOP } from '../../constants';
@@ -32,8 +33,7 @@ export const ForgotPasswordScreen: React.FC = () => {
   const { forgotPassword } = useAuthentication();
 
   const [emailAddress, setEmailAddress] = useState('');
-
-  var fetching = false;
+  const [fetchingData, setFetchingData] = useState<boolean>(false);
 
   return (
     <Container style={styles.background}>
@@ -82,31 +82,37 @@ export const ForgotPasswordScreen: React.FC = () => {
           </TouchableWithoutFeedback>
         </View>
       </SafeAreaView>
+
+      <Spinner
+        visible={fetchingData}
+        textContent={''}
+        textStyle={{color: COLOR.systemWhiteColor}}
+      />
     </Container>
   );
 
   function onForgotPassword() {
-    if (fetching == true) {
+    if (fetchingData == true) {
       return;
     } else if (emailAddress == '') {
       Alert.alert(ERROR_MESSAGE.EMPTY_EMAIL_ADDRESS);
       return;
     }
-    fetching = true;
+    setFetchingData(true);
 
     forgotPassword(emailAddress)
     .then(async (result: Promise<IApiSuccessMessage>) => {
-      fetching = false;
+      setFetchingData(false);
       if ((await result).error == false) {
         Alert.alert((await result).message);
       } else {
         Alert.alert((await result).message);
       }
     }).catch(async (error: Promise<IApiError>) => {
-      fetching = false;
+      setFetchingData(false);
       Alert.alert((await error).error.message);
     }).catch(() => {
-      fetching = false;
+      setFetchingData(false);
       Alert.alert(ERROR_MESSAGE.FORGOT_PASSWORD_FAIL);
     });
   }

@@ -18,6 +18,7 @@ import { useHosts } from '../../hooks';
 
 interface props {
   host: IHost;
+  onFetchingData: (fetching: boolean) => void;
 }
 
 export const HostView: React.FC<props> = (props: props) => {
@@ -49,10 +50,13 @@ export const HostView: React.FC<props> = (props: props) => {
   );
 
   async function goHostDetailScreen() {
+    props.onFetchingData(true);
     await getHostDetail(host.id)
     .then(async (hostDetail: Promise<IHostDetail>) => {
+      props.onFetchingData(false);
       navigate('HostDetail', {hostDetail: hostDetail});
     }).catch(() => {
+      props.onFetchingData(false);
       Alert.alert(ERROR_MESSAGE.GET_HOST_DETAIL_FAIL);
     });
   }

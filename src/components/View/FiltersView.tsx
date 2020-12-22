@@ -13,8 +13,8 @@ import {
 } from 'react-native';
 import { useCallback, useEffect, useState } from 'react';
 import { SvgXml } from 'react-native-svg';
-import RangeSlider from 'rn-range-slider';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import RangeSlider from 'rn-range-slider';
 
 // from app
 import { 
@@ -27,11 +27,12 @@ import {
   Icon_Slider_Right,
 } from '../../constants';
 import { ColorButton } from '../Button';
-import { useDispatch } from '../../redux/Store';
+import { useGlobalState } from '../../redux/Store';
 import GlobalStyle from '../../styles/global';
-import { ActionType } from '../../redux/Reducer';
+
 
 interface props {
+  onFilter: (lowPrice: number, hightPrice: number) => void;
   onCloseView: (visible: boolean) => void;
 }
 
@@ -39,10 +40,11 @@ const { width: viewportWidth } = Dimensions.get('window');
 
 export const FiltersView: React.FC<props> = (props: props) => {
 
-  const dispatch = useDispatch();
+  const filter = useGlobalState('filter');
+
   const [searchLocation, setSearchLocation] = useState<string>('');
-  const [lowPrice, setLowPrice] = useState<number>(0);
-  const [highPrice, setHighPrice] = useState<number>(1000);
+  const [lowPrice, setLowPrice] = useState<number>(filter.minPrice != null ? filter.minPrice : 0);
+  const [highPrice, setHighPrice] = useState<number>(filter.maxPrice != null ? filter.maxPrice : 1000);
 
   const renderThumb = useCallback(() => <SvgXml width={34} height={24} xml={Icon_Slider_Left} />, []);
   const renderRail = useCallback(() => <View style={styles.slider_rail} />, []);
@@ -99,7 +101,7 @@ export const FiltersView: React.FC<props> = (props: props) => {
                 renderNotch={renderNotch}
                 onValueChanged={handleValueChange}
               />
-              <View style={{...GlobalStyle.auth_line, backgroundColor: COLOR.alphaBlackColor20, marginTop: 22}} />
+              {/* <View style={{...GlobalStyle.auth_line, backgroundColor: COLOR.alphaBlackColor20, marginTop: 22}} />
 
               <Text style={{...styles.content_title, marginTop: 44}}>Location</Text>
 
@@ -131,12 +133,12 @@ export const FiltersView: React.FC<props> = (props: props) => {
               <View style={{...GlobalStyle.auth_line, backgroundColor: COLOR.alphaBlackColor20, marginTop: 22}} />
               <Text style={styles.content_text}>Nashville, TN</Text>
               <View style={{...GlobalStyle.auth_line, backgroundColor: COLOR.alphaBlackColor20, marginTop: 22}} />
-              <Text style={styles.content_text}>New York, NY</Text>
+              <Text style={styles.content_text}>New York, NY</Text> */}
 
             </View>
           {/* </KeyboardAvoidingView> */}
 
-          <TouchableWithoutFeedback onPress={() => onApplyFilter()}>
+          <TouchableWithoutFeedback onPress={() => props.onFilter(lowPrice, highPrice)}>
             <View style={styles.bottom_button}>
               <ColorButton title={'Apply Filters'} backgroundColor={COLOR.systemBlackColor} color={COLOR.systemWhiteColor} />
             </View>
@@ -152,22 +154,6 @@ export const FiltersView: React.FC<props> = (props: props) => {
 
   function onSelectLocation() {
 
-  }
-
-  function onApplyFilter() {
-    dispatch({
-      type: ActionType.SET_FILTER,
-      payload: {
-        id: 0,
-        fullname: '',
-        isHost: false,
-        email: '',
-        status: '',
-        avatarUrl: '',
-        dateOfBirth: '', 
-      },
-    });
-    props.onCloseView(false);
   }
 
   function renderSliderLabel(value: number) {
@@ -213,8 +199,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   content_container: {
-    marginLeft: 24,
-    marginRight: 24,
+    marginLeft: 0,
+    marginRight: 0,
   },
   bottom_button: {
     marginTop: 33,
@@ -230,6 +216,8 @@ const styles = StyleSheet.create({
     fontFamily: FONT.AN_Regular,
     color: COLOR.systemBlackColor,
     fontSize: 16,
+    marginLeft: 24,
+    marginRight: 24,
   },
   slider_value_container: {
     marginTop: 22,
@@ -243,11 +231,14 @@ const styles = StyleSheet.create({
     fontFamily: FONT.AN_Regular,
     color: COLOR.blackColor,
     fontSize: 14,
+    marginLeft: 24,
+    marginRight: 24,
   },
   slider: {
     marginTop: 12,
-    width: '100%',
     height: 34,
+    marginLeft: 18,
+    marginRight: 18,
   },
   content_text: {
     marginTop: 22,

@@ -38,6 +38,7 @@ import { ColorButton } from '../../components/Button';
 import { useAuthentication } from '../../hooks';
 import { IApiError } from '../../interfaces/api';
 import GlobalStyle from '../../styles/global';
+import Spinner from 'react-native-loading-spinner-overlay';
 
 
 const { width: viewportWidth, height: viewportHeight } = Dimensions.get('window');
@@ -49,8 +50,7 @@ export const LogInScreen: React.FC = () => {
 
   const [emailAddress, setEmailAddress] = useState('');
   const [password, setPassword] = useState('');
-
-  var fetching = false;
+  const [fetchingData, setFetchingData] = useState<boolean>(false);
 
   return (
     <Container style={styles.background}>
@@ -118,11 +118,17 @@ export const LogInScreen: React.FC = () => {
           </View>
         </TouchableWithoutFeedback>
       </SafeAreaView>
+
+      <Spinner
+        visible={fetchingData}
+        textContent={''}
+        textStyle={{color: COLOR.systemWhiteColor}}
+      />
     </Container>
   );
 
   function onLogIn() {
-    if (fetching == true) {
+    if (fetchingData == true) {
       return;
     } else if (emailAddress == '') {
       Alert.alert(ERROR_MESSAGE.EMPTY_EMAIL_ADDRESS);
@@ -131,11 +137,11 @@ export const LogInScreen: React.FC = () => {
       Alert.alert(ERROR_MESSAGE.EMPTY_PASSWORD);
       return;
     }
-    fetching = true;
+    setFetchingData(true);
 
     loginUser(emailAddress, password)
     .then(async (result: Promise<boolean>) => {
-      fetching = false;
+      setFetchingData(false);
       if ((await result) == true) {
         saveUserInfo();
         goBack();
@@ -143,10 +149,10 @@ export const LogInScreen: React.FC = () => {
         Alert.alert(ERROR_MESSAGE.LOGIN_FAIL);
       }
     }).catch(async (error: Promise<IApiError>) => {
-      fetching = false;
+      setFetchingData(false);
       Alert.alert((await error).error.message);
     }).catch(() => {
-      fetching = false;
+      setFetchingData(false);
       Alert.alert(ERROR_MESSAGE.LOGIN_FAIL);
     });
   }

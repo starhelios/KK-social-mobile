@@ -10,40 +10,56 @@ import {
   ScrollView,
   Modal,
 } from 'react-native';
-import { Container } from 'native-base';
 import { useEffect, useState } from 'react';
+import { Container } from 'native-base';
 import { SvgXml } from 'react-native-svg';
 import Moment from 'moment';
+import Spinner from 'react-native-loading-spinner-overlay';
 
 // from app
 import { API_CONFIG, COLOR, FONT, Icon_Filter, Icon_Search, MARGIN_TOP } from '../../constants';
 import { useCategories, useExperiences, useHosts } from '../../hooks';
-import { ICategory, IExperience, IHost, IHostList } from '../../interfaces/app';
-import { ExperienceView, FiltersView, HostView, SelectDatesView } from '../../components/View';
+import { ICategory, IExperience, IFilter, IHost, IHostList } from '../../interfaces/app';
+import { ExperienceView, FiltersView, HostView, SelectDateView } from '../../components/View';
+import { useDispatch, useGlobalState } from '../../redux/Store';
+import { ActionType } from '../../redux/Reducer';
 
 
 export const HomeScreen: React.FC = () => {
   
+  const dispatch = useDispatch();
+  const filter = useGlobalState('filter');
+
   const { getCategoryList } = useCategories();
-  const { getExperienceList } = useExperiences();
+  const { getExperienceList, filterExperiences } = useExperiences();
   const { getHostList } = useHosts();
 
   const [searchText, setSearchText] = useState<string>('');
   const [categoryList, setCategoryList] = useState<ICategory[]>([]);
+  const [popularExperienceList, setPopularExperienceList] = useState<IExperience[]>([]);
   const [experienceList, setExperienceList] = useState<IExperience[]>([]);
   const [hostList, setHostList] = useState<IHost[]>([]);
-  const [selectedCategoryID, setSelectedCategoryID] = useState<string>('');
+  const [selectedCategoryList, setSelectedCategoryList] = useState<ICategory[]>([]);
   const [showFilters, setShowFilters] = useState<boolean>(false);
   const [showSelectDates, setShowSelectDates] = useState<boolean>(false);
   const [selectedDate, setSelectedDate] = useState<string>('');
+  const [fetchingExperienceList, setFetchingExperienceList] = useState<boolean>(false);
+  const [fetchingHostList, setFetchingHostList] = useState<boolean>(false);
+  const [fetchingData, setFetchingData] = useState<boolean>(false);
+  const [searching, setSearching] = useState<boolean>(false);
+  const [filtering, setFiltering] = useState<boolean>(false);
 
-  var isSearchResult = false;
 
   useEffect(() => {
     loadCategoryList();
     loadExperienceList();
     loadHostList();
   }, [API_CONFIG])
+
+  useEffect(() => {
+    loadFilterExperienceList();
+  }, [filter])
+
 
   async function loadCategoryList() {
     await getCategoryList('')
@@ -54,33 +70,95 @@ export const HomeScreen: React.FC = () => {
   }
 
   async function loadExperienceList() {
+    setFetchingExperienceList(true);
     await getExperienceList()
     .then(async (result: Promise<IExperience[]>) => {
-      setExperienceList(await result);
+      setPopularExperienceList(await result);
+      dispatch({
+        type: ActionType.SET_EXPERIENCE_LIST,
+        payload: await result,
+      });
+      setFetchingExperienceList(false);
     }).catch(() => {
+      setFetchingExperienceList(false);
     });
   }
 
   async function loadHostList() {
+    setFetchingHostList(true);
     await getHostList()
     .then(async (result: Promise<IHostList>) => {
       setHostList((await result).results);
+      dispatch({
+        type: ActionType.SET_HOST_LIST,
+        payload: (await result).results,
+      });
+      setFetchingHostList(false);
     }).catch(() => {
+      setFetchingHostList(false);
     });
   }
 
+  async function loadFilterExperienceList() {
+    if ((filter.minPrice == null || filter.minPrice == 0) 
+      && (filter.maxPrice == null || filter.maxPrice == 1000 || filter.maxPrice == 0)
+      && (filter.startDay == null || filter.startDay == "") 
+      && (filter.endDay == null || filter.endDay == "") 
+      && filter.categoryName.length == 0) {
+      setFiltering(false);
+    } else {
+      setFiltering(true);
+
+      setFetchingData(true);
+      setShowSelectDates(false);
+
+      await filterExperiences(filter.minPrice, filter.maxPrice, filter.startDay, filter.endDay, filter.categoryName)
+      .then(async (result: Promise<IExperience[]>) => {
+        setExperienceList(await result);
+        setFetchingData(false);
+      }).catch(() => {
+        setExperienceList([]);
+        setFetchingData(false);
+      });
+    }
+  }
+
+
   function onSearch() {
-    console.log('search home');
   }
 
-  function onSelectDateFilter() {
-    // setSelectedExperienceCategoryID(0);
-    // navigate('SelectDates');
-    setShowSelectDates(true);
+  function onFilter(lowPrice: number, highPrice: number) {
+    let minPrice = lowPrice;
+    var maxPrice = highPrice;
+    if (maxPrice == 1000) {
+      maxPrice = 0
+    }
+
+    dispatch({
+      type: ActionType.SET_FILTER,
+      payload: {
+        minPrice: minPrice,
+        maxPrice: maxPrice,
+        startDay: filter.startDay,
+        endDay: filter.endDay,
+        categoryName: filter.categoryName,
+      },
+    });
+    setShowFilters(false);
   }
 
-  function onSelectDate(selectedDate: string,) {
+  function onSelectDate(selectedDate: string) {
     setSelectedDate(selectedDate);
+    dispatch({
+      type: ActionType.SET_FILTER,
+      payload: {
+        minPrice: filter.minPrice,
+        maxPrice: filter.maxPrice,
+        startDay: selectedDate,
+        endDay: selectedDate,
+        categoryName: filter.categoryName,
+      },
+    });
     setShowSelectDates(false);
   }
 
@@ -94,13 +172,45 @@ export const HomeScreen: React.FC = () => {
   }
 
   function onSelectCategory(category: ICategory) {
-    setSelectedCategoryID(category.id);
+    var location = checkSelectedCategory(category);
+    var list = [...selectedCategoryList];
+    if (location == -1) {
+      list.push(category);
+    } else {
+      list.splice(location, 1);
+    }
+
+    var categoryName: string[] = [];
+    for (let i = 0; i < list.length; i++) {
+      categoryName.push(list[i].name);
+    }
+
+    dispatch({
+      type: ActionType.SET_FILTER,
+      payload: {
+        minPrice: filter.minPrice,
+        maxPrice: filter.maxPrice,
+        startDay: filter.startDay,
+        endDay: filter.endDay,
+        categoryName: categoryName,
+      },
+    });
+    setSelectedCategoryList(list);
+  }
+
+  function checkSelectedCategory(category: ICategory) {
+    for (let i = 0; i < selectedCategoryList.length; i++) {
+      if (selectedCategoryList[i].id == category.id) {
+        return i;
+      }
+    }
+    return -1;
   }
 
   function renderCategoryView(category: ICategory) {
     return (
       <TouchableWithoutFeedback onPress={() => onSelectCategory(category)}>
-        <View style={{...experienceCategoryStyles.container, backgroundColor: selectedCategoryID == category.id ? COLOR.selectedCategoryBackgroundColor : COLOR.clearColor}}>
+        <View style={{...experienceCategoryStyles.container, backgroundColor: checkSelectedCategory(category) != -1 ? COLOR.selectedCategoryBackgroundColor : COLOR.clearColor}}>
           <Text style={experienceCategoryStyles.title}>{ category.name }</Text>
         </View>
       </TouchableWithoutFeedback>
@@ -120,12 +230,12 @@ export const HomeScreen: React.FC = () => {
           </TouchableWithoutFeedback>
 
           <View style={styles.search_text_container}>
-          { searchText == '' && (
-            <View style={styles.search_text_placeholder}>
-              <Text style={styles.placeholder_search}>Search</Text>
-              <Text style={styles.placeholder_kloutkast}>KloutKast</Text>
-            </View>
-          )}
+            { searchText == '' && (
+              <View style={styles.search_text_placeholder}>
+                <Text style={styles.placeholder_search}>Search</Text>
+                <Text style={styles.placeholder_kloutkast}>KloutKast</Text>
+              </View>
+            )}
             <TextInput 
               style={styles.search_text}
               onChangeText={text => setSearchText(text)}
@@ -141,8 +251,8 @@ export const HomeScreen: React.FC = () => {
 
         <ScrollView style={{width: '100%', marginTop: 16}}>
           <View style={styles.experience_category_list}>
-            <TouchableWithoutFeedback onPress={() => onSelectDateFilter()}>
-              <View style={{...experienceCategoryStyles.container, backgroundColor: selectedCategoryID == '' ? COLOR.selectedCategoryBackgroundColor : COLOR.clearColor}}>
+            <TouchableWithoutFeedback onPress={() => setShowSelectDates(true)}>
+              <View style={{...experienceCategoryStyles.container, backgroundColor: filtering == true ? COLOR.selectedCategoryBackgroundColor : COLOR.clearColor}}>
                 <Text style={experienceCategoryStyles.title}>
                   { getVisibleDate() }
                 </Text>
@@ -156,35 +266,26 @@ export const HomeScreen: React.FC = () => {
               showsHorizontalScrollIndicator={false}
               horizontal={true}
               data={categoryList}
-              keyExtractor={item => item.id.toString()}
+              keyExtractor={(item, index) => index.toString()}
               renderItem={({item}) => renderCategoryView(item)}
             />
-
           </View>
 
           <Text style={styles.list_title}>
-            {
-              isSearchResult == false 
-              ? 'Popular Experiences' 
-              : experienceList.length + ' Experiences'
-            }
+            { filtering == false ? 'Popular Experiences' : experienceList.length + ' Experiences' }
           </Text>
           <FlatList
             style={{width: '100%', height: 284, marginTop: 22 }}
             contentContainerStyle={{paddingHorizontal: 24}}
             showsHorizontalScrollIndicator={false}
             horizontal={true}
-            data={experienceList}
-            keyExtractor={item => item.id.toString()}
-            renderItem={({item}) => <ExperienceView experience={item} white_color={true} />}
+            data={filtering == false ? popularExperienceList : experienceList}
+            keyExtractor={(item, index) => index.toString()}
+            renderItem={({item}) => <ExperienceView experience={item} white_color={true} onFetchingData={setFetchingData} />}
           />
 
           <Text style={styles.list_title}>
-          {
-            isSearchResult == false 
-            ? 'Popular Hosts' 
-            : hostList.length + ' Hosts'
-          }
+            { 'Popular Hosts' }
           </Text>
           <FlatList
             style={{width: '100%', height: 211, marginTop: 22, marginBottom: 20 }}
@@ -192,23 +293,29 @@ export const HomeScreen: React.FC = () => {
             showsHorizontalScrollIndicator={false}
             horizontal={true}
             data={hostList}
-            keyExtractor={item => item.id.toString()}
-            renderItem={({item}) => <HostView host={item} />}
+            keyExtractor={(item, index) => index.toString()}
+            renderItem={({item}) => <HostView host={item} onFetchingData={setFetchingData} />}
           />
         </ScrollView>
 
         <Modal animationType = {"slide"} transparent = {true}
           visible = {showSelectDates}
-          onRequestClose = {() => { console.log("Modal has been closed.") } }>
-          <SelectDatesView selectedDate={selectedDate} onCloseView={setShowSelectDates} onSelectDate={onSelectDate} />
+          onRequestClose = {() => { } }>
+          <SelectDateView selectedDate={selectedDate} onCloseView={setShowSelectDates} onSelectDate={onSelectDate} />
         </Modal>
        
         <Modal animationType = {"slide"} transparent = {true}
           visible = {showFilters}
-          onRequestClose = {() => { console.log("Modal has been closed.") } }>
-          <FiltersView onCloseView={setShowFilters} />
+          onRequestClose = {() => { } }>
+          <FiltersView onCloseView={setShowFilters} onFilter={onFilter} />
         </Modal> 
       </SafeAreaView>
+
+      <Spinner
+        visible={fetchingHostList || fetchingExperienceList || fetchingData}
+        textContent={''}
+        textStyle={{color: COLOR.systemWhiteColor}}
+      />
     </Container>
   );
 };

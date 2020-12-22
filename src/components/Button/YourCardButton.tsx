@@ -26,7 +26,6 @@ export const YourCardButton: React.FC<props> = (props: props) => {
   );
 
   function onSelectCard() {
-    console.log("select card : " + props.card.number);
   }
 }
 

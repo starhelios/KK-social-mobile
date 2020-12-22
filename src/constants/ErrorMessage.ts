@@ -16,4 +16,6 @@ export const ERROR_MESSAGE = {
   GET_HOST_DETAIL_FAIL: 'Host can\'t be found.',
   EMPTY_GUEST_COUNT: 'Please select guest count.',
   UPDATE_USER_PROFILE_FAIL: 'Failed to update profile.',
+
+  NEED_LOGIN_FUNCTION: 'You need to log in to use this function.',
 };

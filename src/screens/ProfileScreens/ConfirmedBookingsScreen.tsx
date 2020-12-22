@@ -21,57 +21,142 @@ import {
   Icon_Back,
   MARGIN_TOP,
 } from '../../constants';
-import { IBooking } from '../../interfaces/app';
-import { useConfirmedUpcomingBookings, useConfirmedCompletedBookings } from '../../hooks';
+import { IBooking, IHost } from '../../interfaces/app';
+// import { useConfirmedUpcomingBookings, useConfirmedCompletedBookings } from '../../hooks';
 import { ConfirmedBookingView } from '../../components/View';
+import { useGlobalState } from '../../redux/Store';
 
 const { width: viewportWidth } = Dimensions.get('window');
 
 export const ConfirmedBookingsScreen: React.FC = () => {
 
+  const hostList = useGlobalState('hostList');
+  const experienceList = useGlobalState('experienceList');
+  
   const { navigate, goBack } = useNavigation();
-  const { confirmedUpcomingBookings } = useConfirmedUpcomingBookings();
-  const { confirmedCompletedBookings } = useConfirmedCompletedBookings();
+  // const { confirmedUpcomingBookings } = useConfirmedUpcomingBookings();
+  // const { confirmedCompletedBookings } = useConfirmedCompletedBookings();
 
-  const [ selectedTab, setSelectedTab ] = useState<number>(0);
-  const [ upcomingBookingList, setUpcomingBookingList ] = useState<IBooking[]>([]);
-  const [ completedBookingList, setCompletedBookingList ] = useState<IBooking[]>([]);
+  const [selectedTab, setSelectedTab] = useState<number>(0);
+  const [upcomingBookingList, setUpcomingBookingList] = useState<IBooking[]>([]);
+  const [completedBookingList, setCompletedBookingList] = useState<IBooking[]>([]);
 
   useEffect(() => {
-    loadUpcomingBookingList();
+    // loadUpcomingBookingList();
+    setBookingList();
   }, [])
 
-  async function loadUpcomingBookingList() {
-    await confirmedUpcomingBookings()
-    .then(async (result: Promise<IBooking[]>) => {
-      var list: IBooking[] = [];
-      var currentDate = '';
-      for (let i = 0; i < (await result).length; i++) {
-        const booking = (await result)[i];
-        booking.show_date = booking.date == currentDate ? false : true;
-        currentDate = booking.date;
-        list.push(booking);
+  function setBookingList() {
+    let currentDate = new Date();
+
+    var upcomingBookings: IBooking[] = [];
+    var completedBookings: IBooking[] = [];
+    for (let i = 0; i < experienceList.length; i++) {
+      let experience = experienceList[i];
+      for (let j = 0; j < experience.dateAvaibility.length; j++) {
+        let booking = experience.dateAvaibility[j];
+        let startDateString = booking.day + " " + booking.startTime;
+        // let startDate = Moment(startDateString).format('MMMM D, YYYY hh:mm a');
+        let startDate = new Date(startDateString);
+        if (startDate > currentDate) {
+          var host: IHost | null = null;
+          for (let k = 0; k < hostList.length; k++) {
+            if (hostList[k].id == experience.userId) {
+              host = hostList[k];
+              break;
+            }
+          }
+          var newBooking: IBooking = {
+            id: 0,
+            image: experience.images.length > 0 ? experience.images[0] : '',
+            experience_icon: '',
+            experience: experience.title,
+            date: booking.day,
+            hour: booking.startTime,
+            duration: experience.duration,
+            rating: 0,
+            is_host: false,
+            is_joined: true,
+            host: host,
+            paid: null,
+            receive: null,
+            completed: null,
+            show_date: null,
+          };
+          upcomingBookings.push(newBooking);
+          continue;
+        }
+
+        let endDateString = booking.day + " " + booking.endTime;
+        // let endDate = Moment(endDateString).format('MMMM D, YYYY hh:mm a');
+        let endDate = new Date(endDateString);
+        if (endDate < currentDate) {
+          var host: IHost | null = null;
+          for (let k = 0; k < hostList.length; k++) {
+            if (hostList[k].id == experience.userId) {
+              host = hostList[k];
+              break;
+            }
+          }
+          
+          var newBooking: IBooking = {
+            id: 0,
+            image: experience.images.length > 0 ? experience.images[0] : '',
+            experience_icon: '',
+            experience: experience.title,
+            date: booking.day,
+            hour: booking.startTime,
+            duration: experience.duration,
+            rating: 0,
+            is_host: false,
+            is_joined: true,
+            host: host,
+            paid: null,
+            receive: null,
+            completed: null,
+            show_date: null,
+          };
+          completedBookings.push(newBooking);
+          continue;
+        }
       }
-      setUpcomingBookingList(list);
-    }).catch(() => {
-    });
+    }
+
+    setUpcomingBookingList(upcomingBookings);
+    setCompletedBookingList(completedBookings);
   }
 
-  async function loadCompletedBookingList() {
-    await confirmedCompletedBookings()
-    .then(async (result: Promise<IBooking[]>) => {
-      var list: IBooking[] = [];
-      var currentDate = '';
-      for (let i = 0; i < (await result).length; i++) {
-        const booking = (await result)[i];
-        booking.show_date = booking.date == currentDate ? false : true;
-        currentDate = booking.date;
-        list.push(booking);
-      }
-      setCompletedBookingList(list);
-    }).catch(() => {
-    });
-  }
+  // async function loadUpcomingBookingList() {
+  //   await confirmedUpcomingBookings()
+  //   .then(async (result: Promise<IBooking[]>) => {
+  //     var list: IBooking[] = [];
+  //     var currentDate = '';
+  //     for (let i = 0; i < (await result).length; i++) {
+  //       const booking = (await result)[i];
+  //       booking.show_date = booking.date == currentDate ? false : true;
+  //       currentDate = booking.date;
+  //       list.push(booking);
+  //     }
+  //     setUpcomingBookingList(list);
+  //   }).catch(() => {
+  //   });
+  // }
+
+  // async function loadCompletedBookingList() {
+  //   await confirmedCompletedBookings()
+  //   .then(async (result: Promise<IBooking[]>) => {
+  //     var list: IBooking[] = [];
+  //     var currentDate = '';
+  //     for (let i = 0; i < (await result).length; i++) {
+  //       const booking = (await result)[i];
+  //       booking.show_date = booking.date == currentDate ? false : true;
+  //       currentDate = booking.date;
+  //       list.push(booking);
+  //     }
+  //     setCompletedBookingList(list);
+  //   }).catch(() => {
+  //   });
+  // }
 
   return (
     <Container style={styles.background}>
@@ -120,7 +205,7 @@ export const ConfirmedBookingsScreen: React.FC = () => {
           showsVerticalScrollIndicator={false}
           horizontal={false}
           data={selectedTab == 0 ? upcomingBookingList : completedBookingList}
-          keyExtractor={item => item.id.toString()}
+          keyExtractor={(item, index) => index.toString()}
           renderItem={({item}) => <ConfirmedBookingView booking={item} isCompleted={selectedTab == 0 ? false : true} />}
         />
       </SafeAreaView>
@@ -129,12 +214,12 @@ export const ConfirmedBookingsScreen: React.FC = () => {
 
   function onShowUpcomingBookings() {
     setSelectedTab(0);
-    loadUpcomingBookingList();
+    // loadUpcomingBookingList();
   }
 
   function onShowCompletedBookings() {
     setSelectedTab(1);
-    loadCompletedBookingList();
+    // loadCompletedBookingList();
   }
 };
 

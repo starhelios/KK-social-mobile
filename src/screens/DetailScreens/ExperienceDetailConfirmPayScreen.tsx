@@ -75,7 +75,7 @@ export const ExperienceDetailConfirmPayScreen: React.FC = ({route}) => {
           <Text style={styles.info_title}>Details</Text>
 
           <Text style={styles.info_detail_title}>Date</Text>
-          <Text style={styles.info_detail_content}>{Moment(availableDate.day).format('ddd, MMM d') + '    ' + availableDate.startTime + ' - ' + availableDate.endTime}</Text>
+          <Text style={styles.info_detail_content}>{Moment(availableDate.day).format('ddd, MMM DD') + '    ' + availableDate.startTime + ' - ' + availableDate.endTime}</Text>
           <View style={styles.line} />
 
           <Text style={styles.info_detail_title}>Guest</Text>
@@ -91,7 +91,7 @@ export const ExperienceDetailConfirmPayScreen: React.FC = ({route}) => {
 
           <Text style={styles.info_title}>Payment</Text>
           <View style={{marginLeft: 24, width: viewportWidth - 48, marginTop: 16}}>
-            <TitleArrowButton title={'Credit Card'} name={'Visa 5326'} showArrow={true} white_color={false} />
+            <TitleArrowButton title={'Credit Card'} name={''} showArrow={true} white_color={false} />
           </View>
         </ScrollView>
 

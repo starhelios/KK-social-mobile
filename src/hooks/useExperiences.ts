@@ -66,7 +66,7 @@ export const useExperiences = () => {
     }
   };
 
-  const filterExperience = async (
+  const filterExperiences = async (
     minPrice: number | null,
     maxPrice: number | null,
     startDay: string | null,
@@ -81,8 +81,9 @@ export const useExperiences = () => {
       endDay,
       categoryName,
     }
+  
     try {
-      const { data } = await axios.get<IApiSuccess>(url, API_CONFIG);
+      const { data } = await axios.post<IApiSuccess>(url, body, API_CONFIG);
       const result: IExperience[] = data.payload;
       return Promise.resolve(result);
     } catch (err) {
@@ -90,5 +91,5 @@ export const useExperiences = () => {
     }
   };
 
-  return { getExperienceList, getExperienceDetail, createExperience, filterExperience };
+  return { getExperienceList, getExperienceDetail, createExperience, filterExperiences };
 };

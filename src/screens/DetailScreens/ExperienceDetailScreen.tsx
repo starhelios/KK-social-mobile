@@ -10,6 +10,7 @@ import {
   ScrollView,
   NativeSyntheticEvent,
   NativeScrollEvent,
+  Alert,
 } from 'react-native';
 import { Container } from 'native-base';
 import { useEffect, useState } from 'react';
@@ -23,8 +24,9 @@ import Moment from 'moment';
 // from app
 import { 
   COLOR, 
+  ERROR_MESSAGE, 
   FONT, 
-  GetHostDetail, 
+  GetDurationString, 
   Icon_Back,
   Icon_Back_Black,
   Icon_Experience_Black,
@@ -36,7 +38,8 @@ import {
   MARGIN_TOP,
 } from '../../constants';
 import { ColorButton } from '../../components/Button';
-import { IExperience, IExperienceDetail, IHost, IHostDetail } from '../../interfaces/app';
+import { IExperience, IExperienceDetail, IHost, IHostDetail, IUser } from '../../interfaces/app';
+import { useGlobalState } from '../../redux/Store';
 import GlobalStyle from '../../styles/global';
 
 
@@ -49,6 +52,7 @@ export const ExperienceDetailScreen: React.FC = ({route}) => {
   const [currentPage, setCurrentPage] = useState<number>(0);
   const [isBlackHeader, setIsBlackHeader] = useState<boolean>(true)
 
+  const userInfo: IUser = useGlobalState('userInfo');
   const experienceDetail: IExperienceDetail = route.params.experienceDetail;
   const experience: IExperience = experienceDetail.experience;
   const hostDetail: IHostDetail = route.params.hostDetail;
@@ -77,7 +81,7 @@ export const ExperienceDetailScreen: React.FC = ({route}) => {
               bounces={false}
               horizontal={true}
               data={experience.images}
-              keyExtractor={item => item}
+              keyExtractor={(item, index) => index.toString()}
               onMomentumScrollEnd={({nativeEvent}) => { 
                 setCurrentPage(Math.round(nativeEvent.contentOffset.x / viewportWidth));
               }}
@@ -95,7 +99,7 @@ export const ExperienceDetailScreen: React.FC = ({route}) => {
                 indicatorStyle={{borderRadius: 6}}
                 currentIndicatorStyle={{borderRadius: 6}}
                 indicatorSize={{width:6, height:6}}
-                onPageIndicatorPress={(page) => console.log(page)}
+                onPageIndicatorPress={(page) => {}}
               />
             </View>
           </View>
@@ -112,7 +116,7 @@ export const ExperienceDetailScreen: React.FC = ({route}) => {
 
             <View style={{marginTop: 12, height: 16, flexDirection: 'row'}}>
               <SvgXml width={16} height={16} xml={Icon_Time_Black} />
-              <Text style={{...styles.location, marginTop: 1, marginLeft: 8}}>{GetHostDetail(experience.duration)}</Text>
+              <Text style={{...styles.location, marginTop: 1, marginLeft: 8}}>{GetDurationString(experience.duration)}</Text>
             </View>
 
             <View style={{marginTop: 12, height: 16, flexDirection: 'row'}}>
@@ -128,7 +132,7 @@ export const ExperienceDetailScreen: React.FC = ({route}) => {
             <View style={{marginTop: 22, flexDirection: 'row'}}>
               <View style={{width: viewportWidth - 100}}>
                 <Text style={styles.host_name}>{'Say Hello! to ' + host.fullname}</Text>
-                <Text style={styles.joined_date}>{'Joined in ' + Moment(host.dateOfBirth).format('MMMM DD, YYYY')}</Text>
+                <Text style={styles.joined_date}>{'Joined in ' + Moment(host.dateOfBirth).format('MMMM D, YYYY')}</Text>
               </View>
               <Image style={styles.avatar} source={host.avatarUrl != null && host.avatarUrl != '' ? {uri: host.avatarUrl} : Img_User_Avatar} />
             </View>
@@ -150,7 +154,7 @@ export const ExperienceDetailScreen: React.FC = ({route}) => {
             showsHorizontalScrollIndicator={false}
             horizontal={true}
             data={experience.images}
-            keyExtractor={item => item}
+            keyExtractor={(item, index) => index.toString()}
             renderItem={({item}) => renderExperienceImage(item) }
           />
         </ScrollView>
@@ -188,7 +192,7 @@ export const ExperienceDetailScreen: React.FC = ({route}) => {
             {/* <Text style={styles.personal}>{' / ' + experience.personal}</Text> */}
           </View>
 
-          <TouchableWithoutFeedback onPress={() => navigate('ExperienceDetailBook', {experience: experience})}>
+          <TouchableWithoutFeedback onPress={() => onBook()}>
             <View style={styles.bottom_button}>
               <ColorButton title={'Book'} backgroundColor={COLOR.redColor} color={COLOR.systemWhiteColor} />
             </View>
@@ -199,7 +203,6 @@ export const ExperienceDetailScreen: React.FC = ({route}) => {
   );
 
   function handleScroll(event: NativeSyntheticEvent<NativeScrollEvent>) {
-    console.log(event.nativeEvent.contentOffset.y);
     if (event.nativeEvent.contentOffset.y < 280) {
       setIsBlackHeader(true);
     } else {
@@ -217,6 +220,14 @@ export const ExperienceDetailScreen: React.FC = ({route}) => {
         <Image style={experience_image_styles.image} source={{uri: uri}} />
       </View>
     );
+  }
+
+  function onBook() {
+    if (userInfo.id == "") {
+      Alert.alert(ERROR_MESSAGE.NEED_LOGIN_FUNCTION);
+    } else {
+      navigate('ExperienceDetailBook', {experience: experience});
+    }
   }
 };
 

@@ -7,7 +7,7 @@ export interface IBooking {
 	experience: string;
 	date: string;
 	hour: string;
-	duration: string;
+	duration: number;
 	rating: number;
 	is_host: boolean;
 	is_joined: boolean;

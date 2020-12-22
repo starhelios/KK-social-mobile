@@ -37,6 +37,7 @@ import { ColorButton } from '../../components/Button';
 import { useAuthentication } from '../../hooks';
 import { IApiError } from '../../interfaces/api';
 import GlobalStyle from '../../styles/global';
+import Spinner from 'react-native-loading-spinner-overlay';
 
 
 const { width: viewportWidth, height: viewportHeight } = Dimensions.get('window');
@@ -49,11 +50,7 @@ export const SignUpScreen: React.FC = () => {
   const [fullName, setFullName] = useState('');
   const [emailAddress, setEmailAddress] = useState('');
   const [password, setPassword] = useState('');
-
-  var fetching = false;
-
-  useEffect(() => {
-  }, [])
+  const [fetchingData, setFetchingData] = useState<boolean>(false);
 
   return (
     <Container style={styles.background}>
@@ -128,11 +125,17 @@ export const SignUpScreen: React.FC = () => {
           </View>
         </TouchableWithoutFeedback>
       </SafeAreaView>
+
+      <Spinner
+        visible={fetchingData}
+        textContent={''}
+        textStyle={{color: COLOR.systemWhiteColor}}
+      />
     </Container>
   );
 
   function onCreateAccount() {
-    if (fetching == true) {
+    if (fetchingData == true) {
       return;
     } if (fullName == '') {
       Alert.alert(ERROR_MESSAGE.EMPTY_FULL_NAME);
@@ -144,11 +147,11 @@ export const SignUpScreen: React.FC = () => {
       Alert.alert(ERROR_MESSAGE.EMPTY_PASSWORD);
       return;
     }
-    fetching = true;
+    setFetchingData(true);
 
     registerUser(fullName, emailAddress, password)
     .then(async (result: Promise<Boolean>) => {
-      fetching = false;
+      setFetchingData(false);
       if ((await result) == true) {
         saveUserInfo();
         navigate('SignUpAddProfilePicture');
@@ -156,10 +159,10 @@ export const SignUpScreen: React.FC = () => {
         Alert.alert(ERROR_MESSAGE.REGISTER_FAIL);
       }
     }).catch(async (error: Promise<IApiError>) => {
-      fetching = false;
+      setFetchingData(false);
       Alert.alert((await error).error.message);
     }).catch(() => {
-      fetching = false;
+      setFetchingData(false);
       Alert.alert(ERROR_MESSAGE.REGISTER_FAIL);
     });
   }

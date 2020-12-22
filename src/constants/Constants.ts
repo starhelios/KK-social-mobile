@@ -44,7 +44,7 @@ export const SetApiConfig = (token: string) => {
   }
 }
 
-export const GetHostDetail = (duration: number) => {
+export const GetDurationString = (duration: number) => {
   let hour = Math.floor(duration / 60);
   let min = duration % 60;
   if (hour > 0) {

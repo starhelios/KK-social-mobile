@@ -28,7 +28,7 @@ import {
   MARGIN_TOP,
 } from '../../constants';
 import { IAvailableDate, IExperience } from '../../interfaces/app';
-import { ExperienceDetailBookView, SelectDatesView } from '../../components/View';
+import { ExperienceDetailBookView, SelectDateView } from '../../components/View';
 
 
 const { width: viewportWidth, height: viewportHeight } = Dimensions.get('window');
@@ -110,15 +110,15 @@ export const ExperienceDetailBookScreen: React.FC = ({route}) => {
           showsVerticalScrollIndicator={false}
           horizontal={false}
           data={availableDates}
-          keyExtractor={item => item._id}
+          keyExtractor={(item, index) => index.toString()}
           renderItem={({item}) => <ExperienceDetailBookView experience={experience} availableDate={item} onChooseDate={onChooseDate} />}
         />
       </SafeAreaView>
 
       <Modal animationType = {"slide"} transparent = {true}
         visible = {showSelectDates}
-        onRequestClose = {() => { console.log("Modal has been closed.") } }>
-        <SelectDatesView selectedDate={selectedDate} onCloseView={setShowSelectDates} onSelectDate={onSelectDate} />
+        onRequestClose = {() => { } }>
+        <SelectDateView selectedDate={selectedDate} onCloseView={setShowSelectDates} onSelectDate={onSelectDate} />
       </Modal>
     </Container>
   );
@@ -150,7 +150,7 @@ export const ExperienceDetailBookScreen: React.FC = ({route}) => {
       setAvailableDates(allAvailableDates);
     } else {
       const date = Moment(selectedDate, 'YYYY-MM-DD', true).format();
-      const filterDateString = Moment(date).format('MMMM DD, YYYY');
+      const filterDateString = Moment(date).format('MMMM D, YYYY');
 
       var availableDates: IAvailableDate[] = [];
       for (let i = 0; i < experience.dateAvaibility.length; i++) {

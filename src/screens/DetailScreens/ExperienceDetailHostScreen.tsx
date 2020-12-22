@@ -69,7 +69,7 @@ export const ExperienceDetailHostScreen: React.FC = ({route}) => {
               bounces={false}
               horizontal={true}
               data={experience.images}
-              keyExtractor={item => item}
+              keyExtractor={(item, index) => index.toString()}
               onMomentumScrollEnd={({nativeEvent}) => { 
                 setCurrentPage(Math.round(nativeEvent.contentOffset.x / viewportWidth));
               }}
@@ -87,7 +87,7 @@ export const ExperienceDetailHostScreen: React.FC = ({route}) => {
                 indicatorStyle={{borderRadius: 6}}
                 currentIndicatorStyle={{borderRadius: 6}}
                 indicatorSize={{width:6, height:6}}
-                onPageIndicatorPress={(page) => console.log(page)}
+                onPageIndicatorPress={(page) => {}}
               />
             </View>
           </View>
@@ -104,12 +104,12 @@ export const ExperienceDetailHostScreen: React.FC = ({route}) => {
 
             <View style={{marginTop: 12, height: 16, flexDirection: 'row'}}>
               <SvgXml width={16} height={16} xml={Icon_Time_Black} />
-              <Text style={{...styles.location, marginTop: 1, marginLeft: 8}}>{experience.duration}</Text>
+              <Text style={{...styles.location, marginTop: 1, marginLeft: 8}}>{GetDurationString(experience.duration)}</Text>
             </View>
 
             <View style={{marginTop: 12, height: 16, flexDirection: 'row'}}>
               <SvgXml width={16} height={16} xml={Icon_Experience_Black} />
-              <Text style={{...styles.location, marginTop: 1, marginLeft: 8}}>{experience.experience}</Text>
+              <Text style={{...styles.location, marginTop: 1, marginLeft: 8}}>{experience.title}</Text>
             </View>
             <View style={{...GlobalStyle.auth_line, backgroundColor: COLOR.alphaBlackColor20, marginTop: 22}} />
 

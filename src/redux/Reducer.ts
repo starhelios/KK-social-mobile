@@ -1,5 +1,7 @@
 import { 
+  IExperience,
   IFilter,
+  IHost,
   IToken,
   IUser,
 } from "../interfaces/app";
@@ -9,6 +11,8 @@ export enum ActionType {
   SET_REFRESH_TOKEN = 'SET_REFRESH_TOKEN',
   SET_ACCESS_TOKEN = 'SET_ACCESS_TOKEN',
   SET_FILTER = 'SET_FILTER',
+  SET_EXPERIENCE_LIST = 'SET_EXPERIENCE_LIST',
+  SET_HOST_LIST = 'SET_HOST_LIST',
 }
 
 export interface Action {
@@ -22,6 +26,8 @@ export interface State {
   accessToken: IToken;
   refreshToken: IToken;
   filter: IFilter;
+  experienceList: IExperience[];
+  hostList: IHost[],
 }
 
 /** Reducer */
@@ -40,6 +46,12 @@ const Reducer = (state: State, action: Action): any => {
 
     case ActionType.SET_FILTER:
       return {...state, filter: payload};
+
+    case ActionType.SET_EXPERIENCE_LIST:
+      return {...state, experienceList: payload};
+
+    case ActionType.SET_HOST_LIST:
+      return {...state, hostList: payload};
 
     default:
       break;

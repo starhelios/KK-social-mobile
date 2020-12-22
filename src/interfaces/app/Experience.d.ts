@@ -16,4 +16,5 @@ export interface IExperience {
 	// test
 	icon: string,
 	personal: string,
+	location: string,
 }

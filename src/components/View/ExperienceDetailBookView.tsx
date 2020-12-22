@@ -32,7 +32,7 @@ export const ExperienceDetailBookView: React.FC<props> = (props: props) => {
     <View>
     {
       availableDate.show_date == true
-      ? <Text style={styles.date}>{Moment(availableDate.day).format('ddd, MMM d')}</Text>
+      ? <Text style={styles.date}>{Moment(availableDate.day).format('ddd, MMM D')}</Text>
       : null
     }
 

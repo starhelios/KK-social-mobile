@@ -15,6 +15,7 @@ import { Container } from 'native-base';
 import { useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { SvgXml } from 'react-native-svg';
+import Spinner from 'react-native-loading-spinner-overlay';
 
 // from app
 import { COLOR, ERROR_MESSAGE, FONT, Icon_Back, Img_Auth_Background, MARGIN_TOP } from '../../constants';
@@ -30,20 +31,18 @@ const { width: viewportWidth, height: viewportHeight } = Dimensions.get('window'
 
 export const ChangePasswordScreen: React.FC = () => {
 
+  const userInfo: IUser = useGlobalState('userInfo');
+
   const { goBack } = useNavigation();
   const { changePassword } = useAuthentication();
 
   const [currentPassword, setCurrentPassword] = useState<string>('');
   const [newPassword, setNewPassword] = useState<string>('');
   const [confirmPassword, setConfirmPassword] = useState<string>('');
-
-  const userInfo: IUser = useGlobalState('userInfo');
-
-  var fetching = false;
+  const [fetchingData, setFetchingData] = useState<boolean>(false);
 
   return (
     <Container style={styles.background}>
-      
       <Image style={{width: viewportWidth, height: viewportHeight, resizeMode: 'cover'}} source={Img_Auth_Background} />
 
       <SafeAreaView style={styles.safe_area}>
@@ -113,11 +112,17 @@ export const ChangePasswordScreen: React.FC = () => {
           </TouchableWithoutFeedback>
         </View>
       </SafeAreaView>
+
+      <Spinner
+        visible={fetchingData}
+        textContent={''}
+        textStyle={{color: COLOR.systemWhiteColor}}
+      />
     </Container>
   );
 
   function onChangePassword() {
-    if (fetching == true) {
+    if (fetchingData == true) {
       return;
     } else if (currentPassword == '') {
       Alert.alert(ERROR_MESSAGE.EMPTY_CURRENT_PASSWORD);
@@ -132,11 +137,11 @@ export const ChangePasswordScreen: React.FC = () => {
       Alert.alert(ERROR_MESSAGE.MISMATCH_PASSWORD);
       return;
     }
-    fetching = true;
+    setFetchingData(true);
 
     changePassword(userInfo.id, currentPassword, newPassword, true)
     .then(async (result: Promise<IApiSuccess>) => {
-      fetching = false;
+      setFetchingData(false);
       if ((await result).error.status == false) {
         setCurrentPassword('');
         setNewPassword('');
@@ -146,10 +151,10 @@ export const ChangePasswordScreen: React.FC = () => {
         Alert.alert((await result).error.message);
       }
     }).catch(async (error: Promise<IApiError>) => {
-      fetching = false;
+      setFetchingData(false);
       Alert.alert((await error).error.message);
     }).catch(() => {
-      fetching = false;
+      setFetchingData(false);
       Alert.alert(ERROR_MESSAGE.CHANGE_PASSWORD_FAIL);
     });
   }

@@ -66,7 +66,7 @@ export const WithdrawalScreen: React.FC = () => {
                 showsHorizontalScrollIndicator={false}
                 horizontal={false}
                 data={bankList}
-                keyExtractor={item => item.number}
+                keyExtractor={(item, index) => index.toString()}
                 renderItem={({item}) => <BankButton card={item} />}
               />
             </View>
@@ -82,7 +82,6 @@ export const WithdrawalScreen: React.FC = () => {
   );
 
   function onAddBankAccount() {
-    console.log('Add Bank Account');
   }
 };
 

@@ -12,6 +12,7 @@ import { Calendar, LocaleConfig } from 'react-native-calendars';
 import { GoogleSignin, statusCodes, User } from '@react-native-community/google-signin';
 import Moment from 'moment';
 import DefaultPreference from 'react-native-default-preference';
+import Spinner from 'react-native-loading-spinner-overlay';
 
 // from app
 import { 
@@ -36,13 +37,15 @@ import { ILoginUser } from '../../interfaces/app';
 export const SplashScreen: React.FC = () => {
 
   const { reset } = useNavigation();
-  const { loginUser } = useAuthentication();
+  const { loginUser, loginByGoogle } = useAuthentication();
 
-  const [googleUserInfo, setGoogleUserInfo] = useState<User | null>(null);
+  const [fetchingData, setFetchingData] = useState<boolean>(false);
 
   var fetching = false;
 
   useEffect(() => {
+    setFetchingData(true);
+
     GoogleSignin.configure({
       iosClientId: '620619163089-pm3clc8bqt1i83h2on0f3if7957qhv5t.apps.googleusercontent.com',
       scopes: ['email', 'profile'],
@@ -64,17 +67,10 @@ export const SplashScreen: React.FC = () => {
           index: 0,
           routes: [{ name: 'TabBar' }],
         });
+        setFetchingData(false);
       }
     }, LOADING_TIME);
   }, [])
-
-  useEffect(() => {
-    if (googleUserInfo != null) {
-      console.log(googleUserInfo.idToken);
-      console.log(googleUserInfo.serverAuthCode);
-      goMainScreen();
-    }
-  }, [googleUserInfo])
 
   function loadAutoLoginInformation() {
     DefaultPreference.get(LOGIN_TYPE).then(function(loginType) {
@@ -92,8 +88,6 @@ export const SplashScreen: React.FC = () => {
         getCurrentGoogleUserInfo();
 
       } else if (loginType == FACEBOOK_LOGIN || loginType == GOOGLE_LOGIN || loginType == APPLE_LOGIN) {
-
-
         DefaultPreference.get(ACCESS_TOKEN).then(function(accessToken) {
           if (accessToken != null && accessToken != '') {
             DefaultPreference.get(CODE).then(function(code) {
@@ -110,32 +104,32 @@ export const SplashScreen: React.FC = () => {
   async function getCurrentGoogleUserInfo() {
     fetching = true;
     try {
-      const userInfo = await GoogleSignin.signInSilently();
-      setGoogleUserInfo(userInfo);
+      const userInfo = await GoogleSignin.signInSilently()
+      .then((data) => {
+        const currentUser = GoogleSignin.getTokens()
+        .then((res) => {
+          loginByGoogle(res.accessToken)
+          .then(async (result: Promise<boolean>) => {
+            if ((await result) == true) {
+              DefaultPreference.set(LOGIN_TYPE, GOOGLE_LOGIN).then(function() { }); 
+              DefaultPreference.set(ACCESS_TOKEN, res.accessToken).then(function() { });
+              DefaultPreference.set(CODE, res.idToken).then(function() { });
+              goMainScreen();
+            } else {
+              fetching = false;
+            }
+          }).catch(() => {
+            fetching = false;
+          });
+        })
+      });
     } catch (error) {
       fetching = false;
-      console.log(error);
-      if (error.code === statusCodes.SIGN_IN_REQUIRED) {
-      } else {
-      }
     }
   };
 
-  /*
-  const isGoogleSignedIn = async () => {
-    const isSignedIn = await GoogleSignin.isSignedIn();
-    setGoogleSignedIn(!isSignedIn);
-  };
-
-  const getCurrentGoogleUser = async () => {
-    const currentUser = await GoogleSignin.getCurrentUser();
-    setGoogleUserInfo(currentUser);
-  };
-  */
-
   const onAutoLoginByEmail = useCallback(async (emailAddress: string, passwordString: string): Promise<void> => {
     fetching = true;
-
     loginUser(emailAddress, passwordString)
     .then(async (result: Promise<ILoginUser>) => {
       goMainScreen();
@@ -146,7 +140,6 @@ export const SplashScreen: React.FC = () => {
 
   const onAutoLoginBySocial = useCallback(async (loginType: string, accessToken: string, code: string): Promise<void> => {
     fetching = true;
-
     goMainScreen();
   }, []);
 
@@ -156,6 +149,7 @@ export const SplashScreen: React.FC = () => {
         index: 0,
         routes: [{ name: 'TabBar' }],
       });
+      setFetchingData(false);
     }, LOADING_TIME);
   }
 
@@ -166,6 +160,12 @@ export const SplashScreen: React.FC = () => {
       <View style={styles.icon} >
         <SvgXml width={75} height={130} xml={Icon_Tab_Bar_Booking_Select} />
       </View>
+
+      {/* <Spinner
+        visible={fetchingData}
+        textContent={''}
+        textStyle={{color: COLOR.systemWhiteColor}}
+      /> */}
     </Container>
   );
 };
