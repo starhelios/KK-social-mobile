@@ -52,29 +52,3 @@ cd android
 cd android
 ./gradlew assembleRelease
 ```
-
-
-# Example
-```
-export PATH=/Volumes/Data/Data/Android_SDK/platform-tools:$PATH
-export PATH=/Volumes/Data/Data/Android_SDK/tools:$PATH
-export JAVA_HOME="/Applications/Android Studio.app/Contents/jre/jdk/Contents/Home"
-```
-
-# Create Key File
-```
-keytool -genkey -v -keystore finderscope.keystore -alias finderscope -keyalg RSA -keysize 2048 -validity 10000
-keytool -importkeystore -srckeystore finderscope.keystore -destkeystore finderscope.keystore -deststoretype pkcs12
-```
-
-# Version Update
-```
-npm i -g npm-check-updates
-ncu -u
-npm install
-```
-
-Alert.alert((await result).message, "", 
-  [ { text: "OK", onPress: () => goBack() }],
-  { cancelable: false }
-);

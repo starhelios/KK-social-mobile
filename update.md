@@ -125,3 +125,11 @@
 - Change updating user profile
 - Add google login
 - Change experience filter
+
+### 2020.12.21
+- Add loading bar
+- Integrate filter function
+
+### 2020.12.22
+- Fix client's errors
+- Integrate filter function
