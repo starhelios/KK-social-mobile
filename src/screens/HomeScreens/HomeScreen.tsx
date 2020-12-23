@@ -60,7 +60,6 @@ export const HomeScreen: React.FC = () => {
     loadFilterExperienceList();
   }, [filter])
 
-
   async function loadCategoryList() {
     await getCategoryList('')
     .then(async (result: Promise<ICategory[]>) => {
@@ -109,16 +108,14 @@ export const HomeScreen: React.FC = () => {
     } else {
       setFiltering(true);
 
-      setFetchingData(true);
-      setShowSelectDates(false);
-
+      // setFetchingData(true);
       await filterExperiences(filter.minPrice, filter.maxPrice, filter.startDay, filter.endDay, filter.categoryName)
       .then(async (result: Promise<IExperience[]>) => {
         setExperienceList(await result);
-        setFetchingData(false);
+        // setFetchingData(false);
       }).catch(() => {
         setExperienceList([]);
-        setFetchingData(false);
+        // setFetchingData(false);
       });
     }
   }
@@ -127,7 +124,7 @@ export const HomeScreen: React.FC = () => {
   function onSearch() {
   }
 
-  function onFilter(lowPrice: number, highPrice: number) {
+  function onFilterExperience(lowPrice: number, highPrice: number) {
     let minPrice = lowPrice;
     var maxPrice = highPrice;
     if (maxPrice == 1000) {
@@ -147,7 +144,7 @@ export const HomeScreen: React.FC = () => {
     setShowFilters(false);
   }
 
-  function onSelectDate(selectedDate: string) {
+  function onFilterSelectDate(selectedDate: string) {
     setSelectedDate(selectedDate);
     dispatch({
       type: ActionType.SET_FILTER,
@@ -301,13 +298,13 @@ export const HomeScreen: React.FC = () => {
         <Modal animationType = {"slide"} transparent = {true}
           visible = {showSelectDates}
           onRequestClose = {() => { } }>
-          <SelectDateView selectedDate={selectedDate} onCloseView={setShowSelectDates} onSelectDate={onSelectDate} />
+          <SelectDateView selectedDate={selectedDate} onCloseView={setShowSelectDates} onSelectDate={onFilterSelectDate} />
         </Modal>
        
         <Modal animationType = {"slide"} transparent = {true}
           visible = {showFilters}
           onRequestClose = {() => { } }>
-          <FiltersView onCloseView={setShowFilters} onFilter={onFilter} />
+          <FiltersView onCloseView={setShowFilters} onFilter={onFilterExperience} />
         </Modal> 
       </SafeAreaView>
 

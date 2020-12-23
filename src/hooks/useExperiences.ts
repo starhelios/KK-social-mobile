@@ -81,7 +81,7 @@ export const useExperiences = () => {
       endDay,
       categoryName,
     }
-  
+  console.log(body);
     try {
       const { data } = await axios.post<IApiSuccess>(url, body, API_CONFIG);
       const result: IExperience[] = data.payload;
