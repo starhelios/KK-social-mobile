@@ -223,11 +223,11 @@ export const ExperienceDetailScreen: React.FC = ({route}) => {
   }
 
   function onBook() {
-    if (userInfo.id == "") {
-      Alert.alert(ERROR_MESSAGE.NEED_LOGIN_FUNCTION);
-    } else {
+    // if (userInfo.id == "") {
+    //   Alert.alert(ERROR_MESSAGE.NEED_LOGIN_FUNCTION);
+    // } else {
       navigate('ExperienceDetailBook', {experience: experience});
-    }
+    // }
   }
 };
 
