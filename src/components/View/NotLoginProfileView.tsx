@@ -166,8 +166,6 @@ export const NotLoginProfileView: React.FC = () => {
           .then(async (result: Promise<boolean>) => {
             if ((await result) == true) {
               DefaultPreference.set(LOGIN_TYPE, GOOGLE_LOGIN).then(function() { }); 
-              DefaultPreference.set(ACCESS_TOKEN, res.accessToken).then(function() { });
-              DefaultPreference.set(CODE, res.idToken).then(function() { });
             } else {
               Alert.alert(ERROR_MESSAGE.LOGIN_FAIL);
             }
