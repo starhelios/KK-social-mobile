@@ -47,13 +47,14 @@ export const SplashScreen: React.FC = () => {
     setFetchingData(true);
 
     GoogleSignin.configure({
-      iosClientId: '620619163089-pm3clc8bqt1i83h2on0f3if7957qhv5t.apps.googleusercontent.com',
+      iosClientId: '670577491944-41kkju36r8m33sk0h5974f8o5tqfd7ma.apps.googleusercontent.com',
       scopes: ['email', 'profile'],
       hostedDomain: '',
       loginHint: '',
       forceCodeForRefreshToken: true,
-      accountName: '', 
-      webClientId: '620619163089-q7es5q6snv0pq27ljn5kje4uoaha1f9j.apps.googleusercontent.com',
+      accountName: '',
+      offlineAccess: true, 
+      webClientId: '670577491944-sf4h58m22gt1716gjl916j51uces495t.apps.googleusercontent.com',
     });
 
     // LocaleConfig.defaultLocale = 'en';
@@ -111,9 +112,6 @@ export const SplashScreen: React.FC = () => {
           loginByGoogle(res.accessToken)
           .then(async (result: Promise<boolean>) => {
             if ((await result) == true) {
-              DefaultPreference.set(LOGIN_TYPE, GOOGLE_LOGIN).then(function() { }); 
-              DefaultPreference.set(ACCESS_TOKEN, res.accessToken).then(function() { });
-              DefaultPreference.set(CODE, res.idToken).then(function() { });
               goMainScreen();
             } else {
               fetching = false;

@@ -27,7 +27,17 @@
 			<string>Editor</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>com.googleusercontent.apps.620619163089-pm3clc8bqt1i83h2on0f3if7957qhv5t</string>
+				<string>com.googleusercontent.apps.670577491944-41kkju36r8m33sk0h5974f8o5tqfd7ma</string>
+			</array>
+		</dict>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLName</key>
+			<string>kloutkast</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>kloutkast</string>
 			</array>
 		</dict>
 	</array>

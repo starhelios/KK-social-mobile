@@ -3,21 +3,23 @@
 <plist version="1.0">
 <dict>
 	<key>CLIENT_ID</key>
-	<string>620619163089-pm3clc8bqt1i83h2on0f3if7957qhv5t.apps.googleusercontent.com</string>
+	<string>670577491944-41kkju36r8m33sk0h5974f8o5tqfd7ma.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.620619163089-pm3clc8bqt1i83h2on0f3if7957qhv5t</string>
+	<string>com.googleusercontent.apps.670577491944-41kkju36r8m33sk0h5974f8o5tqfd7ma</string>
+	<key>ANDROID_CLIENT_ID</key>
+	<string>670577491944-h3tvr9qj62mgp498sk8letj7uffi0cra.apps.googleusercontent.com</string>
 	<key>API_KEY</key>
-	<string>AIzaSyD3WfQwxg4n7rDftr9BItRt5IfEDHfrIUQ</string>
+	<string>AIzaSyCCIgsuN1XPUum_xyyPYQAIoCL7O0bl5Cs</string>
 	<key>GCM_SENDER_ID</key>
-	<string>620619163089</string>
+	<string>670577491944</string>
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
 	<string>org.name.KloutKast</string>
 	<key>PROJECT_ID</key>
-	<string>kloutkast-b2507</string>
+	<string>kloutkast-81183</string>
 	<key>STORAGE_BUCKET</key>
-	<string>kloutkast-b2507.appspot.com</string>
+	<string>kloutkast-81183.appspot.com</string>
 	<key>IS_ADS_ENABLED</key>
 	<false></false>
 	<key>IS_ANALYTICS_ENABLED</key>
@@ -29,6 +31,6 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:620619163089:ios:3fdb0ab31377171f5aecf0</string>
+	<string>1:670577491944:ios:a994c7ca8cf1cbab592e5d</string>
 </dict>
 </plist>

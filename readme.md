@@ -52,3 +52,14 @@ cd android
 cd android
 ./gradlew assembleRelease
 ```
+
+1. Google Login
+2. Facebook Login
+3. Apple Login
+4. Add Payment
+5. Add Withdrawal
+
+Confirmed Bookings
+Terms of Service
+
+

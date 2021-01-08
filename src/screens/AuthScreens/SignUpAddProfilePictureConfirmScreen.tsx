@@ -43,7 +43,7 @@ export const SignUpAddProfilePictureConfirmScreen: React.FC = ({route}) => {
 
           <TouchableWithoutFeedback onPress={() => goBack()}>
             <View style={styles.back_icon}>
-              <SvgXml width='100%' height='100%' xml={Icon_Back} />
+              {/* <SvgXml width='100%' height='100%' xml={Icon_Back} /> */}
             </View>
           </TouchableWithoutFeedback>
         </View>
@@ -115,6 +115,7 @@ const styles = StyleSheet.create({
     marginLeft: 24,
     width: 20,
     height: '100%',
+    backgroundColor: '#F00',
   },
   description_text: {
     marginTop: 33,

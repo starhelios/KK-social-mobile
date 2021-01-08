@@ -14,11 +14,11 @@
 		3E461D99554A48A4959DE609 /* SplashScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AA286B85B6C04FC6940260E9 /* SplashScreen.storyboard */; };
 		96905EF65AED1B983A6B3ABC /* libPods-KloutKast.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 58EEBF8E8E6FB1BC6CAF49B5 /* libPods-KloutKast.a */; };
 		BB2F792D24A3F905000567C9 /* Expo.plist in Resources */ = {isa = PBXBuildFile; fileRef = BB2F792C24A3F905000567C9 /* Expo.plist */; };
-		D8045E54258C85EB00603671 /* GoogleService-Info.xml in Resources */ = {isa = PBXBuildFile; fileRef = D8045E53258C85EA00603671 /* GoogleService-Info.xml */; };
 		D8785FC2258C927800C94508 /* libRNGoogleSignin.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D8785FC1258C927800C94508 /* libRNGoogleSignin.a */; };
 		D8785FC5258C929C00C94508 /* SafariServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D8785FC4258C929C00C94508 /* SafariServices.framework */; };
 		D8785FC7258C92A300C94508 /* AddressBook.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D8785FC6258C92A300C94508 /* AddressBook.framework */; };
 		D8785FC9258C92A900C94508 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D8785FC8258C92A900C94508 /* SystemConfiguration.framework */; };
+		D8A1244D25A6190500C78F1E /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = D8A1244C25A6190400C78F1E /* GoogleService-Info.plist */; };
 		D8B8407A2567C53D0038C5BD /* AvenirNextLTPro-It.otf in Resources */ = {isa = PBXBuildFile; fileRef = D8B840772567C53C0038C5BD /* AvenirNextLTPro-It.otf */; };
 		D8B8407B2567C53D0038C5BD /* AvenirNextLTPro-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = D8B840782567C53C0038C5BD /* AvenirNextLTPro-Regular.otf */; };
 		D8B8407C2567C53D0038C5BD /* AvenirNextLTPro-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = D8B840792567C53D0038C5BD /* AvenirNextLTPro-Bold.otf */; };
@@ -38,12 +38,12 @@
 		7A4D352CD337FB3A3BF06240 /* Pods-KloutKast.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-KloutKast.release.xcconfig"; path = "Target Support Files/Pods-KloutKast/Pods-KloutKast.release.xcconfig"; sourceTree = "<group>"; };
 		AA286B85B6C04FC6940260E9 /* SplashScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = SplashScreen.storyboard; path = KloutKast/SplashScreen.storyboard; sourceTree = "<group>"; };
 		BB2F792C24A3F905000567C9 /* Expo.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Expo.plist; sourceTree = "<group>"; };
-		D8045E53258C85EA00603671 /* GoogleService-Info.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = "GoogleService-Info.xml"; path = "KloutKast/GoogleService-Info.xml"; sourceTree = "<group>"; };
 		D8785FC1258C927800C94508 /* libRNGoogleSignin.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libRNGoogleSignin.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		D8785FC4258C929C00C94508 /* SafariServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SafariServices.framework; path = System/Library/Frameworks/SafariServices.framework; sourceTree = SDKROOT; };
 		D8785FC6258C92A300C94508 /* AddressBook.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AddressBook.framework; path = System/Library/Frameworks/AddressBook.framework; sourceTree = SDKROOT; };
 		D8785FC8258C92A900C94508 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		D87860C6258CB81700C94508 /* KloutKast.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = KloutKast.entitlements; path = KloutKast/KloutKast.entitlements; sourceTree = "<group>"; };
+		D8A1244C25A6190400C78F1E /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "KloutKast/GoogleService-Info.plist"; sourceTree = "<group>"; };
 		D8B840772567C53C0038C5BD /* AvenirNextLTPro-It.otf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "AvenirNextLTPro-It.otf"; path = "../src/assets/fonts/AvenirNextLTPro-It.otf"; sourceTree = "<group>"; };
 		D8B840782567C53C0038C5BD /* AvenirNextLTPro-Regular.otf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "AvenirNextLTPro-Regular.otf"; path = "../src/assets/fonts/AvenirNextLTPro-Regular.otf"; sourceTree = "<group>"; };
 		D8B840792567C53D0038C5BD /* AvenirNextLTPro-Bold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "AvenirNextLTPro-Bold.otf"; path = "../src/assets/fonts/AvenirNextLTPro-Bold.otf"; sourceTree = "<group>"; };
@@ -71,7 +71,7 @@
 			isa = PBXGroup;
 			children = (
 				D87860C6258CB81700C94508 /* KloutKast.entitlements */,
-				D8045E53258C85EA00603671 /* GoogleService-Info.xml */,
+				D8A1244C25A6190400C78F1E /* GoogleService-Info.plist */,
 				BB2F792B24A3F905000567C9 /* Supporting */,
 				008F07F21AC5B25A0029DE68 /* main.jsbundle */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
@@ -227,10 +227,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				BB2F792D24A3F905000567C9 /* Expo.plist in Resources */,
+				D8A1244D25A6190500C78F1E /* GoogleService-Info.plist in Resources */,
 				D8B8407C2567C53D0038C5BD /* AvenirNextLTPro-Bold.otf in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				13B07FBD1A68108700A75B9A /* LaunchScreen.xib in Resources */,
-				D8045E54258C85EB00603671 /* GoogleService-Info.xml in Resources */,
 				3E461D99554A48A4959DE609 /* SplashScreen.storyboard in Resources */,
 				D8B8407B2567C53D0038C5BD /* AvenirNextLTPro-Regular.otf in Resources */,
 				D8B8407A2567C53D0038C5BD /* AvenirNextLTPro-It.otf in Resources */,

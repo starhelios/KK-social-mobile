@@ -161,12 +161,6 @@ export const EditProfileScreen: React.FC = () => {
                           <TitleArrowButton title={'Security'} name={'Change Password'} showArrow={true} white_color={true} />
                         </View>
                       </TouchableWithoutFeedback>
-
-                      <TouchableWithoutFeedback onPress={() => navigate('ResetPassword') }>
-                        <View style={{width:'100%', marginTop: 22}}>
-                          <TitleArrowButton title={''} name={'Reset Password'} showArrow={true} white_color={true} />
-                        </View>
-                      </TouchableWithoutFeedback>
                     </View>
                 </ScrollView>
               </KeyboardAvoidingView>
@@ -278,7 +272,7 @@ export const EditProfileScreen: React.FC = () => {
   }
 
   function onSave() {
-    updateUserInformation(profile.id, emailAddress, fullName, avatarFile, '', '')
+    updateUserInformation(profile.id, emailAddress, fullName, birthday,avatarFile)
     .then(async (result: Promise<IUser>) => {
       setLoginUser(await result);
       Alert.alert(SUCCESS_MESSAGE.UPDATE_USER_PROFILE_SUCCESS);
