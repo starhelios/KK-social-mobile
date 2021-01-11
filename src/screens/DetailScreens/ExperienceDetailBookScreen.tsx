@@ -19,6 +19,7 @@ import Moment from 'moment';
 // from app
 import { 
   COLOR, 
+  convertStringToDateFormat, 
   ERROR_MESSAGE, 
   FONT, 
   Icon_Back_Black,
@@ -139,8 +140,8 @@ export const ExperienceDetailBookScreen: React.FC = ({route}) => {
   function getVisibleDate() {
     var visibleDateString = 'Select Date';
     if (selectedDate != '') {
-      const date = Moment(selectedDate, 'YYYY-MM-DD', true).format();
-      visibleDateString = Moment(date).format('MMMM D');
+      const date = convertStringToDateFormat(selectedDate, 'YYYY-MM-DD');
+      visibleDateString = convertStringToDateFormat(date, 'MMMM D');
     }
     return visibleDateString;
   }
@@ -149,8 +150,8 @@ export const ExperienceDetailBookScreen: React.FC = ({route}) => {
     if (selectedDate == '') {
       setAvailableDates(allAvailableDates);
     } else {
-      const date = Moment(selectedDate, 'YYYY-MM-DD', true).format();
-      const filterDateString = Moment(date).format('MMMM D, YYYY');
+      const date = convertStringToDateFormat(selectedDate, 'YYYY-MM-DD');
+      const filterDateString = convertStringToDateFormat(date, 'MMMM D, YYYY');
 
       var availableDates: IAvailableDate[] = [];
       for (let i = 0; i < experience.dateAvaibility.length; i++) {

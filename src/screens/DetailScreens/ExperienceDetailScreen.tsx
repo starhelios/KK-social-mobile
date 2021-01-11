@@ -24,6 +24,7 @@ import Moment from 'moment';
 // from app
 import { 
   COLOR, 
+  convertStringToDateFormat, 
   ERROR_MESSAGE, 
   FONT, 
   GetDurationString, 
@@ -132,7 +133,7 @@ export const ExperienceDetailScreen: React.FC = ({route}) => {
             <View style={{marginTop: 22, flexDirection: 'row'}}>
               <View style={{width: viewportWidth - 100}}>
                 <Text style={styles.host_name}>{'Say Hello! to ' + host.fullname}</Text>
-                <Text style={styles.joined_date}>{'Joined in ' + Moment(host.dateOfBirth).format('MMMM D, YYYY')}</Text>
+                <Text style={styles.joined_date}>{'Joined in ' + convertStringToDateFormat(host.dateOfBirth, 'MMMM D, YYYY')}</Text>
               </View>
               <Image style={styles.avatar} source={host.avatarUrl != null && host.avatarUrl != '' ? {uri: host.avatarUrl} : Img_User_Avatar} />
             </View>

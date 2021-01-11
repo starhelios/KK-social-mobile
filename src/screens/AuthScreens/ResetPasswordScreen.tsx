@@ -18,7 +18,7 @@ import { SvgXml } from 'react-native-svg';
 import Spinner from 'react-native-loading-spinner-overlay';
 
 // from app
-import { COLOR, ERROR_MESSAGE, FONT, Icon_Back, Img_Auth_Background, MARGIN_TOP } from '../../constants';
+import { COLOR, CustomTextInput, ERROR_MESSAGE, FONT, Icon_Back, Img_Auth_Background, MARGIN_TOP } from '../../constants';
 import { ColorButton } from '../../components/Button';
 import { useAuthentication } from '../../hooks';
 import { IApiError, IApiSuccess, IApiSuccessMessage } from '../../interfaces/api';
@@ -61,7 +61,7 @@ export const ResetPasswordScreen: React.FC = () => {
             <View style={styles.input_container}>
               <View style={{width:'100%', marginTop: 22}}>
                 <Text style={styles.info_title}>New Password</Text>
-                <TextInput
+                <CustomTextInput
                   style={GlobalStyle.auth_input}
                   placeholder={'New Password'}
                   secureTextEntry={true}
@@ -75,7 +75,7 @@ export const ResetPasswordScreen: React.FC = () => {
 
               <View style={{width:'100%', marginTop: 22}}>
                 <Text style={styles.info_title}>Confirm Password</Text>
-                <TextInput
+                <CustomTextInput
                   style={GlobalStyle.auth_input}
                   placeholder={'Confirm Password'}
                   secureTextEntry={true}

@@ -19,6 +19,7 @@ import Moment from 'moment';
 // from app
 import { 
   COLOR, 
+  convertStringToDateFormat, 
   FONT, 
   Icon_Back_Black,
   Icon_Location_Black,
@@ -93,7 +94,7 @@ export const HostDetailScreen: React.FC = ({route}) => {
             <View style={{marginTop: 33, flexDirection: 'row'}}>
               <View style={{width: viewportWidth - 100}}>
                 <Text style={styles.host_name}>{'Hey, I\'m ' + host.fullname}</Text>
-                <Text style={styles.joined_date}>{'Joined in ' + Moment(host.dateOfBirth).format('MMMM D, YYYY')}</Text>
+                <Text style={styles.joined_date}>{'Joined in ' + convertStringToDateFormat(host.dateOfBirth, 'MMMM D, YYYY')}</Text>
               </View>
               <Image
                 style={styles.avatar}

@@ -12,18 +12,21 @@ import {
   ScrollView,
   Keyboard,
   KeyboardAvoidingView,
-  Animated,
 } from 'react-native';
 import { Container } from 'native-base';
 import { useEffect, useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { SvgXml } from 'react-native-svg';
+import DateTimePicker from '@react-native-community/datetimepicker';
 import ImagePicker from 'react-native-image-crop-picker';
 import LinearGradient from 'react-native-linear-gradient';
 
 // from app
 import { 
   COLOR, 
+  convertDateToDateFormat, 
+  convertStringToDateFormat, 
+  CustomTextInput, 
   FONT, 
   Icon_Back,
   Icon_Camera,
@@ -31,7 +34,7 @@ import {
   Icon_Search_White,
   MARGIN_TOP,
 } from '../../constants';
-import { ColorButton, TitleArrowButton } from '../../components/Button';
+import { ColorButton } from '../../components/Button';
 import { useGlobalState } from '../../redux/Store';
 import { IFile, IUser } from '../../interfaces/app';
 import GlobalStyle from '../../styles/global';
@@ -40,157 +43,50 @@ const { width: viewportWidth, height: viewportHeight } = Dimensions.get('window'
 
 export const BecomeAHostScreen: React.FC = () => {
 
-  const { goBack, navigate } = useNavigation();
+  const { goBack } = useNavigation();
 
   const profile: IUser = useGlobalState('userInfo');
 
   const [image, setImage] = useState<string>(profile.avatarUrl);
   const [fullName, setFullName] = useState<string>(profile.fullname);
   const [emailAddress, setEmailAddress] = useState<string>(profile.email);
-  const [birthday, setBirthday] = useState<string>(profile.dateOfBirth);
+  const [birthday, setBirthday] = useState<string>(convertStringToDateFormat(profile.dateOfBirth, 'YYYY-MM-DD'));
   const [aboutMe, setAboutMe] = useState<string>();
   const [location, setLocation] = useState<string>();
   const [category, setCategory] = useState<string>();
+  const [showDatePicker, setShowDatePicker] = useState<boolean>(false);
+  const [mode, setMode] = useState<"date" | "time" | undefined>('date');
+  const [pickerDate, setPickerDate] = useState<Date>(birthday != undefined && birthday != '' ? new Date(birthday) : new Date());
 
-  return (
-    <Container style={styles.background}>
+  useEffect(() => {
+    setImage(profile.avatarUrl);
+    setFullName(profile.fullname);
+    setEmailAddress(profile.email);
+    setAboutMe(profile.aboutMe);
+    setLocation(profile.location);
+    setCategory(profile.categoryName);
+    setBirthday(convertStringToDateFormat(profile.dateOfBirth, 'YYYY-MM-DD'));
+  }, [profile]);
 
-      <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
-        <SafeAreaView style={styles.safe_area}>
-          <View style={styles.navigation_bar}>
-            <Text style={styles.title}>Become A Host</Text>
+  const onChange = (event: any, selectedDate: any) => {
+    setPickerDate(selectedDate);
+  };
 
-            <TouchableWithoutFeedback onPress={() => goBack()}>
-              <View style={styles.back_icon}>
-                <SvgXml width='100%' height='100%' xml={Icon_Back} />
-              </View>
-            </TouchableWithoutFeedback>
-          </View>
+  const showMode = (currentMode: "date" | "time" | undefined) => {
+    setShowDatePicker(true);
+    setMode(currentMode);
+  };
 
-          <View style={{flex: 1}}>
-            <View style={styles.container}>
-              <KeyboardAvoidingView behavior={Platform.OS == "ios" ? "padding" : "height"} >
-                <ScrollView bounces={false}>
-                  <View style={styles.profile_container}>
-                    <TouchableWithoutFeedback onPress={() => onSelectPhoto()}>
-                      <View style={styles.profile}>
-                        {
-                          image != ''
-                          ? <Image style={{width: '100%', height: '100%'}} source={{uri: image}} />
-                          : <View style={styles.profile_no_image}>
-                              <SvgXml width={46} height={58} xml={Icon_Normal_Profile} />
-                            </View>
-                        }
-                        <LinearGradient
-                          colors={['#00000010', '#00000070']}
-                          style={styles.camera_container}
-                          start={{x: 0.5, y: 0}}
-                          end={{x: 0.5, y: 1}} >
-                          <View style={styles.camera_icon}>
-                            <SvgXml width='100%' height='100%' xml={Icon_Camera} />
-                          </View>
-                        </LinearGradient>
-                      </View>
-                    </TouchableWithoutFeedback>
-                  </View>
+  const onConfirmBirthday = () => {
+    setBirthday(convertDateToDateFormat(pickerDate, 'YYYY-MM-DD'));
+    setShowDatePicker(false);
+  }
 
-                  <View style={{marginLeft: 24, marginRight: 24, width: viewportWidth - 48}}>
-                      <View style={{width:'100%', marginTop: 33}}>
-                        <Text style={styles.info_title}>Full Name</Text>
-                        <TextInput
-                          style={GlobalStyle.auth_input}
-                          placeholder={'Full Name'}
-                          placeholderTextColor={COLOR.alphaWhiteColor50}
-                          onChangeText={text => setFullName(text)}
-                          value={fullName}
-                        />
-                        <View style={GlobalStyle.auth_line} />
-                      </View>
-
-                      <View style={{width:'100%', marginTop: 22}}>
-                        <Text style={styles.info_title}>Email Address</Text>
-                        <TextInput
-                          style={GlobalStyle.auth_input}
-                          keyboardType={'email-address'}
-                          placeholder={'Email Address'}
-                          placeholderTextColor={COLOR.alphaWhiteColor50}
-                          onChangeText={text => setEmailAddress(text)}
-                          value={emailAddress}
-                        />
-                        <View style={GlobalStyle.auth_line} />
-                      </View>
-
-                      <View style={{width:'100%', marginTop: 22}}>
-                        <Text style={styles.info_title}>Date of Birth</Text>
-                        <TouchableWithoutFeedback onPress={() => onSelectBirthday()}>
-                          <Text style={{...GlobalStyle.auth_input, lineHeight: 45}}>{birthday}</Text>
-                        </TouchableWithoutFeedback>
-                        <View style={GlobalStyle.auth_line} />
-                      </View>
-
-                      <View style={{width:'100%', marginTop: 22}}>
-                        <Text style={styles.info_title}>About Me</Text>
-                        <TextInput
-                          style={GlobalStyle.auth_input}
-                          placeholder={'About Me'}
-                          placeholderTextColor={COLOR.alphaWhiteColor50}
-                          onChangeText={text => setAboutMe(text)}
-                          value={aboutMe}
-                        />
-                        <View style={GlobalStyle.auth_line} />
-                      </View>
-
-                      <View style={{width:'100%', marginTop: 22}}>
-                        <Text style={styles.info_title}>Location</Text>
-                        <TextInput
-                          style={GlobalStyle.auth_input}
-                          placeholder={'Location'}
-                          placeholderTextColor={COLOR.alphaWhiteColor50}
-                          onChangeText={text => setLocation(text)}
-                          value={location}
-                        />
-                        <View style={GlobalStyle.auth_line} />
-                      </View>
-
-                      <View style={{width:'100%', marginTop: 22}}>
-                        <Text style={styles.info_title}>Category</Text>
-                        <TextInput
-                          style={{...GlobalStyle.auth_input, paddingLeft: 25}}
-                          placeholder={'Search Categories'}
-                          placeholderTextColor={COLOR.alphaWhiteColor50}
-                          onChangeText={text => setCategory(text)}
-                          value={category}
-                        />
-                        <View style={GlobalStyle.auth_line} />
-
-                        <TouchableWithoutFeedback onPress={() => onSearchCategory()}>
-                          <View style={{position: 'absolute', top: 40, left: 0, width: 14, height: 14}}>
-                            <SvgXml width='100%' height='100%' xml={Icon_Search_White} />
-                          </View>
-                        </TouchableWithoutFeedback>
-                      </View>
-                    </View>
-                </ScrollView>
-              </KeyboardAvoidingView>
-            </View>
-          </View>
-          
-          <TouchableWithoutFeedback onPress={() => onBecomeAHost() }>
-            <View style={styles.bottom_button}>
-              <ColorButton title={'Become A Host'} backgroundColor={COLOR.whiteColor} color={COLOR.blackColor} />
-            </View>
-          </TouchableWithoutFeedback>
-          
-        </SafeAreaView>
-      </TouchableWithoutFeedback>
-    </Container>
-  );
-
-  function onSelectPhoto() {
+  const onSelectPhoto = () => {
     onChoosePhoto();
   }
 
-  function onChoosePhoto() {
+  const onChoosePhoto = () => {
     ImagePicker.openPicker({
       includeBase64: true,
       multiple: false,
@@ -198,9 +94,8 @@ export const BecomeAHostScreen: React.FC = () => {
       mediaType: "photo",
     })
     .then((image) => {
-      let fileName = generateName();
       const file = {
-        name: 'image' + fileName + '.jpg',
+        name: 'avatar.jpg',
         type: image.mime,
         uri:
           Platform.OS === 'android'
@@ -212,7 +107,7 @@ export const BecomeAHostScreen: React.FC = () => {
     .catch((e) => {});
   }
 
-  function onTakePicture() {
+  const onTakePicture = () => {
     ImagePicker.openCamera({
       includeBase64: true,
       multiple: false,
@@ -220,9 +115,8 @@ export const BecomeAHostScreen: React.FC = () => {
       mediaType: "photo",
     })
     .then((image) => {
-      let fileName = generateName();
       const file: IFile = {
-        name: 'image' + fileName + '.jpg',
+        name: 'avatar.jpg',
         type: image.mime,
         uri:
           Platform.OS === 'android'
@@ -235,25 +129,172 @@ export const BecomeAHostScreen: React.FC = () => {
     });
   }
 
-  function generateName() {
-    return (
-      Math.random().toString(36).substring(2, 10) +
-      '-' +
-      Math.random().toString(36).substring(2, 6)
-    );
-  }
-
-  function onSelectBirthday() {
+  const onBecomeAHost = () => {
 
   }
 
-  function onBecomeAHost() {
+  const onSearchCategory = () => {
 
   }
 
-  function onSearchCategory() {
+  return (
+    <Container style={styles.background}>
+      <SafeAreaView style={styles.safe_area}>
+        <View style={styles.navigation_bar}>
+          <Text style={styles.title}>Become A Host</Text>
 
-  }
+          <TouchableWithoutFeedback onPress={() => goBack()}>
+            <View style={styles.back_icon}>
+              <SvgXml width='100%' height='100%' xml={Icon_Back} />
+            </View>
+          </TouchableWithoutFeedback>
+        </View>
+
+        <View style={{flex: 1}}>
+          <View style={styles.container}>
+            <KeyboardAvoidingView behavior={Platform.OS == "ios" ? "padding" : "height"} >
+              <ScrollView bounces={false}>
+                <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+                  <View>
+                    <View style={styles.profile_container}>
+                      <TouchableWithoutFeedback onPress={() => onSelectPhoto()}>
+                        <View style={styles.profile}>
+                          {
+                            image != ''
+                            ? <Image style={{width: '100%', height: '100%'}} source={{uri: image}} />
+                            : <View style={styles.profile_no_image}>
+                                <SvgXml width={46} height={58} xml={Icon_Normal_Profile} />
+                              </View>
+                          }
+                          <LinearGradient
+                            colors={['#00000010', '#00000070']}
+                            style={styles.camera_container}
+                            start={{x: 0.5, y: 0}}
+                            end={{x: 0.5, y: 1}} >
+                            <View style={styles.camera_icon}>
+                              <SvgXml width='100%' height='100%' xml={Icon_Camera} />
+                            </View>
+                          </LinearGradient>
+                        </View>
+                      </TouchableWithoutFeedback>
+                    </View>
+
+                    <View style={{marginLeft: 24, marginRight: 24, width: viewportWidth - 48}}>
+                      <View style={{width:'100%', marginTop: 33}}>
+                        <Text style={styles.info_title}>Full Name</Text>
+                        <CustomTextInput
+                          style={GlobalStyle.auth_input}
+                          placeholder={'Full Name'}
+                          placeholderTextColor={COLOR.alphaWhiteColor50}
+                          onChangeText={text => setFullName(text)}
+                          value={fullName}
+                        />
+                        <View style={GlobalStyle.auth_line} />
+                      </View>
+
+                      <View style={{width:'100%', marginTop: 22}}>
+                        <Text style={styles.info_title}>Email Address</Text>
+                        <CustomTextInput
+                          style={GlobalStyle.auth_input}
+                          keyboardType={'email-address'}
+                          placeholder={'Email Address'}
+                          placeholderTextColor={COLOR.alphaWhiteColor50}
+                          onChangeText={text => setEmailAddress(text)}
+                          value={emailAddress}
+                        />
+                        <View style={GlobalStyle.auth_line} />
+                      </View>
+
+                      <View style={{width:'100%', marginTop: 22}}>
+                        <Text style={styles.info_title}>Date of Birth</Text>
+                        <TouchableWithoutFeedback onPress={() => setShowDatePicker(true)}>
+                          <Text style={{...GlobalStyle.auth_input, lineHeight: 45}}>{birthday}</Text>
+                        </TouchableWithoutFeedback>
+                        <View style={GlobalStyle.auth_line} />
+                      </View>
+
+                      <View style={{width:'100%', marginTop: 22}}>
+                        <Text style={styles.info_title}>About Me</Text>
+                        <CustomTextInput
+                          style={GlobalStyle.auth_input}
+                          placeholder={'About Me'}
+                          placeholderTextColor={COLOR.alphaWhiteColor50}
+                          onChangeText={text => setAboutMe(text)}
+                          value={aboutMe}
+                        />
+                        <View style={GlobalStyle.auth_line} />
+                      </View>
+
+                      <View style={{width:'100%', marginTop: 22}}>
+                        <Text style={styles.info_title}>Location</Text>
+                        <CustomTextInput
+                          style={GlobalStyle.auth_input}
+                          placeholder={'Location'}
+                          placeholderTextColor={COLOR.alphaWhiteColor50}
+                          onChangeText={text => setLocation(text)}
+                          value={location}
+                        />
+                        <View style={GlobalStyle.auth_line} />
+                      </View>
+
+                      <View style={{width:'100%', marginTop: 22}}>
+                        <Text style={styles.info_title}>Category</Text>
+                        <CustomTextInput
+                          style={{...GlobalStyle.auth_input, paddingLeft: 25}}
+                          placeholder={'Search Categories'}
+                          placeholderTextColor={COLOR.alphaWhiteColor50}
+                          autoCapitalize='none'
+                          onChangeText={text => setCategory(text)}
+                          value={category}
+                        />
+                        <View style={GlobalStyle.auth_line} />
+
+                        <TouchableWithoutFeedback onPress={() => onSearchCategory()}>
+                          <View style={{position: 'absolute', top: 40, left: 0, width: 14, height: 14}}>
+                            <SvgXml width='100%' height='100%' xml={Icon_Search_White} />
+                          </View>
+                        </TouchableWithoutFeedback>
+                      </View>
+                    </View>
+
+                    <TouchableWithoutFeedback onPress={() => onBecomeAHost() }>
+                      <View style={styles.bottom_button}>
+                        <ColorButton title={'Become A Host'} backgroundColor={COLOR.whiteColor} color={COLOR.blackColor} />
+                      </View>
+                    </TouchableWithoutFeedback>
+                  </View>
+                </TouchableWithoutFeedback>
+              </ScrollView>
+            </KeyboardAvoidingView>
+          </View>
+        </View>
+
+        {showDatePicker && (
+        <View style={styles.datePickerBackground} >
+          <View style={styles.datePickerContainer}>
+            <DateTimePicker
+              testID="dateTimePicker"
+              value={pickerDate}
+              onChange={onChange}
+              style={styles.datePicker}
+              firstDayOfWeek={2}
+              maximumDate={new Date()}
+              minimumDate={new Date('1960')}
+              dateFormat={'shortdate'}
+              dayOfWeekFormat={'{dayofweek.abbreviated(2)}'}
+              placeholderText="Select Date"
+            />
+            <TouchableWithoutFeedback onPress={() => onConfirmBirthday() }>
+              <View style={styles.datePickerConfirm}>
+                <Text style={styles.confirm_text}>Confirm</Text>
+              </View>
+            </TouchableWithoutFeedback>
+          </View>
+        </View>
+      )}
+      </SafeAreaView>
+    </Container>
+  );
 };
 
 const styles = StyleSheet.create({
@@ -305,7 +346,7 @@ const styles = StyleSheet.create({
     width: '100%', 
     position: 'absolute', 
     top: 0, 
-    bottom: 77,
+    bottom: 0,
   },
   profile_container: {
     width: '100%',
@@ -354,10 +395,10 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   bottom_button: {
-    position: 'absolute',
-    bottom: 33,
+    marginTop: 30,
     marginLeft: 48,
     marginRight: 48,
+    marginBottom: 30,
     width: viewportWidth - 96,
     height: 44,
     flex: 1,
@@ -369,5 +410,42 @@ const styles = StyleSheet.create({
     fontFamily: FONT.AN_Regular,
     fontSize: 14,
     color: COLOR.systemWhiteColor,
+  },
+  datePickerBackground: {
+    position: 'absolute',
+    flex: 1,
+    bottom: 0,
+    width: '100%',
+    height: 150,
+    backgroundColor: COLOR.whiteColor,
+  },
+  datePickerContainer: {
+    flexDirection: 'row', 
+    marginTop: 15, 
+    marginLeft: 15, 
+    width: viewportWidth - 30,
+  },
+  datePicker: {
+    alignContent: 'center',
+    marginTop: 3,
+    width: viewportWidth - 30,
+  },
+  datePickerConfirm: {
+    position: 'absolute',
+    right: 0,
+    width: 100,
+    height: 35,
+    borderColor: COLOR.alphaBlackColor20,
+    borderWidth: 1,
+    borderRadius: 10,
+  },
+  confirm_text: {
+    width: '100%',
+    height: 35,
+    lineHeight: 35,
+    textAlign: 'center',
+    fontFamily: FONT.AN_Regular,
+    fontSize: 16,
+    color: COLOR.blueColor,
   },
 });

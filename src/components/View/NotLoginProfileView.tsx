@@ -103,13 +103,13 @@ export const NotLoginProfileView: React.FC = () => {
 
         {
           profileHelpList.length > 0
-          ? <View style={{...styles.profile_help_description_container, bottom: 80}}>  
+          ? <View style={{...styles.profile_help_description_container, bottom: 212}}>  
               <Text style={styles.profile_help_description}>
                 {currentPage < profileHelpList.length ? profileHelpList[currentPage].title : ''}
               </Text>
 
               <PageControl
-                style={styles.page_control}
+                style={{...styles.page_control, bottom: 24}}
                 numberOfPages={profileHelpList.length}
                 currentPage={currentPage}
                 hidesForSinglePage
@@ -125,11 +125,11 @@ export const NotLoginProfileView: React.FC = () => {
         }
         
         <View style={styles.social_container}>
-          {/* <TouchableWithoutFeedback onPress={() => onConnectWithFacebook()}>
+          <TouchableWithoutFeedback onPress={() => onConnectWithFacebook()}>
             <View style={{ ...styles.social_button, marginTop: 24 }}>
               <ColorButton title={'Connect With Facebook'} backgroundColor={COLOR.blueColor} color={COLOR.systemWhiteColor} />
             </View>
-          </TouchableWithoutFeedback> */}
+          </TouchableWithoutFeedback>
 
           <TouchableWithoutFeedback onPress={() => onConnectWithGoogle()}>
             <View style={styles.social_button}>
@@ -137,13 +137,13 @@ export const NotLoginProfileView: React.FC = () => {
             </View>
           </TouchableWithoutFeedback>
 
-          {/* { (Platform.OS == 'ios' || appleAuthAndroid.isSupported) && (
+          { (Platform.OS == 'ios' || appleAuthAndroid.isSupported) && (
             <TouchableWithoutFeedback onPress={() => onSignUpWithApple()}>
               <View style={styles.social_button}>
                 <ColorButton title={'Sign Up With Apple'} backgroundColor={COLOR.systemBlackColor} color={COLOR.systemWhiteColor} />
               </View>
             </TouchableWithoutFeedback>
-          )} */}
+          )}
 
         </View>
       </View>
@@ -166,6 +166,8 @@ export const NotLoginProfileView: React.FC = () => {
           .then(async (result: Promise<boolean>) => {
             if ((await result) == true) {
               DefaultPreference.set(LOGIN_TYPE, GOOGLE_LOGIN).then(function() { }); 
+              DefaultPreference.set(ACCESS_TOKEN, res.accessToken).then(function() { });
+              DefaultPreference.set(CODE, res.idToken).then(function() { });
             } else {
               Alert.alert(ERROR_MESSAGE.LOGIN_FAIL);
             }
@@ -264,7 +266,7 @@ const styles = StyleSheet.create({
   profile_help_container: {
     borderTopLeftRadius: 22,
     borderTopRightRadius: 22,
-    marginBottom: 80,
+    marginBottom: 212,
     flex: 1,
     overflow: 'hidden',
   },
@@ -293,14 +295,14 @@ const styles = StyleSheet.create({
   page_control: {
     position:'absolute', 
     right: 24,
-    bottom: 24,
+    bottom: 236,
     height: 12,
   },
   social_container: {
     width: '100%',
     position: 'absolute',
     bottom: 0,
-    height: 80,
+    height: 212,
     borderBottomLeftRadius: 22,
     borderBottomRightRadius: 22,
     backgroundColor: COLOR.whiteColor,

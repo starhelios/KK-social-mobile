@@ -21,13 +21,15 @@ import { SvgXml } from 'react-native-svg';
 import ImagePicker from 'react-native-image-crop-picker';
 import LinearGradient from 'react-native-linear-gradient';
 import DateTimePicker from '@react-native-community/datetimepicker';
-import Moment from 'moment';
 
 
 // from app
 import { 
+  choosePhoto,
   COLOR, 
-  DAY_OF_WEEK, 
+  convertDateToDateFormat, 
+  convertStringToDateFormat, 
+  CustomTextInput, 
   ERROR_MESSAGE, 
   FONT, 
   Icon_Back,
@@ -57,7 +59,7 @@ export const EditProfileScreen: React.FC = () => {
   const [avatarFile, setAvatarFile] = useState<IFile | null>(null);
   const [fullName, setFullName] = useState<string>(profile.fullname);
   const [emailAddress, setEmailAddress] = useState<string>(profile.email);
-  const [birthday, setBirthday] = useState<string>(profile.dateOfBirth);
+  const [birthday, setBirthday] = useState<string>(convertStringToDateFormat(profile.dateOfBirth, 'YYYY-MM-DD'));
   const [mode, setMode] = useState<"date" | "time" | undefined>('date');
   const [showDatePicker, setShowDatePicker] = useState<boolean>(false);
   const [pickerDate, setPickerDate] = useState<Date>(birthday != undefined && birthday != '' ? new Date(birthday) : new Date());
@@ -66,7 +68,7 @@ export const EditProfileScreen: React.FC = () => {
     setImage(profile.avatarUrl);
     setFullName(profile.fullname);
     setEmailAddress(profile.email);
-    setBirthday(profile.dateOfBirth);
+    setBirthday(convertStringToDateFormat(profile.dateOfBirth, 'YYYY-MM-DD'));
   }, [profile]);
 
   const onChange = (event: any, selectedDate: any) => {
@@ -125,7 +127,7 @@ export const EditProfileScreen: React.FC = () => {
                   <View style={{marginLeft: 24, marginRight: 24, width: viewportWidth - 48, paddingBottom: 10}}>
                       <View style={{width:'100%', marginTop: 33}}>
                         <Text style={styles.info_title}>Full Name</Text>
-                        <TextInput
+                        <CustomTextInput
                           style={GlobalStyle.auth_input}
                           placeholder={'Full Name'}
                           placeholderTextColor={COLOR.alphaWhiteColor50}
@@ -137,7 +139,7 @@ export const EditProfileScreen: React.FC = () => {
 
                       <View style={{width:'100%', marginTop: 22}}>
                         <Text style={styles.info_title}>Email Address</Text>
-                        <TextInput
+                        <CustomTextInput
                           style={GlobalStyle.auth_input}
                           keyboardType={'email-address'}
                           placeholder={'Email Address'}
@@ -214,9 +216,8 @@ export const EditProfileScreen: React.FC = () => {
       mediaType: "photo",
     })
     .then((image) => {
-      let fileName = generateName();
       const file = {
-        name: 'image' + fileName + '.jpg',
+        name: 'avatar.jpg',
         type: image.mime,
         uri:
           Platform.OS === 'android'
@@ -237,9 +238,8 @@ export const EditProfileScreen: React.FC = () => {
       mediaType: "photo",
     })
     .then((image) => {
-      let fileName = generateName();
       const file: IFile = {
-        name: 'image' + fileName + '.jpg',
+        name: 'avatar.jpg',
         type: image.mime,
         uri:
           Platform.OS === 'android'
@@ -253,26 +253,18 @@ export const EditProfileScreen: React.FC = () => {
     });
   }
 
-  function generateName() {
-    return (
-      Math.random().toString(36).substring(2, 10) +
-      '-' +
-      Math.random().toString(36).substring(2, 6)
-    );
-  }
-
   function onSelectBirthday() {
     setPickerDate(birthday != undefined && birthday != '' ? new Date(birthday) : new Date());
     setShowDatePicker(true);
   }
   
   function onConfirmBirthday() {
-    setBirthday(Moment(pickerDate).format('YYYY-MM-DD'));
+    setBirthday(convertDateToDateFormat(pickerDate, 'YYYY-MM-DD'));
     setShowDatePicker(false);
   }
 
   function onSave() {
-    updateUserInformation(profile.id, emailAddress, fullName, birthday,avatarFile)
+    updateUserInformation(profile.id, emailAddress, fullName, birthday, avatarFile)
     .then(async (result: Promise<IUser>) => {
       setLoginUser(await result);
       Alert.alert(SUCCESS_MESSAGE.UPDATE_USER_PROFILE_SUCCESS);

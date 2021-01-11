@@ -23,6 +23,7 @@ import DefaultPreference from 'react-native-default-preference';
 // from app
 import { 
   COLOR, 
+  CustomTextInput, 
   EMAIL_LOGIN, 
   ERROR_MESSAGE, 
   FONT, 
@@ -75,7 +76,7 @@ export const LogInScreen: React.FC = () => {
                 <View style={styles.input_container}>
                   <View style={{width:'100%', marginTop: 22}}>
                     <Text style={styles.info_title}>Email Address</Text>
-                    <TextInput
+                    <CustomTextInput
                       style={GlobalStyle.auth_input}
                       keyboardType={'email-address'}
                       placeholder={'Email Address'}
@@ -89,7 +90,7 @@ export const LogInScreen: React.FC = () => {
 
                   <View style={{width:'100%', marginTop: 22}}>
                     <Text style={styles.info_title}>Password</Text>
-                    <TextInput
+                    <CustomTextInput
                       style={GlobalStyle.auth_input}
                       placeholder={'Password'}
                       secureTextEntry={true}

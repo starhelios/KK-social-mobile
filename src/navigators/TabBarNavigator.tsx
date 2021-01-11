@@ -110,7 +110,7 @@ const styles = StyleSheet.create({
   navigation_bar: {
     bottom: 0, 
     width: '100%', 
-    height: 50,
+    height: 60,
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',

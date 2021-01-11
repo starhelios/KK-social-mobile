@@ -14,6 +14,7 @@ import Moment from 'moment';
 // from app
 import { 
   COLOR, 
+  convertStringToDateFormat, 
   FONT,
   Icon_Close_Black,
 } from '../../constants';
@@ -44,7 +45,7 @@ export const SelectDateRangeView: React.FC<props> = (props: props) => {
       updateMarkerDate(props.selectedDate);
     }
 
-    const currentDate = Moment(new Date()).format('YYYY-MM-DD');
+    const currentDate = convertStringToDateFormat('', 'YYYY-MM-DD');
     setCurrentDate(currentDate);
   }, []);
 

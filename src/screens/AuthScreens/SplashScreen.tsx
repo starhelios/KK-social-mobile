@@ -8,11 +8,8 @@ import { Container } from 'native-base';
 import { useCallback, useEffect, useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { SvgXml } from 'react-native-svg';
-import { Calendar, LocaleConfig } from 'react-native-calendars';
-import { GoogleSignin, statusCodes, User } from '@react-native-community/google-signin';
-import Moment from 'moment';
+import { GoogleSignin } from '@react-native-community/google-signin';
 import DefaultPreference from 'react-native-default-preference';
-import Spinner from 'react-native-loading-spinner-overlay';
 
 // from app
 import { 
@@ -29,6 +26,8 @@ import {
   APPLE_LOGIN,
   ACCESS_TOKEN,
   CODE,
+  googleConfigure,
+  intialization,
 } from '../../constants';
 import { useAuthentication } from '../../hooks';
 import { ILoginUser } from '../../interfaces/app';
@@ -46,19 +45,8 @@ export const SplashScreen: React.FC = () => {
   useEffect(() => {
     setFetchingData(true);
 
-    GoogleSignin.configure({
-      iosClientId: '670577491944-41kkju36r8m33sk0h5974f8o5tqfd7ma.apps.googleusercontent.com',
-      scopes: ['email', 'profile'],
-      hostedDomain: '',
-      loginHint: '',
-      forceCodeForRefreshToken: true,
-      accountName: '',
-      offlineAccess: true, 
-      webClientId: '670577491944-sf4h58m22gt1716gjl916j51uces495t.apps.googleusercontent.com',
-    });
-
-    // LocaleConfig.defaultLocale = 'en';
-    Moment.locale('en');
+    intialization();
+    googleConfigure();
 
     loadAutoLoginInformation();
 
@@ -73,7 +61,7 @@ export const SplashScreen: React.FC = () => {
     }, LOADING_TIME);
   }, [])
 
-  function loadAutoLoginInformation() {
+  const loadAutoLoginInformation = () => {
     DefaultPreference.get(LOGIN_TYPE).then(function(loginType) {
       if (loginType == EMAIL_LOGIN) {
         DefaultPreference.get(USER_EMAIL).then(function(emailAddress) {
@@ -88,21 +76,15 @@ export const SplashScreen: React.FC = () => {
       } else if (loginType == GOOGLE_LOGIN) {
         getCurrentGoogleUserInfo();
 
-      } else if (loginType == FACEBOOK_LOGIN || loginType == GOOGLE_LOGIN || loginType == APPLE_LOGIN) {
-        DefaultPreference.get(ACCESS_TOKEN).then(function(accessToken) {
-          if (accessToken != null && accessToken != '') {
-            DefaultPreference.get(CODE).then(function(code) {
-              if (code != null && code != '') {
-                onAutoLoginBySocial(loginType, accessToken, code);
-              }
-            });
-          }
-        });
+      } else if (loginType == FACEBOOK_LOGIN) {
+
+      } else if (loginType == APPLE_LOGIN) {
+
       }
     });
   }
 
-  async function getCurrentGoogleUserInfo() {
+  const getCurrentGoogleUserInfo = async () => {
     fetching = true;
     try {
       const userInfo = await GoogleSignin.signInSilently()
@@ -112,6 +94,9 @@ export const SplashScreen: React.FC = () => {
           loginByGoogle(res.accessToken)
           .then(async (result: Promise<boolean>) => {
             if ((await result) == true) {
+              DefaultPreference.set(LOGIN_TYPE, GOOGLE_LOGIN).then(function() { }); 
+              DefaultPreference.set(ACCESS_TOKEN, res.accessToken).then(function() { });
+              DefaultPreference.set(CODE, res.idToken).then(function() { });
               goMainScreen();
             } else {
               fetching = false;
@@ -141,7 +126,7 @@ export const SplashScreen: React.FC = () => {
     goMainScreen();
   }, []);
 
-  function goMainScreen() {
+  const goMainScreen = () => {
     setTimeout(() => {
       reset({
         index: 0,
@@ -158,12 +143,6 @@ export const SplashScreen: React.FC = () => {
       <View style={styles.icon} >
         <SvgXml width={75} height={130} xml={Icon_Tab_Bar_Booking_Select} />
       </View>
-
-      {/* <Spinner
-        visible={fetchingData}
-        textContent={''}
-        textStyle={{color: COLOR.systemWhiteColor}}
-      /> */}
     </Container>
   );
 };

@@ -17,7 +17,7 @@ import Moment from 'moment';
 import Spinner from 'react-native-loading-spinner-overlay';
 
 // from app
-import { API_CONFIG, COLOR, FONT, Icon_Filter, Icon_Search, MARGIN_TOP } from '../../constants';
+import { API_CONFIG, COLOR, convertStringToDateFormat, CustomTextInput, FONT, Icon_Filter, Icon_Search, MARGIN_TOP } from '../../constants';
 import { useCategories, useExperiences, useHosts } from '../../hooks';
 import { ICategory, IExperience, IFilter, IHost, IHostList } from '../../interfaces/app';
 import { ExperienceView, FiltersView, HostView, SelectDateView } from '../../components/View';
@@ -59,7 +59,6 @@ export const HomeScreen: React.FC = () => {
   useEffect(() => {
     loadFilterExperienceList();
   }, [filter])
-
 
   async function loadCategoryList() {
     await getCategoryList('')
@@ -109,16 +108,14 @@ export const HomeScreen: React.FC = () => {
     } else {
       setFiltering(true);
 
-      setFetchingData(true);
-      setShowSelectDates(false);
-
+      // setFetchingData(true);
       await filterExperiences(filter.minPrice, filter.maxPrice, filter.startDay, filter.endDay, filter.categoryName)
       .then(async (result: Promise<IExperience[]>) => {
         setExperienceList(await result);
-        setFetchingData(false);
+        // setFetchingData(false);
       }).catch(() => {
         setExperienceList([]);
-        setFetchingData(false);
+        // setFetchingData(false);
       });
     }
   }
@@ -127,7 +124,7 @@ export const HomeScreen: React.FC = () => {
   function onSearch() {
   }
 
-  function onFilter(lowPrice: number, highPrice: number) {
+  function onFilterExperience(lowPrice: number, highPrice: number) {
     let minPrice = lowPrice;
     var maxPrice = highPrice;
     if (maxPrice == 1000) {
@@ -147,7 +144,7 @@ export const HomeScreen: React.FC = () => {
     setShowFilters(false);
   }
 
-  function onSelectDate(selectedDate: string) {
+  function onFilterSelectDate(selectedDate: string) {
     setSelectedDate(selectedDate);
     dispatch({
       type: ActionType.SET_FILTER,
@@ -165,8 +162,8 @@ export const HomeScreen: React.FC = () => {
   function getVisibleDate() {
     var visibleDateString = 'Dates';
     if (selectedDate != '') {
-      const date = Moment(selectedDate, 'YYYY-MM-DD', true).format();
-      visibleDateString = Moment(date).format('MMMM D');
+      // const date = convertStringToDateFormat(selectedDate, 'YYYY-MM-DD');
+      visibleDateString = convertStringToDateFormat(selectedDate, 'MMMM D');
     }
     return visibleDateString;
   }
@@ -236,7 +233,7 @@ export const HomeScreen: React.FC = () => {
                 <Text style={styles.placeholder_kloutkast}>KloutKast</Text>
               </View>
             )}
-            <TextInput 
+            <CustomTextInput 
               style={styles.search_text}
               onChangeText={text => setSearchText(text)}
               value={searchText} />
@@ -301,13 +298,13 @@ export const HomeScreen: React.FC = () => {
         <Modal animationType = {"slide"} transparent = {true}
           visible = {showSelectDates}
           onRequestClose = {() => { } }>
-          <SelectDateView selectedDate={selectedDate} onCloseView={setShowSelectDates} onSelectDate={onSelectDate} />
+          <SelectDateView selectedDate={selectedDate} onCloseView={setShowSelectDates} onSelectDate={onFilterSelectDate} />
         </Modal>
        
         <Modal animationType = {"slide"} transparent = {true}
           visible = {showFilters}
           onRequestClose = {() => { } }>
-          <FiltersView onCloseView={setShowFilters} onFilter={onFilter} />
+          <FiltersView onCloseView={setShowFilters} onFilter={onFilterExperience} />
         </Modal> 
       </SafeAreaView>
 

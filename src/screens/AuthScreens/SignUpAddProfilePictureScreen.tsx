@@ -26,6 +26,56 @@ export const SignUpAddProfilePictureScreen: React.FC = () => {
 
   const { navigate, goBack, reset } = useNavigation();
 
+  const onSkip = () => {
+    reset({
+      index: 0,
+      routes: [{ name: 'TabBar' }],
+    });
+  }
+
+  const onChoosePhoto = () => {
+    ImagePicker.openPicker({
+      includeBase64: true,
+      multiple: false,
+      cropping: true,
+      mediaType: "photo",
+    })
+    .then((image) => {
+      const file = {
+        name: 'avatar.jpg',
+        type: image.mime,
+        uri:
+          Platform.OS === 'android'
+            ? image.path
+            : image.path.replace('file://', ''),
+      };
+      navigate('SignUpAddProfilePictureConfirm', {profile_icon: file});
+    })
+    .catch((e) => {});
+  }
+
+  const onTakePicture = () => {
+    ImagePicker.openCamera({
+      includeBase64: true,
+      multiple: false,
+      cropping: true,
+      mediaType: "photo",
+    })
+    .then((image) => {
+      const file: IFile = {
+        name: 'avatar.jpg',
+        type: image.mime,
+        uri:
+          Platform.OS === 'android'
+            ? image.path
+            : image.path.replace('file://', ''),
+      };
+      navigate('SignUpAddProfilePictureConfirm', {profile_icon: file});
+    })
+    .catch((e) => {
+    });
+  }
+
   return (
     <Container style={styles.background}>
       <Image style={{width: '100%', height: '100%', resizeMode: 'cover'}} source={Img_Edit_Profile_Background} />
@@ -34,16 +84,8 @@ export const SignUpAddProfilePictureScreen: React.FC = () => {
         <View style={styles.navigation_bar}>
           <Text style={styles.title}>Profile Picture</Text>
 
-          <TouchableWithoutFeedback onPress={() => goBack()}>
-            <View style={styles.back_icon}>
-              <SvgXml width='100%' height='100%' xml={Icon_Back} />
-            </View>
-          </TouchableWithoutFeedback>
-
           <TouchableWithoutFeedback onPress={() => onSkip()}>
-            <View style={styles.skip}>
-              <Text style={styles.skip_text}>Skip</Text>
-            </View>
+            <Text style={styles.skip_text}>Skip</Text>
           </TouchableWithoutFeedback>
         </View>
 
@@ -58,85 +100,24 @@ export const SignUpAddProfilePictureScreen: React.FC = () => {
               </View>
             </View>
           </View>
+        </View>
 
-          <View style={styles.bottom_container}>
-            <TouchableWithoutFeedback onPress={() => onChoosePhoto() }>
-              <View style={styles.bottom_button}>
-                <ColorButton title={'Choose Photo'} backgroundColor={COLOR.whiteColor} color={COLOR.blackColor} />
-              </View>
-            </TouchableWithoutFeedback>
+        <View style={styles.bottom_container}>
+          <TouchableWithoutFeedback onPress={() => onChoosePhoto() }>
+            <View style={styles.bottom_button}>
+              <ColorButton title={'Choose Photo'} backgroundColor={COLOR.whiteColor} color={COLOR.blackColor} />
+            </View>
+          </TouchableWithoutFeedback>
 
-            <TouchableWithoutFeedback onPress={() => onTakePicture() }>
-              <View style={{ ...styles.bottom_button, marginTop: 0 }}>
-                <ColorButton title={'Take a Picture'} backgroundColor={COLOR.whiteColor} color={COLOR.blackColor} />
-              </View>
-            </TouchableWithoutFeedback>
-          </View>
-          
+          <TouchableWithoutFeedback onPress={() => onTakePicture() }>
+            <View style={{ ...styles.bottom_button, marginTop: 0 }}>
+              <ColorButton title={'Take a Picture'} backgroundColor={COLOR.whiteColor} color={COLOR.blackColor} />
+            </View>
+          </TouchableWithoutFeedback>
         </View>
       </SafeAreaView>
     </Container>
   );
-
-  function onSkip() {
-    reset({
-      index: 0,
-      routes: [{ name: 'TabBar' }],
-    });
-  }
-
-  function onChoosePhoto() {
-    ImagePicker.openPicker({
-      includeBase64: true,
-      multiple: false,
-      cropping: true,
-      mediaType: "photo",
-    })
-    .then((image) => {
-      let fileName = generateName();
-      const file = {
-        name: 'image' + fileName + '.jpg',
-        type: image.mime,
-        uri:
-          Platform.OS === 'android'
-            ? image.path
-            : image.path.replace('file://', ''),
-      };
-      navigate('SignUpAddProfilePictureConfirm', {profile_icon: file});
-    })
-    .catch((e) => {});
-  }
-
-  function onTakePicture() {
-    ImagePicker.openCamera({
-      includeBase64: true,
-      multiple: false,
-      cropping: true,
-      mediaType: "photo",
-    })
-    .then((image) => {
-      let fileName = generateName();
-      const file: IFile = {
-        name: 'image' + fileName + '.jpg',
-        type: image.mime,
-        uri:
-          Platform.OS === 'android'
-            ? image.path
-            : image.path.replace('file://', ''),
-      };
-      navigate('SignUpAddProfilePictureConfirm', {profile_icon: file});
-    })
-    .catch((e) => {
-    });
-  }
-
-  function generateName() {
-    return (
-      Math.random().toString(36).substring(2, 10) +
-      '-' +
-      Math.random().toString(36).substring(2, 6)
-    );
-  }
 };
 
 const styles = StyleSheet.create({
@@ -173,20 +154,15 @@ const styles = StyleSheet.create({
     width: 20,
     height: '100%',
   },
-  skip: {
+  skip_text: {
     position: 'absolute',
     right: 24,
-    width: 25,
-    height: '100%',
-    alignItems: 'center',
-  },
-  skip_text: {
-    width: '100%',
-    height: 18,
-    lineHeight: 18,
+    width: 40,
+    height: 33,
+    lineHeight: 33,
     textAlign: 'right',
     fontFamily: FONT.AN_Regular,
-    fontSize: 12,
+    fontSize: 13,
     color: COLOR.systemWhiteColor,
   },
   description_text: {
@@ -201,15 +177,14 @@ const styles = StyleSheet.create({
     color: COLOR.systemWhiteColor,
   },
   container: {
+    marginTop: 0,
     width: '100%',
-    height: '100%',
     flex: 1,
     flexDirection: 'row',
+    marginBottom: 150,
   },
   profile_container: {
     width: '100%',
-    height: '100%',
-    bottom: 134,
     alignItems: 'center',
     justifyContent: 'space-evenly',
   },
@@ -230,7 +205,7 @@ const styles = StyleSheet.create({
     width: '100%',
     height: 134,
     flex: 1,
-    bottom: 0,
+    bottom: 30,
   },
   bottom_button: {
     marginTop: 16,

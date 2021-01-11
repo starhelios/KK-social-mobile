@@ -19,6 +19,7 @@ import RangeSlider from 'rn-range-slider';
 // from app
 import { 
   COLOR, 
+  CustomTextInput, 
   FONT,
   Icon_Close_Black,
   Icon_Location,
@@ -101,7 +102,7 @@ export const FiltersView: React.FC<props> = (props: props) => {
                 renderNotch={renderNotch}
                 onValueChanged={handleValueChange}
               />
-              {/* <View style={{...GlobalStyle.auth_line, backgroundColor: COLOR.alphaBlackColor20, marginTop: 22}} />
+              <View style={{...GlobalStyle.auth_line, backgroundColor: COLOR.alphaBlackColor20, marginTop: 22}} />
 
               <Text style={{...styles.content_title, marginTop: 44}}>Location</Text>
 
@@ -112,7 +113,7 @@ export const FiltersView: React.FC<props> = (props: props) => {
                   </View>
                 </TouchableWithoutFeedback>
 
-                <TextInput
+                <CustomTextInput
                   style={{...GlobalStyle.auth_input, paddingLeft: 25, color: COLOR.systemBlackColor}}
                   placeholder={'Search Location'}
                   placeholderTextColor={COLOR.alphaBlackColor75}
@@ -133,7 +134,7 @@ export const FiltersView: React.FC<props> = (props: props) => {
               <View style={{...GlobalStyle.auth_line, backgroundColor: COLOR.alphaBlackColor20, marginTop: 22}} />
               <Text style={styles.content_text}>Nashville, TN</Text>
               <View style={{...GlobalStyle.auth_line, backgroundColor: COLOR.alphaBlackColor20, marginTop: 22}} />
-              <Text style={styles.content_text}>New York, NY</Text> */}
+              <Text style={styles.content_text}>New York, NY</Text>
 
             </View>
           {/* </KeyboardAvoidingView> */}

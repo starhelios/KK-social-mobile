@@ -18,7 +18,7 @@ import { SvgXml } from 'react-native-svg';
 import Spinner from 'react-native-loading-spinner-overlay';
 
 // from app
-import { COLOR, ERROR_MESSAGE, FONT, Icon_Back, Img_Auth_Background, MARGIN_TOP } from '../../constants';
+import { COLOR, CustomTextInput, ERROR_MESSAGE, FONT, Icon_Back, Img_Auth_Background, MARGIN_TOP } from '../../constants';
 import { ColorButton } from '../../components/Button';
 import { useAuthentication } from '../../hooks';
 import { IApiError, IApiSuccessMessage } from '../../interfaces/api';
@@ -56,7 +56,7 @@ export const ForgotPasswordScreen: React.FC = () => {
             <View style={styles.input_container}>
               <View style={{width:'100%', marginTop: 22}}>
                 <Text style={styles.info_title}>Email Address</Text>
-                <TextInput
+                <CustomTextInput
                   style={GlobalStyle.auth_input}
                   keyboardType={'email-address'}
                   placeholder={'Email Address'}

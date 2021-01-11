@@ -1,14 +1,7 @@
 import axios from 'axios';
 
 // from app
-import { 
-  API_CONFIG, 
-  API_ENDPOINT, 
-  EMAIL_LOGIN, 
-  GOOGLE_LOGIN, 
-  SetApiConfig, 
-  SetLoginState, 
-} from '../constants';
+import { API_CONFIG, API_ENDPOINT, SetApiConfig } from '../constants';
 import { ILoginUser, IToken, ITokens, IUser } from '../interfaces/app';
 import { handleError } from '../utils';
 import { IApiSuccess, IApiSuccessMessage } from '../interfaces/api';
@@ -36,7 +29,6 @@ export const useAuthentication = () => {
     try {
       const { data } = await axios.post<IApiSuccess>(url, body, API_CONFIG);
       const result: ILoginUser = data.payload;
-      SetLoginState(EMAIL_LOGIN);
       setLoginUserInfo(result);
       return Promise.resolve(true);
     } catch (err) {
@@ -63,7 +55,6 @@ export const useAuthentication = () => {
     try {
       const { data } = await axios.post<IApiSuccess>(url, body, API_CONFIG);
       const result: ILoginUser = data.payload;
-      SetLoginState(EMAIL_LOGIN);
       setLoginUserInfo(result);
       return Promise.resolve(true);
     } catch (err) {
@@ -84,7 +75,7 @@ export const useAuthentication = () => {
     const body = {
       refreshToken,
     }
-    SetLoginState('');
+
     try {
       const { data } = await axios.post<IApiSuccess>(url, body, API_CONFIG);
       return Promise.resolve(true);
@@ -204,7 +195,16 @@ export const useAuthentication = () => {
   const setLoginUser = (user: IUser) => {
     dispatch({
       type: ActionType.SET_USER_INFO,
-      payload: user,
+      payload: {
+        id: user.id,
+        fullname: user.fullname,
+        isHost: user.isHost,
+        email: user.email,
+        status: user.status,
+        
+        avatarUrl: user.avatarUrl,
+        dateOfBirth: user.dateOfBirth, 
+      },
     });
   }
 
@@ -230,18 +230,15 @@ export const useAuthentication = () => {
   };
 
   const loginByGoogle = async (
-    accessToken: string,
+    code: string,
   ): Promise<any> => {
     const url = API_ENDPOINT.USER_LOGIN_GOOGLE;
     const body = {
-      accessToken,
+      code,
     }
+
     try {
       const { data } = await axios.post<IApiSuccess>(url, body, API_CONFIG);
-      const result: ILoginUser = data.payload;
-      console.log(result);
-      SetLoginState(GOOGLE_LOGIN);
-      setLoginUserInfo(result);
       return Promise.resolve(true);
     } catch (err) {
       const apiError = handleError(err);

@@ -18,6 +18,7 @@ import Moment from 'moment';
 // from app
 import { 
   COLOR, 
+  convertStringToDateFormat, 
   FONT, 
   Icon_Back_Black,
   Icon_Experience_Rating,
@@ -75,7 +76,7 @@ export const ExperienceDetailConfirmPayScreen: React.FC = ({route}) => {
           <Text style={styles.info_title}>Details</Text>
 
           <Text style={styles.info_detail_title}>Date</Text>
-          <Text style={styles.info_detail_content}>{Moment(availableDate.day).format('ddd, MMM DD') + '    ' + availableDate.startTime + ' - ' + availableDate.endTime}</Text>
+          <Text style={styles.info_detail_content}>{convertStringToDateFormat(availableDate.day, 'ddd, MMM DD') + '    ' + availableDate.startTime + ' - ' + availableDate.endTime}</Text>
           <View style={styles.line} />
 
           <Text style={styles.info_detail_title}>Guest</Text>

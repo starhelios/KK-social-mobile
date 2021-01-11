@@ -14,6 +14,7 @@ import Moment from 'moment';
 // from app
 import { 
   COLOR, 
+  convertStringToDateFormat, 
   FONT,
   Icon_Close_Black,
 } from '../../constants';
@@ -44,8 +45,8 @@ export const SelectDateView: React.FC<props> = (props: props) => {
       updateMarkerDate(props.selectedDate);
     }
 
-    const currentDate = Moment(new Date()).format('YYYY-MM-DD');
-    setCurrentDate(currentDate);
+    // const currentDate = convertStringToDateFormat('', 'YYYY-MM-DD');
+    // setCurrentDate(currentDate);
   }, []);
 
   return (
@@ -69,8 +70,8 @@ export const SelectDateView: React.FC<props> = (props: props) => {
 
         <View style={styles.calendar}>
           <Calendar
-            current={ currentDate }
-            markedDates={ markedDates }
+            current={ '2012-03-01' }
+            // markedDates={ markedDates }
 
             style={{backgroundColor: COLOR.clearColor}}
             theme={{
@@ -86,13 +87,13 @@ export const SelectDateView: React.FC<props> = (props: props) => {
               indicatorColor: COLOR.systemBlackColor,
             }}
             onDayPress={(day) => {
-              if (day.dateString != selectedDate) {
-                setSelectedDate(day.dateString);
-                updateMarkerDate(day.dateString);
-              } else {
-                setSelectedDate('');
-                updateMarkerDate('');
-              }
+              // if (day.dateString != selectedDate) {
+              //   setSelectedDate(day.dateString);
+              //   updateMarkerDate(day.dateString);
+              // } else {
+              //   setSelectedDate('');
+              //   updateMarkerDate('');
+              // }
             }}
             onDayLongPress={(day) => { console.log('selected day', day) }}
             onMonthChange={(month) => { console.log('month changed', month) }}

@@ -22,6 +22,7 @@ import ImagePicker from 'react-native-image-crop-picker';
 // from app
 import { 
   COLOR, 
+  CustomTextInput, 
   FONT, 
   Icon_Back_Black,
   Icon_Search_Black,
@@ -103,7 +104,7 @@ export const EditExperienceScreen: React.FC = ({route}) => {
                   <View style={{marginLeft: 24, marginRight: 24, width: viewportWidth - 48}}>
                       <View style={{width:'100%', marginTop: 33}}>
                         <Text style={styles.info_title}>Title</Text>
-                        <TextInput
+                        <CustomTextInput
                           style={{...GlobalStyle.auth_input, color: COLOR.systemBlackColor}}
                           numberOfLines={1}
                           placeholder={'Title'}
@@ -116,7 +117,7 @@ export const EditExperienceScreen: React.FC = ({route}) => {
 
                       <View style={{width:'100%', marginTop: 22}}>
                         <Text style={styles.info_title}>Description</Text>
-                        <TextInput
+                        <CustomTextInput
                           style={{...GlobalStyle.auth_input, color: COLOR.systemBlackColor}}
                           placeholder={'Description'}
                           numberOfLines={1}
@@ -129,7 +130,7 @@ export const EditExperienceScreen: React.FC = ({route}) => {
 
                       <View style={{width:'100%', marginTop: 22}}>
                         <Text style={styles.info_title}>Duration (in minutes)</Text>
-                        <TextInput
+                        <CustomTextInput
                           style={{...GlobalStyle.auth_input, color: COLOR.systemBlackColor}}
                           keyboardType={'numeric'}
                           numberOfLines={1}
@@ -145,7 +146,7 @@ export const EditExperienceScreen: React.FC = ({route}) => {
                         <Text style={styles.info_title}>Price / Person</Text>
                         <View style={{flexDirection: 'row'}}>
                           <Text style={styles.price}>$</Text>
-                          <TextInput
+                          <CustomTextInput
                             style={{...GlobalStyle.auth_input, color: COLOR.systemBlackColor}}
                             keyboardType={'numeric'}
                             placeholder={'Price'}
@@ -160,7 +161,7 @@ export const EditExperienceScreen: React.FC = ({route}) => {
 
                       <View style={{width:'100%', marginTop: 22}}>
                         <Text style={styles.info_title}>Category</Text>
-                        <TextInput
+                        <CustomTextInput
                           style={{...GlobalStyle.auth_input, paddingLeft: 25, color: COLOR.systemBlackColor}}
                           placeholder={'Search Categories'}
                           placeholderTextColor={COLOR.alphaBlackColor75}

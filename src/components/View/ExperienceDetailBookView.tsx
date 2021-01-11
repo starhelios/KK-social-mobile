@@ -9,7 +9,7 @@ import {
 import Moment from 'moment';
 
 // from app
-import { COLOR, FONT } from '../../constants';
+import { COLOR, convertStringToDateFormat, FONT } from '../../constants';
 import { IAvailableDate, IExperience } from '../../interfaces/app';
 import { ColorButton } from '../Button';
 import GlobalStyle from '../../styles/global';
@@ -32,7 +32,7 @@ export const ExperienceDetailBookView: React.FC<props> = (props: props) => {
     <View>
     {
       availableDate.show_date == true
-      ? <Text style={styles.date}>{Moment(availableDate.day).format('ddd, MMM D')}</Text>
+      ? <Text style={styles.date}>{convertStringToDateFormat(availableDate.day, 'ddd, MMM D')}</Text>
       : null
     }
 

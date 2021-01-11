@@ -101,9 +101,9 @@ export const LoginProfileView: React.FC = () => {
           </TouchableWithoutFeedback>
 
           <Text style={{...styles.content_title, marginTop: 44}}>Hosting</Text>
-          <TouchableWithoutFeedback onPress={() => navigate('HostAnExperience') }>
+          <TouchableWithoutFeedback onPress={() => profile.isHost == true ? navigate('HostAnExperience') : navigate('BecomeAHost') }>
             <View style={{width:'100%', marginTop: 22}}>
-              <TitleArrowButton title={''} name={'Host An Experience'} showArrow={true} white_color={true} />
+              <TitleArrowButton title={''} name={profile.isHost == true ? 'Host An Experience' : 'Become a Host'} showArrow={true} white_color={true} />
             </View>
           </TouchableWithoutFeedback>
 

@@ -14,7 +14,7 @@ import { useNavigation } from '@react-navigation/native';
 import { SvgXml } from 'react-native-svg';
 
 // from app
-import { COLOR, ERROR_MESSAGE, FONT, Icon_Back, Img_Edit_Profile_Background, MARGIN_TOP, SUCCESS_MESSAGE } from '../../constants';
+import { COLOR, ERROR_MESSAGE, FONT, Icon_Back, Img_Edit_Profile_Background, MARGIN_TOP } from '../../constants';
 import { ColorButton } from '../../components/Button';
 import { IFile, IUser } from '../../interfaces/app';
 import { useAuthentication, useUsers } from '../../hooks';
@@ -25,12 +25,25 @@ const { width: viewportWidth } = Dimensions.get('window');
 
 export const SignUpAddProfilePictureConfirmScreen: React.FC = ({route}) => {
 
-  const { navigate, goBack } = useNavigation();
-  const { updateUserInformation } = useUsers();
+  const { reset, goBack } = useNavigation();
+  const { updateAvatar } = useUsers();
   const { setLoginUser } = useAuthentication();
 
   const profile_icon: IFile = route.params.profile_icon;
   const userInfo: IUser = useGlobalState('userInfo');
+
+  const onContinue = () => {
+    updateAvatar(userInfo.id, profile_icon)
+    .then(async (result: Promise<IUser>) => {
+      setLoginUser(await result);
+      reset({
+        index: 0,
+        routes: [{ name: 'TabBar' }],
+      });
+    }).catch(() => {
+      Alert.alert(ERROR_MESSAGE.UPDATE_USER_PROFILE_FAIL);
+    });
+  }
 
   return (
     <Container style={styles.background}>
@@ -43,7 +56,7 @@ export const SignUpAddProfilePictureConfirmScreen: React.FC = ({route}) => {
 
           <TouchableWithoutFeedback onPress={() => goBack()}>
             <View style={styles.back_icon}>
-              {/* <SvgXml width='100%' height='100%' xml={Icon_Back} /> */}
+              <SvgXml width='100%' height='100%' xml={Icon_Back} />
             </View>
           </TouchableWithoutFeedback>
         </View>
@@ -57,29 +70,18 @@ export const SignUpAddProfilePictureConfirmScreen: React.FC = ({route}) => {
               <Image style={styles.profile} source={{uri: profile_icon.uri}} />
             </TouchableWithoutFeedback>
           </View>
+        </View>
 
-          <View style={styles.bottom_container}>
-            <TouchableWithoutFeedback onPress={() => onContinue() }>
-              <View style={{ ...styles.bottom_button, marginTop: 0 }}>
-                <ColorButton title={'Continue'} backgroundColor={COLOR.whiteColor} color={COLOR.blackColor} />
-              </View>
-            </TouchableWithoutFeedback>
-          </View>
-          
+        <View style={styles.bottom_container}>
+          <TouchableWithoutFeedback onPress={() => onContinue() }>
+            <View style={{ ...styles.bottom_button, marginTop: 0 }}>
+              <ColorButton title={'Continue'} backgroundColor={COLOR.whiteColor} color={COLOR.blackColor} />
+            </View>
+          </TouchableWithoutFeedback>
         </View>
       </SafeAreaView>
     </Container>
   );
-
-  function onContinue() {
-    updateUserInformation(userInfo.id, userInfo.email, userInfo.fullname, profile_icon, '', '')
-    .then(async (result: Promise<IUser>) => {
-      setLoginUser(await result);
-      Alert.alert(SUCCESS_MESSAGE.UPDATE_USER_PROFILE_SUCCESS);
-    }).catch(() => {
-      Alert.alert(ERROR_MESSAGE.UPDATE_USER_PROFILE_FAIL);
-    });
-  }
 };
 
 const styles = StyleSheet.create({
@@ -115,7 +117,6 @@ const styles = StyleSheet.create({
     marginLeft: 24,
     width: 20,
     height: '100%',
-    backgroundColor: '#F00',
   },
   description_text: {
     marginTop: 33,
@@ -129,14 +130,14 @@ const styles = StyleSheet.create({
     color: COLOR.systemWhiteColor,
   },
   container: {
+    marginTop: 0,
     width: '100%',
-    height: '100%',
     flex: 1,
+    flexDirection: 'row',
+    marginBottom: 150,
   },
   profile_container: {
     width: '100%',
-    height: '100%',
-    bottom: 134,
     alignItems: 'center',
     justifyContent: 'space-evenly',
   },
@@ -157,7 +158,7 @@ const styles = StyleSheet.create({
     width: '100%',
     height: 134,
     flex: 1,
-    bottom: 0,
+    bottom: 33,
     flexDirection: 'row',
   },
   bottom_button: {

@@ -23,6 +23,7 @@ import DefaultPreference from 'react-native-default-preference';
 // from app
 import { 
   COLOR, 
+  CustomTextInput, 
   EMAIL_LOGIN, 
   ERROR_MESSAGE, 
   FONT, Icon_Back, 
@@ -44,13 +45,61 @@ const { width: viewportWidth, height: viewportHeight } = Dimensions.get('window'
 
 export const SignUpScreen: React.FC = () => {
 
-  const { navigate, goBack } = useNavigation();
+  const { reset, goBack } = useNavigation();
   const { registerUser } = useAuthentication();
 
   const [fullName, setFullName] = useState('');
   const [emailAddress, setEmailAddress] = useState('');
   const [password, setPassword] = useState('');
   const [fetchingData, setFetchingData] = useState<boolean>(false);
+
+  const onCreateAccount = () => {
+    if (fetchingData == true) {
+      return;
+    } if (fullName == '') {
+      Alert.alert(ERROR_MESSAGE.EMPTY_FULL_NAME);
+      return;
+    } else if (emailAddress == '') {
+      Alert.alert(ERROR_MESSAGE.EMPTY_EMAIL_ADDRESS);
+      return;
+    } else if (password == '') {
+      Alert.alert(ERROR_MESSAGE.EMPTY_PASSWORD);
+      return;
+    }
+    setFetchingData(true);
+
+    registerUser(fullName, emailAddress, password)
+    .then(async (result: Promise<Boolean>) => {
+      setFetchingData(false);
+      if ((await result) == true) {
+        saveUserInfo();
+        reset({
+          index: 0,
+          routes: [{ name: 'SignUpAddProfilePicture' }],
+        });
+      } else {
+        Alert.alert(ERROR_MESSAGE.REGISTER_FAIL);
+      }
+    }).catch(async (error: Promise<IApiError>) => {
+      setFetchingData(false);
+      Alert.alert((await error).error.message);
+    }).catch(() => {
+      setFetchingData(false);
+      Alert.alert(ERROR_MESSAGE.REGISTER_FAIL);
+    });
+  }
+
+  const saveUserInfo = () => {
+    DefaultPreference.set(LOGIN_TYPE, EMAIL_LOGIN).then(function() { });
+    DefaultPreference.set(USER_EMAIL, emailAddress).then(function() { });
+    DefaultPreference.set(PASSWORD, password).then(function() { });
+    DefaultPreference.get(IS_FIRST_LOGIN).then(function(is_first_login) {
+      if (is_first_login != null && is_first_login == 'false') {
+      } else {
+        DefaultPreference.set(IS_FIRST_LOGIN, 'false').then(function() { });
+      }
+    });
+  }
 
   return (
     <Container style={styles.background}>
@@ -74,7 +123,7 @@ export const SignUpScreen: React.FC = () => {
                 <View style={styles.input_container}>
                   <View style={{width:'100%'}}>
                     <Text style={styles.info_title}>Full Name</Text>
-                    <TextInput
+                    <CustomTextInput
                       style={GlobalStyle.auth_input}
                       numberOfLines={1}
                       scrollEnabled={false}
@@ -88,7 +137,7 @@ export const SignUpScreen: React.FC = () => {
 
                   <View style={{width:'100%', marginTop: 22}}>
                     <Text style={styles.info_title}>Email Address</Text>
-                    <TextInput
+                    <CustomTextInput
                       style={GlobalStyle.auth_input}
                       keyboardType={'email-address'}
                       placeholder={'Email Address'}
@@ -102,7 +151,7 @@ export const SignUpScreen: React.FC = () => {
 
                   <View style={{width:'100%', marginTop: 22}}>
                     <Text style={styles.info_title}>Password</Text>
-                    <TextInput
+                    <CustomTextInput
                       style={GlobalStyle.auth_input}
                       placeholder={'Password'}
                       autoCapitalize='none'
@@ -133,51 +182,6 @@ export const SignUpScreen: React.FC = () => {
       />
     </Container>
   );
-
-  function onCreateAccount() {
-    if (fetchingData == true) {
-      return;
-    } if (fullName == '') {
-      Alert.alert(ERROR_MESSAGE.EMPTY_FULL_NAME);
-      return;
-    } else if (emailAddress == '') {
-      Alert.alert(ERROR_MESSAGE.EMPTY_EMAIL_ADDRESS);
-      return;
-    } else if (password == '') {
-      Alert.alert(ERROR_MESSAGE.EMPTY_PASSWORD);
-      return;
-    }
-    setFetchingData(true);
-
-    registerUser(fullName, emailAddress, password)
-    .then(async (result: Promise<Boolean>) => {
-      setFetchingData(false);
-      if ((await result) == true) {
-        saveUserInfo();
-        navigate('SignUpAddProfilePicture');
-      } else {
-        Alert.alert(ERROR_MESSAGE.REGISTER_FAIL);
-      }
-    }).catch(async (error: Promise<IApiError>) => {
-      setFetchingData(false);
-      Alert.alert((await error).error.message);
-    }).catch(() => {
-      setFetchingData(false);
-      Alert.alert(ERROR_MESSAGE.REGISTER_FAIL);
-    });
-  }
-
-  function saveUserInfo() {
-    DefaultPreference.set(LOGIN_TYPE, EMAIL_LOGIN).then(function() { });
-    DefaultPreference.set(USER_EMAIL, emailAddress).then(function() { });
-    DefaultPreference.set(PASSWORD, password).then(function() { });
-    DefaultPreference.get(IS_FIRST_LOGIN).then(function(is_first_login) {
-      if (is_first_login != null && is_first_login == 'false') {
-      } else {
-        DefaultPreference.set(IS_FIRST_LOGIN, 'false').then(function() { });
-      }
-    });
-  }
 };
 
 const styles = StyleSheet.create({
@@ -236,7 +240,6 @@ const styles = StyleSheet.create({
   },
   bottom_button: {
     position: 'absolute',
-    // top: viewportHeight - 77,
     bottom: 33,
     marginLeft: 48,
     marginRight: 48,

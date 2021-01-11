@@ -48,11 +48,11 @@ export const useUsers = () => {
     userId: string,
     email: string,
     fullname: string,
-    dateOfBirth: string,
+    avatar: IFile | null,
+    categoryName: string,
     aboutMe: string,
     location: string,
-    categoryName: string,
-    avatar: IFile | null,
+    dateOfBirth: string,
   ): Promise<any> => {
     const url = API_ENDPOINT.USERS + '/' + userId;
 
@@ -78,7 +78,7 @@ export const useUsers = () => {
       if (apiError) {
         return Promise.reject(apiError);
       } else {
-        return Promise.reject(null);
+        return Promise.resolve(false);
       }
     }
   };
@@ -103,11 +103,13 @@ export const useUsers = () => {
 
     try {
       const { data } = await axios.patch<any>(url, body, API_CONFIG);
+      console.log(data);
       const result: IUser = data.payload;
       return Promise.resolve(result);
     } catch (err) {
       const apiError = handleError(err);
       if (apiError) {
+        console.log(apiError);
         return Promise.reject(apiError);
       } else {
         return Promise.resolve(false);
@@ -132,7 +134,7 @@ export const useUsers = () => {
       if (apiError) {
         return Promise.reject(apiError);
       } else {
-        return Promise.reject(null);
+        return Promise.resolve(false);
       }
     }
   };
