@@ -146,8 +146,8 @@ export const HomeScreen: React.FC = () => {
   function onFilterExperience(lowPrice: number, highPrice: number, location: string) {
     let minPrice = lowPrice;
     var maxPrice = highPrice;
-    if (maxPrice == 1000) {
-      maxPrice = 0
+    if (minPrice == 0 && maxPrice == 1000) {
+      maxPrice = 0;
     }
 
     dispatch({
