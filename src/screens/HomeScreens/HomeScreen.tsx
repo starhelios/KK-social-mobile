@@ -9,6 +9,7 @@ import {
   Modal,
   KeyboardAvoidingView,
   Platform,
+  Alert,
 } from 'react-native';
 import { useEffect, useState } from 'react';
 import { Container } from 'native-base';
@@ -22,6 +23,7 @@ import {
   convertStringToDateFormat, 
   CustomText, 
   CustomTextInput, 
+  ERROR_MESSAGE, 
   FONT, 
   Icon_Filter, 
   Icon_Search, 
@@ -126,6 +128,9 @@ export const HomeScreen: React.FC = () => {
       await filterExperiences(filter.minPrice, filter.maxPrice, filter.startDay, filter.endDay, filter.categoryName)
       .then(async (result: Promise<IExperience[]>) => {
         setExperienceList(await result);
+        if ((await result).length == 0) {
+          Alert.alert(ERROR_MESSAGE.UPDATE_SEARCH_CONDITION);
+        }
         // setFetchingData(false);
       }).catch(() => {
         setExperienceList([]);
@@ -182,7 +187,7 @@ export const HomeScreen: React.FC = () => {
       if (selectedFromDate == selectedEndDate) {
         visibleDateString = convertStringToDateFormat(selectedFromDate, 'MMMM D');
       } else {
-        visibleDateString = convertStringToDateFormat(selectedFromDate, 'MMMM YYYY');
+        visibleDateString = convertStringToDateFormat(selectedFromDate, 'MMM D') + ' ~ ' + convertStringToDateFormat(selectedEndDate, 'MMM D');
       }      
     }
 
