@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>670577491944-41kkju36r8m33sk0h5974f8o5tqfd7ma.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.670577491944-41kkju36r8m33sk0h5974f8o5tqfd7ma</string>
+	<key>ANDROID_CLIENT_ID</key>
+	<string>670577491944-h3tvr9qj62mgp498sk8letj7uffi0cra.apps.googleusercontent.com</string>
+	<key>API_KEY</key>
+	<string>AIzaSyCCIgsuN1XPUum_xyyPYQAIoCL7O0bl5Cs</string>
+	<key>GCM_SENDER_ID</key>
+	<string>670577491944</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>org.name.KloutKast</string>
+	<key>PROJECT_ID</key>
+	<string>kloutkast-81183</string>
+	<key>STORAGE_BUCKET</key>
+	<string>kloutkast-81183.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:670577491944:ios:a994c7ca8cf1cbab592e5d</string>
+</dict>
+</plist>

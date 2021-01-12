@@ -1,29 +1,50 @@
 {
-  "expo": {
-    "name": "kk-app",
-    "slug": "kk-app",
-    "version": "1.0.0",
-    "orientation": "portrait",
-    "icon": "./src/assets/images/icon.png",
-    "scheme": "myapp",
-    "userInterfaceStyle": "automatic",
-    "splash": {
-      "image": "./src/assets/images/splash.png",
-      "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
-    },
-    "updates": {
-      "fallbackToCacheTimeout": 0
-    },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
-    "ios": {
-      "supportsTablet": true
-    },
-    "web": {
-      "favicon": "./src/assets/images/favicon.png"
-    },
-    "description": ""
+  "name": "KloutKast",
+  "displayName": "KloutKast",
+  "icon": "./src/assets/images/icon.png",
+  "scheme": "myapp",
+  "userInterfaceStyle": "automatic",
+  "splash": {
+    "image": "./src/assets/images/splash.png",
+    "resizeMode": "contain",
+    "backgroundColor": "#ffffff"
+  },
+  "orientation": "portrait",
+  "updates": {
+    "fallbackToCacheTimeout": 0
+  },
+  "assetBundlePatterns": [
+    "**/*"
+  ],
+  "ios": {
+    "supportsTablet": true,
+    "bundleIdentifier": "com.dragon.kloutkast"
+  },
+  "web": {
+    "favicon": "./src/assets/images/favicon.png"
+  },
+  "description": "",
+  "apiEndpoint": {
+    "local": "http://35.232.226.9/api/v1",
+    "dev": "http://35.232.226.9/api/v1"
+  },
+  "packagerOpts": {
+    "config": "metro.config.js",
+    "sourceExts": [
+      "expo.ts",
+      "expo.tsx",
+      "expo.js",
+      "expo.jsx",
+      "ts",
+      "tsx",
+      "js",
+      "jsx",
+      "json",
+      "wasm",
+      "svg"
+    ]
+  },
+  "android": {
+    "package": "com.dragon.kloutkast"
   }
 }

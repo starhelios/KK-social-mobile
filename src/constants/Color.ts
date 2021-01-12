@@ -1,0 +1,18 @@
+export const COLOR = {
+  systemWhiteColor: '#FFF',
+  systemBlackColor: '#000',
+  systemRedColor: '#F00',
+  clearColor: '#0000',
+  blackColor: '#2A2A29',
+  redColor: '#E41E35',
+  blueColor: '#1778F2',
+  whiteColor: '#EAEAEA',
+  whiteBorderColor: '#979797',
+  selectedCategoryBackgroundColor: '#9797973F',
+  alphaBlackColor20: '#0003',
+  alphaBlackColor50: '#0008',
+  alphaBlackColor75: '#000B',
+  alphaWhiteColor20: '#FFF3',
+  alphaWhiteColor50: '#FFF8',
+  alphaWhiteColor75: '#FFFB',
+};
