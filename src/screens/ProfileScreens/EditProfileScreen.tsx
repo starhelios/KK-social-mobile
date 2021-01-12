@@ -2,13 +2,10 @@ import * as React from 'react';
 import {
   SafeAreaView,
   StyleSheet,
-  Text,
   View,
   TouchableWithoutFeedback,
-  Dimensions,
   Image,
   Platform,
-  TextInput,
   ScrollView,
   Alert,
   Keyboard,
@@ -22,21 +19,23 @@ import ImagePicker from 'react-native-image-crop-picker';
 import LinearGradient from 'react-native-linear-gradient';
 import DateTimePicker from '@react-native-community/datetimepicker';
 
-
 // from app
 import { 
-  choosePhoto,
   COLOR, 
   convertDateToDateFormat, 
   convertStringToDateFormat, 
+  CustomText, 
   CustomTextInput, 
+  EMAIL_LOGIN, 
   ERROR_MESSAGE, 
   FONT, 
   Icon_Back,
   Icon_Camera,
   Icon_Normal_Profile,
+  LOGIN_STATE,
   MARGIN_TOP,
   SUCCESS_MESSAGE,
+  viewportWidth,
 } from '../../constants';
 import { ColorButton, TitleArrowButton } from '../../components/Button';
 import { useGlobalState } from '../../redux/Store';
@@ -44,8 +43,6 @@ import { IFile, IUser } from '../../interfaces/app';
 import { useUsers, useAuthentication } from '../../hooks';
 import GlobalStyle from '../../styles/global';
 
-
-const { width: viewportWidth, height: viewportHeight } = Dimensions.get('window');
 
 export const EditProfileScreen: React.FC = () => {
 
@@ -88,7 +85,7 @@ export const EditProfileScreen: React.FC = () => {
       <TouchableWithoutFeedback onPress={() => onDismiss()} accessible={false}>
         <SafeAreaView style={styles.safe_area}>
           <View style={styles.navigation_bar}>
-            <Text style={styles.title}>Edit Profile</Text>
+            <CustomText style={styles.title}>Edit Profile</CustomText>
 
             <TouchableWithoutFeedback onPress={() => goBack()}>
               <View style={styles.back_icon}>
@@ -126,7 +123,7 @@ export const EditProfileScreen: React.FC = () => {
 
                   <View style={{marginLeft: 24, marginRight: 24, width: viewportWidth - 48, paddingBottom: 10}}>
                       <View style={{width:'100%', marginTop: 33}}>
-                        <Text style={styles.info_title}>Full Name</Text>
+                        <CustomText style={styles.info_title}>Full Name</CustomText>
                         <CustomTextInput
                           style={GlobalStyle.auth_input}
                           placeholder={'Full Name'}
@@ -138,31 +135,34 @@ export const EditProfileScreen: React.FC = () => {
                       </View>
 
                       <View style={{width:'100%', marginTop: 22}}>
-                        <Text style={styles.info_title}>Email Address</Text>
+                        <CustomText style={styles.info_title}>Email Address</CustomText>
                         <CustomTextInput
-                          style={GlobalStyle.auth_input}
+                          style={{...GlobalStyle.auth_input, color: LOGIN_STATE == EMAIL_LOGIN ? COLOR.systemWhiteColor : COLOR.alphaWhiteColor50}}
                           keyboardType={'email-address'}
                           placeholder={'Email Address'}
                           placeholderTextColor={COLOR.alphaWhiteColor50}
                           onChangeText={text => setEmailAddress(text)}
                           value={emailAddress}
+                          editable={LOGIN_STATE == EMAIL_LOGIN ? true : false}
                         />
                         <View style={GlobalStyle.auth_line} />
                       </View>
 
                       <View style={{width:'100%', marginTop: 22}}>
-                        <Text style={styles.info_title}>Date of Birth</Text>
+                        <CustomText style={styles.info_title}>Date of Birth</CustomText>
                         <TouchableWithoutFeedback onPress={() => onSelectBirthday()}>
-                          <Text style={{...GlobalStyle.auth_input, lineHeight: 45}}>{birthday}</Text>
+                          <CustomText style={{...GlobalStyle.auth_input, lineHeight: 45}}>{birthday}</CustomText>
                         </TouchableWithoutFeedback>
                         <View style={GlobalStyle.auth_line} />
                       </View>
 
-                      <TouchableWithoutFeedback onPress={() => navigate('ChangePassword') }>
-                        <View style={{width:'100%', marginTop: 44}}>
-                          <TitleArrowButton title={'Security'} name={'Change Password'} showArrow={true} white_color={true} />
-                        </View>
-                      </TouchableWithoutFeedback>
+                      {LOGIN_STATE == EMAIL_LOGIN &&
+                        <TouchableWithoutFeedback onPress={() => navigate('ChangePassword') }>
+                          <View style={{width:'100%', marginTop: 44}}>
+                            <TitleArrowButton title={'Security'} name={'Change Password'} showArrow={true} white_color={true} />
+                          </View>
+                        </TouchableWithoutFeedback>
+                      }
                     </View>
                 </ScrollView>
               </KeyboardAvoidingView>
@@ -192,7 +192,7 @@ export const EditProfileScreen: React.FC = () => {
                 />
                 <TouchableWithoutFeedback onPress={() => onConfirmBirthday() }>
                   <View style={styles.datePickerConfirm}>
-                    <Text style={styles.confirm_text}>Confirm</Text>
+                    <CustomText style={styles.confirm_text}>Confirm</CustomText>
                   </View>
                 </TouchableWithoutFeedback>
               </View>

@@ -1,13 +1,8 @@
 import * as React from 'react';
-import {
-  StyleSheet,
-  Text,
-  TouchableWithoutFeedback,
-  View,
-} from 'react-native';
+import { StyleSheet, TouchableWithoutFeedback, View } from 'react-native';
 
 // from app
-import { COLOR, FONT } from '../../constants';
+import { COLOR, CustomText, FONT } from '../../constants';
 import { ICard } from '../../interfaces/app';
 
 interface props {
@@ -18,7 +13,7 @@ export const YourCardButton: React.FC<props> = (props: props) => {
   return (
     <TouchableWithoutFeedback onPress={() => onSelectCard() }>
       <View style={styles.container}>
-        <Text style={styles.card_number}>{props.card.number}</Text>
+        <CustomText style={styles.card_number}>{props.card.number}</CustomText>
         <View style={styles.info_line} />
       </View>
     </TouchableWithoutFeedback>

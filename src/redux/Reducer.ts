@@ -1,4 +1,5 @@
 import { 
+  ICategory,
   IExperience,
   IFilter,
   IHost,
@@ -13,6 +14,7 @@ export enum ActionType {
   SET_FILTER = 'SET_FILTER',
   SET_EXPERIENCE_LIST = 'SET_EXPERIENCE_LIST',
   SET_HOST_LIST = 'SET_HOST_LIST',
+  SET_CATEGORY_LIST = 'SET_CATEGORY_LIST',
 }
 
 export interface Action {
@@ -27,7 +29,8 @@ export interface State {
   refreshToken: IToken;
   filter: IFilter;
   experienceList: IExperience[];
-  hostList: IHost[],
+  hostList: IHost[];
+  categoryList: ICategory[];
 }
 
 /** Reducer */
@@ -52,6 +55,9 @@ const Reducer = (state: State, action: Action): any => {
 
     case ActionType.SET_HOST_LIST:
       return {...state, hostList: payload};
+
+    case ActionType.SET_CATEGORY_LIST:
+      return {...state, categoryList: payload};
 
     default:
       break;

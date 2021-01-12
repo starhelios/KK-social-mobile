@@ -1,5 +1,5 @@
-// const API_HOST = 'https://kloutkast-backend.herokuapp.com/v1';
-const API_HOST = 'http://192.168.101.16:4000/v1';
+const API_HOST = 'https://kloutkast-backend.herokuapp.com/v1';
+// const API_HOST = 'http://192.168.101.16:4000/v1';
 
 export const API_ENDPOINT = {
   // Authentication
@@ -26,4 +26,7 @@ export const API_ENDPOINT = {
 
   // Hosts
   HOSTS : `${API_HOST}/hosts`,
+
+  // Tutorials
+  TUTORIALS : `${API_HOST}/tutorials`,
 };

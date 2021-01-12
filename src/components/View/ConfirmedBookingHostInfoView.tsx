@@ -1,20 +1,20 @@
 import * as React from 'react';
 import {
   StyleSheet,
-  Text,
   View,
   Image,
   TouchableWithoutFeedback,
-  Dimensions,
 } from 'react-native';
 import { SvgXml } from 'react-native-svg';
 
 // from app
 import { 
   COLOR, 
+  CustomText, 
   FONT,
   Icon_Dot_Menu_White,
   Img_User_Avatar,
+  viewportWidth,
 } from '../../constants';
 import { IBooking } from '../../interfaces/app';
 
@@ -22,8 +22,6 @@ interface props {
   booking: IBooking;
   isCompleted: boolean;
 }
-
-const { width: viewportWidth } = Dimensions.get('window');
 
 export const ConfirmedBookingHostInfoView: React.FC<props> = (props: props) => {
 
@@ -38,7 +36,7 @@ export const ConfirmedBookingHostInfoView: React.FC<props> = (props: props) => {
           <Image style={{width: '100%', height: '100%'}} source={booking.host?.avatarUrl == '' ? Img_User_Avatar : {uri: booking.host?.avatarUrl}} />
         </View>
         
-        <Text style={styles.username} numberOfLines={1}>{ booking.host?.fullname }</Text>
+        <CustomText style={styles.username} numberOfLines={1}>{ booking.host?.fullname }</CustomText>
 
         <TouchableWithoutFeedback onPress={() => onMenu()}>
             <View style={styles.dot_menu}>

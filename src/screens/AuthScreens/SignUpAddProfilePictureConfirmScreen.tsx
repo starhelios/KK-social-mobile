@@ -2,11 +2,9 @@ import * as React from 'react';
 import {
   SafeAreaView,
   StyleSheet,
-  Text,
   View,
   Image,
   TouchableWithoutFeedback,
-  Dimensions,
   Alert,
 } from 'react-native';
 import { Container } from 'native-base';
@@ -14,14 +12,21 @@ import { useNavigation } from '@react-navigation/native';
 import { SvgXml } from 'react-native-svg';
 
 // from app
-import { COLOR, ERROR_MESSAGE, FONT, Icon_Back, Img_Edit_Profile_Background, MARGIN_TOP } from '../../constants';
+import { 
+  COLOR, 
+  CustomText, 
+  ERROR_MESSAGE, 
+  FONT, 
+  Icon_Back, 
+  Img_Edit_Profile_Background, 
+  MARGIN_TOP,
+  viewportWidth, 
+} from '../../constants';
 import { ColorButton } from '../../components/Button';
 import { IFile, IUser } from '../../interfaces/app';
 import { useAuthentication, useUsers } from '../../hooks';
 import { useGlobalState } from '../../redux/Store';
 
-
-const { width: viewportWidth } = Dimensions.get('window');
 
 export const SignUpAddProfilePictureConfirmScreen: React.FC = ({route}) => {
 
@@ -52,7 +57,7 @@ export const SignUpAddProfilePictureConfirmScreen: React.FC = ({route}) => {
 
       <SafeAreaView style={styles.safe_area}>
         <View style={styles.navigation_bar}>
-          <Text style={styles.title}>Confirm Picture</Text>
+          <CustomText style={styles.title}>Confirm Picture</CustomText>
 
           <TouchableWithoutFeedback onPress={() => goBack()}>
             <View style={styles.back_icon}>
@@ -61,8 +66,8 @@ export const SignUpAddProfilePictureConfirmScreen: React.FC = ({route}) => {
           </TouchableWithoutFeedback>
         </View>
 
-        <Text style={styles.description_text}>If you need to make a change,</Text>
-        <Text style={{...styles.description_text, marginTop: 0 }}>tap your profile picture below.</Text>
+        <CustomText style={styles.description_text}>If you need to make a change,</CustomText>
+        <CustomText style={{...styles.description_text, marginTop: 0 }}>tap your profile picture below.</CustomText>
 
         <View style={styles.container}>
           <View style={styles.profile_container}>

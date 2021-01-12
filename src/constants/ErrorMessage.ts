@@ -6,6 +6,7 @@ export const ERROR_MESSAGE = {
   EMPTY_NEW_PASSWORD: 'Please input New Password',
   EMPTY_CONFIRM_PASSWORD: 'Please input Confirm Password',
   MISMATCH_PASSWORD: 'New Password and Confirm Password don\'t match.',
+  EMPTY_END_DATE: 'Please select end date.',
 
   REGISTER_FAIL: 'Failed to register user.\nPlease try again.',
   LOGIN_FAIL: 'Failed to login user.\nPlease try again.',

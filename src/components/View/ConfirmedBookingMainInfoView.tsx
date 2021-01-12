@@ -1,16 +1,8 @@
 import * as React from 'react';
-import {
-  Dimensions,
-  StyleSheet,
-  Text,
-  View,
-} from 'react-native';
+import { StyleSheet, View } from 'react-native';
 
 // from app
-import { 
-  COLOR, 
-  FONT, 
-} from '../../constants';
+import { COLOR, CustomText, FONT } from '../../constants';
 import { IBooking } from '../../interfaces/app';
 
 interface props {
@@ -25,9 +17,9 @@ export const ConfirmedBookingMainInfoView: React.FC<props> = (props: props) => {
 
   return (
     <View>
-      <Text style={styles.experience} numberOfLines={1}>{booking.experience}</Text>
+      <CustomText style={styles.experience} numberOfLines={1}>{booking.experience}</CustomText>
       <View style={styles.date_container}>
-        <Text style={styles.date} numberOfLines={1}>{booking.date + ' • ' + booking.hour}</Text>
+        <CustomText style={styles.date} numberOfLines={1}>{booking.date + ' • ' + booking.hour}</CustomText>
       </View>
     </View>
   );

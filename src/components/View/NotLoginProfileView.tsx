@@ -1,12 +1,10 @@
 import * as React from 'react';
 import {
   Alert,
-  Dimensions,
   FlatList,
   Image,
   Platform,
   StyleSheet,
-  Text,
   TouchableWithoutFeedback,
   View,
 } from 'react-native';
@@ -17,50 +15,91 @@ import { appleAuth, appleAuthAndroid } from '@invertase/react-native-apple-authe
 import { v4 as uuid } from 'uuid'
 import PageControl from 'react-native-page-control';
 import DefaultPreference from 'react-native-default-preference';
+import BackgroundTimer from 'react-native-background-timer';
+import Carousel from 'react-native-snap-carousel'
 
 // from app
-import { ACCESS_TOKEN, CODE, COLOR, ERROR_MESSAGE, FONT, GOOGLE_LOGIN, Img_Experience, LOGIN_TYPE, MARGIN_TOP } from '../../constants';
+import {
+  COLOR, 
+  CustomText, 
+  ERROR_MESSAGE, 
+  FONT, 
+  GOOGLE_LOGIN, 
+  Img_Experience, 
+  LOGIN_TYPE, 
+  MARGIN_TOP,
+  viewportWidth, 
+} from '../../constants';
 import { ColorButton } from '../Button';
 import { ContinueText } from '../Text';
-import { IProfileHelp } from '../../interfaces/app';
-import { useAuthentication, useProfileHelps } from '../../hooks';
+import { ITutorial, IUser } from '../../interfaces/app';
+import { useAuthentication, useTutorials } from '../../hooks';
 import { IApiError } from '../../interfaces/api';
+import { useGlobalState } from '../../redux/Store';
 
-const { width: viewportWidth, height: viewportHeight } = Dimensions.get('window');
 
 export const NotLoginProfileView: React.FC = () => {
 
+  const profile: IUser = useGlobalState('userInfo');
+
   const { navigate } = useNavigation();
-  const { profileHelps } = useProfileHelps();
+  const { tutorialList } = useTutorials();
   const { loginByGoogle } = useAuthentication();
 
-  const [profileHelpList, setProfileHelpList] = useState<IProfileHelp[]>([]);
+  const [profileHelpList, setProfileHelpList] = useState<ITutorial[]>([]);
   const [currentPage, setCurrentPage] = useState<number>(0);
   const [loginType, setLoginType] = useState<string>('');
   const [accessToken, setAccessToken] = useState<string>('');
   const [code, setCode] = useState<string>('');
 
-  var scrollViewRef: FlatList<IProfileHelp> | null;
+  var tutorialIndex = 0;
 
   useEffect(() => {
     loadProfileList();
   }, []);
 
   useEffect(() => {
+    updateTutorialImage();
+  }, [profileHelpList]);
+
+  useEffect(() => {
     if (accessToken != '' || code != '') {      
     }
   }, [loginType])
 
+  useEffect(() => {
+    if (profile.id != '') {
+      BackgroundTimer.stopBackgroundTimer();
+    } else {
+      updateTutorialImage();
+    }
+  }, [profile])
+
   async function loadProfileList() {
-    await profileHelps()
-    .then(async (result: Promise<IProfileHelp[]>) => {
-      setProfileHelpList(await result);
+    await tutorialList()
+    .then(async (result: Promise<ITutorial[]>) => {
+      setProfileHelpList(await result);      
     });
+  }
+
+  const updateTutorialImage = () => {
+    BackgroundTimer.stopBackgroundTimer();
+    if (profileHelpList.length == 0) {
+      return;
+    }
+
+    BackgroundTimer.runBackgroundTimer(() => { 
+      tutorialIndex += 1;
+      if (tutorialIndex >= profileHelpList.length) {
+        tutorialIndex = 0;
+      }
+      setCurrentPage(tutorialIndex);
+    }, 3000);
   }
 
   return (
     <View style={{flex: 1}}>
-      <Text style={styles.title}>Your Profile</Text>
+      <CustomText style={styles.title}>Your Profile</CustomText>
 
       <View style={styles.top_description}>
         <ContinueText colorTexts={[
@@ -72,42 +111,41 @@ export const NotLoginProfileView: React.FC = () => {
 
       <View style={styles.auth_container}>
         <TouchableWithoutFeedback onPress={() => navigate('SignUp') }>
-          <Text style={{...styles.auth_text, textDecorationLine: 'underline'}}>Sign up with email</Text>
+          <CustomText style={{...styles.auth_text, textDecorationLine: 'underline'}}>Sign up with email</CustomText>
         </TouchableWithoutFeedback>
 
-        <Text style={styles.auth_text}>  •  </Text>
+        <CustomText style={styles.auth_text}>  •  </CustomText>
 
         <TouchableWithoutFeedback onPress={() => navigate('LogIn') }>
-          <Text style={{...styles.auth_text, textDecorationLine: 'underline'}}>Log in</Text>
+          <CustomText style={{...styles.auth_text, textDecorationLine: 'underline'}}>Log in</CustomText>
         </TouchableWithoutFeedback>
       </View>
 
       <View style={styles.info_container}>
         <FlatList
-            ref={ref => {
-              scrollViewRef = ref;
-            }}
-            style={styles.profile_help_container}
-            contentContainerStyle={{paddingHorizontal: 0}}
-            showsHorizontalScrollIndicator={false}
-            pagingEnabled={true}
-            bounces={false}
-            horizontal={true}
-            data={profileHelpList}
-            keyExtractor={(item, index) => index.toString()}
-            onMomentumScrollEnd={({nativeEvent}) => { 
-              setCurrentPage(Math.round(nativeEvent.contentOffset.x / viewportWidth));
-            }}
-            renderItem={({item}) => renderFlatItemView(item)}
-          />
+          ref={ref => {
+            if (ref != null) {
+              ref.scrollToOffset({animated: true, offset: (viewportWidth - 48) * currentPage});
+            }
+          }}
+          // scrollEnabled={false}
+          style={styles.profile_help_container}
+          contentContainerStyle={{paddingHorizontal: 0}}
+          showsHorizontalScrollIndicator={false}
+          pagingEnabled={true}
+          bounces={false}
+          horizontal={true}
+          data={profileHelpList}
+          keyExtractor={(item, index) => index.toString()}
+          onMomentumScrollEnd={({nativeEvent}) => { 
+            // setCurrentPage(Math.round(nativeEvent.contentOffset.x / viewportWidth));
+          }}
+          renderItem={({item}) => renderFlatItemView(item)}
+        />
 
         {
           profileHelpList.length > 0
-          ? <View style={{...styles.profile_help_description_container, bottom: 212}}>  
-              <Text style={styles.profile_help_description}>
-                {currentPage < profileHelpList.length ? profileHelpList[currentPage].title : ''}
-              </Text>
-
+          ? <View style={{...styles.profile_help_description_container, bottom: 80}}>  
               <PageControl
                 style={{...styles.page_control, bottom: 24}}
                 numberOfPages={profileHelpList.length}
@@ -125,11 +163,11 @@ export const NotLoginProfileView: React.FC = () => {
         }
         
         <View style={styles.social_container}>
-          <TouchableWithoutFeedback onPress={() => onConnectWithFacebook()}>
+          {/* <TouchableWithoutFeedback onPress={() => onConnectWithFacebook()}>
             <View style={{ ...styles.social_button, marginTop: 24 }}>
               <ColorButton title={'Connect With Facebook'} backgroundColor={COLOR.blueColor} color={COLOR.systemWhiteColor} />
             </View>
-          </TouchableWithoutFeedback>
+          </TouchableWithoutFeedback> */}
 
           <TouchableWithoutFeedback onPress={() => onConnectWithGoogle()}>
             <View style={styles.social_button}>
@@ -137,13 +175,13 @@ export const NotLoginProfileView: React.FC = () => {
             </View>
           </TouchableWithoutFeedback>
 
-          { (Platform.OS == 'ios' || appleAuthAndroid.isSupported) && (
+          {/* { (Platform.OS == 'ios' || appleAuthAndroid.isSupported) && (
             <TouchableWithoutFeedback onPress={() => onSignUpWithApple()}>
               <View style={styles.social_button}>
                 <ColorButton title={'Sign Up With Apple'} backgroundColor={COLOR.systemBlackColor} color={COLOR.systemWhiteColor} />
               </View>
             </TouchableWithoutFeedback>
-          )}
+          )} */}
 
         </View>
       </View>
@@ -160,14 +198,10 @@ export const NotLoginProfileView: React.FC = () => {
       .then((data) => {
         const currentUser = GoogleSignin.getTokens()
         .then((res) => {
-          console.log(res.accessToken);
-          console.log(res.idToken);
           loginByGoogle(res.accessToken)
           .then(async (result: Promise<boolean>) => {
             if ((await result) == true) {
-              DefaultPreference.set(LOGIN_TYPE, GOOGLE_LOGIN).then(function() { }); 
-              DefaultPreference.set(ACCESS_TOKEN, res.accessToken).then(function() { });
-              DefaultPreference.set(CODE, res.idToken).then(function() { });
+              DefaultPreference.set(LOGIN_TYPE, GOOGLE_LOGIN).then(() => { }); 
             } else {
               Alert.alert(ERROR_MESSAGE.LOGIN_FAIL);
             }
@@ -214,15 +248,13 @@ export const NotLoginProfileView: React.FC = () => {
     }
   }
 
-  function renderFlatItemView(item: IProfileHelp) {
+  function renderFlatItemView(item: ITutorial) {
     return <View>
-      {/* <Image style={styles.profile_help_image} source={item.image} /> */}
-      {/* // test */}
-      <Image style={styles.profile_help_image} source={Img_Experience} />
+      <Image style={styles.profile_help_image} source={{uri: item.image}} />
 
-      {/* <View style={styles.profile_help_description_container}>
-        <Text style={styles.profile_help_description}>{item.title}</Text>
-      </View> */}
+      <View style={styles.profile_help_description_container}>
+        <CustomText style={styles.profile_help_description}>{item.title}</CustomText>
+      </View>
     </View>
   }
 }
@@ -266,7 +298,7 @@ const styles = StyleSheet.create({
   profile_help_container: {
     borderTopLeftRadius: 22,
     borderTopRightRadius: 22,
-    marginBottom: 212,
+    marginBottom: 80, //212,
     flex: 1,
     overflow: 'hidden',
   },
@@ -302,7 +334,7 @@ const styles = StyleSheet.create({
     width: '100%',
     position: 'absolute',
     bottom: 0,
-    height: 212,
+    height: 80, //212,
     borderBottomLeftRadius: 22,
     borderBottomRightRadius: 22,
     backgroundColor: COLOR.whiteColor,

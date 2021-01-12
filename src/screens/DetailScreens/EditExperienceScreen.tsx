@@ -2,12 +2,9 @@ import * as React from 'react';
 import {
   SafeAreaView,
   StyleSheet,
-  Text,
   View,
   TouchableWithoutFeedback,
-  Dimensions,
   Platform,
-  TextInput,
   ScrollView,
   FlatList,
   Keyboard,
@@ -22,12 +19,14 @@ import ImagePicker from 'react-native-image-crop-picker';
 // from app
 import { 
   COLOR, 
+  CustomText, 
   CustomTextInput, 
   FONT, 
   Icon_Back_Black,
   Icon_Search_Black,
   Icon_Share_Black,
   MARGIN_TOP,
+  viewportWidth,
 } from '../../constants';
 import { ColorButton } from '../../components/Button';
 import { useGlobalState } from '../../redux/Store';
@@ -35,7 +34,6 @@ import { IExperience, IFile, IUser } from '../../interfaces/app';
 import { ExperienceImageView } from '../../components/View';
 import GlobalStyle from '../../styles/global';
 
-const { width: viewportWidth, height: viewportHeight } = Dimensions.get('window');
 
 export const EditExperienceScreen: React.FC = ({route}) => {
 
@@ -67,7 +65,7 @@ export const EditExperienceScreen: React.FC = ({route}) => {
       <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
         <SafeAreaView style={styles.safe_area}>
           <View style={styles.navigation_bar}>
-            <Text style={styles.title}>Edit Experience</Text>
+            <CustomText style={styles.title}>Edit Experience</CustomText>
 
             <TouchableWithoutFeedback onPress={() => goBack()}>
               <View style={styles.back_icon}>
@@ -88,7 +86,7 @@ export const EditExperienceScreen: React.FC = ({route}) => {
                 <ScrollView bounces={false}>
                   <View style={styles.profile_container}>
                     <View style={{width:'100%'}}>
-                      <Text style={{...styles.info_title, marginLeft: 24}}>Photos</Text>
+                      <CustomText style={{...styles.info_title, marginLeft: 24}}>Photos</CustomText>
                       <FlatList
                         style={{height: 75, marginTop: 16 }}
                         contentContainerStyle={{paddingHorizontal: 24}}
@@ -103,7 +101,7 @@ export const EditExperienceScreen: React.FC = ({route}) => {
 
                   <View style={{marginLeft: 24, marginRight: 24, width: viewportWidth - 48}}>
                       <View style={{width:'100%', marginTop: 33}}>
-                        <Text style={styles.info_title}>Title</Text>
+                        <CustomText style={styles.info_title}>Title</CustomText>
                         <CustomTextInput
                           style={{...GlobalStyle.auth_input, color: COLOR.systemBlackColor}}
                           numberOfLines={1}
@@ -116,7 +114,7 @@ export const EditExperienceScreen: React.FC = ({route}) => {
                       </View>
 
                       <View style={{width:'100%', marginTop: 22}}>
-                        <Text style={styles.info_title}>Description</Text>
+                        <CustomText style={styles.info_title}>Description</CustomText>
                         <CustomTextInput
                           style={{...GlobalStyle.auth_input, color: COLOR.systemBlackColor}}
                           placeholder={'Description'}
@@ -129,7 +127,7 @@ export const EditExperienceScreen: React.FC = ({route}) => {
                       </View>
 
                       <View style={{width:'100%', marginTop: 22}}>
-                        <Text style={styles.info_title}>Duration (in minutes)</Text>
+                        <CustomText style={styles.info_title}>Duration (in minutes)</CustomText>
                         <CustomTextInput
                           style={{...GlobalStyle.auth_input, color: COLOR.systemBlackColor}}
                           keyboardType={'numeric'}
@@ -143,9 +141,9 @@ export const EditExperienceScreen: React.FC = ({route}) => {
                       </View>
 
                       <View style={{width:'100%', marginTop: 22}}>
-                        <Text style={styles.info_title}>Price / Person</Text>
+                        <CustomText style={styles.info_title}>Price / Person</CustomText>
                         <View style={{flexDirection: 'row'}}>
-                          <Text style={styles.price}>$</Text>
+                          <CustomText style={styles.price}>$</CustomText>
                           <CustomTextInput
                             style={{...GlobalStyle.auth_input, color: COLOR.systemBlackColor}}
                             keyboardType={'numeric'}
@@ -160,7 +158,7 @@ export const EditExperienceScreen: React.FC = ({route}) => {
                       </View>
 
                       <View style={{width:'100%', marginTop: 22}}>
-                        <Text style={styles.info_title}>Category</Text>
+                        <CustomText style={styles.info_title}>Category</CustomText>
                         <CustomTextInput
                           style={{...GlobalStyle.auth_input, paddingLeft: 25, color: COLOR.systemBlackColor}}
                           placeholder={'Search Categories'}

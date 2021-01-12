@@ -4,4 +4,5 @@ export interface IFilter {
 	startDay: string | null,
 	endDay: string | null,
 	categoryName: string[],
+	location: string;
 }

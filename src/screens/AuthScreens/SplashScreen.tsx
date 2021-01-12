@@ -24,8 +24,6 @@ import {
   FACEBOOK_LOGIN,
   GOOGLE_LOGIN,
   APPLE_LOGIN,
-  ACCESS_TOKEN,
-  CODE,
   googleConfigure,
   intialization,
 } from '../../constants';
@@ -94,19 +92,24 @@ export const SplashScreen: React.FC = () => {
           loginByGoogle(res.accessToken)
           .then(async (result: Promise<boolean>) => {
             if ((await result) == true) {
-              DefaultPreference.set(LOGIN_TYPE, GOOGLE_LOGIN).then(function() { }); 
-              DefaultPreference.set(ACCESS_TOKEN, res.accessToken).then(function() { });
-              DefaultPreference.set(CODE, res.idToken).then(function() { });
               goMainScreen();
             } else {
               fetching = false;
             }
           }).catch(() => {
+            goMainScreen();
             fetching = false;
           });
-        })
+        }).catch(() => {
+          goMainScreen();
+          fetching = false;
+        });
+      }).catch(() => {
+        goMainScreen();
+        fetching = false;
       });
     } catch (error) {
+      goMainScreen();
       fetching = false;
     }
   };

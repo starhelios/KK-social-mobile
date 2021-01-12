@@ -31,10 +31,12 @@ const initialState: State = {
     startDay: null,
     endDay: null,
     categoryName: [],
+    location: '',
   },
 
   experienceList: [],
   hostList: [],
+  categoryList: [],
 };
 
 const StoreContext = createContext<State>(initialState);

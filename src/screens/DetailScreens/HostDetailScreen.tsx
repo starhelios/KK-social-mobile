@@ -2,11 +2,9 @@ import * as React from 'react';
 import {
   SafeAreaView,
   StyleSheet,
-  Text,
   View,
   Image,
   TouchableWithoutFeedback,
-  Dimensions,
   ScrollView,
   FlatList,
 } from 'react-native';
@@ -14,18 +12,19 @@ import { Container } from 'native-base';
 import { useEffect, useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { SvgXml } from 'react-native-svg';
-import Moment from 'moment';
 
 // from app
 import { 
   COLOR, 
   convertStringToDateFormat, 
+  CustomText, 
   FONT, 
   Icon_Back_Black,
   Icon_Location_Black,
   Icon_Rating_Black,
   Img_User_Avatar,
   MARGIN_TOP,
+  viewportWidth,
 } from '../../constants';
 import { IExperience, IHost, IHostDetail } from '../../interfaces/app';
 import { ExperienceView } from '../../components/View';
@@ -34,8 +33,6 @@ import { useGlobalState } from '../../redux/Store';
 import GlobalStyle from '../../styles/global';
 import Spinner from 'react-native-loading-spinner-overlay';
 
-
-const { width: viewportWidth } = Dimensions.get('window');
 
 export const HostDetailScreen: React.FC = ({route}) => {
 
@@ -76,7 +73,7 @@ export const HostDetailScreen: React.FC = ({route}) => {
       <SafeAreaView style={styles.safe_area}>
 
         <View style={styles.navigation_bar}>
-          <Text style={styles.navigation_title}>{'Say Hello! to ' + host.fullname}</Text>
+          <CustomText style={styles.navigation_title}>{'Say Hello! to ' + host.fullname}</CustomText>
 
           <TouchableWithoutFeedback onPress={() => goBack()}>
             <View style={styles.back_icon}>
@@ -93,8 +90,8 @@ export const HostDetailScreen: React.FC = ({route}) => {
           <View style={styles.container}>
             <View style={{marginTop: 33, flexDirection: 'row'}}>
               <View style={{width: viewportWidth - 100}}>
-                <Text style={styles.host_name}>{'Hey, I\'m ' + host.fullname}</Text>
-                <Text style={styles.joined_date}>{'Joined in ' + convertStringToDateFormat(host.dateOfBirth, 'MMMM D, YYYY')}</Text>
+                <CustomText style={styles.host_name}>{'Hey, I\'m ' + host.fullname}</CustomText>
+                <CustomText style={styles.joined_date}>{'Joined in ' + convertStringToDateFormat(host.dateOfBirth, 'MMMM D, YYYY')}</CustomText>
               </View>
               <Image
                 style={styles.avatar}
@@ -102,22 +99,22 @@ export const HostDetailScreen: React.FC = ({route}) => {
             </View>
             <View style={{...GlobalStyle.auth_line, backgroundColor: COLOR.alphaBlackColor20, marginTop: 22}} />
 
-            <Text style={{...styles.content_title, marginTop: 22}}>{'About this host'}</Text>
+            <CustomText style={{...styles.content_title, marginTop: 22}}>{'About this host'}</CustomText>
             <View style={{marginTop: 22, height: 16, flexDirection: 'row'}}>
               <SvgXml width={16} height={16} xml={Icon_Location_Black} />
-              <Text style={{...styles.location, marginTop: 1, marginLeft: 8}}>{host.email}</Text>
+              <CustomText style={{...styles.location, marginTop: 1, marginLeft: 8}}>{host.email}</CustomText>
             </View>
 
             <View style={{marginTop: 12, height: 16, flexDirection: 'row'}}>
               <SvgXml width={16} height={16} xml={Icon_Rating_Black} />
-              <Text style={{...styles.location, marginTop: 1, marginLeft: 8}}>{hostDetail.ratingMark + ' Stars • ' + hostDetail.ratingCount + ' Ratings'}</Text>
+              <CustomText style={{...styles.location, marginTop: 1, marginLeft: 8}}>{hostDetail.ratingMark + ' Stars • ' + hostDetail.ratingCount + ' Ratings'}</CustomText>
             </View>
             <View style={{...GlobalStyle.auth_line, backgroundColor: COLOR.alphaBlackColor20, marginTop: 22}} />
 
-            <Text style={styles.description}>{host.aboutMe}</Text>
+            <CustomText style={styles.description}>{host.aboutMe}</CustomText>
             <View style={{...GlobalStyle.auth_line, backgroundColor: COLOR.alphaBlackColor20, marginTop: 22}} />
 
-            <Text style={{...styles.content_title, marginTop: 22}}>{host.fullname + '\'s Experiences'}</Text>
+            <CustomText style={{...styles.content_title, marginTop: 22}}>{host.fullname + '\'s Experiences'}</CustomText>
           </View>
 
           <FlatList

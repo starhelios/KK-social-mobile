@@ -2,15 +2,12 @@ import * as React from 'react';
 import {
   SafeAreaView,
   StyleSheet,
-  Text,
   View,
   Image,
   TouchableWithoutFeedback,
-  Dimensions,
   ScrollView,
   NativeSyntheticEvent,
   NativeScrollEvent,
-  Alert,
 } from 'react-native';
 import { Container } from 'native-base';
 import { useEffect, useState } from 'react';
@@ -19,12 +16,12 @@ import { SvgXml } from 'react-native-svg';
 import { FlatList } from 'react-native-gesture-handler';
 import LinearGradient from 'react-native-linear-gradient';
 import PageControl from 'react-native-page-control';
-import Moment from 'moment';
 
 // from app
 import { 
   COLOR, 
   convertStringToDateFormat, 
+  CustomText, 
   ERROR_MESSAGE, 
   FONT, 
   GetDurationString, 
@@ -37,14 +34,13 @@ import {
   Icon_Time_Black,
   Img_User_Avatar,
   MARGIN_TOP,
+  viewportWidth,
 } from '../../constants';
 import { ColorButton } from '../../components/Button';
 import { IExperience, IExperienceDetail, IHost, IHostDetail, IUser } from '../../interfaces/app';
 import { useGlobalState } from '../../redux/Store';
 import GlobalStyle from '../../styles/global';
 
-
-const { width: viewportWidth } = Dimensions.get('window');
 
 export const ExperienceDetailScreen: React.FC = ({route}) => {
 
@@ -106,47 +102,47 @@ export const ExperienceDetailScreen: React.FC = ({route}) => {
           </View>
 
           <View style={styles.content_container}>
-            <Text style={styles.title}>{experience.title}</Text>
-            <Text style={styles.location}>{host.email}</Text>
+            <CustomText style={styles.title}>{experience.title}</CustomText>
+            <CustomText style={styles.location}>{host.email}</CustomText>
             <View style={{...GlobalStyle.auth_line, backgroundColor: COLOR.alphaBlackColor20, marginTop: 22}} />
             
             <View style={{marginTop: 12, flexDirection: 'row'}}>
-              <Text style={styles.host_name}>{'Hosted by ' + host.fullname}</Text>
+              <CustomText style={styles.host_name}>{'Hosted by ' + host.fullname}</CustomText>
               <Image style={styles.avatar} source={host.avatarUrl != null && host.avatarUrl != '' ? {uri: host.avatarUrl} : Img_User_Avatar} />
             </View>
 
             <View style={{marginTop: 12, height: 16, flexDirection: 'row'}}>
               <SvgXml width={16} height={16} xml={Icon_Time_Black} />
-              <Text style={{...styles.location, marginTop: 1, marginLeft: 8}}>{GetDurationString(experience.duration)}</Text>
+              <CustomText style={{...styles.location, marginTop: 1, marginLeft: 8}}>{GetDurationString(experience.duration)}</CustomText>
             </View>
 
             <View style={{marginTop: 12, height: 16, flexDirection: 'row'}}>
               <SvgXml width={16} height={16} xml={Icon_Experience_Black} />
-              <Text style={{...styles.location, marginTop: 1, marginLeft: 8}}>{experience.categoryName}</Text>
+              <CustomText style={{...styles.location, marginTop: 1, marginLeft: 8}}>{experience.categoryName}</CustomText>
             </View>
             <View style={{...GlobalStyle.auth_line, backgroundColor: COLOR.alphaBlackColor20, marginTop: 22}} />
 
-            <Text style={{...styles.host_name, marginTop: 22}}>About the experience</Text>
-            <Text style={styles.about}>{experience.description}</Text>
+            <CustomText style={{...styles.host_name, marginTop: 22}}>About the experience</CustomText>
+            <CustomText style={styles.about}>{experience.description}</CustomText>
             <View style={{...GlobalStyle.auth_line, backgroundColor: COLOR.alphaBlackColor20, marginTop: 22}} />
 
             <View style={{marginTop: 22, flexDirection: 'row'}}>
               <View style={{width: viewportWidth - 100}}>
-                <Text style={styles.host_name}>{'Say Hello! to ' + host.fullname}</Text>
-                <Text style={styles.joined_date}>{'Joined in ' + convertStringToDateFormat(host.dateOfBirth, 'MMMM D, YYYY')}</Text>
+                <CustomText style={styles.host_name}>{'Say Hello! to ' + host.fullname}</CustomText>
+                <CustomText style={styles.joined_date}>{'Joined in ' + convertStringToDateFormat(host.dateOfBirth, 'MMMM D, YYYY')}</CustomText>
               </View>
               <Image style={styles.avatar} source={host.avatarUrl != null && host.avatarUrl != '' ? {uri: host.avatarUrl} : Img_User_Avatar} />
             </View>
 
             <View style={{marginTop: 22, flexDirection: 'row', height: 16}}>
               <SvgXml width={16} height='100%' xml={Icon_Review_Black} />
-              <Text style={styles.review_count}>{hostDetail.ratingCount.toString() + ' Reviews'}</Text>
+              <CustomText style={styles.review_count}>{hostDetail.ratingCount.toString() + ' Reviews'}</CustomText>
             </View>
 
-            <Text style={styles.about}>{host.aboutMe}</Text>
+            <CustomText style={styles.about}>{host.aboutMe}</CustomText>
             <View style={{...GlobalStyle.auth_line, backgroundColor: COLOR.alphaBlackColor20, marginTop: 22}} />
 
-            <Text style={{...styles.host_name, marginTop: 22}}>{host.fullname + '\'s Experiences'}</Text>
+            <CustomText style={{...styles.host_name, marginTop: 22}}>{host.fullname + '\'s Experiences'}</CustomText>
           </View>
 
           <FlatList
@@ -169,7 +165,7 @@ export const ExperienceDetailScreen: React.FC = ({route}) => {
               end={{x: 0.5, y: 1}} >
             </LinearGradient>
           : <View style={{...styles.gradient_container, backgroundColor: COLOR.whiteColor, height: 104}}>
-              <Text style={styles.navigation_title}>{experience.title}</Text>
+              <CustomText style={styles.navigation_title}>{experience.title}</CustomText>
             </View>
         }
         
@@ -189,8 +185,8 @@ export const ExperienceDetailScreen: React.FC = ({route}) => {
 
         <View style={styles.bottom_container}>
           <View style={styles.price_container}>
-            <Text style={styles.price}>{'From $' + experience.price}</Text>
-            {/* <Text style={styles.personal}>{' / ' + experience.personal}</Text> */}
+            <CustomText style={styles.price}>{'From $' + experience.price}</CustomText>
+            {/* <CustomText style={styles.personal}>{' / ' + experience.personal}</CustomText> */}
           </View>
 
           <TouchableWithoutFeedback onPress={() => onBook()}>

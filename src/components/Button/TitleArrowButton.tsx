@@ -1,13 +1,15 @@
 import * as React from 'react';
-import {
-  StyleSheet,
-  Text,
-  View,
-} from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { SvgXml } from 'react-native-svg';
 
 // from app
-import { COLOR, FONT, Icon_Detail_Right_Arrow_Black, Icon_Detail_Right_Arrow_White } from '../../constants';
+import { 
+  COLOR, 
+  CustomText, 
+  FONT, 
+  Icon_Detail_Right_Arrow_Black, 
+  Icon_Detail_Right_Arrow_White, 
+} from '../../constants';
 
 interface props {
   title: string;
@@ -21,18 +23,24 @@ export const TitleArrowButton: React.FC<props> = (props: props) => {
     <View style={styles.container}>
       {
         props.title != ''
-        ? <Text style={{
+        ? <CustomText style={{
             ...styles.title, 
             color: props.white_color == true ? COLOR.systemWhiteColor : COLOR.alphaBlackColor75,
             height: props.white_color == true ? 23 : 18,
             lineHeight: props.white_color == true ? 23 : 18,
             marginBottom: props.white_color == true ? 22 : 16,
             fontFamily: FONT.AN_Regular,
-            fontSize: props.white_color == true ? 14 : 12}} numberOfLines={1}>{props.title}</Text>
+            fontSize: props.white_color == true ? 14 : 12}} numberOfLines={1}>
+            {props.title}
+          </CustomText>
         : null
       }
       <View style={styles.info}>
-        <Text style={{...styles.name, color: props.white_color == true ? COLOR.systemWhiteColor : COLOR.blackColor}} numberOfLines={1}>{props.name}</Text>
+        <CustomText 
+          style={{...styles.name, color: props.white_color == true ? COLOR.systemWhiteColor : COLOR.blackColor}} 
+          numberOfLines={1}>
+          {props.name}
+        </CustomText>
         <View style={styles.arrow}>
             <SvgXml width='100%' height='100%' xml={props.white_color == true ? Icon_Detail_Right_Arrow_White : Icon_Detail_Right_Arrow_Black} />
         </View>

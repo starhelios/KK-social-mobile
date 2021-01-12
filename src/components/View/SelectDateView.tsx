@@ -1,52 +1,42 @@
 import * as React from 'react';
-import {
-  Dimensions,
-  StyleSheet,
-  Text,
-  TouchableWithoutFeedback,
-  View,
-} from 'react-native';
+import { StyleSheet, TouchableWithoutFeedback, View } from 'react-native';
 import { useEffect, useState } from 'react';
 import { SvgXml } from 'react-native-svg';
-import { Calendar } from 'react-native-calendars';
-import Moment from 'moment';
+import { Calendar, CalendarList } from 'react-native-calendars';
 
 // from app
 import { 
   COLOR, 
+  convertDateToDateFormat, 
   convertStringToDateFormat, 
+  CustomText, 
   FONT,
   Icon_Close_Black,
+  viewportWidth,
 } from '../../constants';
 import GlobalStyle from '../../styles/global';
 import { ColorButton } from '../Button';
 
+
 interface props {
-  selectedDate: string;
+  selectedDateList: string[];
   onCloseView: (visible: boolean) => void;
   onSelectDate: (selectedDate: string) => void;
 }
 
-const { width: viewportWidth } = Dimensions.get('window');
-
 export const SelectDateView: React.FC<props> = (props: props) => {
 
   const [currentDate, setCurrentDate] = useState<string>('')
-  const [selectedDate, setSelectedDate] = useState<string>(props.selectedDate);
+  const [selectedDateList, setSelectedDateList] = useState<string[]>(props.selectedDateList);
   const [markedDates, setMarkedDates] = useState<any>();
   const [selectedStartDate, setSelectedStartDate] = useState<Date | null>(null);
   const [selectedEndDate, setSelectedEndDate] = useState<Date | null>(null);
 
-  useEffect(() => {
-    
-    
-    setSelectedDate(props.selectedDate);
-    if (props.selectedDate != '') {
-      updateMarkerDate(props.selectedDate);
+  useEffect(() => {    
+    setSelectedDateList(props.selectedDateList);
+    if (props.selectedDateList.length > 0) {
+      updateMarkerDate(props.selectedDateList);
     }
-
-    // const currentDate = convertStringToDateFormat('', 'YYYY-MM-DD');
-    // setCurrentDate(currentDate);
   }, []);
 
   return (
@@ -57,7 +47,7 @@ export const SelectDateView: React.FC<props> = (props: props) => {
       
       <View style = {styles.calendar_container}>
         <View style={styles.title_bar}>
-          <Text style={styles.title}>Dates</Text>
+          <CustomText style={styles.title}>Dates</CustomText>
 
           <TouchableWithoutFeedback onPress={() => props.onCloseView(false)}>
             <View style = {styles.close_icon}>
@@ -69,10 +59,11 @@ export const SelectDateView: React.FC<props> = (props: props) => {
         <View style={{...GlobalStyle.auth_line, backgroundColor: COLOR.alphaBlackColor20, marginLeft: 24, marginRight: 24, width: viewportWidth - 48, marginTop: 0}} />
 
         <View style={styles.calendar}>
-          <Calendar
+          {/* <Calendar
             current={ '2012-03-01' }
             // markedDates={ markedDates }
-
+            minDate={'2012-05-10'}
+            maxDate={'2012-05-30'}
             style={{backgroundColor: COLOR.clearColor}}
             theme={{
               backgroundColor: COLOR.clearColor,
@@ -98,22 +89,99 @@ export const SelectDateView: React.FC<props> = (props: props) => {
             onDayLongPress={(day) => { console.log('selected day', day) }}
             onMonthChange={(month) => { console.log('month changed', month) }}
             enableSwipeMonths={true}
-          />
+          /> */}
+
+<CalendarList
+      // testID={testIDs.calendarList.CONTAINER}
+      current={convertDateToDateFormat(new Date(), 'YYYY-MM-DD')}
+      markedDates={ markedDates }
+      pastScrollRange={24}
+      futureScrollRange={24}
+      renderHeader={date => {
+        const textStyle = {
+          fontSize: 15,
+          paddingTop: 10,
+          fontFamily: FONT.AN_Bold,
+          color: COLOR.systemBlackColor,
+          paddingRight: 5,
+        };
+
+        return (
+          <View
+            style={{
+              flexDirection: 'row',
+              width: '100%',
+              justifyContent: 'space-between',
+              marginBottom: 10
+            }}
+          >
+            <CustomText style={{marginLeft: 5, ...textStyle}}>{convertDateToDateFormat(date, 'MMMM yyyy')}</CustomText>
+          </View>
+        );
+      }}
+      theme={{
+        'stylesheet.calendar.header': {
+          dayHeader: {
+            fontSize: 13,
+            // fontFamily: FONT.AN_Regular,
+            color: COLOR.alphaBlackColor50,
+            height: 0,
+          }
+        },
+        'stylesheet.day.basic': {
+          today: {
+            borderColor: COLOR.systemRedColor,
+            // borderWidth: 0.8,
+            // fontFamily: FONT.AN_Regular,
+            // fontSize: 13,
+          },
+          todayText: {
+            color: COLOR.systemRedColor,
+            // fontFamily: FONT.AN_Regular,
+            // fontSize: 13,
+            // fontWeight: '800',
+          }
+        },
+        'stylesheet.day.single': {
+          day: {
+            color: COLOR.systemRedColor,
+            fontFamily: FONT.AN_Regular,
+          }
+        },
+        'stylesheet.calendar-list.main': {
+
+        },
+        backgroundColor: COLOR.clearColor,
+        calendarBackground: COLOR.clearColor,
+      }}
+      onDayPress={(day) => {
+        if (day.dateString != selectedDate) {
+          setSelectedDateList(day.dateString);
+          updateMarkerDate(day.dateString);
+        } else {
+          setSelectedDateList([]);
+          updateMarkerDate([]);
+        }
+      }}
+    />
         </View>         
         
-        <TouchableWithoutFeedback onPress={() => props.onSelectDate(selectedDate)}>
+        {/* <TouchableWithoutFeedback onPress={() => props.onSelectDate(selectedDate)}>
           <View style={styles.bottom_button}>
             <ColorButton title={'Apply'} backgroundColor={COLOR.systemBlackColor} color={COLOR.systemWhiteColor} />
           </View>
-        </TouchableWithoutFeedback>
+        </TouchableWithoutFeedback> */}
       </View>
     </View>
   );
 
-  function updateMarkerDate(dateString: string) {
-    if (dateString != '') {
+  function updateMarkerDate(dateList: string[]) {
+    if (dateList.length > 0) {
       const newMarkedDate: {[key:string]: {selected: boolean, selectedColor: string}} = {};
-      newMarkedDate[dateString] = {selected: true, selectedColor: 'blue'};
+      for (let i = 0; i < dateList.length; i++) {
+        const dateString = dateList[i];
+        newMarkedDate[dateString] = {selected: true, selectedColor: 'blue'};
+      }
       setMarkedDates(newMarkedDate);
     } else {
       setMarkedDates(null);
@@ -169,7 +237,7 @@ const styles = StyleSheet.create({
     marginTop: 22,
     marginLeft: 24,
     marginRight: 24,
-    height: 320,
+    height: 420,
   },
   bottom_button: {
     marginLeft: 48,

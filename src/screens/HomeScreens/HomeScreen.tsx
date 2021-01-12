@@ -2,25 +2,34 @@ import * as React from 'react';
 import {
   StyleSheet,
   View,
-  Text,
   SafeAreaView,
   TouchableWithoutFeedback,
   FlatList,
-  TextInput,
   ScrollView,
   Modal,
+  KeyboardAvoidingView,
+  Platform,
 } from 'react-native';
 import { useEffect, useState } from 'react';
 import { Container } from 'native-base';
 import { SvgXml } from 'react-native-svg';
-import Moment from 'moment';
 import Spinner from 'react-native-loading-spinner-overlay';
 
 // from app
-import { API_CONFIG, COLOR, convertStringToDateFormat, CustomTextInput, FONT, Icon_Filter, Icon_Search, MARGIN_TOP } from '../../constants';
+import { 
+  API_CONFIG, 
+  COLOR, 
+  convertStringToDateFormat, 
+  CustomText, 
+  CustomTextInput, 
+  FONT, 
+  Icon_Filter, 
+  Icon_Search, 
+  MARGIN_TOP, 
+} from '../../constants';
 import { useCategories, useExperiences, useHosts } from '../../hooks';
-import { ICategory, IExperience, IFilter, IHost, IHostList } from '../../interfaces/app';
-import { ExperienceView, FiltersView, HostView, SelectDateView } from '../../components/View';
+import { ICategory, IExperience, IHost, IHostList } from '../../interfaces/app';
+import { ExperienceView, FiltersView, HostView, SelectDateRangeView, SelectDateView } from '../../components/View';
 import { useDispatch, useGlobalState } from '../../redux/Store';
 import { ActionType } from '../../redux/Reducer';
 
@@ -42,7 +51,8 @@ export const HomeScreen: React.FC = () => {
   const [selectedCategoryList, setSelectedCategoryList] = useState<ICategory[]>([]);
   const [showFilters, setShowFilters] = useState<boolean>(false);
   const [showSelectDates, setShowSelectDates] = useState<boolean>(false);
-  const [selectedDate, setSelectedDate] = useState<string>('');
+  const [selectedFromDate, setSelectedFromDate] = useState<string>('');
+  const [selectedEndDate, setSelectedEndDate] = useState<string>('');
   const [fetchingExperienceList, setFetchingExperienceList] = useState<boolean>(false);
   const [fetchingHostList, setFetchingHostList] = useState<boolean>(false);
   const [fetchingData, setFetchingData] = useState<boolean>(false);
@@ -64,6 +74,10 @@ export const HomeScreen: React.FC = () => {
     await getCategoryList('')
     .then(async (result: Promise<ICategory[]>) => {
       setCategoryList(await result);
+      dispatch({
+        type: ActionType.SET_CATEGORY_LIST,
+        payload: (await result),
+      })
     }).catch(() => {
     });
   }
@@ -124,7 +138,7 @@ export const HomeScreen: React.FC = () => {
   function onSearch() {
   }
 
-  function onFilterExperience(lowPrice: number, highPrice: number) {
+  function onFilterExperience(lowPrice: number, highPrice: number, location: string) {
     let minPrice = lowPrice;
     var maxPrice = highPrice;
     if (maxPrice == 1000) {
@@ -139,21 +153,24 @@ export const HomeScreen: React.FC = () => {
         startDay: filter.startDay,
         endDay: filter.endDay,
         categoryName: filter.categoryName,
+        location: location,
       },
     });
     setShowFilters(false);
   }
 
-  function onFilterSelectDate(selectedDate: string) {
-    setSelectedDate(selectedDate);
+  function onFilterSelectDate(fromDate: string, endDate: string) {
+    setSelectedFromDate(fromDate);
+    setSelectedEndDate(endDate);
     dispatch({
       type: ActionType.SET_FILTER,
       payload: {
         minPrice: filter.minPrice,
         maxPrice: filter.maxPrice,
-        startDay: selectedDate,
-        endDay: selectedDate,
+        startDay: fromDate,
+        endDay: endDate,
         categoryName: filter.categoryName,
+        location: filter.location,
       },
     });
     setShowSelectDates(false);
@@ -161,10 +178,14 @@ export const HomeScreen: React.FC = () => {
 
   function getVisibleDate() {
     var visibleDateString = 'Dates';
-    if (selectedDate != '') {
-      // const date = convertStringToDateFormat(selectedDate, 'YYYY-MM-DD');
-      visibleDateString = convertStringToDateFormat(selectedDate, 'MMMM D');
+    if (selectedFromDate != '') {
+      if (selectedFromDate == selectedEndDate) {
+        visibleDateString = convertStringToDateFormat(selectedFromDate, 'MMMM D');
+      } else {
+        visibleDateString = convertStringToDateFormat(selectedFromDate, 'MMMM YYYY');
+      }      
     }
+
     return visibleDateString;
   }
 
@@ -190,8 +211,10 @@ export const HomeScreen: React.FC = () => {
         startDay: filter.startDay,
         endDay: filter.endDay,
         categoryName: categoryName,
+        location: filter.location,
       },
     });
+    setSearchText(categoryName.toString().split(',').join(', '));
     setSelectedCategoryList(list);
   }
 
@@ -208,7 +231,7 @@ export const HomeScreen: React.FC = () => {
     return (
       <TouchableWithoutFeedback onPress={() => onSelectCategory(category)}>
         <View style={{...experienceCategoryStyles.container, backgroundColor: checkSelectedCategory(category) != -1 ? COLOR.selectedCategoryBackgroundColor : COLOR.clearColor}}>
-          <Text style={experienceCategoryStyles.title}>{ category.name }</Text>
+          <CustomText style={experienceCategoryStyles.title}>{ category.name }</CustomText>
         </View>
       </TouchableWithoutFeedback>
     );
@@ -229,14 +252,15 @@ export const HomeScreen: React.FC = () => {
           <View style={styles.search_text_container}>
             { searchText == '' && (
               <View style={styles.search_text_placeholder}>
-                <Text style={styles.placeholder_search}>Search</Text>
-                <Text style={styles.placeholder_kloutkast}>KloutKast</Text>
+                <CustomText style={styles.placeholder_search}>Search</CustomText>
+                <CustomText style={styles.placeholder_kloutkast}>KloutKast</CustomText>
               </View>
             )}
-            <CustomTextInput 
+            {/* <CustomTextInput 
               style={styles.search_text}
               onChangeText={text => setSearchText(text)}
-              value={searchText} />
+              value={searchText} /> */}
+              <CustomText style={styles.search_text}>{ searchText }</CustomText>
           </View>
 
           <TouchableWithoutFeedback onPress={() => setShowFilters(true)}>
@@ -249,10 +273,10 @@ export const HomeScreen: React.FC = () => {
         <ScrollView style={{width: '100%', marginTop: 16}}>
           <View style={styles.experience_category_list}>
             <TouchableWithoutFeedback onPress={() => setShowSelectDates(true)}>
-              <View style={{...experienceCategoryStyles.container, backgroundColor: filtering == true ? COLOR.selectedCategoryBackgroundColor : COLOR.clearColor}}>
-                <Text style={experienceCategoryStyles.title}>
+              <View style={{...experienceCategoryStyles.container, backgroundColor: selectedFromDate != '' ? COLOR.selectedCategoryBackgroundColor : COLOR.clearColor}}>
+                <CustomText style={experienceCategoryStyles.title}>
                   { getVisibleDate() }
-                </Text>
+                </CustomText>
               </View>
             </TouchableWithoutFeedback>
 
@@ -268,9 +292,9 @@ export const HomeScreen: React.FC = () => {
             />
           </View>
 
-          <Text style={styles.list_title}>
+          <CustomText style={styles.list_title}>
             { filtering == false ? 'Popular Experiences' : experienceList.length + ' Experiences' }
-          </Text>
+          </CustomText>
           <FlatList
             style={{width: '100%', height: 284, marginTop: 22 }}
             contentContainerStyle={{paddingHorizontal: 24}}
@@ -281,9 +305,7 @@ export const HomeScreen: React.FC = () => {
             renderItem={({item}) => <ExperienceView experience={item} white_color={true} onFetchingData={setFetchingData} />}
           />
 
-          <Text style={styles.list_title}>
-            { 'Popular Hosts' }
-          </Text>
+          <CustomText style={styles.list_title}>{'Popular Hosts'}</CustomText>
           <FlatList
             style={{width: '100%', height: 211, marginTop: 22, marginBottom: 20 }}
             contentContainerStyle={{paddingHorizontal: 24}}
@@ -298,7 +320,7 @@ export const HomeScreen: React.FC = () => {
         <Modal animationType = {"slide"} transparent = {true}
           visible = {showSelectDates}
           onRequestClose = {() => { } }>
-          <SelectDateView selectedDate={selectedDate} onCloseView={setShowSelectDates} onSelectDate={onFilterSelectDate} />
+          <SelectDateRangeView selectedFromDate={selectedFromDate} selectedEndDate={selectedEndDate} onCloseView={setShowSelectDates} onSelectDate={onFilterSelectDate} />
         </Modal>
        
         <Modal animationType = {"slide"} transparent = {true}
@@ -380,6 +402,7 @@ const styles = StyleSheet.create({
     position: 'absolute', 
     width: '100%', 
     height: 44,
+    lineHeight: 44,
     paddingLeft: 10,
   },
   filter_container: {

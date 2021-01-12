@@ -1,9 +1,7 @@
 import * as React from 'react';
 import {
   StyleSheet,
-  Dimensions,
   View,
-  Text,
   SafeAreaView,
   TouchableWithoutFeedback,
   FlatList,
@@ -11,17 +9,14 @@ import {
 import { Container } from 'native-base';
 import { useEffect, useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
-import Moment from 'moment';
 
 // from app
-import { COLOR, FONT, MARGIN_TOP } from '../../constants';
+import { COLOR, CustomText, FONT, MARGIN_TOP, viewportWidth } from '../../constants';
 // import { useCompletedBookings, useUpcomingBookings } from '../../hooks';
 import { IBooking, IHost } from '../../interfaces/app';
 import { BookingView } from '../../components/View';
 import { useGlobalState } from '../../redux/Store';
 
-
-const { width: viewportWidth } = Dimensions.get('window');
 
 export const BookingScreen: React.FC = () => {
   
@@ -142,18 +137,18 @@ export const BookingScreen: React.FC = () => {
   return (
     <Container style={{width: viewportWidth, flex: 1, backgroundColor: COLOR.blackColor}}>
       <SafeAreaView style={styles.safe_area}>
-        <Text style={styles.title}>Booking</Text>
+        <CustomText style={styles.title}>Booking</CustomText>
 
         <View style={styles.tab_bar}>
           <TouchableWithoutFeedback onPress={() => onShowUpcomingBookings()}>
             <View style={{
               ...styles.tab_upcoming,
               backgroundColor: selectedTab == 0 ? COLOR.blackColor : COLOR.clearColor}}>
-              <Text style={{
+              <CustomText style={{
                 ...styles.tab_title, 
                 color: selectedTab == 0 ? COLOR.whiteColor : COLOR.blackColor}}>
                 Upcoming
-              </Text>
+              </CustomText>
             </View>
           </TouchableWithoutFeedback>
 
@@ -161,11 +156,11 @@ export const BookingScreen: React.FC = () => {
             <View style={{
               ...styles.tab_completed,
               backgroundColor: selectedTab == 0 ? COLOR.clearColor : COLOR.blackColor }}>
-              <Text style={{
+              <CustomText style={{
                 ...styles.tab_title, 
                 color: selectedTab == 0 ? COLOR.blackColor : COLOR.whiteColor}}>
                 Completed
-              </Text>
+              </CustomText>
             </View>
           </TouchableWithoutFeedback>
         </View>

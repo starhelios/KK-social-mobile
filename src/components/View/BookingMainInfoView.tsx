@@ -1,13 +1,8 @@
 import * as React from 'react';
-import {
-  Dimensions,
-  StyleSheet,
-  Text,
-  View,
-} from 'react-native';
+import { StyleSheet, View } from 'react-native';
 
 // from app
-import { COLOR, FONT, GetDurationString } from '../../constants';
+import { COLOR, CustomText, FONT, GetDurationString } from '../../constants';
 import { IBooking } from '../../interfaces/app';
 
 interface props {
@@ -22,12 +17,12 @@ export const BookingMainInfoView: React.FC<props> = (props: props) => {
 
   return (
     <View>
-      <Text style={styles.experience}>{booking.experience}</Text>
+      <CustomText style={styles.experience}>{booking.experience}</CustomText>
       <View style={styles.date_container}>
-        <Text style={styles.date}>{booking.date + ' • ' + booking.hour}</Text>
+        <CustomText style={styles.date}>{booking.date + ' • ' + booking.hour}</CustomText>
         { 
           completed_booking == false
-          ? <Text style={styles.duration}>{GetDurationString(booking.duration)}</Text>
+          ? <CustomText style={styles.duration}>{GetDurationString(booking.duration)}</CustomText>
           : null
         }
       </View>

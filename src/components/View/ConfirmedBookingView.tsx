@@ -1,16 +1,18 @@
 import { useNavigation } from '@react-navigation/native';
 import * as React from 'react';
-import {
-  StyleSheet,
-  Text,
-  TouchableWithoutFeedback,
-  View,
-} from 'react-native';
+import { StyleSheet, TouchableWithoutFeedback, View } from 'react-native';
 import { SvgXml } from 'react-native-svg';
 
 // from app
-import { COLOR, FONT, GetDurationString, Icon_Detail_Right_Arrow_White } from '../../constants';
+import { 
+  COLOR, 
+  CustomText, 
+  FONT, 
+  GetDurationString, 
+  Icon_Detail_Right_Arrow_White, 
+} from '../../constants';
 import { IBooking } from '../../interfaces/app';
+
 
 interface props {
   booking: IBooking;
@@ -29,13 +31,13 @@ export const ConfirmedBookingView: React.FC<props> = (props: props) => {
       <View style={styles.container}>
         {
           booking.show_date != null && booking.show_date == true
-          ? <Text style={styles.date}>{booking.date}</Text>
+          ? <CustomText style={styles.date}>{booking.date}</CustomText>
           : null
         }
         <View style={{...styles.info_container, marginTop: (booking.show_date != null && booking.show_date == true) ? 16 : 22}}>
           <View style={{height: 40}}>
-            <Text style={styles.name}>{booking.hour + ' / ' + booking.host?.fullname}</Text>
-            <Text style={styles.experience}>{booking.experience + ' • ' + GetDurationString(booking.duration)}</Text>
+            <CustomText style={styles.name}>{booking.hour + ' / ' + booking.host?.fullname}</CustomText>
+            <CustomText style={styles.experience}>{booking.experience + ' • ' + GetDurationString(booking.duration)}</CustomText>
           </View>
           
           <View style={styles.arrow}>

@@ -3,7 +3,6 @@ import {
   Alert,
   Image,
   StyleSheet,
-  Text,
   TouchableWithoutFeedback,
   View,
 } from 'react-native';
@@ -13,6 +12,7 @@ import { useNavigation } from '@react-navigation/native';
 // from app
 import { 
   COLOR, 
+  CustomText, 
   ERROR_MESSAGE, 
   FONT, 
   GetDurationString, 
@@ -44,7 +44,9 @@ export const ExperienceView: React.FC<props> = (props: props) => {
         <Image
           style={styles.image}
           source={experience.images.length > 0 ? {uri: experience.images[0]} : Img_Experience} />
-        <Text style={{...styles.title, color: white_color == true ? COLOR.systemWhiteColor : COLOR.blackColor}}>{experience.title}</Text>
+        <CustomText style={{...styles.title, color: white_color == true ? COLOR.systemWhiteColor : COLOR.blackColor}}>
+          {experience.title}
+        </CustomText>
         <View style={styles.experienceContainer}>
           {
             experience.icon != null && experience.icon != ''
@@ -53,11 +55,17 @@ export const ExperienceView: React.FC<props> = (props: props) => {
                 source={{uri: experience.icon}} />
             : <SvgXml height='100%' xml={Icon_Category} />
           }          
-          <Text style={{...styles.experience, color: white_color == true ? COLOR.systemWhiteColor : COLOR.blackColor}}>{experience.categoryName + ' • ' + GetDurationString(experience.duration)}</Text>
+          <CustomText style={{...styles.experience, color: white_color == true ? COLOR.systemWhiteColor : COLOR.blackColor}}>
+            {experience.categoryName + ' • ' + GetDurationString(experience.duration)}
+          </CustomText>
         </View>
         <View style={styles.priceContainer}>
-          <Text style={{...styles.price, color: white_color == true ? COLOR.systemWhiteColor : COLOR.blackColor}}>{'From ' + experience.price.toString() + '$'}</Text>
-          {/* <Text style={{...styles.personal, color: white_color == true ? COLOR.systemWhiteColor : COLOR.blackColor}}>{' / ' + experience.personal}</Text> */}
+          <CustomText style={{...styles.price, color: white_color == true ? COLOR.systemWhiteColor : COLOR.blackColor}}>
+            {'From ' + experience.price.toString() + '$'}
+          </CustomText>
+          {/* <CustomText style={{...styles.personal, color: white_color == true ? COLOR.systemWhiteColor : COLOR.blackColor}}>
+            {' / ' + experience.personal}
+          </CustomText> */}
         </View>
       </View>
     </TouchableWithoutFeedback>

@@ -3,7 +3,6 @@ import {
   Alert,
   Image, 
   StyleSheet, 
-  Text, 
   TouchableWithoutFeedback, 
   View, 
 } from 'react-native';
@@ -11,7 +10,14 @@ import { SvgXml } from 'react-native-svg';
 import { useNavigation } from '@react-navigation/native';
 
 // from app
-import { COLOR, ERROR_MESSAGE, FONT, Icon_Category, Img_User_Avatar } from '../../constants';
+import { 
+  COLOR, 
+  CustomText, 
+  ERROR_MESSAGE, 
+  FONT, 
+  Icon_Category, 
+  Img_User_Avatar, 
+} from '../../constants';
 import { IHost, IHostDetail } from '../../interfaces/app';
 import { useHosts } from '../../hooks';
 
@@ -34,7 +40,7 @@ export const HostView: React.FC<props> = (props: props) => {
           style={styles.image}
           source={(host.avatarUrl == null || host.avatarUrl == '') ? Img_User_Avatar : {uri: host.avatarUrl}}
         />
-        <Text style={styles.title}>{host.fullname}</Text>
+        <CustomText style={styles.title}>{host.fullname}</CustomText>
         <View style={styles.experienceContainer}>
           <View style={{flex: 1, flexDirection: 'row'}}>
             {
@@ -42,7 +48,7 @@ export const HostView: React.FC<props> = (props: props) => {
               ? <Image style={{width: '100%', height: '100%'}} source={{uri: host.categoryIcon}} />
               : <SvgXml height={12} xml={Icon_Category} />
             }
-            <Text style={styles.experience}>{host.categoryName}</Text>
+            <CustomText style={styles.experience}>{host.categoryName}</CustomText>
           </View>
         </View>
       </View>

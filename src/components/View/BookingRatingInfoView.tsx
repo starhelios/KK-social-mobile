@@ -1,15 +1,11 @@
 import * as React from 'react';
-import {
-  Dimensions,
-  StyleSheet,
-  Text,
-  View,
-} from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import Stars from 'react-native-stars';
 
 // from app
 import { 
   COLOR, 
+  CustomText, 
   FONT,
   Img_Rating_Empty,
   Img_Rating_Full, 
@@ -27,12 +23,12 @@ export const BookingRatingInfoView: React.FC<props> = (props: props) => {
   return (
     <View>
       <View style={styles.line} />
-      <Text style={styles.rating_title}>
+      <CustomText style={styles.rating_title}>
         {
           booking.is_host == true 
           ? (booking.host != null ? 'Rate your host, ' + booking.host.fullname : 'Rate your host')
           : 'Rate this experience:'}
-      </Text>
+      </CustomText>
       <View style={styles.rating}>
         <Stars
           value={booking.rating}

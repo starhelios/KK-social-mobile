@@ -2,15 +2,12 @@ import * as React from 'react';
 import {
   SafeAreaView,
   StyleSheet,
-  Text,
   View,
   Image,
   TouchableWithoutFeedback,
   KeyboardAvoidingView,
   Platform,
   Keyboard,
-  TextInput,
-  Dimensions,
   ScrollView,
   Alert,
 } from 'react-native';
@@ -23,6 +20,7 @@ import DefaultPreference from 'react-native-default-preference';
 // from app
 import { 
   COLOR, 
+  CustomText, 
   CustomTextInput, 
   EMAIL_LOGIN, 
   ERROR_MESSAGE, 
@@ -32,7 +30,9 @@ import {
   LOGIN_TYPE, 
   MARGIN_TOP, 
   PASSWORD, 
-  USER_EMAIL, 
+  USER_EMAIL,
+  viewportHeight,
+  viewportWidth, 
 } from '../../constants';
 import { ColorButton } from '../../components/Button';
 import { useAuthentication } from '../../hooks';
@@ -40,8 +40,6 @@ import { IApiError } from '../../interfaces/api';
 import GlobalStyle from '../../styles/global';
 import Spinner from 'react-native-loading-spinner-overlay';
 
-
-const { width: viewportWidth, height: viewportHeight } = Dimensions.get('window');
 
 export const SignUpScreen: React.FC = () => {
 
@@ -90,13 +88,13 @@ export const SignUpScreen: React.FC = () => {
   }
 
   const saveUserInfo = () => {
-    DefaultPreference.set(LOGIN_TYPE, EMAIL_LOGIN).then(function() { });
-    DefaultPreference.set(USER_EMAIL, emailAddress).then(function() { });
-    DefaultPreference.set(PASSWORD, password).then(function() { });
+    DefaultPreference.set(LOGIN_TYPE, EMAIL_LOGIN).then(() => { });
+    DefaultPreference.set(USER_EMAIL, emailAddress).then(() => { });
+    DefaultPreference.set(PASSWORD, password).then(() => { });
     DefaultPreference.get(IS_FIRST_LOGIN).then(function(is_first_login) {
       if (is_first_login != null && is_first_login == 'false') {
       } else {
-        DefaultPreference.set(IS_FIRST_LOGIN, 'false').then(function() { });
+        DefaultPreference.set(IS_FIRST_LOGIN, 'false').then(() => { });
       }
     });
   }
@@ -107,7 +105,7 @@ export const SignUpScreen: React.FC = () => {
 
       <SafeAreaView style={styles.safe_area}>
         <View style={styles.navigation_bar}>
-          <Text style={styles.title}>Sign Up</Text>
+          <CustomText style={styles.title}>Sign Up</CustomText>
 
           <TouchableWithoutFeedback onPress={() => goBack() }>
             <View style={styles.back_icon}>
@@ -122,7 +120,7 @@ export const SignUpScreen: React.FC = () => {
               <ScrollView>
                 <View style={styles.input_container}>
                   <View style={{width:'100%'}}>
-                    <Text style={styles.info_title}>Full Name</Text>
+                    <CustomText style={styles.info_title}>Full Name</CustomText>
                     <CustomTextInput
                       style={GlobalStyle.auth_input}
                       numberOfLines={1}
@@ -136,7 +134,7 @@ export const SignUpScreen: React.FC = () => {
                   </View>
 
                   <View style={{width:'100%', marginTop: 22}}>
-                    <Text style={styles.info_title}>Email Address</Text>
+                    <CustomText style={styles.info_title}>Email Address</CustomText>
                     <CustomTextInput
                       style={GlobalStyle.auth_input}
                       keyboardType={'email-address'}
@@ -150,7 +148,7 @@ export const SignUpScreen: React.FC = () => {
                   </View>
 
                   <View style={{width:'100%', marginTop: 22}}>
-                    <Text style={styles.info_title}>Password</Text>
+                    <CustomText style={styles.info_title}>Password</CustomText>
                     <CustomTextInput
                       style={GlobalStyle.auth_input}
                       placeholder={'Password'}

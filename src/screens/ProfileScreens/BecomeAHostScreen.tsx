@@ -2,21 +2,21 @@ import * as React from 'react';
 import {
   SafeAreaView,
   StyleSheet,
-  Text,
   View,
   TouchableWithoutFeedback,
-  Dimensions,
   Image,
   Platform,
-  TextInput,
   ScrollView,
   Keyboard,
   KeyboardAvoidingView,
+  Alert,
+  TouchableOpacity,
 } from 'react-native';
 import { Container } from 'native-base';
 import { useEffect, useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { SvgXml } from 'react-native-svg';
+// import Autocomplete from 'react-native-autocomplete-input';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import ImagePicker from 'react-native-image-crop-picker';
 import LinearGradient from 'react-native-linear-gradient';
@@ -26,37 +26,65 @@ import {
   COLOR, 
   convertDateToDateFormat, 
   convertStringToDateFormat, 
+  CustomText, 
   CustomTextInput, 
+  EMAIL_LOGIN, 
+  ERROR_MESSAGE, 
   FONT, 
   Icon_Back,
   Icon_Camera,
   Icon_Normal_Profile,
   Icon_Search_White,
+  LOGIN_STATE,
   MARGIN_TOP,
+  SUCCESS_MESSAGE,
+  viewportWidth,
 } from '../../constants';
 import { ColorButton } from '../../components/Button';
 import { useGlobalState } from '../../redux/Store';
-import { IFile, IUser } from '../../interfaces/app';
+import { ICategory, IFile, IUser } from '../../interfaces/app';
+import { useAuthentication, useUsers } from '../../hooks';
 import GlobalStyle from '../../styles/global';
 
-const { width: viewportWidth, height: viewportHeight } = Dimensions.get('window');
 
 export const BecomeAHostScreen: React.FC = () => {
 
   const { goBack } = useNavigation();
+  const { updateHostInformation } = useUsers();
+  const { setLoginUser } = useAuthentication();
 
   const profile: IUser = useGlobalState('userInfo');
+  const allCategoryList: ICategory[] = useGlobalState('categoryList'); 
+
+  const comp = (a: string, b: string) => a.toLowerCase().trim() === b.toLowerCase().trim();
+  const findCategory = (query: string) => {
+    if (query === '') {
+      return [];
+    }
+    const regex = new RegExp(`${query}`, 'i');
+    const aaa = allCategoryList.filter(category => category.name.search(regex) >= 0);
+    console.log(aaa);
+    return allCategoryList.filter(category => category.name.search(regex) >= 0);
+  }
 
   const [image, setImage] = useState<string>(profile.avatarUrl);
   const [fullName, setFullName] = useState<string>(profile.fullname);
   const [emailAddress, setEmailAddress] = useState<string>(profile.email);
   const [birthday, setBirthday] = useState<string>(convertStringToDateFormat(profile.dateOfBirth, 'YYYY-MM-DD'));
-  const [aboutMe, setAboutMe] = useState<string>();
-  const [location, setLocation] = useState<string>();
-  const [category, setCategory] = useState<string>();
+  const [aboutMe, setAboutMe] = useState<string>(profile.aboutMe);
+  const [location, setLocation] = useState<string>(profile.location);
+  const [category, setCategory] = useState<string>(profile.categoryName);
+  const [categoryList, setCategoryList] = useState<ICategory[]>(findCategory(category));
+  const [showCategoryList, setShowCategoryList] = useState<boolean>(true);
+  const [avatarFile, setAvatarFile] = useState<IFile | null>(null);
   const [showDatePicker, setShowDatePicker] = useState<boolean>(false);
   const [mode, setMode] = useState<"date" | "time" | undefined>('date');
   const [pickerDate, setPickerDate] = useState<Date>(birthday != undefined && birthday != '' ? new Date(birthday) : new Date());
+
+
+  useEffect(() => {
+    setCategoryList([]);
+  }, []);
 
   useEffect(() => {
     setImage(profile.avatarUrl);
@@ -102,6 +130,7 @@ export const BecomeAHostScreen: React.FC = () => {
             ? image.path
             : image.path.replace('file://', ''),
       };
+      setAvatarFile(file);
       setImage(file.uri);
     })
     .catch((e) => {});
@@ -123,6 +152,7 @@ export const BecomeAHostScreen: React.FC = () => {
             ? image.path
             : image.path.replace('file://', ''),
       };
+      setAvatarFile(file);
       setImage(file.uri);
     })
     .catch((e) => {
@@ -130,18 +160,33 @@ export const BecomeAHostScreen: React.FC = () => {
   }
 
   const onBecomeAHost = () => {
-
+    updateHostInformation(profile.id, emailAddress, fullName, birthday, aboutMe, location, category, avatarFile)
+    .then(async (result: Promise<IUser>) => {
+      setLoginUser(await result);
+      Alert.alert(
+        SUCCESS_MESSAGE.UPDATE_USER_PROFILE_SUCCESS,
+        '',
+        [
+          { text: "OK", onPress: () => goBack() }
+        ],
+        { cancelable: false }
+      );
+    }).catch(() => {
+      Alert.alert(ERROR_MESSAGE.UPDATE_USER_PROFILE_FAIL);
+    });
   }
 
   const onSearchCategory = () => {
-
+    
   }
+
+  
 
   return (
     <Container style={styles.background}>
       <SafeAreaView style={styles.safe_area}>
         <View style={styles.navigation_bar}>
-          <Text style={styles.title}>Become A Host</Text>
+          <CustomText style={styles.title}>Become A Host</CustomText>
 
           <TouchableWithoutFeedback onPress={() => goBack()}>
             <View style={styles.back_icon}>
@@ -181,7 +226,7 @@ export const BecomeAHostScreen: React.FC = () => {
 
                     <View style={{marginLeft: 24, marginRight: 24, width: viewportWidth - 48}}>
                       <View style={{width:'100%', marginTop: 33}}>
-                        <Text style={styles.info_title}>Full Name</Text>
+                        <CustomText style={styles.info_title}>Full Name</CustomText>
                         <CustomTextInput
                           style={GlobalStyle.auth_input}
                           placeholder={'Full Name'}
@@ -193,28 +238,29 @@ export const BecomeAHostScreen: React.FC = () => {
                       </View>
 
                       <View style={{width:'100%', marginTop: 22}}>
-                        <Text style={styles.info_title}>Email Address</Text>
+                        <CustomText style={styles.info_title}>Email Address</CustomText>
                         <CustomTextInput
-                          style={GlobalStyle.auth_input}
+                          style={{...GlobalStyle.auth_input, color: LOGIN_STATE == EMAIL_LOGIN ? COLOR.systemWhiteColor : COLOR.alphaWhiteColor50}}
                           keyboardType={'email-address'}
                           placeholder={'Email Address'}
                           placeholderTextColor={COLOR.alphaWhiteColor50}
                           onChangeText={text => setEmailAddress(text)}
                           value={emailAddress}
+                          editable={LOGIN_STATE == EMAIL_LOGIN ? true : false}
                         />
                         <View style={GlobalStyle.auth_line} />
                       </View>
 
                       <View style={{width:'100%', marginTop: 22}}>
-                        <Text style={styles.info_title}>Date of Birth</Text>
+                        <CustomText style={styles.info_title}>Date of Birth</CustomText>
                         <TouchableWithoutFeedback onPress={() => setShowDatePicker(true)}>
-                          <Text style={{...GlobalStyle.auth_input, lineHeight: 45}}>{birthday}</Text>
+                          <CustomText style={{...GlobalStyle.auth_input, lineHeight: 45}}>{birthday}</CustomText>
                         </TouchableWithoutFeedback>
                         <View style={GlobalStyle.auth_line} />
                       </View>
 
                       <View style={{width:'100%', marginTop: 22}}>
-                        <Text style={styles.info_title}>About Me</Text>
+                        <CustomText style={styles.info_title}>About Me</CustomText>
                         <CustomTextInput
                           style={GlobalStyle.auth_input}
                           placeholder={'About Me'}
@@ -226,7 +272,7 @@ export const BecomeAHostScreen: React.FC = () => {
                       </View>
 
                       <View style={{width:'100%', marginTop: 22}}>
-                        <Text style={styles.info_title}>Location</Text>
+                        <CustomText style={styles.info_title}>Location</CustomText>
                         <CustomTextInput
                           style={GlobalStyle.auth_input}
                           placeholder={'Location'}
@@ -237,16 +283,34 @@ export const BecomeAHostScreen: React.FC = () => {
                         <View style={GlobalStyle.auth_line} />
                       </View>
 
-                      <View style={{width:'100%', marginTop: 22}}>
-                        <Text style={styles.info_title}>Category</Text>
-                        <CustomTextInput
+                      <View style={{width:'100%', marginTop: 22, zIndex: 100}}>
+                        <CustomText style={styles.info_title}>Category</CustomText>
+                        {/* <Autocomplete
+                          autoCapitalize="none"
+                          autoCorrect={false}
+                          containerStyle={styles.autocompleteContainer}
+                          style={styles.autocomplete}
+                          data={categoryList.length === 1 && comp(category, categoryList[0].name) ? [] : categoryList}
+                          defaultValue={category}
+                          onChangeText={text => setCategory(text)}
+                          placeholder="Search Categories"
+                          renderItem={({item}) => (
+                            <TouchableOpacity onPress={() => setCategory(item.name)}>
+                              <CustomText style={{...GlobalStyle.auth_input, paddingLeft: 25, backgroundColor: COLOR.systemWhiteColor, color: COLOR.systemBlackColor}}>
+                                {item.name}
+                              </CustomText>
+                            </TouchableOpacity>
+                          )}
+                        /> */}
+
+                        {/* <CustomTextInput
                           style={{...GlobalStyle.auth_input, paddingLeft: 25}}
                           placeholder={'Search Categories'}
                           placeholderTextColor={COLOR.alphaWhiteColor50}
                           autoCapitalize='none'
                           onChangeText={text => setCategory(text)}
                           value={category}
-                        />
+                        /> */}
                         <View style={GlobalStyle.auth_line} />
 
                         <TouchableWithoutFeedback onPress={() => onSearchCategory()}>
@@ -255,13 +319,13 @@ export const BecomeAHostScreen: React.FC = () => {
                           </View>
                         </TouchableWithoutFeedback>
                       </View>
-                    </View>
 
-                    <TouchableWithoutFeedback onPress={() => onBecomeAHost() }>
-                      <View style={styles.bottom_button}>
-                        <ColorButton title={'Become A Host'} backgroundColor={COLOR.whiteColor} color={COLOR.blackColor} />
-                      </View>
-                    </TouchableWithoutFeedback>
+                      <TouchableWithoutFeedback onPress={() => onBecomeAHost() }>
+                        <View style={styles.bottom_button}>
+                          <ColorButton title={'Become A Host'} backgroundColor={COLOR.whiteColor} color={COLOR.blackColor} />
+                        </View>
+                      </TouchableWithoutFeedback>
+                    </View>
                   </View>
                 </TouchableWithoutFeedback>
               </ScrollView>
@@ -286,7 +350,7 @@ export const BecomeAHostScreen: React.FC = () => {
             />
             <TouchableWithoutFeedback onPress={() => onConfirmBirthday() }>
               <View style={styles.datePickerConfirm}>
-                <Text style={styles.confirm_text}>Confirm</Text>
+                <CustomText style={styles.confirm_text}>Confirm</CustomText>
               </View>
             </TouchableWithoutFeedback>
           </View>
@@ -330,6 +394,23 @@ const styles = StyleSheet.create({
     marginLeft: 24,
     width: 20,
     height: '100%',
+  },
+  autocompleteContainer: {
+    zIndex: 100,
+    borderColor: COLOR.clearColor,
+    borderWidth: 0,
+    borderRightColor: COLOR.clearColor,
+    borderRightWidth: 0,
+  },
+  autocomplete: {
+    backgroundColor: COLOR.clearColor,
+    borderColor: COLOR.clearColor,
+    borderWidth: 0,
+    height: 45,
+    color: COLOR.systemWhiteColor,
+    paddingLeft: 30,
+    borderRightColor: COLOR.clearColor,
+    borderRightWidth: 0,
   },
   description_text: {
     marginTop: 33,

@@ -2,11 +2,9 @@ import * as React from 'react';
 import {
   SafeAreaView,
   StyleSheet,
-  Text,
   View,
   Image,
   TouchableWithoutFeedback,
-  Dimensions,
   Platform,
 } from 'react-native';
 import { Container } from 'native-base';
@@ -15,12 +13,19 @@ import { SvgXml } from 'react-native-svg';
 import ImagePicker from 'react-native-image-crop-picker';
 
 // from app
-import { COLOR, FONT, Icon_Back, Icon_Normal_Profile, Img_Edit_Profile_Background, MARGIN_TOP } from '../../constants';
+import { 
+  COLOR, 
+  CustomText, 
+  FONT, 
+  Icon_Back, 
+  Icon_Normal_Profile, 
+  Img_Edit_Profile_Background, 
+  MARGIN_TOP,
+  viewportWidth, 
+} from '../../constants';
 import { ColorButton } from '../../components/Button';
 import { IFile } from '../../interfaces/app';
 
-
-const { width: viewportWidth } = Dimensions.get('window');
 
 export const SignUpAddProfilePictureScreen: React.FC = () => {
 
@@ -82,15 +87,15 @@ export const SignUpAddProfilePictureScreen: React.FC = () => {
 
       <SafeAreaView style={styles.safe_area}>
         <View style={styles.navigation_bar}>
-          <Text style={styles.title}>Profile Picture</Text>
+          <CustomText style={styles.title}>Profile Picture</CustomText>
 
           <TouchableWithoutFeedback onPress={() => onSkip()}>
-            <Text style={styles.skip_text}>Skip</Text>
+            <CustomText style={styles.skip_text}>Skip</CustomText>
           </TouchableWithoutFeedback>
         </View>
 
-        <Text style={styles.description_text}>Add a profile picture so hosts</Text>
-        <Text style={{...styles.description_text, marginTop: 0 }}>know who you are.</Text>
+        <CustomText style={styles.description_text}>Add a profile picture so hosts</CustomText>
+        <CustomText style={{...styles.description_text, marginTop: 0 }}>know who you are.</CustomText>
 
         <View style={styles.container}>
           <View style={styles.profile_container}>

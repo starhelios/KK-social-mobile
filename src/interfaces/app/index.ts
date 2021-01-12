@@ -24,9 +24,10 @@ export * from './HostList';
 export * from './File';
 export * from './ColorText';
 
+// Tutorial
+export * from './Tutorial';
 
 
 export * from './Booking';
-export * from './ProfileHelp';
 export * from './Bank';
 export * from './Card';

@@ -2,11 +2,8 @@ import * as React from 'react';
 import {
   SafeAreaView,
   StyleSheet,
-  Text,
   View,
-  Image,
   TouchableWithoutFeedback,
-  Dimensions,
   FlatList,
 } from 'react-native';
 import { Container } from 'native-base';
@@ -17,6 +14,7 @@ import { SvgXml } from 'react-native-svg';
 // from app
 import { 
   COLOR, 
+  CustomText, 
   FONT, 
   Icon_Back,
   MARGIN_TOP,
@@ -26,7 +24,6 @@ import { IBooking, IHost } from '../../interfaces/app';
 import { ConfirmedBookingView } from '../../components/View';
 import { useGlobalState } from '../../redux/Store';
 
-const { width: viewportWidth } = Dimensions.get('window');
 
 export const ConfirmedBookingsScreen: React.FC = () => {
 
@@ -163,7 +160,7 @@ export const ConfirmedBookingsScreen: React.FC = () => {
 
       <SafeAreaView style={styles.safe_area}>
         <View style={styles.navigation_bar}>
-          <Text style={styles.title}>Bookings</Text>
+          <CustomText style={styles.title}>Bookings</CustomText>
 
           <TouchableWithoutFeedback onPress={() => goBack()}>
             <View style={styles.back_icon}>
@@ -178,11 +175,11 @@ export const ConfirmedBookingsScreen: React.FC = () => {
               <View style={{
                 ...styles.tab_upcoming,
                 backgroundColor: selectedTab == 0 ? COLOR.blackColor : COLOR.clearColor}}>
-                <Text style={{
+                <CustomText style={{
                   ...styles.tab_title, 
                   color: selectedTab == 0 ? COLOR.whiteColor : COLOR.blackColor}}>
                   Upcoming
-                </Text>
+                </CustomText>
               </View>
             </TouchableWithoutFeedback>
 
@@ -190,11 +187,11 @@ export const ConfirmedBookingsScreen: React.FC = () => {
               <View style={{
                 ...styles.tab_completed,
                 backgroundColor: selectedTab == 0 ? COLOR.clearColor : COLOR.blackColor }}>
-                <Text style={{
+                <CustomText style={{
                   ...styles.tab_title, 
                   color: selectedTab == 0 ? COLOR.blackColor : COLOR.whiteColor}}>
                   Completed
-                </Text>
+                </CustomText>
               </View>
             </TouchableWithoutFeedback>
           </View>

@@ -2,11 +2,9 @@ import * as React from 'react';
 import {
   SafeAreaView,
   StyleSheet,
-  Text,
   View,
   Image,
   TouchableWithoutFeedback,
-  Dimensions,
   FlatList,
 } from 'react-native';
 import { Container } from 'native-base';
@@ -17,15 +15,16 @@ import { SvgXml } from 'react-native-svg';
 // from app
 import { 
   COLOR, 
+  CustomText, 
   FONT, 
   Icon_Back, 
   Img_Auth_Background,
   MARGIN_TOP,
+  viewportHeight,
 } from '../../constants';
 import { BankButton, TitleArrowButton } from '../../components/Button';
 import { IBank } from '../../interfaces/app';
 
-const { width: viewportWidth, height: viewportHeight } = Dimensions.get('window');
 
 export const WithdrawalScreen: React.FC = () => {
 
@@ -48,7 +47,7 @@ export const WithdrawalScreen: React.FC = () => {
 
       <SafeAreaView style={styles.safe_area}>
         <View style={styles.navigation_bar}>
-          <Text style={styles.title}>Withdrawal</Text>
+          <CustomText style={styles.title}>Withdrawal</CustomText>
 
           <TouchableWithoutFeedback onPress={() => goBack() }>
             <View style={styles.back_icon}>
@@ -59,7 +58,7 @@ export const WithdrawalScreen: React.FC = () => {
 
           <View style={styles.input_container}>
             <View style={{width:'100%'}}>
-              <Text style={styles.info_title}>Connected Account</Text>
+              <CustomText style={styles.info_title}>Connected Account</CustomText>
               <FlatList
                 style={{width: '100%', marginTop: 5, height: bankList.length * 78 <= viewportHeight - 350 ? bankList.length * 78 : viewportHeight - 350 }}
                 contentContainerStyle={{paddingVertical: 0}}

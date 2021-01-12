@@ -2,10 +2,8 @@ import * as React from 'react';
 import {
   SafeAreaView,
   StyleSheet,
-  Text,
   View,
   TouchableWithoutFeedback,
-  Dimensions,
   ScrollView,
   Image,
 } from 'react-native';
@@ -13,23 +11,22 @@ import { Container } from 'native-base';
 import { useEffect } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { SvgXml } from 'react-native-svg';
-import Moment from 'moment';
 
 // from app
 import { 
   COLOR, 
   convertStringToDateFormat, 
+  CustomText, 
   FONT, 
   Icon_Back_Black,
   Icon_Experience_Rating,
   Img_Experience,
   MARGIN_TOP,
+  viewportWidth,
 } from '../../constants';
 import { ColorButton, TitleArrowButton } from '../../components/Button';
 import { IAvailableDate, IExperience } from '../../interfaces/app';
 
-
-const { width: viewportWidth } = Dimensions.get('window');
 
 export const ExperienceDetailConfirmPayScreen: React.FC = ({route}) => {
 
@@ -47,7 +44,7 @@ export const ExperienceDetailConfirmPayScreen: React.FC = ({route}) => {
 
       <SafeAreaView style={styles.safe_area}>
         <View style={styles.navigation_bar}>
-          <Text style={styles.title}>Confirm Pay</Text>
+          <CustomText style={styles.title}>Confirm Pay</CustomText>
 
           <TouchableWithoutFeedback onPress={() => goBack()}>
             <View style={styles.back_icon}>
@@ -63,34 +60,34 @@ export const ExperienceDetailConfirmPayScreen: React.FC = ({route}) => {
               source={experience.images.length > 0 ? {uri: experience.images[0]} : Img_Experience} />
 
             <View style={{...image_styles.content_container, width: viewportWidth - 89}}>
-              <Text style={image_styles.title} numberOfLines={2}>{experience.title}</Text>
+              <CustomText style={image_styles.title} numberOfLines={2}>{experience.title}</CustomText>
 
               <View style={image_styles.rating_container}>
                 <SvgXml width={15} height={15} xml={Icon_Experience_Rating} />
-                <Text style={image_styles.rating_text} numberOfLines={1}>{experience.categoryName}</Text>
-                {/* <Text style={{...image_styles.rating_text, color: COLOR.alphaBlackColor50}} numberOfLines={1}>{'(' + experience.rating_count.toString() + ')'}</Text> */}
+                <CustomText style={image_styles.rating_text} numberOfLines={1}>{experience.categoryName}</CustomText>
+                {/* <CustomText style={{...image_styles.rating_text, color: COLOR.alphaBlackColor50}} numberOfLines={1}>{'(' + experience.rating_count.toString() + ')'}</CustomText> */}
               </View>
             </View>
           </View>
 
-          <Text style={styles.info_title}>Details</Text>
+          <CustomText style={styles.info_title}>Details</CustomText>
 
-          <Text style={styles.info_detail_title}>Date</Text>
-          <Text style={styles.info_detail_content}>{convertStringToDateFormat(availableDate.day, 'ddd, MMM DD') + '    ' + availableDate.startTime + ' - ' + availableDate.endTime}</Text>
+          <CustomText style={styles.info_detail_title}>Date</CustomText>
+          <CustomText style={styles.info_detail_content}>{convertStringToDateFormat(availableDate.day, 'ddd, MMM DD') + '    ' + availableDate.startTime + ' - ' + availableDate.endTime}</CustomText>
           <View style={styles.line} />
 
-          <Text style={styles.info_detail_title}>Guest</Text>
-          <Text style={styles.info_detail_content}>{guestCount.toString() + ' person'}</Text>
+          <CustomText style={styles.info_detail_title}>Guest</CustomText>
+          <CustomText style={styles.info_detail_content}>{guestCount.toString() + ' person'}</CustomText>
           <View style={styles.line} />
 
-          <Text style={styles.info_detail_title}>Price Detail</Text>
+          <CustomText style={styles.info_detail_title}>Price Detail</CustomText>
           <View style={{flexDirection: 'row'}}>
-            <Text style={styles.info_detail_content}>{'$' + experience.price + ' x ' + guestCount.toString() + ' person'}</Text>
-            <Text style={styles.price_unit}>{'$' + Math.floor(experience.price * guestCount).toString()}</Text>
+            <CustomText style={styles.info_detail_content}>{'$' + experience.price + ' x ' + guestCount.toString() + ' person'}</CustomText>
+            <CustomText style={styles.price_unit}>{'$' + Math.floor(experience.price * guestCount).toString()}</CustomText>
           </View>
           <View style={styles.line} />
 
-          <Text style={styles.info_title}>Payment</Text>
+          <CustomText style={styles.info_title}>Payment</CustomText>
           <View style={{marginLeft: 24, width: viewportWidth - 48, marginTop: 16}}>
             <TitleArrowButton title={'Credit Card'} name={''} showArrow={true} white_color={false} />
           </View>

@@ -1,20 +1,14 @@
 import * as React from 'react';
-import {
-  StyleSheet,
-  Dimensions,
-  SafeAreaView,
-} from 'react-native';
+import { StyleSheet, SafeAreaView } from 'react-native';
 import { Container } from 'native-base';
 import { useEffect, useState } from 'react';
 
 // from app
-import { COLOR } from '../../constants';
+import { COLOR, viewportWidth } from '../../constants';
 import { NotLoginProfileView, LoginProfileView } from '../../components/View';
 import { IUser } from '../../interfaces/app';
 import { useGlobalState } from '../../redux/Store';
 
-
-const { width: viewportWidth } = Dimensions.get('window');
 
 export const ProfileScreen: React.FC = () => {
 

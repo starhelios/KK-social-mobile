@@ -1,15 +1,8 @@
 import * as React from 'react';
-import {
-  Dimensions,
-  StyleSheet,
-  Text,
-  TouchableWithoutFeedback,
-  View,
-} from 'react-native';
-import Moment from 'moment';
+import { StyleSheet, TouchableWithoutFeedback, View } from 'react-native';
 
 // from app
-import { COLOR, convertStringToDateFormat, FONT } from '../../constants';
+import { COLOR, convertStringToDateFormat, CustomText, FONT, viewportWidth } from '../../constants';
 import { IAvailableDate, IExperience } from '../../interfaces/app';
 import { ColorButton } from '../Button';
 import GlobalStyle from '../../styles/global';
@@ -21,8 +14,6 @@ interface props {
   onChooseDate: (availableDate: IAvailableDate) => void;
 }
 
-const { width: viewportWidth } = Dimensions.get('window');
-
 export const ExperienceDetailBookView: React.FC<props> = (props: props) => {
 
   const experience: IExperience = props.experience;
@@ -32,16 +23,16 @@ export const ExperienceDetailBookView: React.FC<props> = (props: props) => {
     <View>
     {
       availableDate.show_date == true
-      ? <Text style={styles.date}>{convertStringToDateFormat(availableDate.day, 'ddd, MMM D')}</Text>
+      ? <CustomText style={styles.date}>{convertStringToDateFormat(availableDate.day, 'ddd, MMM D')}</CustomText>
       : null
     }
 
       <View style={styles.container}>
         <View>
-          <Text style={styles.time}>{availableDate.startTime + ' - ' + availableDate.endTime + ' (EDT)'}</Text>
+          <CustomText style={styles.time}>{availableDate.startTime + ' - ' + availableDate.endTime + ' (EDT)'}</CustomText>
           <View style={styles.price_container}>
-            <Text style={{...styles.time, fontFamily: FONT.AN_Bold}}>{'$' + experience.price}</Text>
-            {/* <Text style={styles.time}>{' / person'}</Text> */}
+            <CustomText style={{...styles.time, fontFamily: FONT.AN_Bold}}>{'$' + experience.price}</CustomText>
+            {/* <CustomText style={styles.time}>{' / person'}</CustomText> */}
           </View>
         </View>
 

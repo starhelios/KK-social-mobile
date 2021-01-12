@@ -2,13 +2,10 @@ import * as React from 'react';
 import {
   SafeAreaView,
   StyleSheet,
-  Text,
   View,
   Image,
   TouchableWithoutFeedback,
   Keyboard,
-  TextInput,
-  Dimensions,
   Alert,
 } from 'react-native';
 import { Container } from 'native-base';
@@ -18,14 +15,23 @@ import { SvgXml } from 'react-native-svg';
 import Spinner from 'react-native-loading-spinner-overlay';
 
 // from app
-import { COLOR, CustomTextInput, ERROR_MESSAGE, FONT, Icon_Back, Img_Auth_Background, MARGIN_TOP } from '../../constants';
+import { 
+  COLOR, 
+  CustomText, 
+  CustomTextInput, 
+  ERROR_MESSAGE, 
+  FONT, 
+  Icon_Back, 
+  Img_Auth_Background, 
+  MARGIN_TOP,
+  viewportHeight,
+  viewportWidth, 
+} from '../../constants';
 import { ColorButton } from '../../components/Button';
 import { useAuthentication } from '../../hooks';
 import { IApiError, IApiSuccessMessage } from '../../interfaces/api';
 import GlobalStyle from '../../styles/global';
 
-
-const { width: viewportWidth, height: viewportHeight } = Dimensions.get('window');
 
 export const ForgotPasswordScreen: React.FC = () => {
 
@@ -42,7 +48,7 @@ export const ForgotPasswordScreen: React.FC = () => {
 
       <SafeAreaView style={styles.safe_area}>
         <View style={styles.navigation_bar}>
-          <Text style={styles.title}>Forgot Password</Text>
+          <CustomText style={styles.title}>Forgot Password</CustomText>
 
           <TouchableWithoutFeedback onPress={() => goBack() }>
             <View style={styles.back_icon}>
@@ -55,7 +61,7 @@ export const ForgotPasswordScreen: React.FC = () => {
           <View style={styles.container}>
             <View style={styles.input_container}>
               <View style={{width:'100%', marginTop: 22}}>
-                <Text style={styles.info_title}>Email Address</Text>
+                <CustomText style={styles.info_title}>Email Address</CustomText>
                 <CustomTextInput
                   style={GlobalStyle.auth_input}
                   keyboardType={'email-address'}
@@ -72,8 +78,8 @@ export const ForgotPasswordScreen: React.FC = () => {
         </TouchableWithoutFeedback>
 
         <View style={styles.bottom_container}>
-          <Text style={styles.bottom_description}>We will send a password reset email</Text>
-          <Text style={styles.bottom_description}>to the address above.</Text>
+          <CustomText style={styles.bottom_description}>We will send a password reset email</CustomText>
+          <CustomText style={styles.bottom_description}>to the address above.</CustomText>
 
           <TouchableWithoutFeedback onPress={() => onForgotPassword() }>
             <View style={styles.bottom_button}>

@@ -1,13 +1,8 @@
 import * as React from 'react';
-import {
-  StyleSheet,
-  Text,
-  TouchableWithoutFeedback,
-  View,
-} from 'react-native';
+import { StyleSheet, TouchableWithoutFeedback, View } from 'react-native';
 
 // from app
-import { COLOR, FONT } from '../../constants';
+import { COLOR, CustomText, FONT } from '../../constants';
 import { IBank } from '../../interfaces/app';
 
 interface props {
@@ -18,8 +13,8 @@ export const BankButton: React.FC<props> = (props: props) => {
   return (
     <TouchableWithoutFeedback onPress={() => onSelectBank() }>
       <View style={styles.container}>
-        <Text style={styles.card_name} numberOfLines={1}>{props.card.name}</Text>
-        <Text style={styles.card_number} numberOfLines={1}>{props.card.number}</Text>
+        <CustomText style={styles.card_name} numberOfLines={1}>{props.card.name}</CustomText>
+        <CustomText style={styles.card_number} numberOfLines={1}>{props.card.number}</CustomText>
         <View style={styles.info_line} />
       </View>
     </TouchableWithoutFeedback>

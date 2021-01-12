@@ -2,14 +2,9 @@ import * as React from 'react';
 import {
   SafeAreaView,
   StyleSheet,
-  Text,
   View,
   Image,
   TouchableWithoutFeedback,
-  KeyboardAvoidingView,
-  Platform,
-  Keyboard,
-  Dimensions,
   FlatList,
 } from 'react-native';
 import { Container } from 'native-base';
@@ -20,15 +15,16 @@ import { SvgXml } from 'react-native-svg';
 // from app
 import { 
   COLOR, 
+  CustomText, 
   FONT, 
   Icon_Back, 
   Img_Auth_Background,
   MARGIN_TOP,
+  viewportHeight,
 } from '../../constants';
 import { TitleArrowButton, YourCardButton } from '../../components/Button';
 import { ICard } from '../../interfaces/app';
 
-const { width: viewportWidth, height: viewportHeight } = Dimensions.get('window');
 
 export const PaymentOptionsScreen: React.FC = () => {
 
@@ -50,7 +46,7 @@ export const PaymentOptionsScreen: React.FC = () => {
 
       <SafeAreaView style={styles.safe_area}>
         <View style={styles.navigation_bar}>
-          <Text style={styles.title}>Payment</Text>
+          <CustomText style={styles.title}>Payment</CustomText>
 
           <TouchableWithoutFeedback onPress={() => goBack() }>
             <View style={styles.back_icon}>
@@ -61,7 +57,7 @@ export const PaymentOptionsScreen: React.FC = () => {
 
         <View style={styles.input_container}>
           <View style={{width:'100%'}}>
-            <Text style={styles.info_title}>Your Cards</Text>
+            <CustomText style={styles.info_title}>Your Cards</CustomText>
             
             <FlatList
                 style={{width: '100%', marginTop: 5, height: cardList.length * 60 <= viewportHeight - 350 ? cardList.length * 60 : viewportHeight - 350 }}

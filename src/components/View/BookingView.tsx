@@ -1,6 +1,5 @@
 import * as React from 'react';
 import {
-  Dimensions,
   Image,
   StyleSheet,
   TouchableWithoutFeedback,
@@ -10,7 +9,8 @@ import {
 // from app
 import { 
   COLOR, 
-  Img_Experience, 
+  Img_Experience,
+  viewportWidth, 
 } from '../../constants';
 import { IBooking } from '../../interfaces/app';
 import { ColorButton } from '../Button';
@@ -21,8 +21,6 @@ interface props {
   completed_booking: boolean;
   booking: IBooking;
 }
-
-const { width: viewportWidth } = Dimensions.get('window');
 
 export const BookingView: React.FC<props> = (props: props) => {
   return (

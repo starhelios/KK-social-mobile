@@ -1,12 +1,8 @@
 import * as React from 'react';
-import {
-  StyleSheet,
-  Text,
-  View,
-} from 'react-native';
+import { StyleSheet, View } from 'react-native';
 
 // from app
-import { COLOR, FONT } from '../../constants';
+import { COLOR, CustomText, FONT } from '../../constants';
 
 interface props {
   title: string;
@@ -17,7 +13,7 @@ interface props {
 export const ColorButton: React.FC<props> = (props: props) => {
   return (
     <View style={{ ...styles.button, backgroundColor: props.backgroundColor }}>
-      <Text style={{...styles.button_text, color: props.color }} numberOfLines={1}>{props.title}</Text>
+      <CustomText style={{...styles.button_text, color: props.color }} numberOfLines={1}>{props.title}</CustomText>
     </View>
   );
 }

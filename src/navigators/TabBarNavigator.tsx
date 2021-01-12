@@ -1,9 +1,7 @@
 import React from 'react';
 import { View, StyleSheet } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-// import * as Sentry from '@sentry/react-native';
 import { SvgXml } from 'react-native-svg';
-import { Dimensions } from 'react-native';
 
 // from app
 import HomeNavigator from './HomeNavigator';
@@ -19,11 +17,6 @@ import {
   Icon_Tab_Bar_Profile_Select,
 } from '../constants';
 
-// Sentry.init({
-//   dsn: 'https://3463daf0c4c047cdbda89c051aaed669@o300282.ingest.sentry.io/5212707',
-// });
-
-const { width: viewportWidth } = Dimensions.get('window');
 
 const TabStack = createBottomTabNavigator();
 

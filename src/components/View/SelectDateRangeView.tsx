@@ -1,53 +1,64 @@
 import * as React from 'react';
 import {
-  Dimensions,
+  Alert,
   StyleSheet,
-  Text,
   TouchableWithoutFeedback,
   View,
 } from 'react-native';
 import { useEffect, useState } from 'react';
 import { SvgXml } from 'react-native-svg';
 import CalendarPicker from 'react-native-calendar-picker';
-import Moment from 'moment';
 
 // from app
 import { 
   COLOR, 
+  convertDateToDateFormat, 
+  convertStringToDate, 
   convertStringToDateFormat, 
+  CustomText, 
+  ERROR_MESSAGE, 
   FONT,
   Icon_Close_Black,
+  viewportWidth,
 } from '../../constants';
 import GlobalStyle from '../../styles/global';
 import { ColorButton } from '../Button';
 
-interface props {
-  selectedDate: string;
-  onCloseView: (visible: boolean) => void;
-  onSelectDate: (selectedDate: string) => void;
-}
 
-const { width: viewportWidth } = Dimensions.get('window');
+interface props {
+  selectedFromDate: string;
+  selectedEndDate: string;
+  onCloseView: (visible: boolean) => void;
+  onSelectDate: (fromDate: string, endDate: string) => void;
+}
 
 export const SelectDateRangeView: React.FC<props> = (props: props) => {
 
-  const [currentDate, setCurrentDate] = useState<string>('')
-  const [selectedDate, setSelectedDate] = useState<string>(props.selectedDate);
-  const [markedDates, setMarkedDates] = useState<any>();
-  const [selectedStartDate, setSelectedStartDate] = useState<Date | null>(null);
+  // const [selectedFromDate, setSelectedFromDate] = useState<Date | null>(convertStringToDate(props.selectedFromDate));
+  // const [selectedEndDate, setSelectedEndDate] = useState<Date | null>(convertStringToDate(props.selectedEndDate));
+  const [selectedFromDate, setSelectedFromDate] = useState<Date | null>(null);
   const [selectedEndDate, setSelectedEndDate] = useState<Date | null>(null);
+  const [markedDates, setMarkedDates] = useState<any>();
 
-  useEffect(() => {
-    
-    
-    setSelectedDate(props.selectedDate);
-    if (props.selectedDate != '') {
-      updateMarkerDate(props.selectedDate);
+  const onDateChange = (date: Date, type: string) => {
+    if (type === 'END_DATE') {
+      setSelectedEndDate(date);
+    } else {
+      setSelectedFromDate(date);
+      setSelectedEndDate(null);
+    }
+  }
+
+  const onFilter = () => {
+    if (selectedFromDate != null && selectedEndDate == null) {
+      Alert.alert(ERROR_MESSAGE.EMPTY_END_DATE);
+      return;
     }
 
-    const currentDate = convertStringToDateFormat('', 'YYYY-MM-DD');
-    setCurrentDate(currentDate);
-  }, []);
+    props.onSelectDate(
+      selectedFromDate != null ? convertDateToDateFormat(selectedFromDate, 'YYYY-MM-DD') : '', 
+      selectedEndDate != null ? convertDateToDateFormat(selectedEndDate, 'YYYY-MM-DD') : '')
+  }
 
   return (
     <View style={{flex: 1}}>
@@ -57,7 +68,7 @@ export const SelectDateRangeView: React.FC<props> = (props: props) => {
       
       <View style = {styles.calendar_container}>
         <View style={styles.title_bar}>
-          <Text style={styles.title}>Dates</Text>
+          <CustomText style={styles.title}>Dates</CustomText>
 
           <TouchableWithoutFeedback onPress={() => props.onCloseView(false)}>
             <View style = {styles.close_icon}>
@@ -80,17 +91,17 @@ export const SelectDateRangeView: React.FC<props> = (props: props) => {
             nextTitle=">"
             todayBackgroundColor={COLOR.redColor}
             selectedDayColor={COLOR.blueColor}
-            selectedDayTextColor="#000000"
+            selectedDayTextColor={COLOR.systemBlackColor}
             scaleFactor={375}
             textStyle={{
-              fontFamily: 'Cochin',
-              color: '#000000',
+              fontFamily: FONT.AN_Regular,
+              color: COLOR.systemBlackColor,
             }}
             onDateChange={onDateChange}
           />
         </View>         
         
-        <TouchableWithoutFeedback onPress={() => props.onSelectDate(selectedDate)}>
+        <TouchableWithoutFeedback onPress={onFilter}>
           <View style={styles.bottom_button}>
             <ColorButton title={'Apply'} backgroundColor={COLOR.systemBlackColor} color={COLOR.systemWhiteColor} />
           </View>
@@ -98,25 +109,6 @@ export const SelectDateRangeView: React.FC<props> = (props: props) => {
       </View>
     </View>
   );
-
-  function updateMarkerDate(dateString: string) {
-    if (dateString != '') {
-      const newMarkedDate: {[key:string]: {selected: boolean, selectedColor: string}} = {};
-      newMarkedDate[dateString] = {selected: true, selectedColor: 'blue'};
-      setMarkedDates(newMarkedDate);
-    } else {
-      setMarkedDates(null);
-    }
-  }
-
-  function onDateChange(date: Date, type: string) {
-    if (type === 'END_DATE') {
-      setSelectedEndDate(date);
-    } else {
-      setSelectedStartDate(date);
-      setSelectedEndDate(null);
-    }
-  }
 }
 
 const styles = StyleSheet.create({

@@ -2,10 +2,8 @@ import * as React from 'react';
 import {
   SafeAreaView,
   StyleSheet,
-  Text,
   View,
   TouchableWithoutFeedback,
-  Dimensions,
   FlatList,
   Modal,
   Alert,
@@ -14,12 +12,12 @@ import { Container } from 'native-base';
 import { useEffect, useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { SvgXml } from 'react-native-svg';
-import Moment from 'moment';
 
 // from app
 import { 
   COLOR, 
   convertStringToDateFormat, 
+  CustomText, 
   ERROR_MESSAGE, 
   FONT, 
   Icon_Back_Black,
@@ -27,12 +25,11 @@ import {
   Icon_Guest_Plus,
   Icon_Share_Black,
   MARGIN_TOP,
+  viewportWidth,
 } from '../../constants';
 import { IAvailableDate, IExperience } from '../../interfaces/app';
 import { ExperienceDetailBookView, SelectDateView } from '../../components/View';
 
-
-const { width: viewportWidth, height: viewportHeight } = Dimensions.get('window');
 
 export const ExperienceDetailBookScreen: React.FC = ({route}) => {
 
@@ -67,7 +64,7 @@ export const ExperienceDetailBookScreen: React.FC = ({route}) => {
 
       <SafeAreaView style={styles.safe_area}>
         <View style={styles.navigation_bar}>
-          <Text style={styles.title}>Select Date & Time</Text>
+          <CustomText style={styles.title}>Select Date & Time</CustomText>
 
           <TouchableWithoutFeedback onPress={() => goBack()}>
             <View style={styles.back_icon}>
@@ -85,12 +82,12 @@ export const ExperienceDetailBookScreen: React.FC = ({route}) => {
         <View style={styles.tab_bar}>
           <TouchableWithoutFeedback onPress={() => setShowSelectDates(true)}>
             <View style={styles.tab_bar_date_container}>
-              <Text style={styles.tab_bar_text}>{getVisibleDate()}</Text>
+              <CustomText style={styles.tab_bar_text}>{getVisibleDate()}</CustomText>
             </View>
           </TouchableWithoutFeedback>
 
           <View style={styles.tab_bar_count_container}>
-            <Text style={styles.tab_bar_text}>{guestCount + ' guest'}</Text>
+            <CustomText style={styles.tab_bar_text}>{guestCount + ' guest'}</CustomText>
 
             <TouchableWithoutFeedback onPress={() => onDecreaseGuestCount()}>
               <View style={styles.increase_count}>

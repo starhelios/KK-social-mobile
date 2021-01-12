@@ -2,12 +2,9 @@ import * as React from 'react';
 import {
   SafeAreaView,
   StyleSheet,
-  Text,
   View,
   TouchableWithoutFeedback,
-  Dimensions,
   Platform,
-  TextInput,
   ScrollView,
   FlatList,
   Keyboard,
@@ -22,11 +19,13 @@ import ImagePicker from 'react-native-image-crop-picker';
 // from app
 import { 
   COLOR, 
+  CustomText, 
   CustomTextInput, 
   FONT, 
   Icon_Back_Black,
   Icon_Search_Black,
   MARGIN_TOP,
+  viewportWidth,
 } from '../../constants';
 import { ColorButton } from '../../components/Button';
 import { useGlobalState } from '../../redux/Store';
@@ -34,7 +33,6 @@ import { IFile, IUser } from '../../interfaces/app';
 import { ExperienceImageView } from '../../components/View';
 import GlobalStyle from '../../styles/global';
 
-const { width: viewportWidth, height: viewportHeight } = Dimensions.get('window');
 
 export const HostAnExperienceScreen: React.FC = () => {
 
@@ -64,7 +62,7 @@ export const HostAnExperienceScreen: React.FC = () => {
 
         <View style={{flex: 1}}>
           <View style={styles.navigation_bar}>
-            <Text style={styles.title}>Host an Experience</Text>
+            <CustomText style={styles.title}>Host an Experience</CustomText>
 
             <TouchableWithoutFeedback onPress={() => goBack()}>
               <View style={styles.back_icon}>
@@ -79,7 +77,7 @@ export const HostAnExperienceScreen: React.FC = () => {
                 <ScrollView style={{}}>
                   <View style={styles.profile_container}>
                     <View style={{width:'100%'}}>
-                      <Text style={{...styles.info_title, marginLeft: 24}}>Photos</Text>
+                      <CustomText style={{...styles.info_title, marginLeft: 24}}>Photos</CustomText>
                       <FlatList
                         style={{height: 75, marginTop: 16 }}
                         contentContainerStyle={{paddingHorizontal: 24}}
@@ -94,7 +92,7 @@ export const HostAnExperienceScreen: React.FC = () => {
 
                   <View style={{marginLeft: 24, marginRight: 24, width: viewportWidth - 48, marginBottom: 30}}>
                     <View style={{width:'100%', marginTop: 33}}>
-                      <Text style={styles.info_title}>Title</Text>
+                      <CustomText style={styles.info_title}>Title</CustomText>
                       <CustomTextInput
                         style={{...GlobalStyle.auth_input, color: COLOR.systemBlackColor}}
                         placeholder={'Title'}
@@ -106,7 +104,7 @@ export const HostAnExperienceScreen: React.FC = () => {
                     </View>
 
                     <View style={{width:'100%', marginTop: 22}}>
-                      <Text style={styles.info_title}>Description</Text>
+                      <CustomText style={styles.info_title}>Description</CustomText>
                       <CustomTextInput
                         style={{...GlobalStyle.auth_input, color: COLOR.systemBlackColor}}
                         placeholder={'Description'}
@@ -118,7 +116,7 @@ export const HostAnExperienceScreen: React.FC = () => {
                     </View>
 
                     <View style={{width:'100%', marginTop: 22}}>
-                      <Text style={styles.info_title}>Duration (in minutes)</Text>
+                      <CustomText style={styles.info_title}>Duration (in minutes)</CustomText>
                       <CustomTextInput
                         style={{...GlobalStyle.auth_input, color: COLOR.systemBlackColor}}
                         keyboardType={'numeric'}
@@ -131,9 +129,9 @@ export const HostAnExperienceScreen: React.FC = () => {
                     </View>
 
                     <View style={{width:'100%', marginTop: 22}}>
-                      <Text style={styles.info_title}>Price / Person</Text>
+                      <CustomText style={styles.info_title}>Price / Person</CustomText>
                       <View style={{flexDirection: 'row'}}>
-                        <Text style={styles.price}>$</Text>
+                        <CustomText style={styles.price}>$</CustomText>
                         <CustomTextInput
                           style={{...GlobalStyle.auth_input, color: COLOR.systemBlackColor}}
                           keyboardType={'numeric'}
@@ -147,7 +145,7 @@ export const HostAnExperienceScreen: React.FC = () => {
                     </View>
 
                     <View style={{width:'100%', marginTop: 22}}>
-                      <Text style={styles.info_title}>Category</Text>
+                      <CustomText style={styles.info_title}>Category</CustomText>
                       <CustomTextInput
                         style={{...GlobalStyle.auth_input, paddingLeft: 25, color: COLOR.systemBlackColor}}
                         placeholder={'Search Categories'}

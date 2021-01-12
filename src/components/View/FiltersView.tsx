@@ -1,24 +1,23 @@
 import * as React from 'react';
 import {
-  Dimensions,
   Keyboard,
   KeyboardAvoidingView,
   Platform,
   ScrollView,
   StyleSheet,
-  Text,
-  TextInput,
   TouchableWithoutFeedback,
   View,
 } from 'react-native';
 import { useCallback, useEffect, useState } from 'react';
 import { SvgXml } from 'react-native-svg';
-import { SafeAreaView } from 'react-native-safe-area-context';
 import RangeSlider from 'rn-range-slider';
+import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
+
 
 // from app
 import { 
   COLOR, 
+  CustomText, 
   CustomTextInput, 
   FONT,
   Icon_Close_Black,
@@ -26,6 +25,7 @@ import {
   Icon_Search_Black,
   Icon_Slider_Left,
   Icon_Slider_Right,
+  viewportWidth,
 } from '../../constants';
 import { ColorButton } from '../Button';
 import { useGlobalState } from '../../redux/Store';
@@ -33,11 +33,9 @@ import GlobalStyle from '../../styles/global';
 
 
 interface props {
-  onFilter: (lowPrice: number, hightPrice: number) => void;
+  onFilter: (lowPrice: number, hightPrice: number, location: string) => void;
   onCloseView: (visible: boolean) => void;
 }
-
-const { width: viewportWidth } = Dimensions.get('window');
 
 export const FiltersView: React.FC<props> = (props: props) => {
 
@@ -45,22 +43,29 @@ export const FiltersView: React.FC<props> = (props: props) => {
 
   const [searchLocation, setSearchLocation] = useState<string>('');
   const [lowPrice, setLowPrice] = useState<number>(filter.minPrice != null ? filter.minPrice : 0);
-  const [highPrice, setHighPrice] = useState<number>(filter.maxPrice != null ? filter.maxPrice : 1000);
+  const [highPrice, setHighPrice] = useState<number>(filter.maxPrice != null && filter.maxPrice != 0 ? filter.maxPrice : 1000);
 
   const renderThumb = useCallback(() => <SvgXml width={34} height={24} xml={Icon_Slider_Left} />, []);
   const renderRail = useCallback(() => <View style={styles.slider_rail} />, []);
   const renderRailSelected = useCallback(() => <View style={styles.slider_rail_selected} />, []);
   const renderLabel = useCallback(value => renderSliderLabel(value), []);
   const renderNotch = useCallback(() => <View style={styles.slider_notch} />, []);
+
+  var isInit = true;
+
   const handleValueChange = useCallback((low, high) => {
+    if (isInit == true) {
+      isInit = false;
+      setLowPrice(filter.minPrice != null ? filter.minPrice : 0);
+      setHighPrice(filter.maxPrice != null && filter.maxPrice != 0 ? filter.maxPrice : 1000);
+      return;
+    }
     setLowPrice(low);
     setHighPrice(high);
   }, []);
 
-  useEffect(() => {
-  }, []);
-
   return (
+    
     <View style={{flex: 1}}>
       <TouchableWithoutFeedback onPress={() => props.onCloseView(false)}>
         <View style = {styles.container} />
@@ -69,7 +74,7 @@ export const FiltersView: React.FC<props> = (props: props) => {
       <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
         <View style = {styles.calendar_container}>
           <View style={styles.title_bar}>
-            <Text style={styles.title}>Filters</Text>
+            <CustomText style={styles.title}>Filters</CustomText>
 
             <TouchableWithoutFeedback onPress={() => props.onCloseView(false)}>
               <View style = {styles.close_icon}>
@@ -79,14 +84,16 @@ export const FiltersView: React.FC<props> = (props: props) => {
           </View>
 
           <View style={{...GlobalStyle.auth_line, backgroundColor: COLOR.alphaBlackColor20, marginLeft: 24, marginRight: 24, width: viewportWidth - 48, marginTop: 0}} />
-          
-          {/* <KeyboardAvoidingView behavior={Platform.OS == "ios" ? "padding" : "height"} > */}
             <View style={styles.content_container}>
-              <Text style={{...styles.content_title, marginTop: 33}}>Price</Text>
+              <CustomText style={{...styles.content_title, marginTop: 33}}>Price</CustomText>
 
               <View style={styles.slider_value_container}>
-                <Text style={{...styles.slider_value, textAlign: 'left'}}>{'$' + lowPrice.toString()}</Text>
-                <Text style={{...styles.slider_value, textAlign: 'right', position: 'absolute', right: 0,}}>{'$' + (highPrice == 1000 ? '1000+' : highPrice.toString())}</Text>
+                <CustomText style={{...styles.slider_value, textAlign: 'left'}}>
+                  {'$' + lowPrice.toString()}
+                </CustomText>
+                <CustomText style={{...styles.slider_value, textAlign: 'right', position: 'absolute', right: 0,}}>
+                  {'$' + (highPrice == 1000 ? '1000+' : highPrice.toString())}
+                </CustomText>
               </View>
 
               <RangeSlider
@@ -94,6 +101,8 @@ export const FiltersView: React.FC<props> = (props: props) => {
                 min={0}
                 max={1000}
                 step={50}
+                low={lowPrice}
+                high={highPrice}
                 floatingLabel
                 renderThumb={renderThumb}
                 renderRail={renderRail}
@@ -104,7 +113,7 @@ export const FiltersView: React.FC<props> = (props: props) => {
               />
               <View style={{...GlobalStyle.auth_line, backgroundColor: COLOR.alphaBlackColor20, marginTop: 22}} />
 
-              <Text style={{...styles.content_title, marginTop: 44}}>Location</Text>
+              {/* <CustomText style={{...styles.content_title, marginTop: 44}}>Location</CustomText>
 
               <View style={{width:'100%', marginTop: 22, flexDirection: 'row'}}>
                 <TouchableWithoutFeedback onPress={() => onSearchLocation()}>
@@ -113,12 +122,31 @@ export const FiltersView: React.FC<props> = (props: props) => {
                   </View>
                 </TouchableWithoutFeedback>
 
-                <CustomTextInput
-                  style={{...GlobalStyle.auth_input, paddingLeft: 25, color: COLOR.systemBlackColor}}
-                  placeholder={'Search Location'}
-                  placeholderTextColor={COLOR.alphaBlackColor75}
-                  onChangeText={text => setSearchLocation(text)}
-                  value={searchLocation}
+                <GooglePlacesAutocomplete
+                  placeholder='Enter Location'
+                  minLength={2}
+                  // autoFocus={false}
+                  // returnKeyType={'default'}
+                  fetchDetails={true}
+                  styles={{
+                    textInputContainer: {
+                      backgroundColor: COLOR.clearColor,
+                    },
+                    textInput: {
+                      height: 45,
+                      color: '#5d5d5d',
+                      fontSize: 16,
+                      backgroundColor: COLOR.clearColor,
+                      marginLeft: 20,
+                    },
+                    predefinedPlacesDescription: {
+                      color: '#1faadb',
+                    },
+                  }}
+                  query={{
+                    key: 'YOUR API KEY',
+                    language: 'en',
+                  }}
                 />
                 
                 <TouchableWithoutFeedback onPress={() => onSelectLocation()}>
@@ -130,16 +158,15 @@ export const FiltersView: React.FC<props> = (props: props) => {
               </View>
 
               <View style={{...GlobalStyle.auth_line, backgroundColor: COLOR.alphaBlackColor20, marginTop: 0}} />
-              <Text style={styles.content_text}>New Orleans, LA</Text>
+              <CustomText style={styles.content_text}>New Orleans, LA</CustomText>
               <View style={{...GlobalStyle.auth_line, backgroundColor: COLOR.alphaBlackColor20, marginTop: 22}} />
-              <Text style={styles.content_text}>Nashville, TN</Text>
+              <CustomText style={styles.content_text}>Nashville, TN</CustomText>
               <View style={{...GlobalStyle.auth_line, backgroundColor: COLOR.alphaBlackColor20, marginTop: 22}} />
-              <Text style={styles.content_text}>New York, NY</Text>
+              <CustomText style={styles.content_text}>New York, NY</CustomText> */}
 
             </View>
-          {/* </KeyboardAvoidingView> */}
-
-          <TouchableWithoutFeedback onPress={() => props.onFilter(lowPrice, highPrice)}>
+            
+          <TouchableWithoutFeedback onPress={() => props.onFilter(lowPrice, highPrice, searchLocation)}>
             <View style={styles.bottom_button}>
               <ColorButton title={'Apply Filters'} backgroundColor={COLOR.systemBlackColor} color={COLOR.systemWhiteColor} />
             </View>
@@ -147,6 +174,7 @@ export const FiltersView: React.FC<props> = (props: props) => {
         </View>
       </TouchableWithoutFeedback>
     </View>
+    
   );
 
   function onSearchLocation() {
@@ -159,7 +187,7 @@ export const FiltersView: React.FC<props> = (props: props) => {
 
   function renderSliderLabel(value: number) {
     <View style={styles.slider_label_container}>
-      <Text style={styles.slider_label}>{value}</Text>
+      <CustomText style={styles.slider_label}>{value}</CustomText>
     </View>
   }
 }
@@ -200,8 +228,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   content_container: {
-    marginLeft: 0,
-    marginRight: 0,
+    marginLeft: 24,
+    marginRight: 24,
   },
   bottom_button: {
     marginTop: 33,
@@ -217,8 +245,6 @@ const styles = StyleSheet.create({
     fontFamily: FONT.AN_Regular,
     color: COLOR.systemBlackColor,
     fontSize: 16,
-    marginLeft: 24,
-    marginRight: 24,
   },
   slider_value_container: {
     marginTop: 22,
@@ -232,14 +258,12 @@ const styles = StyleSheet.create({
     fontFamily: FONT.AN_Regular,
     color: COLOR.blackColor,
     fontSize: 14,
-    marginLeft: 24,
-    marginRight: 24,
   },
   slider: {
     marginTop: 12,
     height: 34,
-    marginLeft: 18,
-    marginRight: 18,
+    marginLeft: -5,
+    marginRight: -5,
   },
   content_text: {
     marginTop: 22,

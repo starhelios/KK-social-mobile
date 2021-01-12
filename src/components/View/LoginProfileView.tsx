@@ -1,11 +1,9 @@
 import * as React from 'react';
 import {
-  Dimensions,
   Image,
   Platform,
   ScrollView,
   StyleSheet,
-  Text,
   TouchableWithoutFeedback,
   View,
 } from 'react-native';
@@ -18,10 +16,10 @@ import DefaultPreference from 'react-native-default-preference';
 
 // from app
 import { 
-  ACCESS_TOKEN,
   APPLE_LOGIN,
   CODE,
   COLOR, 
+  CustomText, 
   EMAIL_LOGIN, 
   FACEBOOK_LOGIN, 
   FONT, 
@@ -32,7 +30,8 @@ import {
   MARGIN_TOP,
   PASSWORD,
   SetApiConfig,
-  USER_EMAIL, 
+  USER_EMAIL,
+  viewportWidth, 
 } from '../../constants';
 import { ColorButton, TitleArrowButton } from '../Button';
 import { IUser } from '../../interfaces/app';
@@ -40,21 +39,20 @@ import { useUsers } from '../../hooks';
 import { useDispatch, useGlobalState } from '../../redux/Store';
 import { ActionType } from '../../redux/Reducer';
 
-const { width: viewportWidth, height: viewportHeight } = Dimensions.get('window');
-
 export const LoginProfileView: React.FC = () => {
+  
+  const userInfo: IUser = useGlobalState('userInfo');
 
   const { navigate, goBack } = useNavigation();
   const { getUserInformation } = useUsers();
   const dispatch = useDispatch();
 
   const [currentPage, setCurrentPage] = useState<number>(0);
-
-  const profile: IUser = useGlobalState('userInfo');
+  const [profile, setProfile] = useState<IUser>(userInfo);
 
   useEffect(() => {
-
-  }, [profile]);
+    setProfile(userInfo);
+  }, [userInfo]);
 
   return (
     <View style={{flex: 1}}>
@@ -74,10 +72,10 @@ export const LoginProfileView: React.FC = () => {
 
           <TouchableWithoutFeedback onPress={() => navigate('BecomeAHost')}>
             <View style={styles.profile_info}>
-              <Text style={styles.user_name}>{'Hello, ' + profile.fullname}</Text>
+              <CustomText style={styles.user_name}>{'Hello, ' + profile.fullname}</CustomText>
 
               <View style={styles.view_profile_container}>
-                <Text style={styles.view_profile_title}>View Profile</Text>
+                <CustomText style={styles.view_profile_title}>View Profile</CustomText>
                 <View style={styles.view_profile_arrow}>
                   <SvgXml width='100%' height='100%' xml={Icon_Detail_Right_Arrow_White} />
                 </View>
@@ -87,7 +85,7 @@ export const LoginProfileView: React.FC = () => {
         </View>
 
         <View style={styles.content_container}>
-          <Text style={{...styles.content_title, marginTop: 33}}>Account Settings</Text>
+          <CustomText style={{...styles.content_title, marginTop: 33}}>Account Settings</CustomText>
           <TouchableWithoutFeedback onPress={() => navigate('EditProfile')}>
             <View style={{width:'100%', marginTop: 22}}>
               <TitleArrowButton title={''} name={'Edit Profile'} showArrow={true} white_color={true} />
@@ -100,7 +98,7 @@ export const LoginProfileView: React.FC = () => {
             </View>
           </TouchableWithoutFeedback>
 
-          <Text style={{...styles.content_title, marginTop: 44}}>Hosting</Text>
+          <CustomText style={{...styles.content_title, marginTop: 44}}>Hosting</CustomText>
           <TouchableWithoutFeedback onPress={() => profile.isHost == true ? navigate('HostAnExperience') : navigate('BecomeAHost') }>
             <View style={{width:'100%', marginTop: 22}}>
               <TitleArrowButton title={''} name={profile.isHost == true ? 'Host An Experience' : 'Become a Host'} showArrow={true} white_color={true} />
@@ -119,7 +117,7 @@ export const LoginProfileView: React.FC = () => {
             </View>
           </TouchableWithoutFeedback>
 
-          <Text style={{...styles.content_title, marginTop: 44}}>Legal</Text>
+          <CustomText style={{...styles.content_title, marginTop: 44}}>Legal</CustomText>
           <TouchableWithoutFeedback onPress={() => onTermsOfService() }>
             <View style={{width:'100%', marginTop: 22}}>
               <TitleArrowButton title={''} name={'Terms of Service'} showArrow={true} white_color={true} />
@@ -155,11 +153,9 @@ export const LoginProfileView: React.FC = () => {
   }
 
   function clearData() {
-    DefaultPreference.set(LOGIN_TYPE, '').then(function() { });
-    DefaultPreference.set(USER_EMAIL, '').then(function() { });
-    DefaultPreference.set(PASSWORD, '').then(function() { });
-    DefaultPreference.set(ACCESS_TOKEN, '').then(function() { });
-    DefaultPreference.set(CODE, '').then(function() { });
+    DefaultPreference.set(LOGIN_TYPE, '').then(() => { });
+    DefaultPreference.set(USER_EMAIL, '').then(() => { });
+    DefaultPreference.set(PASSWORD, '').then(() => { });
 
     dispatch({
       type: ActionType.SET_USER_INFO,

@@ -2,11 +2,9 @@ import * as React from 'react';
 import {
   SafeAreaView,
   StyleSheet,
-  Text,
   View,
   Image,
   TouchableWithoutFeedback,
-  Dimensions,
 } from 'react-native';
 import { Container } from 'native-base';
 import { useEffect } from 'react';
@@ -16,17 +14,18 @@ import { SvgXml } from 'react-native-svg';
 // from app
 import { 
   COLOR, 
+  CustomText, 
   FONT, 
   Icon_Back,
   Img_Experience,
   MARGIN_TOP,
+  viewportWidth,
 } from '../../constants';
 import { ColorButton } from '../../components/Button';
 import { IBooking } from '../../interfaces/app';
 import { ConfirmedBookingHostInfoView, ConfirmedBookingMainInfoView, ConfirmedBookingRatingInfoView } from '../../components/View';
 import GlobalStyle from '../../styles/global';
 
-const { width: viewportWidth } = Dimensions.get('window');
 
 export const ConfirmedBookingDetailScreen: React.FC = ({route}) => {
 
@@ -43,7 +42,7 @@ export const ConfirmedBookingDetailScreen: React.FC = ({route}) => {
 
       <SafeAreaView style={styles.safe_area}>
         <View style={styles.navigation_bar}>
-          <Text style={styles.title}>{isCompleted == true ? 'Completed' : 'Upcoming'}</Text>
+          <CustomText style={styles.title}>{isCompleted == true ? 'Completed' : 'Upcoming'}</CustomText>
 
           <TouchableWithoutFeedback onPress={() => goBack()}>
             <View style={styles.back_icon}>
@@ -87,11 +86,11 @@ export const ConfirmedBookingDetailScreen: React.FC = ({route}) => {
           </View>
 
           <View style={styles.bottom_container}>
-            <Text style={styles.bottom_content_title}>{booking.host?.fullname + ' Paid'}</Text>
-            <Text style={styles.bottom_content_info}>{'$ ' + booking.paid}</Text>
+            <CustomText style={styles.bottom_content_title}>{booking.host?.fullname + ' Paid'}</CustomText>
+            <CustomText style={styles.bottom_content_info}>{'$ ' + booking.paid}</CustomText>
             <View style={{...GlobalStyle.auth_line, marginTop: 22}} />
-            <Text style={styles.bottom_content_title}>You Received</Text>
-            <Text style={styles.bottom_content_info}>{'$ ' + booking.receive}</Text>
+            <CustomText style={styles.bottom_content_title}>You Received</CustomText>
+            <CustomText style={styles.bottom_content_info}>{'$ ' + booking.receive}</CustomText>
           </View>
 
         </View>

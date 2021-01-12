@@ -2,11 +2,9 @@ import * as React from 'react';
 import {
   SafeAreaView,
   StyleSheet,
-  Text,
   View,
   Image,
   TouchableWithoutFeedback,
-  Dimensions,
   ScrollView,
 } from 'react-native';
 import { Container } from 'native-base';
@@ -20,22 +18,21 @@ import PageControl from 'react-native-page-control';
 // from app
 import { 
   COLOR, 
+  CustomText, 
   FONT, 
+  GetDurationString, 
   Icon_Back,
   Icon_Experience_Black,
   Icon_Share_White,
   Icon_Time_Black,
-  Img_Avatar_1,
   Img_Edit_Profile_Background,
-  Img_Experience_2,
   MARGIN_TOP,
+  viewportWidth,
 } from '../../constants';
 import { ColorButton } from '../../components/Button';
 import { IExperience } from '../../interfaces/app';
 import GlobalStyle from '../../styles/global';
 
-
-const { width: viewportWidth } = Dimensions.get('window');
 
 export const ExperienceDetailHostScreen: React.FC = ({route}) => {
 
@@ -93,28 +90,28 @@ export const ExperienceDetailHostScreen: React.FC = ({route}) => {
           </View>
 
           <View style={styles.content_container}>
-            <Text style={styles.title}>{experience.title}</Text>
-            <Text style={styles.location}>{experience.location}</Text>
+            <CustomText style={styles.title}>{experience.title}</CustomText>
+            <CustomText style={styles.location}>{experience.location}</CustomText>
             <View style={{...GlobalStyle.auth_line, backgroundColor: COLOR.alphaBlackColor20, marginTop: 22}} />
             
             <View style={{marginTop: 12, flexDirection: 'row'}}>
-              <Text style={styles.host_name}>{'Hosted by ' + experience.host.username}</Text>
+              <CustomText style={styles.host_name}>{'Hosted by ' + experience.host.username}</CustomText>
               <Image style={styles.avatar} source={Img_Avatar_1} />
             </View>
 
             <View style={{marginTop: 12, height: 16, flexDirection: 'row'}}>
               <SvgXml width={16} height={16} xml={Icon_Time_Black} />
-              <Text style={{...styles.location, marginTop: 1, marginLeft: 8}}>{GetDurationString(experience.duration)}</Text>
+              <CustomText style={{...styles.location, marginTop: 1, marginLeft: 8}}>{GetDurationString(experience.duration)}</CustomText>
             </View>
 
             <View style={{marginTop: 12, height: 16, flexDirection: 'row'}}>
               <SvgXml width={16} height={16} xml={Icon_Experience_Black} />
-              <Text style={{...styles.location, marginTop: 1, marginLeft: 8}}>{experience.title}</Text>
+              <CustomText style={{...styles.location, marginTop: 1, marginLeft: 8}}>{experience.title}</CustomText>
             </View>
             <View style={{...GlobalStyle.auth_line, backgroundColor: COLOR.alphaBlackColor20, marginTop: 22}} />
 
-            <Text style={{...styles.host_name, marginTop: 22}}>About the experience</Text>
-            <Text style={styles.about}>{experience.description}</Text>            
+            <CustomText style={{...styles.host_name, marginTop: 22}}>About the experience</CustomText>
+            <CustomText style={styles.about}>{experience.description}</CustomText>            
           </View>
         </ScrollView>
 
@@ -141,8 +138,8 @@ export const ExperienceDetailHostScreen: React.FC = ({route}) => {
 
         <View style={styles.bottom_container}>
           <View style={styles.price_container}>
-            <Text style={styles.price}>{'From $' + experience.min_price}</Text>
-            <Text style={styles.personal}>{' / ' + experience.personal}</Text>
+            <CustomText style={styles.price}>{'From $' + experience.min_price}</CustomText>
+            <CustomText style={styles.personal}>{' / ' + experience.personal}</CustomText>
           </View>
 
           <TouchableWithoutFeedback onPress={() => navigate('EditExperience', {experience: experience})}>

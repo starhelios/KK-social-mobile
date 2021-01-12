@@ -2,11 +2,9 @@ import * as React from 'react';
 import {
   SafeAreaView,
   StyleSheet,
-  Text,
   View,
   Image,
   TouchableWithoutFeedback,
-  Dimensions,
   FlatList,
 } from 'react-native';
 import { Container } from 'native-base';
@@ -17,16 +15,17 @@ import { SvgXml } from 'react-native-svg';
 // from app
 import { 
   COLOR, 
+  CustomText, 
   FONT, 
   Icon_Back, 
   Img_Auth_Background,
   MARGIN_TOP,
+  viewportWidth,
 } from '../../constants';
 import { MyExperienceView } from '../../components/View';
 import { IExperience } from '../../interfaces/app';
 import { useExperiences } from '../../hooks';
 
-const { width: viewportWidth, height: viewportHeight } = Dimensions.get('window');
 
 export const ExperiencesScreen: React.FC = () => {
 
@@ -55,7 +54,7 @@ export const ExperiencesScreen: React.FC = () => {
 
       <SafeAreaView style={styles.safe_area}>
         <View style={styles.navigation_bar}>
-          <Text style={styles.title}>Experiences</Text>
+          <CustomText style={styles.title}>Experiences</CustomText>
 
           <TouchableWithoutFeedback onPress={() => goBack() }>
             <View style={styles.back_icon}>
@@ -66,7 +65,7 @@ export const ExperiencesScreen: React.FC = () => {
 
           <View style={styles.input_container}>
             <View style={{width:'100%'}}>
-              <Text style={styles.info_title}>My Experiences</Text>
+              <CustomText style={styles.info_title}>My Experiences</CustomText>
               <FlatList
                 style={{width: '100%', marginTop: 0, marginLeft: 0, height: '100%'}}
                 contentContainerStyle={{paddingVertical: 0}}

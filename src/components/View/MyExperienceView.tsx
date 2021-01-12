@@ -1,17 +1,17 @@
-import { useNavigation } from '@react-navigation/native';
 import * as React from 'react';
 import {
   Image,
   StyleSheet,
-  Text,
   TouchableWithoutFeedback,
   View,
 } from 'react-native';
 import { SvgXml } from 'react-native-svg';
+import { useNavigation } from '@react-navigation/native';
 
 // from app
 import { 
   COLOR, 
+  CustomText, 
   FONT, 
   Icon_Detail_Right_Arrow_White, 
   Icon_Experience_Rating, 
@@ -43,11 +43,13 @@ export const MyExperienceView: React.FC<props> = (props: props) => {
           />
 
           <View style={{...styles.content_container, width: width - 166}}>
-            <Text style={styles.title} numberOfLines={2}>{experience.title}</Text>
+            <CustomText style={styles.title} numberOfLines={2}>{experience.title}</CustomText>
 
             <View style={styles.rating_container}>
               <SvgXml width={15} height={15} xml={Icon_Experience_Rating} />
-              <Text style={styles.rating_text} numberOfLines={1}>{experience.rating.toString() + ' (' + experience.rating_count.toString() + ')'}</Text>
+              <CustomText style={styles.rating_text} numberOfLines={1}>
+                {experience.rating.toString() + ' (' + experience.rating_count.toString() + ')'}
+              </CustomText>
             </View>
           </View>
 

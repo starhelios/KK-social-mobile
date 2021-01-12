@@ -2,13 +2,10 @@ import * as React from 'react';
 import {
   SafeAreaView,
   StyleSheet,
-  Text,
   View,
   Image,
   TouchableWithoutFeedback,
   Keyboard,
-  TextInput,
-  Dimensions,
   Alert,
 } from 'react-native';
 import { Container } from 'native-base';
@@ -18,16 +15,24 @@ import { SvgXml } from 'react-native-svg';
 import Spinner from 'react-native-loading-spinner-overlay';
 
 // from app
-import { COLOR, CustomTextInput, ERROR_MESSAGE, FONT, Icon_Back, Img_Auth_Background, MARGIN_TOP } from '../../constants';
+import { 
+  COLOR, 
+  CustomText, 
+  CustomTextInput, 
+  ERROR_MESSAGE, 
+  FONT, 
+  Icon_Back, 
+  Img_Auth_Background, 
+  MARGIN_TOP,
+  viewportHeight,
+  viewportWidth, 
+} from '../../constants';
 import { ColorButton } from '../../components/Button';
 import { useAuthentication } from '../../hooks';
 import { IApiError, IApiSuccess } from '../../interfaces/api';
 import { IUser } from '../../interfaces/app';
 import { useGlobalState } from '../../redux/Store';
 import GlobalStyle from '../../styles/global';
-
-
-const { width: viewportWidth, height: viewportHeight } = Dimensions.get('window');
 
 export const ChangePasswordScreen: React.FC = () => {
 
@@ -47,7 +52,7 @@ export const ChangePasswordScreen: React.FC = () => {
 
       <SafeAreaView style={styles.safe_area}>
         <View style={styles.navigation_bar}>
-          <Text style={styles.title}>Change Password</Text>
+          <CustomText style={styles.title}>Change Password</CustomText>
 
           <TouchableWithoutFeedback onPress={() => goBack() }>
             <View style={styles.back_icon}>
@@ -60,7 +65,7 @@ export const ChangePasswordScreen: React.FC = () => {
           <View style={styles.container}>
             <View style={styles.input_container}>
               <View style={{width:'100%', marginTop: 22}}>
-                <Text style={styles.info_title}>Current Password</Text>
+                <CustomText style={styles.info_title}>Current Password</CustomText>
                 <CustomTextInput
                   style={GlobalStyle.auth_input}
                   placeholder={'Current Password'}
@@ -74,7 +79,7 @@ export const ChangePasswordScreen: React.FC = () => {
               </View>
 
               <View style={{width:'100%', marginTop: 22}}>
-                <Text style={styles.info_title}>New Password</Text>
+                <CustomText style={styles.info_title}>New Password</CustomText>
                 <CustomTextInput
                   style={GlobalStyle.auth_input}
                   placeholder={'New Password'}
@@ -88,7 +93,7 @@ export const ChangePasswordScreen: React.FC = () => {
               </View>
 
               <View style={{width:'100%', marginTop: 22}}>
-                <Text style={styles.info_title}>Confirm Password</Text>
+                <CustomText style={styles.info_title}>Confirm Password</CustomText>
                 <CustomTextInput
                   style={GlobalStyle.auth_input}
                   placeholder={'Confirm Password'}

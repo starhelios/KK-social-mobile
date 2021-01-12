@@ -1,13 +1,9 @@
 import * as React from 'react';
-import {
-  StyleSheet,
-  Text,
-  View,
-} from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { IColorText } from '../../interfaces/app';
 
 // from app
-import { COLOR, FONT } from '../../constants';
+import { COLOR, CustomText, FONT } from '../../constants';
 
 interface props {
   colorTexts: IColorText[];
@@ -18,7 +14,7 @@ export const ContinueText: React.FC<props> = (props: props) => {
     <View style={styles.container}>
       {
         props.colorTexts.map(colorText =>
-          <Text 
+          <CustomText 
             key={colorText.title}
             style={{
               ...styles.title,
@@ -26,7 +22,7 @@ export const ContinueText: React.FC<props> = (props: props) => {
               fontSize: colorText.fontSize,
               color: colorText.color}}>
               {colorText.title}
-          </Text>
+          </CustomText>
         )
       }
     </View>
