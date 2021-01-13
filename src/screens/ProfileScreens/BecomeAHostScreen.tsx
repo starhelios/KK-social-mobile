@@ -79,6 +79,8 @@ export const BecomeAHostScreen: React.FC = () => {
   const [mode, setMode] = useState<"date" | "time" | undefined>('date');
   const [pickerDate, setPickerDate] = useState<Date>(birthday != undefined && birthday != '' ? new Date(birthday) : new Date());
 
+  let isInit = true;
+
   useEffect(() => {
     setImage(profile.avatarUrl);
     setFullName(profile.fullname);
@@ -90,6 +92,11 @@ export const BecomeAHostScreen: React.FC = () => {
   }, [profile]);
 
   useEffect(() => {
+    if (isInit == true) {
+      isInit = false;
+      return;
+    }
+    
     setCategoryList(findCategory(category));
   }, [category]);
 
@@ -447,8 +454,8 @@ const styles = StyleSheet.create({
   },
   bottom_button: {
     marginTop: 30,
-    marginLeft: 48,
-    marginRight: 48,
+    marginLeft: 24,
+    marginRight: 24,
     marginBottom: 30,
     width: viewportWidth - 96,
     height: 44,
