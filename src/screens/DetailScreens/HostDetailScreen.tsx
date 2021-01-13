@@ -42,7 +42,7 @@ export const HostDetailScreen: React.FC = ({route}) => {
   const { getExperienceList } = useExperiences();
 
   const hostDetail: IHostDetail = route.params.hostDetail;
-  const host: IHost = hostDetail.user;
+  const host: IHost = route.params.hostDetail;
 
   const [hostExperienceList, setHostExperienceList] = useState<IExperience[]>([]);
   const [fetchingData, setFetchingData] = useState<boolean>(false);
@@ -91,7 +91,7 @@ export const HostDetailScreen: React.FC = ({route}) => {
             <View style={{marginTop: 33, flexDirection: 'row'}}>
               <View style={{width: viewportWidth - 100}}>
                 <CustomText style={styles.host_name}>{'Hey, I\'m ' + host.fullname}</CustomText>
-                <CustomText style={styles.joined_date}>{'Joined in ' + convertStringToDateFormat(host.dateOfBirth, 'MMMM D, YYYY')}</CustomText>
+                <CustomText style={styles.joined_date}>{'Joined in ' + convertStringToDateFormat(host.createdAt, 'MMMM D, YYYY')}</CustomText>
               </View>
               <Image
                 style={styles.avatar}

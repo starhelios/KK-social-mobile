@@ -37,9 +37,31 @@ export const ExperienceView: React.FC<props> = (props: props) => {
   const { navigate } = useNavigation();
   const { getExperienceDetail } = useExperiences();
   const { getHostDetail } = useHosts();
+
+  const goExperienceDetailScreen = async () => {
+    props.onFetchingData(true);
+    await getExperienceDetail(experience.id)
+    .then(async (experienceDetail: Promise<IExperienceDetail>) => {
+      getHostDetailInformation(await experienceDetail);
+    }).catch(() => {
+      props.onFetchingData(false);
+      Alert.alert(ERROR_MESSAGE.GET_EXPERIENCE_DETAIL_FAIL);
+    });
+  }
+
+  const getHostDetailInformation = async (experienceDetail: IExperienceDetail) => {
+    await getHostDetail(experience.userId)
+    .then(async (hostDetail: Promise<IHostDetail>) => {
+      props.onFetchingData(false);
+      navigate('ExperienceDetail' , {experienceDetail: experienceDetail, hostDetail: hostDetail});
+    }).catch(() => {
+      props.onFetchingData(false);
+      Alert.alert(ERROR_MESSAGE.GET_HOST_DETAIL_FAIL);
+    });
+  }
   
   return (
-    <TouchableWithoutFeedback onPress={() => goExperienceDetailScreen() }>
+    <TouchableWithoutFeedback onPress={ goExperienceDetailScreen }>
       <View style={styles.container}>
         <Image
           style={styles.image}
@@ -61,7 +83,7 @@ export const ExperienceView: React.FC<props> = (props: props) => {
         </View>
         <View style={styles.priceContainer}>
           <CustomText style={{...styles.price, color: white_color == true ? COLOR.systemWhiteColor : COLOR.blackColor}}>
-            {'From ' + experience.price.toString() + '$'}
+            {'From $' + experience.price.toString()}
           </CustomText>
           {/* <CustomText style={{...styles.personal, color: white_color == true ? COLOR.systemWhiteColor : COLOR.blackColor}}>
             {' / ' + experience.personal}
@@ -70,28 +92,6 @@ export const ExperienceView: React.FC<props> = (props: props) => {
       </View>
     </TouchableWithoutFeedback>
   );
-
-  async function goExperienceDetailScreen() {
-    props.onFetchingData(true);
-    await getExperienceDetail(experience.id)
-    .then(async (experienceDetail: Promise<IExperienceDetail>) => {
-      getHostDetailInformation(await experienceDetail);
-    }).catch(() => {
-      props.onFetchingData(false);
-      Alert.alert(ERROR_MESSAGE.GET_EXPERIENCE_DETAIL_FAIL);
-    });
-  }
-
-  async function getHostDetailInformation(experienceDetail: IExperienceDetail) {
-    await getHostDetail(experience.userId)
-    .then(async (hostDetail: Promise<IHostDetail>) => {
-      props.onFetchingData(false);
-      navigate('ExperienceDetail' , {experienceDetail: experienceDetail, hostDetail: hostDetail});
-    }).catch(() => {
-      props.onFetchingData(false);
-      Alert.alert(ERROR_MESSAGE.GET_HOST_DETAIL_FAIL);
-    });
-  }
 }
 
 const styles = StyleSheet.create({

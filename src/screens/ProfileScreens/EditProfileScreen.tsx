@@ -22,7 +22,7 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 // from app
 import { 
   COLOR, 
-  convertDateToDateFormat, 
+  convertDateToMomentDateFormat, 
   convertStringToDateFormat, 
   CustomText, 
   CustomTextInput, 
@@ -259,7 +259,7 @@ export const EditProfileScreen: React.FC = () => {
   }
   
   function onConfirmBirthday() {
-    setBirthday(convertDateToDateFormat(pickerDate, 'YYYY-MM-DD'));
+    setBirthday(convertDateToMomentDateFormat(pickerDate, 'YYYY-MM-DD'));
     setShowDatePicker(false);
   }
 

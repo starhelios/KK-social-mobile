@@ -129,7 +129,7 @@ export const ExperienceDetailScreen: React.FC = ({route}) => {
             <View style={{marginTop: 22, flexDirection: 'row'}}>
               <View style={{width: viewportWidth - 100}}>
                 <CustomText style={styles.host_name}>{'Say Hello! to ' + host.fullname}</CustomText>
-                <CustomText style={styles.joined_date}>{'Joined in ' + convertStringToDateFormat(host.dateOfBirth, 'MMMM D, YYYY')}</CustomText>
+                <CustomText style={styles.joined_date}>{'Joined in ' + convertStringToDateFormat(host.createdAt, 'MMMM D, YYYY')}</CustomText>
               </View>
               <Image style={styles.avatar} source={host.avatarUrl != null && host.avatarUrl != '' ? {uri: host.avatarUrl} : Img_User_Avatar} />
             </View>
@@ -140,12 +140,12 @@ export const ExperienceDetailScreen: React.FC = ({route}) => {
             </View>
 
             <CustomText style={styles.about}>{host.aboutMe}</CustomText>
-            <View style={{...GlobalStyle.auth_line, backgroundColor: COLOR.alphaBlackColor20, marginTop: 22}} />
-
-            <CustomText style={{...styles.host_name, marginTop: 22}}>{host.fullname + '\'s Experiences'}</CustomText>
+            
+            {/* <View style={{...GlobalStyle.auth_line, backgroundColor: COLOR.alphaBlackColor20, marginTop: 22}} /> */}
+            {/* <CustomText style={{...styles.host_name, marginTop: 22}}>{host.fullname + '\'s Experiences'}</CustomText> */}
           </View>
 
-          <FlatList
+          {/* <FlatList
             style={{width: '100%', height: 206, marginTop: 22, marginBottom: 20 }}
             contentContainerStyle={{paddingHorizontal: 24}}
             showsHorizontalScrollIndicator={false}
@@ -153,7 +153,7 @@ export const ExperienceDetailScreen: React.FC = ({route}) => {
             data={experience.images}
             keyExtractor={(item, index) => index.toString()}
             renderItem={({item}) => renderExperienceImage(item) }
-          />
+          /> */}
         </ScrollView>
 
         {

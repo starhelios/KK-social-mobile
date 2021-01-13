@@ -83,7 +83,7 @@ export const SelectDateRangeView: React.FC<props> = (props: props) => {
           <CalendarPicker
             startFromMonday={true}
             allowRangeSelection={true}
-            // minDate={minDate}
+            minDate={new Date()}
             // maxDate={maxDate}
             // weekdays={['Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sab', 'Dom']}
             // months={['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro']}

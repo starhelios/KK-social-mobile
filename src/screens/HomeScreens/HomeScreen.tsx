@@ -7,8 +7,6 @@ import {
   FlatList,
   ScrollView,
   Modal,
-  KeyboardAvoidingView,
-  Platform,
   Alert,
 } from 'react-native';
 import { useEffect, useState } from 'react';
@@ -20,18 +18,17 @@ import Spinner from 'react-native-loading-spinner-overlay';
 import { 
   API_CONFIG, 
   COLOR, 
-  convertStringToDateFormat, 
   CustomText, 
-  CustomTextInput, 
   ERROR_MESSAGE, 
   FONT, 
+  GetVisibleDateString, 
   Icon_Filter, 
   Icon_Search, 
   MARGIN_TOP, 
 } from '../../constants';
 import { useCategories, useExperiences, useHosts } from '../../hooks';
 import { ICategory, IExperience, IHost, IHostList } from '../../interfaces/app';
-import { ExperienceView, FiltersView, HostView, SelectDateRangeView, SelectDateView } from '../../components/View';
+import { ExperienceView, FiltersView, HostView, SelectDateRangeView } from '../../components/View';
 import { useDispatch, useGlobalState } from '../../redux/Store';
 import { ActionType } from '../../redux/Reducer';
 
@@ -124,8 +121,18 @@ export const HomeScreen: React.FC = () => {
     } else {
       setFiltering(true);
 
+      let filterMinPrice = filter.minPrice;
+      let filterMaxPrice = filter.maxPrice;
+      if (filterMinPrice == 0) {
+        if (filterMaxPrice == 1000) {
+          filterMaxPrice = 0;
+        } else {
+          filterMinPrice = 1;
+        }
+      }  
+
       // setFetchingData(true);
-      await filterExperiences(filter.minPrice, filter.maxPrice, filter.startDay, filter.endDay, filter.categoryName)
+      await filterExperiences(filterMinPrice, filterMaxPrice, filter.startDay, filter.endDay, filter.categoryName)
       .then(async (result: Promise<IExperience[]>) => {
         setExperienceList(await result);
         if ((await result).length == 0) {
@@ -139,17 +146,10 @@ export const HomeScreen: React.FC = () => {
     }
   }
 
-
-  function onSearch() {
-  }
-
   function onFilterExperience(lowPrice: number, highPrice: number, location: string) {
     let minPrice = lowPrice;
     var maxPrice = highPrice;
-    if (minPrice == 0 && maxPrice == 1000) {
-      maxPrice = 0;
-    }
-
+    
     dispatch({
       type: ActionType.SET_FILTER,
       payload: {
@@ -179,19 +179,6 @@ export const HomeScreen: React.FC = () => {
       },
     });
     setShowSelectDates(false);
-  }
-
-  function getVisibleDate() {
-    var visibleDateString = 'Dates';
-    if (selectedFromDate != '') {
-      if (selectedFromDate == selectedEndDate) {
-        visibleDateString = convertStringToDateFormat(selectedFromDate, 'MMMM D');
-      } else {
-        visibleDateString = convertStringToDateFormat(selectedFromDate, 'MMM D') + ' ~ ' + convertStringToDateFormat(selectedEndDate, 'MMM D');
-      }      
-    }
-
-    return visibleDateString;
   }
 
   function onSelectCategory(category: ICategory) {
@@ -246,13 +233,11 @@ export const HomeScreen: React.FC = () => {
     <Container style={styles.background}>
       <SafeAreaView style={styles.safe_area}>
         <View style={styles.search_bar}>
-          <TouchableWithoutFeedback onPress={() => onSearch()}>
-            <View style={styles.search_button_container}>
-              <View style={styles.search_icon}>
-                <SvgXml width='100%' height='100%' xml={Icon_Search} />
-              </View>
+          <View style={styles.search_button_container}>
+            <View style={styles.search_icon}>
+              <SvgXml width='100%' height='100%' xml={Icon_Search} />
             </View>
-          </TouchableWithoutFeedback>
+          </View>
 
           <View style={styles.search_text_container}>
             { searchText == '' && (
@@ -280,7 +265,7 @@ export const HomeScreen: React.FC = () => {
             <TouchableWithoutFeedback onPress={() => setShowSelectDates(true)}>
               <View style={{...experienceCategoryStyles.container, backgroundColor: selectedFromDate != '' ? COLOR.selectedCategoryBackgroundColor : COLOR.clearColor}}>
                 <CustomText style={experienceCategoryStyles.title}>
-                  { getVisibleDate() }
+                  { GetVisibleDateString('Dates', selectedFromDate, selectedEndDate) }
                 </CustomText>
               </View>
             </TouchableWithoutFeedback>

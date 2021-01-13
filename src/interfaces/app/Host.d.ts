@@ -8,6 +8,7 @@ export interface IHost {
 	aboutMe: string,
 	categoryName: string,
 	dateOfBirth: string,
+	createdAt: string,
 
 	// test
 	categoryIcon: string,
