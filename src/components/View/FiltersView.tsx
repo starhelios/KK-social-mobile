@@ -100,7 +100,7 @@ export const FiltersView: React.FC<props> = (props: props) => {
                 style={styles.slider}
                 min={0}
                 max={1000}
-                step={50}
+                step={10}
                 low={lowPrice}
                 high={highPrice}
                 floatingLabel

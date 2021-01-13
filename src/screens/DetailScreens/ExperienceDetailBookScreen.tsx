@@ -16,27 +16,31 @@ import { SvgXml } from 'react-native-svg';
 // from app
 import { 
   COLOR, 
-  convertStringToDateFormat, 
+  convertStringToDate, 
   CustomText, 
   ERROR_MESSAGE, 
   FONT, 
+  GetVisibleDateString, 
   Icon_Back_Black,
   Icon_Guest_Minus,
   Icon_Guest_Plus,
   Icon_Share_Black,
   MARGIN_TOP,
+  ShowShareView,
   viewportWidth,
 } from '../../constants';
 import { IAvailableDate, IExperience } from '../../interfaces/app';
-import { ExperienceDetailBookView, SelectDateView } from '../../components/View';
+import { ExperienceDetailBookView, SelectDateRangeView } from '../../components/View';
 
 
 export const ExperienceDetailBookScreen: React.FC = ({route}) => {
 
-  const { goBack, navigate } = useNavigation();
   const experience: IExperience = route.params.experience;
 
-  const [selectedDate, setSelectedDate] = useState<string>('');
+  const { goBack, navigate } = useNavigation();
+
+  const [selectedFromDate, setSelectedFromDate] = useState<string>('');
+  const [selectedEndDate, setSelectedEndDate] = useState<string>('');
   const [showSelectDates, setShowSelectDates] = useState<boolean>(false);
   const [guestCount, setGuestCount] = useState<number>(0)
   const [allAvailableDates, setAllAvailableDates] = useState<IAvailableDate[]>([]);
@@ -47,6 +51,12 @@ export const ExperienceDetailBookScreen: React.FC = ({route}) => {
     var beforeDate = '';
     for (let i = 0; i < experience.dateAvaibility.length; i++) {
       var availableDate = experience.dateAvaibility[i];
+
+      const startTime = convertStringToDate(availableDate.day + ' ' + availableDate.startTime);
+      if (startTime == null || startTime < new Date()) {
+        continue;
+      }
+
       if (availableDate.day != beforeDate) {
         availableDate.show_date = true;
         beforeDate = availableDate.day;
@@ -59,12 +69,67 @@ export const ExperienceDetailBookScreen: React.FC = ({route}) => {
     setAvailableDates(availableDates);
   }, []);
 
+  const onFilterSelectDate = (fromDate: string, endDate: string) => {
+    setSelectedFromDate(fromDate);
+    setSelectedEndDate(endDate);
+
+    if (fromDate == '') {
+      setAvailableDates(allAvailableDates);
+    } else {
+      const from = convertStringToDate(fromDate);
+      const end = convertStringToDate(endDate);
+
+      if (from != null && end != null) {
+        var availableDates: IAvailableDate[] = [];
+        for (let i = 0; i < experience.dateAvaibility.length; i++) {
+          var availableDate = experience.dateAvaibility[i];
+          const startTime = convertStringToDate(availableDate.day + ' ' + availableDate.startTime);
+          const startDate = convertStringToDate(availableDate.day);
+
+          if (startTime != null && startDate != null) {
+            if (startTime >= from && startDate <= end) {
+              availableDates.push(availableDate);
+            }
+          }
+        }
+        setAvailableDates(availableDates);
+      }
+    }
+
+    setShowSelectDates(false);
+  }
+
+  const onShare = () => {
+    ShowShareView('KloutKast', 'https://kloutkast.herokuapp.com');
+  }
+
+  function onChooseDate(availableDate: IAvailableDate) {
+    if (guestCount == 0) {
+      Alert.alert(ERROR_MESSAGE.EMPTY_GUEST_COUNT);
+      return;
+    }
+    
+    navigate('ExperienceDetailConfirmPay', {experience: experience, availableDate: availableDate, guestCount: guestCount});
+  }
+
+  const onDecreaseGuestCount = () => {
+    if (guestCount < 1) {
+      setGuestCount(0);
+    } else {
+      setGuestCount(guestCount - 1);
+    }
+  }
+
+  const onIncreaseGuestCount = () => {
+    setGuestCount(guestCount + 1);
+  }
+
   return (
     <Container style={{...styles.background, backgroundColor: COLOR.whiteColor}}>
 
       <SafeAreaView style={styles.safe_area}>
         <View style={styles.navigation_bar}>
-          <CustomText style={styles.title}>Select Date & Time</CustomText>
+          <CustomText style={styles.title}>{ 'Select Date & Time' }</CustomText>
 
           <TouchableWithoutFeedback onPress={() => goBack()}>
             <View style={styles.back_icon}>
@@ -72,7 +137,7 @@ export const ExperienceDetailBookScreen: React.FC = ({route}) => {
             </View>
           </TouchableWithoutFeedback>
 
-          <TouchableWithoutFeedback onPress={() => onShare()}>
+          <TouchableWithoutFeedback onPress={onShare}>
             <View style={styles.share_icon}>
               <SvgXml width='100%' height='100%' xml={Icon_Share_Black} />
             </View>
@@ -82,20 +147,20 @@ export const ExperienceDetailBookScreen: React.FC = ({route}) => {
         <View style={styles.tab_bar}>
           <TouchableWithoutFeedback onPress={() => setShowSelectDates(true)}>
             <View style={styles.tab_bar_date_container}>
-              <CustomText style={styles.tab_bar_text}>{getVisibleDate()}</CustomText>
+              <CustomText style={styles.tab_bar_text}>{ GetVisibleDateString('Select Date', selectedFromDate, selectedEndDate) }</CustomText>
             </View>
           </TouchableWithoutFeedback>
 
           <View style={styles.tab_bar_count_container}>
             <CustomText style={styles.tab_bar_text}>{guestCount + ' guest'}</CustomText>
 
-            <TouchableWithoutFeedback onPress={() => onDecreaseGuestCount()}>
+            <TouchableWithoutFeedback onPress={onDecreaseGuestCount}>
               <View style={styles.increase_count}>
                 <SvgXml width='100%' height='100%' xml={Icon_Guest_Minus} />
               </View>
             </TouchableWithoutFeedback>
 
-            <TouchableWithoutFeedback onPress={() => onIncreaseGuestCount()}>
+            <TouchableWithoutFeedback onPress={onIncreaseGuestCount}>
               <View style={styles.decrease_count}>
                 <SvgXml width='100%' height='100%' xml={Icon_Guest_Plus} />
               </View>
@@ -116,64 +181,10 @@ export const ExperienceDetailBookScreen: React.FC = ({route}) => {
       <Modal animationType = {"slide"} transparent = {true}
         visible = {showSelectDates}
         onRequestClose = {() => { } }>
-        <SelectDateView selectedDate={selectedDate} onCloseView={setShowSelectDates} onSelectDate={onSelectDate} />
+        <SelectDateRangeView selectedFromDate={selectedFromDate} selectedEndDate={selectedEndDate} onCloseView={setShowSelectDates} onSelectDate={onFilterSelectDate} />
       </Modal>
     </Container>
   );
-
-  function onShare() {
-
-  }
-
-  function onChooseDate(availableDate: IAvailableDate) {
-    if (guestCount == 0) {
-      Alert.alert(ERROR_MESSAGE.EMPTY_GUEST_COUNT);
-      return;
-    }
-    
-    navigate('ExperienceDetailConfirmPay', {experience: experience, availableDate: availableDate, guestCount: guestCount});
-  }
-
-  function getVisibleDate() {
-    var visibleDateString = 'Select Date';
-    if (selectedDate != '') {
-      const date = convertStringToDateFormat(selectedDate, 'YYYY-MM-DD');
-      visibleDateString = convertStringToDateFormat(date, 'MMMM D');
-    }
-    return visibleDateString;
-  }
-
-  function onSelectDate(selectedDate: string) {
-    if (selectedDate == '') {
-      setAvailableDates(allAvailableDates);
-    } else {
-      const date = convertStringToDateFormat(selectedDate, 'YYYY-MM-DD');
-      const filterDateString = convertStringToDateFormat(date, 'MMMM D, YYYY');
-
-      var availableDates: IAvailableDate[] = [];
-      for (let i = 0; i < experience.dateAvaibility.length; i++) {
-        var availableDate = experience.dateAvaibility[i];
-        if (availableDate.day == filterDateString) {
-          availableDates.push(availableDate);
-        }
-      }
-      setAvailableDates(availableDates);
-    }
-    setSelectedDate(selectedDate);
-    setShowSelectDates(false);
-  }
-
-  function onDecreaseGuestCount() {
-    if (guestCount < 1) {
-      setGuestCount(0);
-    } else {
-      setGuestCount(guestCount - 1);
-    }
-  }
-
-  function onIncreaseGuestCount() {
-    setGuestCount(guestCount + 1);
-  }
 };
 
 const styles = StyleSheet.create({

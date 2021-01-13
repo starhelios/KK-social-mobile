@@ -16,7 +16,7 @@ import { Container } from 'native-base';
 import { useEffect, useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { SvgXml } from 'react-native-svg';
-// import Autocomplete from 'react-native-autocomplete-input';
+import Autocomplete from 'react-native-autocomplete-input';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import ImagePicker from 'react-native-image-crop-picker';
 import LinearGradient from 'react-native-linear-gradient';
@@ -24,7 +24,7 @@ import LinearGradient from 'react-native-linear-gradient';
 // from app
 import { 
   COLOR, 
-  convertDateToDateFormat, 
+  convertDateToMomentDateFormat, 
   convertStringToDateFormat, 
   CustomText, 
   CustomTextInput, 
@@ -62,8 +62,6 @@ export const BecomeAHostScreen: React.FC = () => {
       return [];
     }
     const regex = new RegExp(`${query}`, 'i');
-    const aaa = allCategoryList.filter(category => category.name.search(regex) >= 0);
-    console.log(aaa);
     return allCategoryList.filter(category => category.name.search(regex) >= 0);
   }
 
@@ -74,17 +72,12 @@ export const BecomeAHostScreen: React.FC = () => {
   const [aboutMe, setAboutMe] = useState<string>(profile.aboutMe);
   const [location, setLocation] = useState<string>(profile.location);
   const [category, setCategory] = useState<string>(profile.categoryName);
-  const [categoryList, setCategoryList] = useState<ICategory[]>(findCategory(category));
+  const [categoryList, setCategoryList] = useState<ICategory[]>([]);
   const [showCategoryList, setShowCategoryList] = useState<boolean>(true);
   const [avatarFile, setAvatarFile] = useState<IFile | null>(null);
   const [showDatePicker, setShowDatePicker] = useState<boolean>(false);
   const [mode, setMode] = useState<"date" | "time" | undefined>('date');
   const [pickerDate, setPickerDate] = useState<Date>(birthday != undefined && birthday != '' ? new Date(birthday) : new Date());
-
-
-  useEffect(() => {
-    setCategoryList([]);
-  }, []);
 
   useEffect(() => {
     setImage(profile.avatarUrl);
@@ -96,6 +89,10 @@ export const BecomeAHostScreen: React.FC = () => {
     setBirthday(convertStringToDateFormat(profile.dateOfBirth, 'YYYY-MM-DD'));
   }, [profile]);
 
+  useEffect(() => {
+    setCategoryList(findCategory(category));
+  }, [category]);
+
   const onChange = (event: any, selectedDate: any) => {
     setPickerDate(selectedDate);
   };
@@ -106,7 +103,7 @@ export const BecomeAHostScreen: React.FC = () => {
   };
 
   const onConfirmBirthday = () => {
-    setBirthday(convertDateToDateFormat(pickerDate, 'YYYY-MM-DD'));
+    setBirthday(convertDateToMomentDateFormat(pickerDate, 'YYYY-MM-DD'));
     setShowDatePicker(false);
   }
 
@@ -174,13 +171,7 @@ export const BecomeAHostScreen: React.FC = () => {
     }).catch(() => {
       Alert.alert(ERROR_MESSAGE.UPDATE_USER_PROFILE_FAIL);
     });
-  }
-
-  const onSearchCategory = () => {
-    
-  }
-
-  
+  }  
 
   return (
     <Container style={styles.background}>
@@ -254,9 +245,42 @@ export const BecomeAHostScreen: React.FC = () => {
                       <View style={{width:'100%', marginTop: 22}}>
                         <CustomText style={styles.info_title}>Date of Birth</CustomText>
                         <TouchableWithoutFeedback onPress={() => setShowDatePicker(true)}>
-                          <CustomText style={{...GlobalStyle.auth_input, lineHeight: 45}}>{birthday}</CustomText>
+                          <CustomText style={{...GlobalStyle.auth_input, color: birthday != '' ? COLOR.systemWhiteColor : COLOR.alphaWhiteColor50, lineHeight: 45}}>
+                            {birthday != '' ? birthday : 'Date of Birth'}
+                          </CustomText>
                         </TouchableWithoutFeedback>
                         <View style={GlobalStyle.auth_line} />
+                      </View>
+
+                      <View style={{width:'100%', marginTop: 22, zIndex: 100}}>
+                        <CustomText style={styles.info_title}>Category</CustomText>
+                        <Autocomplete
+                          autoCapitalize="none"
+                          autoCorrect={false}
+                          containerStyle={styles.autocompleteContainer}
+                          inputContainerStyle={styles.autocompleteInput}
+                          style={styles.autocomplete}
+                          data={categoryList.length === 1 && comp(category, categoryList[0].name) ? [] : categoryList}
+                          defaultValue={category}
+                          onChangeText={text => {
+                            setCategory(text);
+                            setCategoryList(findCategory(text));
+                          }}
+                          placeholder="Search Categories"
+                          placeholderTextColor={COLOR.alphaWhiteColor50}
+                          renderItem={({item}) => (
+                            <TouchableOpacity onPress={() => setCategory(item.name)}>
+                              <CustomText style={styles.autocompleteContent}>
+                                {item.name}
+                              </CustomText>
+                            </TouchableOpacity>
+                          )}
+                        />
+                        <View style={GlobalStyle.auth_line} />
+
+                        <View style={{position: 'absolute', top: 40, left: 0, width: 14, height: 14}}>
+                          <SvgXml width='100%' height='100%' xml={Icon_Search_White} />
+                        </View>
                       </View>
 
                       <View style={{width:'100%', marginTop: 22}}>
@@ -281,43 +305,6 @@ export const BecomeAHostScreen: React.FC = () => {
                           value={location}
                         />
                         <View style={GlobalStyle.auth_line} />
-                      </View>
-
-                      <View style={{width:'100%', marginTop: 22, zIndex: 100}}>
-                        <CustomText style={styles.info_title}>Category</CustomText>
-                        {/* <Autocomplete
-                          autoCapitalize="none"
-                          autoCorrect={false}
-                          containerStyle={styles.autocompleteContainer}
-                          style={styles.autocomplete}
-                          data={categoryList.length === 1 && comp(category, categoryList[0].name) ? [] : categoryList}
-                          defaultValue={category}
-                          onChangeText={text => setCategory(text)}
-                          placeholder="Search Categories"
-                          renderItem={({item}) => (
-                            <TouchableOpacity onPress={() => setCategory(item.name)}>
-                              <CustomText style={{...GlobalStyle.auth_input, paddingLeft: 25, backgroundColor: COLOR.systemWhiteColor, color: COLOR.systemBlackColor}}>
-                                {item.name}
-                              </CustomText>
-                            </TouchableOpacity>
-                          )}
-                        /> */}
-
-                        {/* <CustomTextInput
-                          style={{...GlobalStyle.auth_input, paddingLeft: 25}}
-                          placeholder={'Search Categories'}
-                          placeholderTextColor={COLOR.alphaWhiteColor50}
-                          autoCapitalize='none'
-                          onChangeText={text => setCategory(text)}
-                          value={category}
-                        /> */}
-                        <View style={GlobalStyle.auth_line} />
-
-                        <TouchableWithoutFeedback onPress={() => onSearchCategory()}>
-                          <View style={{position: 'absolute', top: 40, left: 0, width: 14, height: 14}}>
-                            <SvgXml width='100%' height='100%' xml={Icon_Search_White} />
-                          </View>
-                        </TouchableWithoutFeedback>
                       </View>
 
                       <TouchableWithoutFeedback onPress={() => onBecomeAHost() }>
@@ -394,23 +381,6 @@ const styles = StyleSheet.create({
     marginLeft: 24,
     width: 20,
     height: '100%',
-  },
-  autocompleteContainer: {
-    zIndex: 100,
-    borderColor: COLOR.clearColor,
-    borderWidth: 0,
-    borderRightColor: COLOR.clearColor,
-    borderRightWidth: 0,
-  },
-  autocomplete: {
-    backgroundColor: COLOR.clearColor,
-    borderColor: COLOR.clearColor,
-    borderWidth: 0,
-    height: 45,
-    color: COLOR.systemWhiteColor,
-    paddingLeft: 30,
-    borderRightColor: COLOR.clearColor,
-    borderRightWidth: 0,
   },
   description_text: {
     marginTop: 33,
@@ -528,5 +498,30 @@ const styles = StyleSheet.create({
     fontFamily: FONT.AN_Regular,
     fontSize: 16,
     color: COLOR.blueColor,
+  },
+  autocompleteContainer: {
+    zIndex: 100,
+    borderColor: COLOR.clearColor,
+    borderWidth: 0,
+  },
+  autocompleteInput: {
+    borderColor: COLOR.clearColor,
+    borderWidth: 0,
+  },
+  autocomplete: {
+    backgroundColor: COLOR.clearColor,
+    borderColor: COLOR.clearColor,
+    borderWidth: 0,
+    height: 45,
+    color: COLOR.systemWhiteColor,
+    paddingLeft: 25,
+  },
+  autocompleteContent: {
+    height: 35,
+    lineHeight: 35,
+    fontFamily: FONT.AN_Regular,
+    paddingLeft: 20, 
+    backgroundColor: COLOR.systemWhiteColor, 
+    color: COLOR.systemBlackColor,
   },
 });

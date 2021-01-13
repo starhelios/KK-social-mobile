@@ -11,7 +11,7 @@ import { useEffect, useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
 
 // from app
-import { COLOR, CustomText, FONT, MARGIN_TOP, viewportWidth } from '../../constants';
+import { COLOR, CustomText, FONT, MARGIN_TOP, SortBookings, viewportWidth } from '../../constants';
 // import { useCompletedBookings, useUpcomingBookings } from '../../hooks';
 import { IBooking, IHost } from '../../interfaces/app';
 import { BookingView } from '../../components/View';
@@ -114,8 +114,8 @@ export const BookingScreen: React.FC = () => {
       }
     }
 
-    setUpcomingBookingList(upcomingBookings);
-    setCompletedBookingList(completedBookings);
+    setUpcomingBookingList(SortBookings(upcomingBookings, true));
+    setCompletedBookingList(SortBookings(completedBookings, false));
   }
 
   async function loadUpcomingBookingList() {
