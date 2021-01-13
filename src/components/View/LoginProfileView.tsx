@@ -17,7 +17,6 @@ import DefaultPreference from 'react-native-default-preference';
 // from app
 import { 
   APPLE_LOGIN,
-  CODE,
   COLOR, 
   CustomText, 
   EMAIL_LOGIN, 
@@ -70,7 +69,7 @@ export const LoginProfileView: React.FC = () => {
             }
           </View>
 
-          <TouchableWithoutFeedback onPress={() => navigate('BecomeAHost')}>
+          <TouchableWithoutFeedback onPress={() => {}}>
             <View style={styles.profile_info}>
               <CustomText style={styles.user_name}>{'Hello, ' + profile.fullname}</CustomText>
 
