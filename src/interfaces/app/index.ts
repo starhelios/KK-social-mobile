@@ -16,7 +16,6 @@ export * from './AvailableDate';
 export * from './Filter';
 
 // Hosts
-export * from './Host';
 export * from './HostDetail';
 export * from './HostList';
 
@@ -26,6 +25,9 @@ export * from './ColorText';
 
 // Tutorial
 export * from './Tutorial';
+
+// Home
+export * from './SearchHome';
 
 
 export * from './Booking';

@@ -19,6 +19,7 @@ import {
   API_CONFIG, 
   COLOR, 
   CustomText, 
+  CustomTextInput, 
   ERROR_MESSAGE, 
   FONT, 
   GetVisibleDateString, 
@@ -26,8 +27,8 @@ import {
   Icon_Search, 
   MARGIN_TOP, 
 } from '../../constants';
-import { useCategories, useExperiences, useHosts } from '../../hooks';
-import { ICategory, IExperience, IHost, IHostList } from '../../interfaces/app';
+import { useCategories, useExperiences, useHosts, useSearch } from '../../hooks';
+import { ICategory, IExperience, IUser, IHostList, ISearchHome } from '../../interfaces/app';
 import { ExperienceView, FiltersView, HostView, SelectDateRangeView } from '../../components/View';
 import { useDispatch, useGlobalState } from '../../redux/Store';
 import { ActionType } from '../../redux/Reducer';
@@ -39,14 +40,16 @@ export const HomeScreen: React.FC = () => {
   const filter = useGlobalState('filter');
 
   const { getCategoryList } = useCategories();
-  const { getExperienceList, filterExperiences } = useExperiences();
+  const { getExperienceList } = useExperiences();
   const { getHostList } = useHosts();
+  const { searchHome } = useSearch();
 
   const [searchText, setSearchText] = useState<string>('');
   const [categoryList, setCategoryList] = useState<ICategory[]>([]);
   const [popularExperienceList, setPopularExperienceList] = useState<IExperience[]>([]);
   const [experienceList, setExperienceList] = useState<IExperience[]>([]);
-  const [hostList, setHostList] = useState<IHost[]>([]);
+  const [popularHostList, setPopularHostList] = useState<IUser[]>([]);
+  const [hostList, setHostList] = useState<IUser[]>([]);
   const [selectedCategoryList, setSelectedCategoryList] = useState<ICategory[]>([]);
   const [showFilters, setShowFilters] = useState<boolean>(false);
   const [showSelectDates, setShowSelectDates] = useState<boolean>(false);
@@ -66,7 +69,7 @@ export const HomeScreen: React.FC = () => {
   }, [API_CONFIG])
 
   useEffect(() => {
-    loadFilterExperienceList();
+    onSearch();
   }, [filter])
 
   async function loadCategoryList() {
@@ -100,7 +103,7 @@ export const HomeScreen: React.FC = () => {
     setFetchingHostList(true);
     await getHostList()
     .then(async (result: Promise<IHostList>) => {
-      setHostList((await result).results);
+      setPopularHostList((await result).results);
       dispatch({
         type: ActionType.SET_HOST_LIST,
         payload: (await result).results,
@@ -111,12 +114,14 @@ export const HomeScreen: React.FC = () => {
     });
   }
 
-  async function loadFilterExperienceList() {
+  const onSearch = async () => {
     if ((filter.minPrice == null || filter.minPrice == 0) 
       && (filter.maxPrice == null || filter.maxPrice == 1000 || filter.maxPrice == 0)
-      && (filter.startDay == null || filter.startDay == "") 
-      && (filter.endDay == null || filter.endDay == "") 
-      && filter.categoryName.length == 0) {
+      && (filter.startDay == null || filter.startDay == '') 
+      && (filter.endDay == null || filter.endDay == '') 
+      && (filter.location == null || filter.location == '') 
+      && filter.categoryName.length == 0
+      && searchText == '') {
       setFiltering(false);
     } else {
       setFiltering(true);
@@ -132,15 +137,20 @@ export const HomeScreen: React.FC = () => {
       }  
 
       // setFetchingData(true);
-      await filterExperiences(filterMinPrice, filterMaxPrice, filter.startDay, filter.endDay, filter.categoryName)
-      .then(async (result: Promise<IExperience[]>) => {
-        setExperienceList(await result);
-        if ((await result).length == 0) {
+      await searchHome(filterMinPrice, filterMaxPrice, filter.startDay, filter.endDay, filter.categoryName, searchText, filter.location)
+      .then(async (result: Promise<ISearchHome>) => {
+        if ((await result).experiences.length == 0 && (await result).hosts.length == 0) {
           Alert.alert(ERROR_MESSAGE.UPDATE_SEARCH_CONDITION);
         }
+
+        setExperienceList((await result).experiences);
+        setHostList((await result).hosts);
+        
         // setFetchingData(false);
       }).catch(() => {
         setExperienceList([]);
+        setHostList([]);
+        Alert.alert(ERROR_MESSAGE.UPDATE_SEARCH_CONDITION);
         // setFetchingData(false);
       });
     }
@@ -206,7 +216,6 @@ export const HomeScreen: React.FC = () => {
         location: filter.location,
       },
     });
-    setSearchText(categoryName.toString().split(',').join(', '));
     setSelectedCategoryList(list);
   }
 
@@ -246,11 +255,11 @@ export const HomeScreen: React.FC = () => {
                 <CustomText style={styles.placeholder_kloutkast}>KloutKast</CustomText>
               </View>
             )}
-            {/* <CustomTextInput 
+            <CustomTextInput 
               style={styles.search_text}
               onChangeText={text => setSearchText(text)}
-              value={searchText} /> */}
-              <CustomText style={styles.search_text}>{ searchText }</CustomText>
+              value={searchText} 
+              onSubmitEditing={onSearch} />
           </View>
 
           <TouchableWithoutFeedback onPress={() => setShowFilters(true)}>
@@ -295,13 +304,15 @@ export const HomeScreen: React.FC = () => {
             renderItem={({item}) => <ExperienceView experience={item} white_color={true} onFetchingData={setFetchingData} />}
           />
 
-          <CustomText style={styles.list_title}>{'Popular Hosts'}</CustomText>
+          <CustomText style={styles.list_title}>
+            { filtering == false ? 'Popular Hosts' : hostList.length + ' Hosts' }
+          </CustomText>
           <FlatList
             style={{width: '100%', height: 211, marginTop: 22, marginBottom: 20 }}
             contentContainerStyle={{paddingHorizontal: 24}}
             showsHorizontalScrollIndicator={false}
             horizontal={true}
-            data={hostList}
+            data={filtering == false ? popularHostList : hostList}
             keyExtractor={(item, index) => index.toString()}
             renderItem={({item}) => <HostView host={item} onFetchingData={setFetchingData} />}
           />
@@ -392,8 +403,11 @@ const styles = StyleSheet.create({
     position: 'absolute', 
     width: '100%', 
     height: 44,
-    lineHeight: 44,
+    // lineHeight: 44,
+    lineHeight: 16,
     paddingLeft: 10,
+    fontFamily: FONT.AN_Regular, 
+    fontSize: 14, 
   },
   filter_container: {
     position: 'absolute', 

@@ -136,6 +136,7 @@ const styles = StyleSheet.create({
     lineHeight: 60,
     fontFamily: FONT.AN_Regular,
     color: COLOR.systemBlackColor,
+    fontWeight: '600',
     fontSize: 16,
     textAlign: 'center',
   },

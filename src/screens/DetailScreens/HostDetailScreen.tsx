@@ -26,7 +26,7 @@ import {
   MARGIN_TOP,
   viewportWidth,
 } from '../../constants';
-import { IExperience, IHost, IHostDetail } from '../../interfaces/app';
+import { IExperience, IUser, IHostDetail } from '../../interfaces/app';
 import { ExperienceView } from '../../components/View';
 import { useExperiences } from '../../hooks';
 import { useGlobalState } from '../../redux/Store';
@@ -42,7 +42,7 @@ export const HostDetailScreen: React.FC = ({route}) => {
   const { getExperienceList } = useExperiences();
 
   const hostDetail: IHostDetail = route.params.hostDetail;
-  const host: IHost = route.params.hostDetail;
+  const host: IUser = hostDetail.user;
 
   const [hostExperienceList, setHostExperienceList] = useState<IExperience[]>([]);
   const [fetchingData, setFetchingData] = useState<boolean>(false);
@@ -102,7 +102,7 @@ export const HostDetailScreen: React.FC = ({route}) => {
             <CustomText style={{...styles.content_title, marginTop: 22}}>{'About this host'}</CustomText>
             <View style={{marginTop: 22, height: 16, flexDirection: 'row'}}>
               <SvgXml width={16} height={16} xml={Icon_Location_Black} />
-              <CustomText style={{...styles.location, marginTop: 1, marginLeft: 8}}>{host.email}</CustomText>
+              <CustomText style={{...styles.location, marginTop: 1, marginLeft: 8}}>{host.location}</CustomText>
             </View>
 
             <View style={{marginTop: 12, height: 16, flexDirection: 'row'}}>
@@ -166,6 +166,7 @@ const styles = StyleSheet.create({
     width: viewportWidth - 110,
     textAlign: 'center',
     fontFamily: FONT.AN_Regular,
+    fontWeight: '600',
     fontSize: 14,
     color: COLOR.blackColor,
   },
@@ -183,6 +184,7 @@ const styles = StyleSheet.create({
     height: 24,
     lineHeight: 24,
     fontFamily: FONT.AN_Regular,
+    fontWeight: '600',
     fontSize: 24,
     color: COLOR.blackColor,
   },
@@ -190,7 +192,8 @@ const styles = StyleSheet.create({
     marginTop: 12,
     height: 14,
     lineHeight: 14,
-    color: COLOR.alphaBlackColor50,
+    fontWeight: '500',
+    color: COLOR.alphaBlackColor75,
     fontFamily: FONT.AN_Regular,
     fontSize: 12,
   },
@@ -207,6 +210,7 @@ const styles = StyleSheet.create({
     height: 20,
     lineHeight: 20,
     fontFamily: FONT.AN_Regular,
+    fontWeight: '600',
     fontSize: 20,
     color: COLOR.blackColor,
   },
@@ -214,6 +218,7 @@ const styles = StyleSheet.create({
     marginTop: 22,
     lineHeight: 20,
     fontFamily: FONT.AN_Regular,
+    fontWeight: '500',
     fontSize: 14,
     color: COLOR.blackColor,
   },
@@ -221,6 +226,7 @@ const styles = StyleSheet.create({
     marginTop: 12,
     lineHeight: 14,
     fontFamily: FONT.AN_Regular,
+    fontWeight: '500',
     fontSize: 14,
     color: COLOR.alphaBlackColor75,
   },

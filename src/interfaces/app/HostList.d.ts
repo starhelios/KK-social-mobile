@@ -1,7 +1,7 @@
-import { IHost } from ".";
+import { IUser } from ".";
 
 export interface IHostList {
-	results: IHost[],
+	results: IUser[],
 	page: number,
 	limit: number,
 	totalPages: number,

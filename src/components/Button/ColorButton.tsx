@@ -29,6 +29,7 @@ const styles = StyleSheet.create({
     height: 44,
     lineHeight: 44,
     fontFamily: FONT.AN_Regular,
+    fontWeight: '600',
     color: COLOR.whiteColor,
     fontSize: 14,
   },

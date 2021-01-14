@@ -8,6 +8,7 @@ import {
   ScrollView,
   NativeSyntheticEvent,
   NativeScrollEvent,
+  Alert,
 } from 'react-native';
 import { Container } from 'native-base';
 import { useEffect, useState } from 'react';
@@ -34,11 +35,13 @@ import {
   Icon_Time_Black,
   Img_User_Avatar,
   MARGIN_TOP,
+  ShowShareView,
   viewportWidth,
 } from '../../constants';
 import { ColorButton } from '../../components/Button';
-import { IExperience, IExperienceDetail, IHost, IHostDetail, IUser } from '../../interfaces/app';
+import { IExperience, IExperienceDetail, IUser, IHostDetail } from '../../interfaces/app';
 import { useGlobalState } from '../../redux/Store';
+import { ExperienceView } from '../../components/View';
 import GlobalStyle from '../../styles/global';
 
 
@@ -48,16 +51,41 @@ export const ExperienceDetailScreen: React.FC = ({route}) => {
 
   const [currentPage, setCurrentPage] = useState<number>(0);
   const [isBlackHeader, setIsBlackHeader] = useState<boolean>(true)
+  const [fetchingData, setFetchingData] = useState<boolean>(false);
+  const [hostExperienceList, setHostExperienceList] = useState<IExperience[]>([]);
 
   const userInfo: IUser = useGlobalState('userInfo');
+  const experienceList = useGlobalState('experienceList');
   const experienceDetail: IExperienceDetail = route.params.experienceDetail;
   const experience: IExperience = experienceDetail.experience;
   const hostDetail: IHostDetail = route.params.hostDetail;
-  const host: IHost = hostDetail.user;
+  const host: IUser = hostDetail.user;
   var scrollViewRef: ScrollView | null;
 
   useEffect(() => {
+    loadExperienceList();
   }, [])
+
+  async function loadExperienceList() {
+    // await getExperienceList()
+    // .then(async (result: Promise<IExperience[]>) => {
+    //   setExperienceList(await result);
+    // }).catch(() => {
+    // });
+
+    var experiences: IExperience[] = [];
+    for (let i = 0; i < experienceList.length; i++) {
+      let experience = experienceList[i];
+      if (experience.userId == host.id) {
+        experiences.push(experience);
+      }
+    }
+    setHostExperienceList(experiences);
+  }
+
+  const onShare = () => {
+    ShowShareView('KloutKast', 'https://kloutkast.herokuapp.com');
+  }
 
   return (
     <Container style={styles.background}>
@@ -103,7 +131,7 @@ export const ExperienceDetailScreen: React.FC = ({route}) => {
 
           <View style={styles.content_container}>
             <CustomText style={styles.title}>{experience.title}</CustomText>
-            <CustomText style={styles.location}>{host.email}</CustomText>
+            <CustomText style={styles.location}>{host.location}</CustomText>
             <View style={{...GlobalStyle.auth_line, backgroundColor: COLOR.alphaBlackColor20, marginTop: 22}} />
             
             <View style={{marginTop: 12, flexDirection: 'row'}}>
@@ -141,19 +169,19 @@ export const ExperienceDetailScreen: React.FC = ({route}) => {
 
             <CustomText style={styles.about}>{host.aboutMe}</CustomText>
             
-            {/* <View style={{...GlobalStyle.auth_line, backgroundColor: COLOR.alphaBlackColor20, marginTop: 22}} /> */}
-            {/* <CustomText style={{...styles.host_name, marginTop: 22}}>{host.fullname + '\'s Experiences'}</CustomText> */}
+            <View style={{...GlobalStyle.auth_line, backgroundColor: COLOR.alphaBlackColor20, marginTop: 22}} />
+            <CustomText style={{...styles.host_name, marginTop: 22}}>{host.fullname + '\'s Experiences'}</CustomText>
           </View>
 
-          {/* <FlatList
-            style={{width: '100%', height: 206, marginTop: 22, marginBottom: 20 }}
+          <FlatList
+            style={{width: '100%', height: 284, marginTop: 22, marginBottom: 20 }}
             contentContainerStyle={{paddingHorizontal: 24}}
             showsHorizontalScrollIndicator={false}
             horizontal={true}
-            data={experience.images}
+            data={hostExperienceList}
             keyExtractor={(item, index) => index.toString()}
-            renderItem={({item}) => renderExperienceImage(item) }
-          /> */}
+            renderItem={({item}) => <ExperienceView experience={item} white_color={false} onFetchingData={setFetchingData} />}
+          />
         </ScrollView>
 
         {
@@ -176,7 +204,7 @@ export const ExperienceDetailScreen: React.FC = ({route}) => {
             </View>
           </TouchableWithoutFeedback>
 
-          <TouchableWithoutFeedback onPress={() => onShare()}>
+          <TouchableWithoutFeedback onPress={onShare}>
             <View style={styles.share_icon}>
               <SvgXml width='100%' height='100%' xml={isBlackHeader == true ? Icon_Share_White : Icon_Share_Black} />
             </View>
@@ -186,7 +214,7 @@ export const ExperienceDetailScreen: React.FC = ({route}) => {
         <View style={styles.bottom_container}>
           <View style={styles.price_container}>
             <CustomText style={styles.price}>{'From $' + experience.price}</CustomText>
-            {/* <CustomText style={styles.personal}>{' / ' + experience.personal}</CustomText> */}
+            <CustomText style={styles.personal}>{' / person'}</CustomText>
           </View>
 
           <TouchableWithoutFeedback onPress={() => onBook()}>
@@ -207,10 +235,6 @@ export const ExperienceDetailScreen: React.FC = ({route}) => {
     }
   }
 
-  function onShare() {
-
-  }
-
   function renderExperienceImage(uri: string) {
     return (
       <View style={experience_image_styles.container}>
@@ -220,11 +244,11 @@ export const ExperienceDetailScreen: React.FC = ({route}) => {
   }
 
   function onBook() {
-    // if (userInfo.id == "") {
-    //   Alert.alert(ERROR_MESSAGE.NEED_LOGIN_FUNCTION);
-    // } else {
-      navigate('ExperienceDetailBook', {experience: experience});
-    // }
+    if (userInfo.id != "" && userInfo.id == experience.userId) {
+      Alert.alert(ERROR_MESSAGE.ENABLE_BOOK_OWN_EXPERIENCE);
+    } else {
+      navigate('ExperienceDetailBook', {experience: experience, hostDetail: hostDetail});
+    }
   }
 };
 
@@ -262,6 +286,7 @@ const styles = StyleSheet.create({
     width: viewportWidth - 110,
     textAlign: 'center',
     fontFamily: FONT.AN_Regular,
+    fontWeight: '600',
     fontSize: 14,
     color: COLOR.blackColor,
   },
@@ -286,6 +311,7 @@ const styles = StyleSheet.create({
     height: '100%',
     overflow: 'hidden',
     resizeMode: 'cover',
+    // resizeMode: 'contain',
   },
   page_control_container: {
     position: 'absolute',
@@ -310,6 +336,7 @@ const styles = StyleSheet.create({
     lineHeight: 24,
     fontFamily: FONT.AN_Regular,
     fontSize: 24,
+    fontWeight: '600',
     color: COLOR.blackColor,
   },
   location: {
@@ -317,6 +344,7 @@ const styles = StyleSheet.create({
     lineHeight: 14,
     fontFamily: FONT.AN_Regular,
     fontSize: 14,
+    fontWeight: '500',
     color: COLOR.alphaBlackColor75,
   },
   host_name: {
@@ -324,6 +352,7 @@ const styles = StyleSheet.create({
     lineHeight: 20,
     fontFamily: FONT.AN_Regular,
     fontSize: 20,
+    fontWeight: '600',
     color: COLOR.blackColor,
   },
   avatar: {
@@ -340,6 +369,7 @@ const styles = StyleSheet.create({
     lineHeight: 20,
     fontFamily: FONT.AN_Regular,
     fontSize: 14,
+    fontWeight: '600',
     color: COLOR.alphaBlackColor75,
   },
   bottom_container: {
@@ -361,12 +391,14 @@ const styles = StyleSheet.create({
     lineHeight: 16,
     fontFamily: FONT.AN_Bold,
     fontSize: 16,
+    fontWeight: '600',
     color: COLOR.systemBlackColor,
   },
   personal: {
     height: 16,
     lineHeight: 16,
     fontFamily: FONT.AN_Regular,
+    fontWeight: '400',
     fontSize: 16,
     color: COLOR.systemBlackColor,
   },
@@ -382,6 +414,7 @@ const styles = StyleSheet.create({
     height: 12,
     lineHeight: 12,
     color: COLOR.alphaBlackColor50,
+    fontWeight: '600',
     fontFamily: FONT.AN_Regular,
     fontSize: 12,
   },
@@ -389,6 +422,7 @@ const styles = StyleSheet.create({
     marginLeft: 9,
     height: 16,
     lineHeight: 16,
+    fontWeight: '600',
     color: COLOR.alphaBlackColor75,
     fontFamily: FONT.AN_Regular,
     fontSize: 14,

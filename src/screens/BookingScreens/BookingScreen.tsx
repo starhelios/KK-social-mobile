@@ -13,7 +13,7 @@ import { useNavigation } from '@react-navigation/native';
 // from app
 import { COLOR, CustomText, FONT, MARGIN_TOP, SortBookings, viewportWidth } from '../../constants';
 // import { useCompletedBookings, useUpcomingBookings } from '../../hooks';
-import { IBooking, IHost } from '../../interfaces/app';
+import { IBooking, IUser } from '../../interfaces/app';
 import { BookingView } from '../../components/View';
 import { useGlobalState } from '../../redux/Store';
 
@@ -52,7 +52,7 @@ export const BookingScreen: React.FC = () => {
         // let startDate = Moment(startDateString).format('MMMM D, YYYY hh:mm a');
         let startDate = new Date(startDateString);
         if (startDate > currentDate) {
-          var host: IHost | null = null;
+          var host: IUser | null = null;
           for (let k = 0; k < hostList.length; k++) {
             if (hostList[k].id == experience.userId) {
               host = hostList[k];
@@ -84,7 +84,7 @@ export const BookingScreen: React.FC = () => {
         // let endDate = Moment(endDateString).format('MMMM D, YYYY hh:mm a');
         let endDate = new Date(endDateString);
         if (endDate < currentDate) {
-          var host: IHost | null = null;
+          var host: IUser | null = null;
           for (let k = 0; k < hostList.length; k++) {
             if (hostList[k].id == experience.userId) {
               host = hostList[k];

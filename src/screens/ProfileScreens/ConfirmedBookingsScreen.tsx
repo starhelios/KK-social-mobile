@@ -19,7 +19,7 @@ import {
   Icon_Back,
   MARGIN_TOP,
 } from '../../constants';
-import { IBooking, IHost } from '../../interfaces/app';
+import { IBooking, IUser } from '../../interfaces/app';
 // import { useConfirmedUpcomingBookings, useConfirmedCompletedBookings } from '../../hooks';
 import { ConfirmedBookingView } from '../../components/View';
 import { useGlobalState } from '../../redux/Store';
@@ -56,7 +56,7 @@ export const ConfirmedBookingsScreen: React.FC = () => {
         // let startDate = Moment(startDateString).format('MMMM D, YYYY hh:mm a');
         let startDate = new Date(startDateString);
         if (startDate > currentDate) {
-          var host: IHost | null = null;
+          var host: IUser | null = null;
           for (let k = 0; k < hostList.length; k++) {
             if (hostList[k].id == experience.userId) {
               host = hostList[k];
@@ -88,7 +88,7 @@ export const ConfirmedBookingsScreen: React.FC = () => {
         // let endDate = Moment(endDateString).format('MMMM D, YYYY hh:mm a');
         let endDate = new Date(endDateString);
         if (endDate < currentDate) {
-          var host: IHost | null = null;
+          var host: IUser | null = null;
           for (let k = 0; k < hostList.length; k++) {
             if (hostList[k].id == experience.userId) {
               host = hostList[k];
