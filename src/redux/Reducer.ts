@@ -2,9 +2,8 @@ import {
   ICategory,
   IExperience,
   IFilter,
-  IHost,
-  IToken,
   IUser,
+  IToken,
 } from "../interfaces/app";
 
 export enum ActionType {
@@ -29,7 +28,7 @@ export interface State {
   refreshToken: IToken;
   filter: IFilter;
   experienceList: IExperience[];
-  hostList: IHost[];
+  hostList: IUser[];
   categoryList: ICategory[];
 }
 

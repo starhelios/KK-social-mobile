@@ -1,4 +1,4 @@
-import { IHost } from "./Host";
+import { IUser } from ".";
 
 export interface IBooking {
 	id: number;
@@ -11,7 +11,7 @@ export interface IBooking {
 	rating: number;
 	is_host: boolean;
 	is_joined: boolean;
-	host: IHost | null;
+	host: IUser | null;
 
 	paid: string | null;
 	receive: string | null;

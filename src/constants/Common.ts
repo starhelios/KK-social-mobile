@@ -17,7 +17,8 @@ export const convertStringToDate = (date: string) => {
   if (date == '' || date == undefined) {
     return null;
   } else {
-    return new Date(date);
+    // return new Date(date);
+    return Moment.utc(date).format("YYYY-MM-DD HH:mm:ss");
   }
 }
 
@@ -25,7 +26,8 @@ export const convertDateToDateFormat = (date: Date, format: string) => {
   if (date == undefined) {
     return '';
   } else {
-    return date.toString(format);
+    // return date.toLocaleString(format);
+    return Moment.utc(date).format(format);
   }
 }
 

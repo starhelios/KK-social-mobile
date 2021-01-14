@@ -25,7 +25,7 @@ import {
   viewportWidth,
 } from '../../constants';
 import { ColorButton, TitleArrowButton } from '../../components/Button';
-import { IAvailableDate, IExperience } from '../../interfaces/app';
+import { IAvailableDate, IExperience, IHostDetail, IUser } from '../../interfaces/app';
 
 
 export const ExperienceDetailConfirmPayScreen: React.FC = ({route}) => {
@@ -35,6 +35,8 @@ export const ExperienceDetailConfirmPayScreen: React.FC = ({route}) => {
   const experience: IExperience = route.params.experience;
   const availableDate: IAvailableDate = route.params.availableDate;
   const guestCount: number = route.params.guestCount;
+  const hostDetail: IHostDetail = route.params.hostDetail;
+  const host: IUser = hostDetail.user;
 
   useEffect(() => {
   }, []);
@@ -44,7 +46,7 @@ export const ExperienceDetailConfirmPayScreen: React.FC = ({route}) => {
 
       <SafeAreaView style={styles.safe_area}>
         <View style={styles.navigation_bar}>
-          <CustomText style={styles.title}>Confirm Pay</CustomText>
+          <CustomText style={styles.title}>{ 'Confirm & Pay' }</CustomText>
 
           <TouchableWithoutFeedback onPress={() => goBack()}>
             <View style={styles.back_icon}>
@@ -64,8 +66,9 @@ export const ExperienceDetailConfirmPayScreen: React.FC = ({route}) => {
 
               <View style={image_styles.rating_container}>
                 <SvgXml width={15} height={15} xml={Icon_Experience_Rating} />
-                <CustomText style={image_styles.rating_text} numberOfLines={1}>{experience.categoryName}</CustomText>
-                {/* <CustomText style={{...image_styles.rating_text, color: COLOR.alphaBlackColor50}} numberOfLines={1}>{'(' + experience.rating_count.toString() + ')'}</CustomText> */}
+                <CustomText style={image_styles.rating_text} numberOfLines={1}>{hostDetail.ratingMark}</CustomText>
+                <CustomText style={{...image_styles.rating_text, color: COLOR.alphaBlackColor50, fontWeight: '500',}} numberOfLines={1}>
+                  {'(' + hostDetail.ratingCount.toString() + ')'}</CustomText>
               </View>
             </View>
           </View>
@@ -73,7 +76,7 @@ export const ExperienceDetailConfirmPayScreen: React.FC = ({route}) => {
           <CustomText style={styles.info_title}>Details</CustomText>
 
           <CustomText style={styles.info_detail_title}>Date</CustomText>
-          <CustomText style={styles.info_detail_content}>{convertStringToDateFormat(availableDate.day, 'ddd, MMM DD') + '    ' + availableDate.startTime + ' - ' + availableDate.endTime}</CustomText>
+          <CustomText style={styles.info_detail_content}>{convertStringToDateFormat(availableDate.day, 'ddd, MMM DD') + '  ' + availableDate.startTime + ' - ' + availableDate.endTime + '(EDT)'}</CustomText>
           <View style={styles.line} />
 
           <CustomText style={styles.info_detail_title}>Guest</CustomText>
@@ -131,9 +134,10 @@ const styles = StyleSheet.create({
     width: '100%',
     height: 33, 
     lineHeight: 33,
-    fontFamily: FONT.AN_Bold, 
-    fontSize: 24, 
+    fontFamily: FONT.AN_Regular, 
+    fontSize: 14, 
     textAlign: 'center',
+    fontWeight: '600',
     color: COLOR.systemBlackColor,
   },
   back_icon: {
@@ -222,6 +226,7 @@ const styles = StyleSheet.create({
     marginTop: 44,
     marginLeft: 24,
     height: 24,
+    fontWeight: '600',
     lineHeight: 24,
     fontFamily: FONT.AN_Regular,
     fontSize: 16,
@@ -231,6 +236,7 @@ const styles = StyleSheet.create({
     marginTop: 16,
     marginLeft: 24,
     height: 18,
+    fontWeight: '600',
     lineHeight: 18,
     fontFamily: FONT.AN_Regular,
     fontSize: 12,
@@ -240,6 +246,7 @@ const styles = StyleSheet.create({
     marginTop: 16,
     marginLeft: 24,
     height: 24,
+    fontWeight: '500',
     lineHeight: 24,
     fontFamily: FONT.AN_Regular,
     fontSize: 16,
@@ -248,7 +255,8 @@ const styles = StyleSheet.create({
   price_unit: {
     position: 'absolute',
     right: 24,
-    fontFamily: FONT.AN_Bold,
+    fontWeight: '700',
+    fontFamily: FONT.AN_Regular,
     fontSize: 16, 
     height: 16, 
     lineHeight: 16, 
@@ -287,6 +295,7 @@ const image_styles = StyleSheet.create({
     lineHeight: 20,
     color: COLOR.blackColor,
     fontFamily: FONT.AN_Regular,
+    fontWeight: '600',
     fontSize: 14,
   },
   rating_container: {
@@ -298,6 +307,7 @@ const image_styles = StyleSheet.create({
     height: 15,
     lineHeight: 15,
     marginLeft: 5,
+    fontWeight: '600',
     color: COLOR.blackColor,
     fontFamily: FONT.AN_Regular,
     fontSize: 12,

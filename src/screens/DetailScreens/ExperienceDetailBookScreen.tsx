@@ -29,20 +29,22 @@ import {
   ShowShareView,
   viewportWidth,
 } from '../../constants';
-import { IAvailableDate, IExperience } from '../../interfaces/app';
+import { IAvailableDate, IExperience, IHostDetail, IUser } from '../../interfaces/app';
 import { ExperienceDetailBookView, SelectDateRangeView } from '../../components/View';
 
 
 export const ExperienceDetailBookScreen: React.FC = ({route}) => {
 
   const experience: IExperience = route.params.experience;
+  const hostDetail: IHostDetail = route.params.hostDetail;
+  const host: IUser = hostDetail.user;
 
   const { goBack, navigate } = useNavigation();
 
   const [selectedFromDate, setSelectedFromDate] = useState<string>('');
   const [selectedEndDate, setSelectedEndDate] = useState<string>('');
   const [showSelectDates, setShowSelectDates] = useState<boolean>(false);
-  const [guestCount, setGuestCount] = useState<number>(0)
+  const [guestCount, setGuestCount] = useState<number>(1)
   const [allAvailableDates, setAllAvailableDates] = useState<IAvailableDate[]>([]);
   const [availableDates, setAvailableDates] = useState<IAvailableDate[]>([]);
 
@@ -76,6 +78,7 @@ export const ExperienceDetailBookScreen: React.FC = ({route}) => {
     if (fromDate == '') {
       setAvailableDates(allAvailableDates);
     } else {
+      
       const from = convertStringToDate(fromDate);
       const end = convertStringToDate(endDate);
 
@@ -109,12 +112,12 @@ export const ExperienceDetailBookScreen: React.FC = ({route}) => {
       return;
     }
     
-    navigate('ExperienceDetailConfirmPay', {experience: experience, availableDate: availableDate, guestCount: guestCount});
+    navigate('ExperienceDetailConfirmPay', {experience: experience, availableDate: availableDate, guestCount: guestCount, hostDetail: hostDetail});
   }
 
   const onDecreaseGuestCount = () => {
-    if (guestCount < 1) {
-      setGuestCount(0);
+    if (guestCount < 2) {
+      setGuestCount(1);
     } else {
       setGuestCount(guestCount - 1);
     }
@@ -210,8 +213,9 @@ const styles = StyleSheet.create({
     width: '100%',
     height: 33, 
     lineHeight: 33,
-    fontFamily: FONT.AN_Bold, 
-    fontSize: 24, 
+    fontFamily: FONT.AN_Regular, 
+    fontSize: 14, 
+    fontWeight: '600',
     textAlign: 'center',
     color: COLOR.systemBlackColor,
   },
@@ -251,6 +255,7 @@ const styles = StyleSheet.create({
     marginTop: 14,
     fontFamily: FONT.AN_Regular, 
     fontSize: 14, 
+    fontWeight: '600',
     textAlign: 'center',
     color: COLOR.systemBlackColor,
   },

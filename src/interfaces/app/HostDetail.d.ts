@@ -1,7 +1,7 @@
-import { IHost } from "./Host";
+import { IUser } from ".";
 
 export interface IHostDetail {
-	user: IHost,
+	user: IUser,
 	ratingMark: number,
 	ratingCount: number,
 }

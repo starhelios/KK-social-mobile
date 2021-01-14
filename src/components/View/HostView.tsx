@@ -18,12 +18,12 @@ import {
   Icon_Category, 
   Img_User_Avatar, 
 } from '../../constants';
-import { IHost, IHostDetail } from '../../interfaces/app';
+import { IUser, IHostDetail } from '../../interfaces/app';
 import { useHosts } from '../../hooks';
 
 
 interface props {
-  host: IHost;
+  host: IUser;
   onFetchingData: (fetching: boolean) => void;
 }
 
@@ -31,7 +31,7 @@ export const HostView: React.FC<props> = (props: props) => {
 
   const { navigate } = useNavigation();
   const { getHostDetail } = useHosts();
-  const host: IHost = props.host;
+  const host: IUser = props.host;
 
   return (
     <TouchableWithoutFeedback onPress={() => goHostDetailScreen()}>
@@ -43,11 +43,11 @@ export const HostView: React.FC<props> = (props: props) => {
         <CustomText style={styles.title}>{host.fullname}</CustomText>
         <View style={styles.experienceContainer}>
           <View style={{flex: 1, flexDirection: 'row'}}>
-            {
+            {/* {
               host.categoryIcon != null && host.categoryIcon != ''
               ? <Image style={{width: '100%', height: '100%'}} source={{uri: host.categoryIcon}} />
               : <SvgXml height={12} xml={Icon_Category} />
-            }
+            } */}
             <CustomText style={styles.experience}>{host.categoryName}</CustomText>
           </View>
         </View>
@@ -100,7 +100,7 @@ const styles = StyleSheet.create({
   experience: {
     height: 12,
     lineHeight: 12,
-    marginLeft: 5,
+    // marginLeft: 5,
     color: COLOR.systemWhiteColor,
     fontFamily: FONT.AN_Regular,
     fontSize: 12,

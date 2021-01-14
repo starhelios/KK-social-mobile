@@ -21,21 +21,22 @@ import {
   MARGIN_TOP,
   viewportWidth,
 } from '../../constants';
+import { 
+  ConfirmedBookingHostInfoView, 
+  ConfirmedBookingMainInfoView, 
+  ConfirmedBookingRatingInfoView, 
+} from '../../components/View';
 import { ColorButton } from '../../components/Button';
 import { IBooking } from '../../interfaces/app';
-import { ConfirmedBookingHostInfoView, ConfirmedBookingMainInfoView, ConfirmedBookingRatingInfoView } from '../../components/View';
 import GlobalStyle from '../../styles/global';
 
 
 export const ConfirmedBookingDetailScreen: React.FC = ({route}) => {
 
-  const { navigate, goBack } = useNavigation();
+  const { goBack } = useNavigation();
 
   const booking: IBooking = route.params.booking;
   const isCompleted: boolean = route.params.isCompleted;
-
-  useEffect(() => {
-  }, [])
 
   return (
     <Container style={styles.background}>

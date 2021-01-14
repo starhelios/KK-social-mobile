@@ -70,13 +70,13 @@ export const ExperienceView: React.FC<props> = (props: props) => {
           {experience.title}
         </CustomText>
         <View style={styles.experienceContainer}>
-          {
+          {/* {
             experience.icon != null && experience.icon != ''
             ? <Image
                 style={{width: '100%', height: '100%', resizeMode: 'cover', overflow: 'hidden'}}
                 source={{uri: experience.icon}} />
             : <SvgXml height='100%' xml={Icon_Category} />
-          }          
+          }           */}
           <CustomText style={{...styles.experience, color: white_color == true ? COLOR.systemWhiteColor : COLOR.blackColor}}>
             {experience.categoryName + ' • ' + GetDurationString(experience.duration)}
           </CustomText>
@@ -123,7 +123,7 @@ const styles = StyleSheet.create({
   experience: {
     height: 12,
     lineHeight: 12,
-    marginLeft: 5,
+    // marginLeft: 5,
     color: COLOR.systemWhiteColor,
     fontFamily: FONT.AN_Regular,
     fontSize: 12,

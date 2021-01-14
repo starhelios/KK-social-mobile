@@ -9,4 +9,8 @@ export interface IUser {
 	aboutMe: string,
 	categoryName: string,
 	location: string,
+	createdAt: string,
+
+	// test
+	categoryIcon: string,
 }

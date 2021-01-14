@@ -20,4 +20,5 @@ export const ERROR_MESSAGE = {
   UPDATE_USER_PROFILE_FAIL: 'Failed to update profile.',
 
   NEED_LOGIN_FUNCTION: 'You need to log in to use this function.',
+  ENABLE_BOOK_OWN_EXPERIENCE: 'You cannot book your own experience.',
 };

@@ -31,8 +31,8 @@ export const ExperienceDetailBookView: React.FC<props> = (props: props) => {
         <View>
           <CustomText style={styles.time}>{availableDate.startTime + ' - ' + availableDate.endTime + ' (EDT)'}</CustomText>
           <View style={styles.price_container}>
-            <CustomText style={{...styles.time, fontFamily: FONT.AN_Bold}}>{'$' + experience.price}</CustomText>
-            {/* <CustomText style={styles.time}>{' / person'}</CustomText> */}
+            <CustomText style={{...styles.time, fontWeight: '600'}}>{'$' + experience.price}</CustomText>
+            <CustomText style={styles.time}>{' / person'}</CustomText>
           </View>
         </View>
 
@@ -56,6 +56,7 @@ const styles = StyleSheet.create({
     lineHeight: 27,
     color: COLOR.blackColor,
     fontFamily: FONT.AN_Regular,
+    fontWeight: '600',
     fontSize: 20,
   },
   container: {
@@ -68,6 +69,7 @@ const styles = StyleSheet.create({
     marginLeft: 1,
     marginTop: 0,
     height: 16,
+    fontWeight: '500',
     lineHeight: 16,
     color: COLOR.blackColor,
     fontFamily: FONT.AN_Regular,
@@ -76,6 +78,7 @@ const styles = StyleSheet.create({
   price_container: {
     marginLeft: 1,
     marginTop: 8,
+    fontWeight: '600',
     flexDirection: 'row',
     height: 16,
   },

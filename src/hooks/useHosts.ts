@@ -3,7 +3,7 @@ import axios from 'axios';
 // from app
 import { API_ENDPOINT, API_CONFIG } from '../constants';
 import { IApiSuccess } from '../interfaces/api';
-import { IHost, IHostDetail, IHostList } from '../interfaces/app';
+import { IHostDetail, IHostList } from '../interfaces/app';
 
 export const useHosts = () => {
 

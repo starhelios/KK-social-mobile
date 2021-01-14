@@ -29,4 +29,7 @@ export const API_ENDPOINT = {
 
   // Tutorials
   TUTORIALS : `${API_HOST}/tutorials`,
+
+  // Search
+  SEARCH : `${API_HOST}/search`,
 };
