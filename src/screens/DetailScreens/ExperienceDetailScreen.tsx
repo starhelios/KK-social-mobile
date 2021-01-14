@@ -310,8 +310,8 @@ const styles = StyleSheet.create({
     width: viewportWidth,
     height: '100%',
     overflow: 'hidden',
-    resizeMode: 'cover',
-    // resizeMode: 'contain',
+    // resizeMode: 'cover',
+    resizeMode: 'contain',
   },
   page_control_container: {
     position: 'absolute',
@@ -344,7 +344,7 @@ const styles = StyleSheet.create({
     lineHeight: 14,
     fontFamily: FONT.AN_Regular,
     fontSize: 14,
-    fontWeight: '500',
+    //fontweight: '500',
     color: COLOR.alphaBlackColor75,
   },
   host_name: {
