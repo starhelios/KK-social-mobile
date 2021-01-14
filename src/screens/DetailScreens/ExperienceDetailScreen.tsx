@@ -42,12 +42,14 @@ import { ColorButton } from '../../components/Button';
 import { IExperience, IExperienceDetail, IUser, IHostDetail } from '../../interfaces/app';
 import { useGlobalState } from '../../redux/Store';
 import { ExperienceView } from '../../components/View';
+import { useHosts } from '../../hooks';
 import GlobalStyle from '../../styles/global';
 
 
 export const ExperienceDetailScreen: React.FC = ({route}) => {
 
   const { navigate, goBack } = useNavigation();
+  const { getHostDetail } = useHosts();
 
   const [currentPage, setCurrentPage] = useState<number>(0);
   const [isBlackHeader, setIsBlackHeader] = useState<boolean>(true)
@@ -87,6 +89,15 @@ export const ExperienceDetailScreen: React.FC = ({route}) => {
     ShowShareView('KloutKast', 'https://kloutkast.herokuapp.com');
   }
 
+  async function goHostDetailScreen() {
+    await getHostDetail(host.id)
+    .then(async (hostDetail: Promise<IHostDetail>) => {
+      navigate('HostDetail', {hostDetail: hostDetail});
+    }).catch(() => {
+      Alert.alert(ERROR_MESSAGE.GET_HOST_DETAIL_FAIL);
+    });
+  }
+
   return (
     <Container style={styles.background}>
       <SafeAreaView style={styles.safe_area}>
@@ -110,7 +121,12 @@ export const ExperienceDetailScreen: React.FC = ({route}) => {
               onMomentumScrollEnd={({nativeEvent}) => { 
                 setCurrentPage(Math.round(nativeEvent.contentOffset.x / viewportWidth));
               }}
-              renderItem={({item}) => <Image style={styles.image} source={{uri: item}} />}
+              renderItem={({item}) => 
+                <View>
+                  <Image style={styles.image} source={{uri: item}} />
+                  <View style={styles.image_cover} />  
+                </View>
+              }
             />
 
             <View style={styles.page_control_container}>  
@@ -136,7 +152,9 @@ export const ExperienceDetailScreen: React.FC = ({route}) => {
             
             <View style={{marginTop: 12, flexDirection: 'row'}}>
               <CustomText style={styles.host_name}>{'Hosted by ' + host.fullname}</CustomText>
-              <Image style={styles.avatar} source={host.avatarUrl != null && host.avatarUrl != '' ? {uri: host.avatarUrl} : Img_User_Avatar} />
+              <TouchableWithoutFeedback onPress={() => goHostDetailScreen()}>
+                <Image style={styles.avatar} source={host.avatarUrl != null && host.avatarUrl != '' ? {uri: host.avatarUrl} : Img_User_Avatar} />
+              </TouchableWithoutFeedback>
             </View>
 
             <View style={{marginTop: 12, height: 16, flexDirection: 'row'}}>
@@ -159,7 +177,9 @@ export const ExperienceDetailScreen: React.FC = ({route}) => {
                 <CustomText style={styles.host_name}>{'Say Hello! to ' + host.fullname}</CustomText>
                 <CustomText style={styles.joined_date}>{'Joined in ' + convertStringToDateFormat(host.createdAt, 'MMMM D, YYYY')}</CustomText>
               </View>
-              <Image style={styles.avatar} source={host.avatarUrl != null && host.avatarUrl != '' ? {uri: host.avatarUrl} : Img_User_Avatar} />
+              <TouchableWithoutFeedback onPress={() => goHostDetailScreen()}>
+                <Image style={styles.avatar} source={host.avatarUrl != null && host.avatarUrl != '' ? {uri: host.avatarUrl} : Img_User_Avatar} />
+              </TouchableWithoutFeedback>
             </View>
 
             <View style={{marginTop: 22, flexDirection: 'row', height: 16}}>
@@ -185,14 +205,15 @@ export const ExperienceDetailScreen: React.FC = ({route}) => {
         </ScrollView>
 
         {
-          isBlackHeader == true 
-          ? <LinearGradient
-              colors={['#00000010', '#00000020']}
-              style={styles.gradient_container}
-              start={{x: 0.5, y: 0}}
-              end={{x: 0.5, y: 1}} >
-            </LinearGradient>
-          : <View style={{...styles.gradient_container, backgroundColor: COLOR.whiteColor, height: 375/*104*/ }}>
+          isBlackHeader == false 
+          // ? <LinearGradient
+          //     colors={['#00000010', '#00000020']}
+          //     style={styles.gradient_container}
+          //     start={{x: 0.5, y: 0}}
+          //     end={{x: 0.5, y: 1}} >
+          //   </LinearGradient>
+          // : 
+          && <View style={{...styles.gradient_container, backgroundColor: COLOR.whiteColor, height: 104 }}>
               <CustomText style={styles.navigation_title}>{experience.title}</CustomText>
             </View>
         }
@@ -305,6 +326,12 @@ const styles = StyleSheet.create({
   image_container: {
     height: 375,
     width: '100%',
+  },
+  image_cover: {
+    position: 'absolute',
+    width: '100%', 
+    height: 375,
+    backgroundColor: '#0001',
   },
   image: {
     width: viewportWidth,

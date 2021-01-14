@@ -98,7 +98,7 @@ export const ExperienceDetailConfirmPayScreen: React.FC = ({route}) => {
 
         <TouchableWithoutFeedback onPress={() => onConfirmPay() }>
           <View style={styles.bottom_button}>
-            <ColorButton title={'Confirm & Save'} backgroundColor={COLOR.redColor} color={COLOR.systemWhiteColor} />
+            <ColorButton title={'Confirm & Pay'} backgroundColor={COLOR.redColor} color={COLOR.systemWhiteColor} />
           </View>
         </TouchableWithoutFeedback>
         
