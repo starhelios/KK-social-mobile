@@ -67,7 +67,7 @@ export const ExperienceDetailConfirmPayScreen: React.FC = ({route}) => {
               <View style={image_styles.rating_container}>
                 <SvgXml width={15} height={15} xml={Icon_Experience_Rating} />
                 <CustomText style={image_styles.rating_text} numberOfLines={1}>{hostDetail.ratingMark}</CustomText>
-                <CustomText style={{...image_styles.rating_text, color: COLOR.alphaBlackColor50, fontWeight: '500',}} numberOfLines={1}>
+                <CustomText style={{...image_styles.rating_text, color: COLOR.alphaBlackColor50}} numberOfLines={1}>
                   {'(' + hostDetail.ratingCount.toString() + ')'}</CustomText>
               </View>
             </View>
@@ -246,7 +246,7 @@ const styles = StyleSheet.create({
     marginTop: 16,
     marginLeft: 24,
     height: 24,
-    fontWeight: '500',
+    //fontweight: '500',
     lineHeight: 24,
     fontFamily: FONT.AN_Regular,
     fontSize: 16,

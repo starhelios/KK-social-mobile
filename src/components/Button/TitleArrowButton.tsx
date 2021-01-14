@@ -73,7 +73,7 @@ const styles = StyleSheet.create({
     lineHeight: 16,
     fontFamily: FONT.AN_Regular,
     fontSize: 16,
-    fontWeight: '500',
+    //fontweight: '500',
     color: COLOR.systemWhiteColor,
   },
   arrow: {

@@ -69,7 +69,7 @@ const styles = StyleSheet.create({
     marginLeft: 1,
     marginTop: 0,
     height: 16,
-    fontWeight: '500',
+    //fontweight: '500',
     lineHeight: 16,
     color: COLOR.blackColor,
     fontFamily: FONT.AN_Regular,
