@@ -192,7 +192,7 @@ export const ExperienceDetailScreen: React.FC = ({route}) => {
               start={{x: 0.5, y: 0}}
               end={{x: 0.5, y: 1}} >
             </LinearGradient>
-          : <View style={{...styles.gradient_container, backgroundColor: COLOR.whiteColor, height: 104}}>
+          : <View style={{...styles.gradient_container, backgroundColor: COLOR.whiteColor, height: 375/*104*/ }}>
               <CustomText style={styles.navigation_title}>{experience.title}</CustomText>
             </View>
         }
@@ -319,7 +319,8 @@ const styles = StyleSheet.create({
     height: 60, 
     bottom: 0,
     alignContent: 'center',
-    backgroundColor: '#0001',
+    // backgroundColor: '#0001',
+    backgroundColor: COLOR.clearColor,
   },
   page_control: {
     marginTop: 27,
