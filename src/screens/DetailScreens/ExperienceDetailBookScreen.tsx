@@ -16,6 +16,7 @@ import { SvgXml } from 'react-native-svg';
 // from app
 import { 
   COLOR, 
+  convertDateToMomentDateFormat, 
   convertStringToDate, 
   CustomText, 
   ERROR_MESSAGE, 
@@ -55,7 +56,7 @@ export const ExperienceDetailBookScreen: React.FC = ({route}) => {
       var availableDate = experience.dateAvaibility[i];
 
       const startTime = convertStringToDate(availableDate.day + ' ' + availableDate.startTime);
-      if (startTime == null || startTime < new Date()) {
+      if (startTime == null || startTime < convertDateToMomentDateFormat(new Date(), 'YYYY-MM-DD HH:mm:ss')) {
         continue;
       }
 

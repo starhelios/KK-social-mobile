@@ -14,6 +14,8 @@ interface props {
   onChooseDate: (availableDate: IAvailableDate) => void;
 }
 
+
+
 export const ExperienceDetailBookView: React.FC<props> = (props: props) => {
 
   const experience: IExperience = props.experience;
@@ -21,11 +23,11 @@ export const ExperienceDetailBookView: React.FC<props> = (props: props) => {
 
   return (
     <View>
-    {
-      availableDate.show_date == true
-      ? <CustomText style={styles.date}>{convertStringToDateFormat(availableDate.day, 'ddd, MMM D')}</CustomText>
-      : null
-    }
+      {
+        availableDate.show_date == true
+        ? <CustomText style={styles.date}>{convertStringToDateFormat(availableDate.day, 'ddd, MMM D')}</CustomText>
+        : null
+      }
 
       <View style={styles.container}>
         <View>
