@@ -204,18 +204,8 @@ export const ExperienceDetailScreen: React.FC = ({route}) => {
           />
         </ScrollView>
 
-        {
-          isBlackHeader == false 
-          // ? <LinearGradient
-          //     colors={['#00000010', '#00000020']}
-          //     style={styles.gradient_container}
-          //     start={{x: 0.5, y: 0}}
-          //     end={{x: 0.5, y: 1}} >
-          //   </LinearGradient>
-          // : 
-          && <View style={{...styles.gradient_container, backgroundColor: COLOR.whiteColor, height: 104 }}>
-              <CustomText style={styles.navigation_title}>{experience.title}</CustomText>
-            </View>
+        { isBlackHeader == false 
+          && <View style={{...styles.gradient_container, backgroundColor: COLOR.whiteColor, height: 104 }} />
         }
         
         <View style={styles.navigation_bar}>
@@ -230,6 +220,10 @@ export const ExperienceDetailScreen: React.FC = ({route}) => {
               <SvgXml width='100%' height='100%' xml={isBlackHeader == true ? Icon_Share_White : Icon_Share_Black} />
             </View>
           </TouchableWithoutFeedback>
+
+          { isBlackHeader == false && 
+            <CustomText style={styles.navigation_title}>{experience.title}</CustomText>
+          }
         </View>
 
         <View style={styles.bottom_container}>
@@ -300,9 +294,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   navigation_title: {
-    marginTop: 63,
-    lineHeight: 14,
-    height: 14,
+    // marginTop: 63,
+    lineHeight: 24,
+    height: 24,
     marginLeft: 55,
     width: viewportWidth - 110,
     textAlign: 'center',

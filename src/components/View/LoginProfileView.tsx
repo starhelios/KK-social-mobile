@@ -53,6 +53,45 @@ export const LoginProfileView: React.FC = () => {
     setProfile(userInfo);
   }, [userInfo]);
 
+  const initUserInfo = () => {
+    dispatch({
+      type: ActionType.SET_USER_INFO,
+      payload: {
+        id: '',
+        fullname: '',
+        isHost: false,
+        email: '',
+        status: '',
+        avatarUrl: '',
+        dateOfBirth: '', 
+        aboutMe: '',
+        location: '',
+        categoryName: '',
+        createdAt: '',
+  
+        paymentInfo: [],
+        bankInfo: [],
+      },
+    });
+  
+    dispatch({
+      type: ActionType.SET_ACCESS_TOKEN,
+      payload: {
+        token: '',
+        expires: '', 
+      },
+    });
+    SetApiConfig('');
+  
+    dispatch({
+      type: ActionType.SET_ACCESS_TOKEN,
+      payload: {
+        token: '',
+        expires: '', 
+      },
+    });
+  }
+
   return (
     <View style={{flex: 1}}>
       <ScrollView style={{width: '100%', height: '100%', marginBottom: 20}}>
@@ -163,37 +202,7 @@ export const LoginProfileView: React.FC = () => {
     DefaultPreference.set(USER_EMAIL, '').then(() => { });
     DefaultPreference.set(PASSWORD, '').then(() => { });
 
-    dispatch({
-      type: ActionType.SET_USER_INFO,
-      payload: {
-        id: '',
-        fullname: '',
-        isHost: false,
-        email: '',
-        status: '',
-        avatarUrl: '',
-        dateOfBirth: '', 
-        aboutMe: '',
-        location: '',
-      },
-    });
-  
-    dispatch({
-      type: ActionType.SET_ACCESS_TOKEN,
-      payload: {
-        token: '',
-        expires: '', 
-      },
-    });
-    SetApiConfig('');
-
-    dispatch({
-      type: ActionType.SET_ACCESS_TOKEN,
-      payload: {
-        token: '',
-        expires: '', 
-      },
-    });
+    initUserInfo();
   }
 
   async function googleSignOut() {

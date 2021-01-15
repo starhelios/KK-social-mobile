@@ -42,8 +42,8 @@ export const ExperienceDetailBookScreen: React.FC = ({route}) => {
 
   const { goBack, navigate } = useNavigation();
 
-  const [selectedFromDate, setSelectedFromDate] = useState<string>('');
-  const [selectedEndDate, setSelectedEndDate] = useState<string>('');
+  const [selectedFromDate, setSelectedFromDate] = useState<string>(convertDateToMomentDateFormat(new Date(), 'YYYY-MM-DD'));
+  const [selectedEndDate, setSelectedEndDate] = useState<string>(convertDateToMomentDateFormat(new Date(), 'YYYY-MM-DD'));
   const [showSelectDates, setShowSelectDates] = useState<boolean>(false);
   const [guestCount, setGuestCount] = useState<number>(1)
   const [allAvailableDates, setAllAvailableDates] = useState<IAvailableDate[]>([]);
@@ -70,6 +70,7 @@ export const ExperienceDetailBookScreen: React.FC = ({route}) => {
     }
     setAllAvailableDates(availableDates);
     setAvailableDates(availableDates);
+    onFilterSelectDate(selectedFromDate, selectedEndDate);
   }, []);
 
   const onFilterSelectDate = (fromDate: string, endDate: string) => {

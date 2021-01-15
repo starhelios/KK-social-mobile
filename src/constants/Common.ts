@@ -2,7 +2,7 @@ import Moment from 'moment';
 import { Alert, Share } from 'react-native';
 
 // from app
-import { IBooking, ICard, IFile } from '../interfaces/app';
+import { IBooking, ICard } from '../interfaces/app';
 
 
 export const convertStringToDateFormat = (date: string, format: string) => {

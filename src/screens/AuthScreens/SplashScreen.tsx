@@ -26,13 +26,17 @@ import {
   APPLE_LOGIN,
   googleConfigure,
   intialization,
+  SetApiConfig,
 } from '../../constants';
 import { useAuthentication } from '../../hooks';
 import { ILoginUser } from '../../interfaces/app';
+import { ActionType } from '../../redux/Reducer';
+import { useDispatch } from '../../redux/Store';
 
 
 export const SplashScreen: React.FC = () => {
-
+  
+  const dispatch = useDispatch();
   const { reset } = useNavigation();
   const { loginUser, loginByGoogle } = useAuthentication();
 
@@ -41,6 +45,7 @@ export const SplashScreen: React.FC = () => {
   var fetching = false;
 
   useEffect(() => {
+    initUserInfo();
     setFetchingData(true);
 
     intialization();
@@ -58,6 +63,45 @@ export const SplashScreen: React.FC = () => {
       }
     }, LOADING_TIME);
   }, [])
+
+  const initUserInfo = () => {
+    dispatch({
+      type: ActionType.SET_USER_INFO,
+      payload: {
+        id: '',
+        fullname: '',
+        isHost: false,
+        email: '',
+        status: '',
+        avatarUrl: '',
+        dateOfBirth: '', 
+        aboutMe: '',
+        location: '',
+        categoryName: '',
+        createdAt: '',
+  
+        paymentInfo: [],
+        bankInfo: [],
+      },
+    });
+  
+    dispatch({
+      type: ActionType.SET_ACCESS_TOKEN,
+      payload: {
+        token: '',
+        expires: '', 
+      },
+    });
+    SetApiConfig('');
+  
+    dispatch({
+      type: ActionType.SET_ACCESS_TOKEN,
+      payload: {
+        token: '',
+        expires: '', 
+      },
+    });
+  }
 
   const loadAutoLoginInformation = () => {
     DefaultPreference.get(LOGIN_TYPE).then(function(loginType) {
