@@ -141,19 +141,25 @@ export const AddPaymentMethodScreen: React.FC = () => {
       userInfo.paymentInfo = paymentMethodList;
       setLoginUser(userInfo);
 
-      addCard(userInfo.id, cardType, cardNumberValue, cardExpiration, cvc)
-      .then((result: IApiSuccess) => {
-        Alert.alert(
-          SUCCESS_MESSAGE.ADD_CARD_SUCCESS,
-          '',
-          [
-            { text: "OK", onPress: () => goBack() }
-          ],
-          { cancelable: false }
-        );
-      }).catch(() => {
-        Alert.alert(ERROR_MESSAGE.ADD_PAYMENT_METHOD_FAIL);
-      });
+      if (userInfo.id != '') {
+        addCard(userInfo.id, cardType, cardNumberValue, cardExpiration, cvc)
+        .then((result: IApiSuccess) => {
+          Alert.alert(
+            SUCCESS_MESSAGE.ADD_CARD_SUCCESS,
+            '',
+            [
+              { text: "OK", onPress: () => goBack() }
+            ],
+            { cancelable: false }
+          );
+        }).catch(() => {
+          Alert.alert(ERROR_MESSAGE.ADD_PAYMENT_METHOD_FAIL);
+        });
+      }
+    }
+
+    if (userInfo.id == '') {
+      goBack();
     }
     
     // updateUserInformation(userInfo.id, userInfo.email, userInfo.fullname, userInfo.dateOfBirth, userInfo.aboutMe, userInfo.location, 
