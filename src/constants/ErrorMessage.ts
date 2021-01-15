@@ -30,5 +30,6 @@ export const ERROR_MESSAGE = {
   EMPTY_CVC: 'Please input CVC',
   ADD_PAYMENT_METHOD_FAIL: 'Failed to add payment method.',
   UNSELECT_CARD: 'Please select payment method.',
+  HOST_HAVE_NO_BANK: 'Host didn’t add any withdrawal methods.',
 
 };

@@ -49,14 +49,17 @@ export const ExperienceDetailConfirmPayScreen: React.FC = ({route}) => {
   const host: IUser = hostDetail.user;
 
   const onConfirmPay = () => {
-    if (selectedCard.cardType == '' || selectedCard.cardNumber == '') {
+    if (host.bankInfo == undefined || host.bankInfo.length == 0) {
+      Alert.alert(ERROR_MESSAGE.HOST_HAVE_NO_BANK);
+      return;
+    } else if (selectedCard.cardType == '' || selectedCard.cardNumber == '') {
       Alert.alert(ERROR_MESSAGE.UNSELECT_CARD);
       return;
     } else if (CheckCardExpirationDate(selectedCard.cardExpiryDate) == false) {
       Alert.alert(ERROR_MESSAGE.PASSED_CARD_EXPIRATION);
       return;
     }
-;
+
     const expMonth = selectedCard.cardExpiryDate.substring(0, 2);
     const expYear = selectedCard.cardExpiryDate.substring(3, 5);
 
