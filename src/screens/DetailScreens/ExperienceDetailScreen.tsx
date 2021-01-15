@@ -372,7 +372,7 @@ const styles = StyleSheet.create({
     lineHeight: 14,
     fontFamily: FONT.AN_Regular,
     fontSize: 14,
-    //fontweight: '500',
+    //fontWeight: '500',
     color: COLOR.alphaBlackColor75,
   },
   host_name: {

@@ -23,21 +23,31 @@ import {
   viewportHeight,
 } from '../../constants';
 import { TitleArrowButton, YourCardButton } from '../../components/Button';
-import { ICard } from '../../interfaces/app';
+import { ICard, IUser } from '../../interfaces/app';
+import { useDispatch, useGlobalState } from '../../redux/Store';
+import { ActionType } from '../../redux/Reducer';
 
 
-export const PaymentOptionsScreen: React.FC = () => {
+export const PaymentOptionsScreen: React.FC = ({route}) => {
 
+  const userInfo: IUser = useGlobalState('userInfo');
+
+  const dispatch = useDispatch();
   const { navigate, goBack } = useNavigation();
 
-  const [cardList, setCardList] = useState<ICard[]>([]);
+  const [cardList, setCardList] = useState<ICard[]>(userInfo.paymentInfo);
 
   useEffect(() => {
-      var list: ICard[] = [];
-      list.push({number: 'Visa 5362'});
-      list.push({number: 'Mastercard 4329'});
-      setCardList(list);
-  }, [])
+    setCardList(userInfo.paymentInfo);
+  }, [userInfo]);
+
+  const onSelectCard = (card: ICard) => {
+    dispatch({
+      type: ActionType.SET_SELECT_CARD,
+      payload: card,
+    });
+    goBack();
+  }
 
   return (
     <Container style={styles.background}>
@@ -56,32 +66,34 @@ export const PaymentOptionsScreen: React.FC = () => {
         </View>
 
         <View style={styles.input_container}>
-          <View style={{width:'100%'}}>
-            <CustomText style={styles.info_title}>Your Cards</CustomText>
-            
-            <FlatList
-                style={{width: '100%', marginTop: 5, height: cardList.length * 60 <= viewportHeight - 350 ? cardList.length * 60 : viewportHeight - 350 }}
-                contentContainerStyle={{paddingVertical: 0}}
-                showsHorizontalScrollIndicator={false}
-                horizontal={false}
-                data={cardList}
-                keyExtractor={(item, index) => index.toString()}
-                renderItem={({item}) => <YourCardButton card={item} />}
-            />
-          </View>
+          { cardList.length > 0 &&
+            <View>
+              <CustomText style={styles.info_title}>Your Cards</CustomText>
+          
+              <FlatList
+                  style={{width: '100%', marginTop: 5, height: cardList.length * 60 <= viewportHeight - 350 ? cardList.length * 60 : viewportHeight - 350 }}
+                  contentContainerStyle={{paddingVertical: 0}}
+                  showsHorizontalScrollIndicator={false}
+                  horizontal={false}
+                  data={cardList}
+                  bounces={false}
+                  keyExtractor={(item, index) => index.toString()}
+                  renderItem={({item}) => <YourCardButton card={item} onSelectCard={onSelectCard} />}
+              />
+            </View>
+          }
 
-          <TouchableWithoutFeedback onPress={() => onAddPaymentMethod() }>
-            <View style={{width:'100%', marginTop: 44}}>
-              <TitleArrowButton title={'Add Card'} name={'Add Payment Method'} showArrow={true} white_color={true} />
+          <CustomText style={{...styles.info_title, marginTop: 44}}>Add Card</CustomText>
+
+          <TouchableWithoutFeedback onPress={() => navigate('AddPaymentMethod')}>
+            <View style={{width:'100%', marginTop: 22}}>
+              <TitleArrowButton title={''} name={'Add Payment Method'} showArrow={true} white_color={true} />
             </View>
           </TouchableWithoutFeedback>
         </View>
       </SafeAreaView>
     </Container>
   );
-
-  function onAddPaymentMethod() {
-  }
 };
 
 const styles = StyleSheet.create({
@@ -107,7 +119,8 @@ const styles = StyleSheet.create({
     width: '100%',
     height: 33, 
     lineHeight: 33,
-    fontFamily: FONT.AN_Bold, 
+    fontWeight: '600',
+    fontFamily: FONT.AN_Regular, 
     fontSize: 24, 
     textAlign: 'center',
     color: COLOR.systemWhiteColor,
@@ -134,18 +147,10 @@ const styles = StyleSheet.create({
     width: '100%',
     height: 23,
     lineHeight: 23,
+    fontWeight: '600',
     fontFamily: FONT.AN_Regular,
-    fontSize: 14,
-    color: COLOR.systemWhiteColor,
-  },
-  info_input: {
-    marginTop: 15,
-    width: '100%',
-    height: 35,
-    lineHeight: 35,
-    fontFamily: FONT.AN_Bold,
-    fontSize: 16,
-    color: COLOR.systemWhiteColor,
+    fontSize: 12,
+    color: COLOR.alphaWhiteColor75,
   },
   info_right_arrow: {
     position: 'absolute',

@@ -1,3 +1,5 @@
+import { ICard, IBank } from ".";
+
 export interface IUser {
 	id: string,
 	status: string,
@@ -11,6 +13,6 @@ export interface IUser {
 	location: string,
 	createdAt: string,
 
-	// test
-	categoryIcon: string,
+	bankInfo: IBank[],
+	paymentInfo: ICard[],
 }

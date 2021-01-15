@@ -6,29 +6,39 @@ import {
   TouchableWithoutFeedback,
   ScrollView,
   Image,
+  Alert,
 } from 'react-native';
 import { Container } from 'native-base';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { SvgXml } from 'react-native-svg';
+import stripe from 'react-native-stripe-payments';
 
 // from app
 import { 
+  CheckCardExpirationDate,
   COLOR, 
   convertStringToDateFormat, 
   CustomText, 
+  ERROR_MESSAGE, 
   FONT, 
+  GetCardVisibleName, 
+  GetVisibleDateString, 
   Icon_Back_Black,
   Icon_Experience_Rating,
   Img_Experience,
   MARGIN_TOP,
+  STRIPE_SECRET_KEY,
   viewportWidth,
 } from '../../constants';
 import { ColorButton, TitleArrowButton } from '../../components/Button';
-import { IAvailableDate, IExperience, IHostDetail, IUser } from '../../interfaces/app';
+import { IAvailableDate, ICard, IExperience, IHostDetail, IUser } from '../../interfaces/app';
+import { useGlobalState } from '../../redux/Store';
 
 
 export const ExperienceDetailConfirmPayScreen: React.FC = ({route}) => {
+
+  const selectedCard: ICard = useGlobalState('selectedCard');
 
   const { goBack, navigate } = useNavigation();
 
@@ -38,8 +48,44 @@ export const ExperienceDetailConfirmPayScreen: React.FC = ({route}) => {
   const hostDetail: IHostDetail = route.params.hostDetail;
   const host: IUser = hostDetail.user;
 
-  useEffect(() => {
-  }, []);
+  const onConfirmPay = () => {
+    if (selectedCard.cardType == '' || selectedCard.cardNumber == '') {
+      Alert.alert(ERROR_MESSAGE.UNSELECT_CARD);
+      return;
+    } else if (CheckCardExpirationDate(selectedCard.cardExpiryDate) == false) {
+      Alert.alert(ERROR_MESSAGE.PASSED_CARD_EXPIRATION);
+      return;
+    }
+;
+    const expMonth = selectedCard.cardExpiryDate.substring(0, 2);
+    const expYear = selectedCard.cardExpiryDate.substring(3, 5);
+
+    if (CheckCardExpirationDate(selectedCard.cardExpiryDate) == false) {
+      Alert.alert(ERROR_MESSAGE.WRONG_CARD_EXPIRATION);
+      return;
+    }
+
+    const cardDetails = {
+      number: selectedCard.cardNumber,
+      expMonth: parseInt(expMonth),
+      expYear: parseInt(expYear),
+      cvc: selectedCard.cvc,
+    }
+
+    const isCardValid = stripe.isCardValid(cardDetails);
+    if (isCardValid == false) {
+      Alert.alert(ERROR_MESSAGE.WRONG_CARD_NUMBER);
+      return;
+    }
+
+    stripe.confirmPayment(STRIPE_SECRET_KEY, cardDetails)
+    .then(result => {
+      console.log(result);
+    })
+    .catch(err => {
+      console.log(err);
+    });
+  }
 
   return (
     <Container style={{...styles.background, backgroundColor: COLOR.whiteColor}}>
@@ -91,12 +137,14 @@ export const ExperienceDetailConfirmPayScreen: React.FC = ({route}) => {
           <View style={styles.line} />
 
           <CustomText style={styles.info_title}>Payment</CustomText>
-          <View style={{marginLeft: 24, width: viewportWidth - 48, marginTop: 16}}>
-            <TitleArrowButton title={'Credit Card'} name={''} showArrow={true} white_color={false} />
-          </View>
+          <TouchableWithoutFeedback onPress={() => navigate('PaymentOptions') }>
+            <View style={{marginLeft: 24, width: viewportWidth - 48, marginTop: 16}}>
+              <TitleArrowButton title={'Credit Card'} name={GetCardVisibleName(selectedCard)} showArrow={true} white_color={false} />
+            </View>
+          </TouchableWithoutFeedback>
         </ScrollView>
 
-        <TouchableWithoutFeedback onPress={() => onConfirmPay() }>
+        <TouchableWithoutFeedback onPress={onConfirmPay}>
           <View style={styles.bottom_button}>
             <ColorButton title={'Confirm & Pay'} backgroundColor={COLOR.redColor} color={COLOR.systemWhiteColor} />
           </View>
@@ -105,10 +153,6 @@ export const ExperienceDetailConfirmPayScreen: React.FC = ({route}) => {
       </SafeAreaView>
     </Container>
   );
-
-  function onConfirmPay() {
-
-  }
 };
 
 const styles = StyleSheet.create({
@@ -246,7 +290,7 @@ const styles = StyleSheet.create({
     marginTop: 16,
     marginLeft: 24,
     height: 24,
-    //fontweight: '500',
+    //fontWeight: '500',
     lineHeight: 24,
     fontFamily: FONT.AN_Regular,
     fontSize: 16,

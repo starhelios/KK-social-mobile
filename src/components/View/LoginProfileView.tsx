@@ -98,24 +98,17 @@ export const LoginProfileView: React.FC = () => {
           </TouchableWithoutFeedback>
 
           <CustomText style={{...styles.content_title, marginTop: 44}}>Hosting</CustomText>
-          {/* <TouchableWithoutFeedback onPress={() => profile.isHost == true ? navigate('HostAnExperience') : navigate('BecomeAHost') }>
-            <View style={{width:'100%', marginTop: 22}}>
-              <TitleArrowButton title={''} name={profile.isHost == true ? 'Host An Experience' : 'Become a Host'} showArrow={true} white_color={true} />
-            </View>
-          </TouchableWithoutFeedback> */}
-
-          <TouchableWithoutFeedback onPress={() => navigate('BecomeAHost') }>
-            <View style={{width:'100%', marginTop: 22}}>
-              <TitleArrowButton title={''} name={'Become a Host'} showArrow={true} white_color={true} />
-            </View>
-          </TouchableWithoutFeedback>
-
-          { profile.isHost == true &&
-            <TouchableWithoutFeedback onPress={() => navigate('HostAnExperience') }>
-              <View style={{width:'100%', marginTop: 22}}>
-                <TitleArrowButton title={''} name={'Host An Experience'} showArrow={true} white_color={true} />
-              </View>
-            </TouchableWithoutFeedback>
+          { profile.isHost == false
+            ? <TouchableWithoutFeedback onPress={() => navigate('BecomeAHost') }>
+                <View style={{width:'100%', marginTop: 22}}>
+                  <TitleArrowButton title={''} name={'Become a Host'} showArrow={true} white_color={true} />
+                </View>
+              </TouchableWithoutFeedback>
+            : <TouchableWithoutFeedback onPress={() => navigate('HostAnExperience') }>
+                <View style={{width:'100%', marginTop: 22}}>
+                  <TitleArrowButton title={''} name={'Host An Experience'} showArrow={true} white_color={true} />
+                </View>
+              </TouchableWithoutFeedback>
           }
 
           <TouchableWithoutFeedback onPress={() => navigate('ConfirmedBookings')}>

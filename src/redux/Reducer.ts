@@ -4,6 +4,7 @@ import {
   IFilter,
   IUser,
   IToken,
+  ICard,
 } from "../interfaces/app";
 
 export enum ActionType {
@@ -14,6 +15,7 @@ export enum ActionType {
   SET_EXPERIENCE_LIST = 'SET_EXPERIENCE_LIST',
   SET_HOST_LIST = 'SET_HOST_LIST',
   SET_CATEGORY_LIST = 'SET_CATEGORY_LIST',
+  SET_SELECT_CARD = 'SET_SELECT_CARD',
 }
 
 export interface Action {
@@ -30,6 +32,7 @@ export interface State {
   experienceList: IExperience[];
   hostList: IUser[];
   categoryList: ICategory[];
+  selectedCard: ICard,
 }
 
 /** Reducer */
@@ -57,6 +60,9 @@ const Reducer = (state: State, action: Action): any => {
 
     case ActionType.SET_CATEGORY_LIST:
       return {...state, categoryList: payload};
+
+    case ActionType.SET_SELECT_CARD:
+      return {...state, selectedCard: payload};
 
     default:
       break;

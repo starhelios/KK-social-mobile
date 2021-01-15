@@ -21,4 +21,14 @@ export const ERROR_MESSAGE = {
 
   NEED_LOGIN_FUNCTION: 'You need to log in to use this function.',
   ENABLE_BOOK_OWN_EXPERIENCE: 'You cannot book your own experience.',
+  
+  WRONG_CARD_NUMBER: 'The card number is wrong.',
+  WRONG_CARD_EXPIRATION: 'The card expiration is wrong.',
+  PASSED_CARD_EXPIRATION: 'The card expiration date has passed.',
+  EMPTY_CARD_NUMBER: 'Please input Card Number',
+  EMPTY_CARD_EXPIRATION: 'Please input Card Expiration',
+  EMPTY_CVC: 'Please input CVC',
+  ADD_PAYMENT_METHOD_FAIL: 'Failed to add payment method.',
+  UNSELECT_CARD: 'Please select payment method.',
+
 };

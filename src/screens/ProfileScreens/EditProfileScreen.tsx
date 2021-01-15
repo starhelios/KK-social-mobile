@@ -10,11 +10,13 @@ import {
   Alert,
   Keyboard,
   KeyboardAvoidingView,
+  TouchableOpacity,
 } from 'react-native';
 import { Container } from 'native-base';
 import { useEffect, useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { SvgXml } from 'react-native-svg';
+import Autocomplete from 'react-native-autocomplete-input';
 import ImagePicker from 'react-native-image-crop-picker';
 import LinearGradient from 'react-native-linear-gradient';
 import DateTimePicker from '@react-native-community/datetimepicker';
@@ -32,6 +34,7 @@ import {
   Icon_Back,
   Icon_Camera,
   Icon_Normal_Profile,
+  Icon_Search_White,
   LOGIN_STATE,
   MARGIN_TOP,
   SUCCESS_MESSAGE,
@@ -39,7 +42,7 @@ import {
 } from '../../constants';
 import { ColorButton, TitleArrowButton } from '../../components/Button';
 import { useGlobalState } from '../../redux/Store';
-import { IFile, IUser } from '../../interfaces/app';
+import { ICategory, IFile, IUser } from '../../interfaces/app';
 import { useUsers, useAuthentication } from '../../hooks';
 import GlobalStyle from '../../styles/global';
 
@@ -52,6 +55,17 @@ export const EditProfileScreen: React.FC = () => {
 
   const profile: IUser = useGlobalState('userInfo');
 
+  const allCategoryList: ICategory[] = useGlobalState('categoryList'); 
+
+  const comp = (a: string, b: string) => a.toLowerCase().trim() === b.toLowerCase().trim();
+  const findCategory = (query: string) => {
+    if (query === '') {
+      return [];
+    }
+    const regex = new RegExp(`${query}`, 'i');
+    return allCategoryList.filter(category => category.name.search(regex) >= 0);
+  }
+
   const [image, setImage] = useState<string>(profile.avatarUrl);
   const [avatarFile, setAvatarFile] = useState<IFile | null>(null);
   const [fullName, setFullName] = useState<string>(profile.fullname);
@@ -60,6 +74,11 @@ export const EditProfileScreen: React.FC = () => {
   const [mode, setMode] = useState<"date" | "time" | undefined>('date');
   const [showDatePicker, setShowDatePicker] = useState<boolean>(false);
   const [pickerDate, setPickerDate] = useState<Date>(birthday != undefined && birthday != '' ? new Date(birthday) : new Date());
+  const [categoryList, setCategoryList] = useState<ICategory[]>([]);
+  const [showCategoryList, setShowCategoryList] = useState<boolean>(true);
+  const [aboutMe, setAboutMe] = useState<string>(profile.aboutMe);
+  const [location, setLocation] = useState<string>(profile.location);
+  const [category, setCategory] = useState<string>(profile.categoryName);
 
   useEffect(() => {
     setImage(profile.avatarUrl);
@@ -81,47 +100,47 @@ export const EditProfileScreen: React.FC = () => {
 
   return (
     <Container style={styles.background}>
+      <SafeAreaView style={styles.safe_area}>
+        <View style={styles.navigation_bar}>
+          <CustomText style={styles.title}>Edit Profile</CustomText>
 
-      <TouchableWithoutFeedback onPress={() => onDismiss()} accessible={false}>
-        <SafeAreaView style={styles.safe_area}>
-          <View style={styles.navigation_bar}>
-            <CustomText style={styles.title}>Edit Profile</CustomText>
+          <TouchableWithoutFeedback onPress={() => goBack()}>
+            <View style={styles.back_icon}>
+              <SvgXml width='100%' height='100%' xml={Icon_Back} />
+            </View>
+          </TouchableWithoutFeedback>
+        </View>
 
-            <TouchableWithoutFeedback onPress={() => goBack()}>
-              <View style={styles.back_icon}>
-                <SvgXml width='100%' height='100%' xml={Icon_Back} />
-              </View>
-            </TouchableWithoutFeedback>
-          </View>
-
-          <View style={{flex: 1}}>
-            <View style={styles.container}>
-              <KeyboardAvoidingView behavior={Platform.OS == "ios" ? "padding" : "height"} >
-                <ScrollView bounces={false}>
-                  <View style={styles.profile_container}>
-                    <TouchableWithoutFeedback onPress={() => onSelectPhoto()}>
-                      <View style={styles.profile}>
-                        {
-                          image != ''
-                          ? <Image style={{width: '100%', height: '100%'}} source={{uri: image}} />
-                          : <View style={styles.profile_no_image}>
-                              <SvgXml width={46} height={58} xml={Icon_Normal_Profile} />
+        <View style={{flex: 1}}>
+          <View style={styles.container}>
+            <KeyboardAvoidingView behavior={Platform.OS == "ios" ? "padding" : "height"} >
+              <ScrollView bounces={false}>
+                <TouchableWithoutFeedback onPress={() => onDismiss()} accessible={false}>
+                  <View>
+                    <View style={styles.profile_container}>
+                      <TouchableWithoutFeedback onPress={() => onSelectPhoto()}>
+                        <View style={styles.profile}>
+                          {
+                            image != ''
+                            ? <Image style={{width: '100%', height: '100%'}} source={{uri: image}} />
+                            : <View style={styles.profile_no_image}>
+                                <SvgXml width={46} height={58} xml={Icon_Normal_Profile} />
+                              </View>
+                          }
+                          <LinearGradient
+                            colors={['#00000010', '#00000070']}
+                            style={styles.camera_container}
+                            start={{x: 0.5, y: 0}}
+                            end={{x: 0.5, y: 1}} >
+                            <View style={styles.camera_icon}>
+                              <SvgXml width='100%' height='100%' xml={Icon_Camera} />
                             </View>
-                        }
-                        <LinearGradient
-                          colors={['#00000010', '#00000070']}
-                          style={styles.camera_container}
-                          start={{x: 0.5, y: 0}}
-                          end={{x: 0.5, y: 1}} >
-                          <View style={styles.camera_icon}>
-                            <SvgXml width='100%' height='100%' xml={Icon_Camera} />
-                          </View>
-                        </LinearGradient>
-                      </View>
-                    </TouchableWithoutFeedback>
-                  </View>
+                          </LinearGradient>
+                        </View>
+                      </TouchableWithoutFeedback>
+                    </View>
 
-                  <View style={{marginLeft: 24, marginRight: 24, width: viewportWidth - 48, paddingBottom: 10}}>
+                    <View style={{marginLeft: 24, marginRight: 24, width: viewportWidth - 48, paddingBottom: 10}}>
                       <View style={{width:'100%', marginTop: 33}}>
                         <CustomText style={styles.info_title}>Full Name</CustomText>
                         <CustomTextInput
@@ -156,6 +175,65 @@ export const EditProfileScreen: React.FC = () => {
                         <View style={GlobalStyle.auth_line} />
                       </View>
 
+                      {profile.isHost == true &&
+                        <View>
+                          <View style={{width:'100%', marginTop: 22, zIndex: 100}}>
+                            <CustomText style={styles.info_title}>Category</CustomText>
+                            <Autocomplete
+                              autoCapitalize="none"
+                              autoCorrect={false}
+                              containerStyle={styles.autocompleteContainer}
+                              inputContainerStyle={styles.autocompleteInput}
+                              style={styles.autocomplete}
+                              data={categoryList.length === 1 && comp(category, categoryList[0].name) ? [] : categoryList}
+                              defaultValue={category}
+                              onChangeText={text => {
+                                setCategory(text);
+                                setCategoryList(findCategory(text));
+                              }}
+                              placeholder="Search Categories"
+                              placeholderTextColor={COLOR.alphaWhiteColor50}
+                              renderItem={({item}) => (
+                                <TouchableOpacity onPress={() => setCategory(item.name)}>
+                                  <CustomText style={styles.autocompleteContent}>
+                                    {item.name}
+                                  </CustomText>
+                                </TouchableOpacity>
+                              )}
+                            />
+                            <View style={GlobalStyle.auth_line} />
+
+                            <View style={{position: 'absolute', top: 40, left: 0, width: 14, height: 14}}>
+                              <SvgXml width='100%' height='100%' xml={Icon_Search_White} />
+                            </View>
+                          </View>
+
+                          <View style={{width:'100%', marginTop: 22}}>
+                            <CustomText style={styles.info_title}>About Me</CustomText>
+                            <CustomTextInput
+                              style={GlobalStyle.auth_input}
+                              placeholder={'About Me'}
+                              placeholderTextColor={COLOR.alphaWhiteColor50}
+                              onChangeText={text => setAboutMe(text)}
+                              value={aboutMe}
+                            />
+                            <View style={GlobalStyle.auth_line} />
+                          </View>
+
+                          <View style={{width:'100%', marginTop: 22}}>
+                            <CustomText style={styles.info_title}>Location</CustomText>
+                            <CustomTextInput
+                              style={GlobalStyle.auth_input}
+                              placeholder={'Location'}
+                              placeholderTextColor={COLOR.alphaWhiteColor50}
+                              onChangeText={text => setLocation(text)}
+                              value={location}
+                            />
+                            <View style={GlobalStyle.auth_line} />
+                          </View>
+                        </View>
+                      }
+
                       {LOGIN_STATE == EMAIL_LOGIN &&
                         <TouchableWithoutFeedback onPress={() => navigate('ChangePassword') }>
                           <View style={{width:'100%', marginTop: 44}}>
@@ -164,43 +242,44 @@ export const EditProfileScreen: React.FC = () => {
                         </TouchableWithoutFeedback>
                       }
                     </View>
-                </ScrollView>
-              </KeyboardAvoidingView>
-            </View>
-          </View>
-
-          <TouchableWithoutFeedback onPress={() => onSave() }>
-            <View style={styles.bottom_button}>
-              <ColorButton title={'Save'} backgroundColor={COLOR.whiteColor} color={COLOR.blackColor} />
-            </View>
-          </TouchableWithoutFeedback>
-
-          {showDatePicker && (
-            <View style={styles.datePickerBackground} >
-              <View style={styles.datePickerContainer}>
-                <DateTimePicker
-                  testID="dateTimePicker"
-                  value={pickerDate}
-                  onChange={onChange}
-                  style={styles.datePicker}
-                  firstDayOfWeek={2}
-                  maximumDate={new Date()}
-                  minimumDate={new Date('1960')}
-                  dateFormat={'shortdate'}
-                  dayOfWeekFormat={'{dayofweek.abbreviated(2)}'}
-                  placeholderText="Select Date"
-                />
-                <TouchableWithoutFeedback onPress={() => onConfirmBirthday() }>
-                  <View style={styles.datePickerConfirm}>
-                    <CustomText style={styles.confirm_text}>Confirm</CustomText>
                   </View>
                 </TouchableWithoutFeedback>
-              </View>
+              </ScrollView>
+            </KeyboardAvoidingView>
+          </View>
+        </View>
+
+        <TouchableWithoutFeedback onPress={() => onSave() }>
+          <View style={styles.bottom_button}>
+            <ColorButton title={'Save'} backgroundColor={COLOR.whiteColor} color={COLOR.blackColor} />
+          </View>
+        </TouchableWithoutFeedback>
+
+        {showDatePicker && (
+          <View style={styles.datePickerBackground} >
+            <View style={styles.datePickerContainer}>
+              <DateTimePicker
+                testID="dateTimePicker"
+                value={pickerDate}
+                onChange={onChange}
+                style={styles.datePicker}
+                firstDayOfWeek={2}
+                maximumDate={new Date()}
+                minimumDate={new Date('1960')}
+                dateFormat={'shortdate'}
+                dayOfWeekFormat={'{dayofweek.abbreviated(2)}'}
+                placeholderText="Select Date"
+              />
+              <TouchableWithoutFeedback onPress={() => onConfirmBirthday() }>
+                <View style={styles.datePickerConfirm}>
+                  <CustomText style={styles.confirm_text}>Confirm</CustomText>
+                </View>
+              </TouchableWithoutFeedback>
             </View>
-          )}
-          
-        </SafeAreaView>
-      </TouchableWithoutFeedback>
+          </View>
+        )}
+        
+      </SafeAreaView>
     </Container>
   );
 
@@ -264,7 +343,8 @@ export const EditProfileScreen: React.FC = () => {
   }
 
   function onSave() {
-    updateUserInformation(profile.id, emailAddress, fullName, birthday, avatarFile)
+    updateUserInformation(profile.id, emailAddress, fullName, birthday, aboutMe, location, 
+      category, avatarFile, profile.bankInfo, profile.paymentInfo, profile.isHost)
     .then(async (result: Promise<IUser>) => {
       setLoginUser(await result);
       Alert.alert(SUCCESS_MESSAGE.UPDATE_USER_PROFILE_SUCCESS);
@@ -430,5 +510,30 @@ const styles = StyleSheet.create({
     fontFamily: FONT.AN_Regular,
     fontSize: 16,
     color: COLOR.blueColor,
+  },
+  autocompleteContainer: {
+    zIndex: 100,
+    borderColor: COLOR.clearColor,
+    borderWidth: 0,
+  },
+  autocompleteInput: {
+    borderColor: COLOR.clearColor,
+    borderWidth: 0,
+  },
+  autocomplete: {
+    backgroundColor: COLOR.clearColor,
+    borderColor: COLOR.clearColor,
+    borderWidth: 0,
+    height: 45,
+    color: COLOR.systemWhiteColor,
+    paddingLeft: 25,
+  },
+  autocompleteContent: {
+    height: 35,
+    lineHeight: 35,
+    fontFamily: FONT.AN_Regular,
+    paddingLeft: 20, 
+    backgroundColor: COLOR.systemWhiteColor, 
+    color: COLOR.systemBlackColor,
   },
 });
