@@ -91,7 +91,7 @@ export const SelectDateView: React.FC<props> = (props: props) => {
             enableSwipeMonths={true}
           /> */}
 
-<CalendarList
+    <CalendarList
       // testID={testIDs.calendarList.CONTAINER}
       current={convertDateToDateFormat(new Date(), 'YYYY-MM-DD')}
       markedDates={ markedDates }
