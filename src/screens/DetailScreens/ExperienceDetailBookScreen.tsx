@@ -18,6 +18,7 @@ import {
   COLOR, 
   convertDateToMomentDateFormat, 
   convertStringToDate, 
+  convertStringToDateFormat, 
   CustomText, 
   ERROR_MESSAGE, 
   FONT, 
@@ -42,8 +43,8 @@ export const ExperienceDetailBookScreen: React.FC = ({route}) => {
 
   const { goBack, navigate } = useNavigation();
 
-  const [selectedFromDate, setSelectedFromDate] = useState<string>(convertDateToMomentDateFormat(new Date(), 'YYYY-MM-DD'));
-  const [selectedEndDate, setSelectedEndDate] = useState<string>(convertDateToMomentDateFormat(new Date(), 'YYYY-MM-DD'));
+  const [selectedFromDate, setSelectedFromDate] = useState<string>(convertStringToDateFormat(new Date().toLocaleDateString(), 'YYYY-MM-DD'));
+  const [selectedEndDate, setSelectedEndDate] = useState<string>(convertStringToDateFormat(new Date().toLocaleDateString(), 'YYYY-MM-DD'));
   const [showSelectDates, setShowSelectDates] = useState<boolean>(false);
   const [guestCount, setGuestCount] = useState<number>(1)
   const [allAvailableDates, setAllAvailableDates] = useState<IAvailableDate[]>([]);
@@ -70,6 +71,7 @@ export const ExperienceDetailBookScreen: React.FC = ({route}) => {
     }
     setAllAvailableDates(availableDates);
     setAvailableDates(availableDates);
+
     onFilterSelectDate(selectedFromDate, selectedEndDate);
   }, []);
 
