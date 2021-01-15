@@ -50,7 +50,7 @@ import GlobalStyle from '../../styles/global';
 export const BecomeAHostScreen: React.FC = () => {
 
   const { goBack } = useNavigation();
-  const { updateHostInformation } = useUsers();
+  const { updateUserInformation } = useUsers();
   const { setLoginUser } = useAuthentication();
 
   const profile: IUser = useGlobalState('userInfo');
@@ -164,11 +164,12 @@ export const BecomeAHostScreen: React.FC = () => {
   }
 
   const onBecomeAHost = () => {
-    updateHostInformation(profile.id, emailAddress, fullName, birthday, aboutMe, location, category, avatarFile)
+    updateUserInformation(profile.id, emailAddress, fullName, birthday, aboutMe, location, category, avatarFile, 
+      profile.bankInfo, profile.paymentInfo, true)
     .then(async (result: Promise<IUser>) => {
       setLoginUser(await result);
       Alert.alert(
-        SUCCESS_MESSAGE.UPDATE_USER_PROFILE_SUCCESS,
+        SUCCESS_MESSAGE.USER_BECOM_A_HOST,
         '',
         [
           { text: "OK", onPress: () => goBack() }

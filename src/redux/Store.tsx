@@ -37,6 +37,12 @@ const initialState: State = {
   experienceList: [],
   hostList: [],
   categoryList: [],
+  selectedCard: {
+    cardType: '',
+    cardNumber: '',
+    cardExpiryDate: '',
+    cvc: '',
+  }
 };
 
 const StoreContext = createContext<State>(initialState);

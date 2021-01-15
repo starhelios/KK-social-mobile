@@ -263,6 +263,9 @@ PODS:
     - React-Core
   - react-native-splash-screen (3.2.0):
     - React
+  - react-native-stripe-payments (1.0.6):
+    - React
+    - Stripe (~> 19.0)
   - React-RCTActionSheet (0.63.4):
     - React-Core/RCTActionSheetHeaders (= 0.63.4)
   - React-RCTAnimation (0.63.4):
@@ -359,6 +362,7 @@ PODS:
   - Sentry (6.0.9):
     - Sentry/Core (= 6.0.9)
   - Sentry/Core (6.0.9)
+  - Stripe (19.4.0)
   - TOCropViewController (2.5.5)
   - Yoga (1.14.0)
   - YogaKit (1.18.1):
@@ -406,6 +410,7 @@ DEPENDENCIES:
   - react-native-image-picker (from `../node_modules/react-native-image-picker`)
   - react-native-safe-area-context (from `../node_modules/react-native-safe-area-context`)
   - react-native-splash-screen (from `../node_modules/react-native-splash-screen`)
+  - react-native-stripe-payments (from `../node_modules/react-native-stripe-payments`)
   - React-RCTActionSheet (from `../node_modules/react-native/Libraries/ActionSheetIOS`)
   - React-RCTAnimation (from `../node_modules/react-native/Libraries/NativeAnimation`)
   - React-RCTBlob (from `../node_modules/react-native/Libraries/Blob`)
@@ -448,6 +453,7 @@ SPEC REPOS:
     - GTMSessionFetcher
     - OpenSSL-Universal
     - Sentry
+    - Stripe
     - TOCropViewController
     - YogaKit
 
@@ -492,6 +498,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-safe-area-context"
   react-native-splash-screen:
     :path: "../node_modules/react-native-splash-screen"
+  react-native-stripe-payments:
+    :path: "../node_modules/react-native-stripe-payments"
   React-RCTActionSheet:
     :path: "../node_modules/react-native/Libraries/ActionSheetIOS"
   React-RCTAnimation:
@@ -575,6 +583,7 @@ SPEC CHECKSUMS:
   react-native-image-picker: 98920a299f85c566800d5b0a884352504a7585eb
   react-native-safe-area-context: b6e0e284002381d2ff29fa4fff42b4d8282e3c94
   react-native-splash-screen: 200d11d188e2e78cea3ad319964f6142b6384865
+  react-native-stripe-payments: 03bbd16051394c9e481f12f99d55d15c17b0515d
   React-RCTActionSheet: 89a0ca9f4a06c1f93c26067af074ccdce0f40336
   React-RCTAnimation: 1bde3ecc0c104c55df246eda516e0deb03c4e49b
   React-RCTBlob: a97d378b527740cc667e03ebfa183a75231ab0f0
@@ -598,6 +607,7 @@ SPEC CHECKSUMS:
   RNSVG: ce9d996113475209013317e48b05c21ee988d42e
   RNVectorIcons: bc69e6a278b14842063605de32bec61f0b251a59
   Sentry: 388c9dc093b2fd3a264466a5c5b21e25959610a9
+  Stripe: 92f1c73a9dbd3c54277ed06a1fea6e08f20414c6
   TOCropViewController: da59f531f8ac8a94ef6d6c0fc34009350f9e8bfe
   Yoga: 4bd86afe9883422a7c4028c00e34790f560923d6
   YogaKit: f782866e155069a2cca2517aafea43200b01fd5a

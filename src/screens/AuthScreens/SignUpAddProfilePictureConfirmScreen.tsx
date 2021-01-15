@@ -31,14 +31,15 @@ import { useGlobalState } from '../../redux/Store';
 export const SignUpAddProfilePictureConfirmScreen: React.FC = ({route}) => {
 
   const { reset, goBack } = useNavigation();
-  const { updateAvatar } = useUsers();
+  const { updateUserInformation } = useUsers();
   const { setLoginUser } = useAuthentication();
 
   const profile_icon: IFile = route.params.profile_icon;
   const userInfo: IUser = useGlobalState('userInfo');
 
   const onContinue = () => {
-    updateAvatar(userInfo.id, profile_icon)
+    updateUserInformation(userInfo.id, userInfo.email, userInfo.fullname, userInfo.dateOfBirth, userInfo.aboutMe, userInfo.location, 
+      userInfo.categoryName, profile_icon, userInfo.bankInfo, userInfo.paymentInfo, false)
     .then(async (result: Promise<IUser>) => {
       setLoginUser(await result);
       reset({

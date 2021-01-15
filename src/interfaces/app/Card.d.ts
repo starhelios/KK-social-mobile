@@ -1,3 +1,6 @@
 export interface ICard {
-	number: string;
+	cardType: string;
+	cardNumber: string;
+	cardExpiryDate: string;
+	cvc: string;
 }

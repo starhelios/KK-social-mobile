@@ -2,7 +2,7 @@ import Moment from 'moment';
 import { Alert, Share } from 'react-native';
 
 // from app
-import { IBooking, IFile } from '../interfaces/app';
+import { IBooking, ICard, IFile } from '../interfaces/app';
 
 
 export const convertStringToDateFormat = (date: string, format: string) => {
@@ -113,4 +113,36 @@ export const GetVisibleDateString = (defaultDate: string, selectedFromDate: stri
     }      
   }
   return visibleDateString;
+}
+
+export const GetCardVisibleName = (card: ICard) => {
+  if (card.cardType == '' || card.cardNumber == '') {
+    return '';
+  }
+
+  let cardName = `${card.cardType} `;
+  if (card.cardNumber.length <= 4) {
+    cardName += card.cardNumber;
+  } else {
+    const length = card.cardNumber.length;
+    cardName += card.cardNumber.substring(length - 4, length);
+  }
+  return cardName;
+}
+
+export const CheckCardExpirationDate = (cardExpiryDate: string) => {
+  if (cardExpiryDate.length != 5) {
+    return false;
+  }
+
+  const expMonth = cardExpiryDate.substring(0, 2);
+  const expYear = cardExpiryDate.substring(3, 5);
+
+  const today = new Date();
+  const expiryDay = new Date(`20${expYear}-${expMonth}-01`);
+  if (expiryDay < today) {
+    return false;
+  } else {
+    return true;
+  }
 }
