@@ -16,7 +16,6 @@ import { v4 as uuid } from 'uuid'
 import PageControl from 'react-native-page-control';
 import DefaultPreference from 'react-native-default-preference';
 import BackgroundTimer from 'react-native-background-timer';
-import Carousel from 'react-native-snap-carousel'
 
 // from app
 import {
@@ -25,7 +24,6 @@ import {
   ERROR_MESSAGE, 
   FONT, 
   GOOGLE_LOGIN, 
-  Img_Experience, 
   LOGIN_TYPE, 
   MARGIN_TOP,
   viewportWidth, 
@@ -63,11 +61,6 @@ export const NotLoginProfileView: React.FC = () => {
   }, [profileHelpList]);
 
   useEffect(() => {
-    if (accessToken != '' || code != '') {      
-    }
-  }, [loginType])
-
-  useEffect(() => {
     if (profile.id != '') {
       BackgroundTimer.stopBackgroundTimer();
     } else {
@@ -75,7 +68,7 @@ export const NotLoginProfileView: React.FC = () => {
     }
   }, [profile])
 
-  async function loadProfileList() {
+  const loadProfileList = async () => {
     await tutorialList()
     .then(async (result: Promise<ITutorial[]>) => {
       setProfileHelpList(await result);      
@@ -267,7 +260,8 @@ const styles = StyleSheet.create({
     backgroundColor: COLOR.clearColor, 
     height: 33, 
     lineHeight: 33,
-    fontFamily: FONT.AN_Bold, 
+    fontFamily: FONT.AN_Regular,
+    fontWeight: '600', 
     fontSize: 24, 
     color: COLOR.systemWhiteColor,
   },

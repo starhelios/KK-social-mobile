@@ -16,10 +16,12 @@ import { Container } from 'native-base';
 import { useEffect, useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { SvgXml } from 'react-native-svg';
+import firebase from 'firebase';
 import Autocomplete from 'react-native-autocomplete-input';
 import ImagePicker from 'react-native-image-crop-picker';
 import LinearGradient from 'react-native-linear-gradient';
 import DateTimePicker from '@react-native-community/datetimepicker';
+import Spinner from 'react-native-loading-spinner-overlay';
 
 // from app
 import { 
@@ -38,6 +40,7 @@ import {
   LOGIN_STATE,
   MARGIN_TOP,
   SUCCESS_MESSAGE,
+  UploadImageToFirebase,
   viewportWidth,
 } from '../../constants';
 import { ColorButton, TitleArrowButton } from '../../components/Button';
@@ -53,9 +56,11 @@ export const EditProfileScreen: React.FC = () => {
   const { updateUserInformation } = useUsers();
   const { setLoginUser } = useAuthentication();
 
-  const profile: IUser = useGlobalState('userInfo');
+  const [uploading, setUploading] = useState(false);
+  const [transferred, setTransferred] = useState(0);
 
-  const allCategoryList: ICategory[] = useGlobalState('categoryList'); 
+  const profile: IUser = useGlobalState('userInfo');
+  const allCategoryList: ICategory[] = useGlobalState('categoryList');
 
   const comp = (a: string, b: string) => a.toLowerCase().trim() === b.toLowerCase().trim();
   const findCategory = (query: string) => {
@@ -75,10 +80,11 @@ export const EditProfileScreen: React.FC = () => {
   const [showDatePicker, setShowDatePicker] = useState<boolean>(false);
   const [pickerDate, setPickerDate] = useState<Date>(birthday != undefined && birthday != '' ? new Date(birthday) : new Date());
   const [categoryList, setCategoryList] = useState<ICategory[]>([]);
-  const [showCategoryList, setShowCategoryList] = useState<boolean>(true);
   const [aboutMe, setAboutMe] = useState<string>(profile.aboutMe);
   const [location, setLocation] = useState<string>(profile.location);
   const [category, setCategory] = useState<string>(profile.categoryName);
+
+  let fetchingData = false;
 
   useEffect(() => {
     setImage(profile.avatarUrl);
@@ -194,7 +200,10 @@ export const EditProfileScreen: React.FC = () => {
                               placeholder="Search Categories"
                               placeholderTextColor={COLOR.alphaWhiteColor50}
                               renderItem={({item}) => (
-                                <TouchableOpacity onPress={() => setCategory(item.name)}>
+                                <TouchableOpacity onPress={() => {
+                                  setCategory(item.name);
+                                  setCategoryList([]);
+                                }}>
                                   <CustomText style={styles.autocompleteContent}>
                                     {item.name}
                                   </CustomText>
@@ -237,7 +246,10 @@ export const EditProfileScreen: React.FC = () => {
                       {LOGIN_STATE == EMAIL_LOGIN &&
                         <TouchableWithoutFeedback onPress={() => navigate('ChangePassword') }>
                           <View style={{width:'100%', marginTop: 44}}>
-                            <TitleArrowButton title={'Security'} name={'Change Password'} showArrow={true} white_color={true} />
+                            <CustomText style={styles.info_title}>Security</CustomText>
+                            <View style={{width:'100%', marginTop: 22}}>
+                              <TitleArrowButton title={''} name={'Change Password'} showArrow={true} white_color={true} />
+                            </View>
                           </View>
                         </TouchableWithoutFeedback>
                       }
@@ -280,6 +292,12 @@ export const EditProfileScreen: React.FC = () => {
         )}
         
       </SafeAreaView>
+
+      <Spinner
+        visible={uploading}
+        textContent={''}
+        textStyle={{color: COLOR.systemWhiteColor}}
+      />
     </Container>
   );
 
@@ -342,13 +360,51 @@ export const EditProfileScreen: React.FC = () => {
     setShowDatePicker(false);
   }
 
-  function onSave() {
-    updateUserInformation(profile.id, emailAddress, fullName, birthday, aboutMe, location, 
-      category, avatarFile, profile.bankInfo, profile.paymentInfo, profile.isHost)
+  async function onSave() {
+    if (fetchingData == true) {
+      return;
+    }
+    fetchingData = true;
+
+    setUploading(true);
+    if (avatarFile != null) {
+      const filename = profile.id;
+      const uploadUri = avatarFile.uri;
+
+      const response = await fetch(uploadUri);
+      const blob = await response.blob();
+
+      const uploadTask = firebase.storage().ref(`images/${filename}.jpg`).put(blob);
+      try {
+        await uploadTask;
+        firebase.storage()
+          .ref('images')
+          .child(`${filename}.jpg`)
+          .getDownloadURL()
+          .then((url) => {
+            saveProfile(url);
+          });
+      } catch (e) {
+        fetchingData = false;
+        setUploading(false);
+        Alert.alert(ERROR_MESSAGE.UPDATE_USER_PROFILE_FAIL);
+        return;
+      }
+    } else {
+      saveProfile('');
+    }
+  }
+
+  function saveProfile(avatarUrl: string) {
+    updateUserInformation(profile.id, emailAddress, fullName, birthday, aboutMe, location, category, avatarUrl, profile.isHost)
     .then(async (result: Promise<IUser>) => {
+      setUploading(false);
+      fetchingData = false;
       setLoginUser(await result);
       Alert.alert(SUCCESS_MESSAGE.UPDATE_USER_PROFILE_SUCCESS);
     }).catch(() => {
+      setUploading(false);
+      fetchingData = false;
       Alert.alert(ERROR_MESSAGE.UPDATE_USER_PROFILE_FAIL);
     });
   }
@@ -382,7 +438,8 @@ const styles = StyleSheet.create({
     width: '100%',
     height: 33, 
     lineHeight: 33,
-    fontFamily: FONT.AN_Bold, 
+    fontFamily: FONT.AN_Regular, 
+    fontWeight: '600',
     fontSize: 24, 
     textAlign: 'center',
     color: COLOR.systemWhiteColor,
@@ -471,8 +528,9 @@ const styles = StyleSheet.create({
     height: 23,
     lineHeight: 23,
     fontFamily: FONT.AN_Regular,
-    fontSize: 14,
-    color: COLOR.systemWhiteColor,
+    fontSize: 12,
+    fontWeight: '600',
+    color: COLOR.alphaWhiteColor75,
   },
   datePickerBackground: {
     position: 'absolute',

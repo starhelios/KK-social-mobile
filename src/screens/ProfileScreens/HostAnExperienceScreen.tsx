@@ -9,12 +9,14 @@ import {
   FlatList,
   Keyboard,
   KeyboardAvoidingView,
+  TouchableOpacity,
 } from 'react-native';
 import { Container } from 'native-base';
 import { useEffect, useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { SvgXml } from 'react-native-svg';
 import ImagePicker from 'react-native-image-crop-picker';
+import Autocomplete from 'react-native-autocomplete-input';
 
 // from app
 import { 
@@ -22,6 +24,7 @@ import {
   CustomText, 
   CustomTextInput, 
   FONT, 
+  generateName, 
   Icon_Back_Black,
   Icon_Search_Black,
   MARGIN_TOP,
@@ -29,7 +32,7 @@ import {
 } from '../../constants';
 import { ColorButton } from '../../components/Button';
 import { useGlobalState } from '../../redux/Store';
-import { IFile, IUser } from '../../interfaces/app';
+import { ICategory, IFile, IUser } from '../../interfaces/app';
 import { ExperienceImageView } from '../../components/View';
 import GlobalStyle from '../../styles/global';
 
@@ -38,60 +41,79 @@ export const HostAnExperienceScreen: React.FC = () => {
 
   const { goBack } = useNavigation();
 
-  const [images, setImages] = useState<IFile[]>([]);
+  const [imageList, setImageList] = useState<IFile[]>([]);
   const [title, setTitle] = useState<string>('');
   const [description, setDescription] = useState<string>('');
   const [duration, setDuration] = useState<string>('');
   const [price, setPrice] = useState<string>('0');
   const [category, setCategory] = useState<string>('');
+  const [categoryList, setCategoryList] = useState<ICategory[]>([]);
+
+  const profile: IUser = useGlobalState('userInfo');
+  const allCategoryList: ICategory[] = useGlobalState('categoryList');
+
+  const comp = (a: string, b: string) => a.toLowerCase().trim() === b.toLowerCase().trim();
+  const findCategory = (query: string) => {
+    if (query === '') {
+      return [];
+    }
+    const regex = new RegExp(`${query}`, 'i');
+    return allCategoryList.filter(category => category.name.search(regex) >= 0);
+  }
 
   useEffect(() => {
-    var imageList: IFile[] = [];
-    imageList.push({name: '', type: '', uri: ''});
-    imageList.push({name: '', type: '', uri: ''});
-    imageList.push({name: '', type: '', uri: ''});
-    imageList.push({name: '', type: '', uri: ''});
-    imageList.push({name: '', type: '', uri: ''});
-    setImages(imageList);
+    var images: IFile[] = [];
+    images.push({name: '', type: '', uri: ''});
+    images.push({name: '', type: '', uri: ''});
+    images.push({name: '', type: '', uri: ''});
+    images.push({name: '', type: '', uri: ''});
+    images.push({name: '', type: '', uri: ''});
+    setImageList(images);
   }, []);
 
   return (
     <Container style={{...styles.background, backgroundColor: COLOR.whiteColor}}>
-      <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
-        <SafeAreaView style={styles.safe_area}>
+      <SafeAreaView style={styles.safe_area}>
+
+      <View style={{flex: 1}}>
+        <View style={styles.navigation_bar}>
+          <CustomText style={styles.title}>Host an Experience</CustomText>
+
+          <TouchableWithoutFeedback onPress={() => goBack()}>
+            <View style={styles.back_icon}>
+              <SvgXml width='100%' height='100%' xml={Icon_Back_Black} />
+            </View>
+          </TouchableWithoutFeedback>
+        </View>
 
         <View style={{flex: 1}}>
-          <View style={styles.navigation_bar}>
-            <CustomText style={styles.title}>Host an Experience</CustomText>
-
-            <TouchableWithoutFeedback onPress={() => goBack()}>
-              <View style={styles.back_icon}>
-                <SvgXml width='100%' height='100%' xml={Icon_Back_Black} />
-              </View>
-            </TouchableWithoutFeedback>
-          </View>
-
-          <View style={{flex: 1}}>
-            <View style={styles.container}>
-              <KeyboardAvoidingView behavior={Platform.OS == "ios" ? "padding" : "height"} >
-                <ScrollView style={{}}>
-                  <View style={styles.profile_container}>
-                    <View style={{width:'100%'}}>
-                      <CustomText style={{...styles.info_title, marginLeft: 24}}>Photos</CustomText>
-                      <FlatList
-                        style={{height: 75, marginTop: 16 }}
-                        contentContainerStyle={{paddingHorizontal: 24}}
-                        showsHorizontalScrollIndicator={false}
-                        horizontal={true}
-                        data={images}
-                        keyExtractor={(item, index) => index.toString()}
-                        renderItem={({item}) => <ExperienceImageView image={item} showPlusIcon={true} />}
-                      />
-                    </View>
+          <View style={styles.container}>
+            <KeyboardAvoidingView behavior={Platform.OS == "ios" ? "padding" : "height"} >
+              <ScrollView style={{}}>
+                <View style={styles.profile_container}>
+                  <View style={{width:'100%'}}>
+                    <CustomText style={{...styles.info_title, marginLeft: 24}}>Photos</CustomText>
+                    <FlatList
+                      style={{height: 75, marginTop: 16 }}
+                      contentContainerStyle={{paddingHorizontal: 24}}
+                      showsHorizontalScrollIndicator={false}
+                      horizontal={true}
+                      data={imageList}
+                      keyExtractor={(item, index) => index.toString()}
+                      renderItem={({item}) => 
+                      <View>
+                        <TouchableWithoutFeedback onPress={() => onSelectPhoto(0) }>
+                          <ExperienceImageView image={item} showPlusIcon={true} />
+                        </TouchableWithoutFeedback>
+                        </View>
+                      }
+                    />
                   </View>
+                </View>
 
-                  <View style={{marginLeft: 24, marginRight: 24, width: viewportWidth - 48, marginBottom: 30}}>
-                    <View style={{width:'100%', marginTop: 33}}>
+                <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+                  <View style={{marginLeft: 24, marginRight: 24, width: viewportWidth - 48, marginBottom: 22}}>
+                    <View style={{width:'100%'}}>
                       <CustomText style={styles.info_title}>Title</CustomText>
                       <CustomTextInput
                         style={{...GlobalStyle.auth_input, color: COLOR.systemBlackColor}}
@@ -101,6 +123,40 @@ export const HostAnExperienceScreen: React.FC = () => {
                         value={title}
                       />
                       <View style={{...GlobalStyle.auth_line, backgroundColor: COLOR.alphaBlackColor20}} />
+                    </View>
+
+                    <View style={{width:'100%', marginTop: 22, zIndex: 100}}>
+                      <CustomText style={styles.info_title}>Category</CustomText>
+                      <Autocomplete
+                        autoCapitalize="none"
+                        autoCorrect={false}
+                        containerStyle={styles.autocompleteContainer}
+                        inputContainerStyle={styles.autocompleteInput}
+                        style={styles.autocomplete}
+                        data={categoryList.length === 1 && comp(category, categoryList[0].name) ? [] : categoryList}
+                        defaultValue={category}
+                        onChangeText={text => {
+                          setCategory(text);
+                          setCategoryList(findCategory(text));
+                        }}
+                        placeholder="Search Categories"
+                        placeholderTextColor={COLOR.alphaBlackColor75}
+                        renderItem={({item}) => (
+                          <TouchableOpacity onPress={() => {
+                            setCategory(item.name);
+                            setCategoryList([]);
+                          }}>
+                            <CustomText style={styles.autocompleteContent}>
+                              {item.name}
+                            </CustomText>
+                          </TouchableOpacity>
+                        )}
+                      />
+                      <View style={{...GlobalStyle.auth_line, backgroundColor: COLOR.alphaBlackColor20}} />
+
+                      <View style={{position: 'absolute', top: 40, left: 0, width: 14, height: 14}}>
+                        <SvgXml width='100%' height='100%' xml={Icon_Search_Black} />
+                      </View>
                     </View>
 
                     <View style={{width:'100%', marginTop: 22}}>
@@ -143,47 +199,36 @@ export const HostAnExperienceScreen: React.FC = () => {
                       </View>
                       <View style={{...GlobalStyle.auth_line, backgroundColor: COLOR.alphaBlackColor20}} />
                     </View>
-
-                    <View style={{width:'100%', marginTop: 22}}>
-                      <CustomText style={styles.info_title}>Category</CustomText>
-                      <CustomTextInput
-                        style={{...GlobalStyle.auth_input, paddingLeft: 25, color: COLOR.systemBlackColor}}
-                        placeholder={'Search Categories'}
-                        placeholderTextColor={COLOR.alphaBlackColor75}
-                        onChangeText={text => setCategory(text)}
-                        value={category}
-                      />
-                      <View style={{...GlobalStyle.auth_line, backgroundColor: COLOR.alphaBlackColor20}} />
-
-                      <TouchableWithoutFeedback onPress={() => onSearchCategory()}>
-                        <View style={{position: 'absolute', top: 40, left: 0, width: 14, height: 14}}>
-                          <SvgXml width='100%' height='100%' xml={Icon_Search_Black} />
-                        </View>
-                      </TouchableWithoutFeedback>
-                    </View>
                   </View>
-                </ScrollView>
-              </KeyboardAvoidingView>   
+                </TouchableWithoutFeedback>
+              </ScrollView>
+            </KeyboardAvoidingView>   
+          </View>
+
+          <TouchableWithoutFeedback onPress={() => onCreateExperience() }>
+            <View style={styles.bottom_button}>
+              <ColorButton title={'Create Experience'} backgroundColor={COLOR.redColor} color={COLOR.systemWhiteColor} />
             </View>
+          </TouchableWithoutFeedback>
 
-            <TouchableWithoutFeedback onPress={() => onCreateExperience() }>
-              <View style={styles.bottom_button}>
-                <ColorButton title={'Create Experience'} backgroundColor={COLOR.redColor} color={COLOR.systemWhiteColor} />
-              </View>
-            </TouchableWithoutFeedback>
-
-          </View>
-          </View>
-        </SafeAreaView>
-      </TouchableWithoutFeedback>
+        </View>
+        </View>
+      </SafeAreaView>
     </Container>
   );
 
-  function onSelectPhoto() {
-    onChoosePhoto();
+  function onSelectPhoto(index: number) {
+    console.log('asd');
+    onChoosePhoto(index);
   }
 
-  function onChoosePhoto() {
+  function onSelectedPhoto(index: number, file: IFile) {
+    let images: IFile[] = imageList;
+    images[index] = file;
+    setImageList(images);
+  }
+
+  function onChoosePhoto(index: number) {
     ImagePicker.openPicker({
       includeBase64: true,
       multiple: false,
@@ -200,12 +245,12 @@ export const HostAnExperienceScreen: React.FC = () => {
             ? image.path
             : image.path.replace('file://', ''),
       };
-      // setImage(file.uri);
+      onSelectedPhoto(index, file);
     })
     .catch((e) => {});
   }
 
-  function onTakePicture() {
+  function onTakePicture(index: number) {
     ImagePicker.openCamera({
       includeBase64: true,
       multiple: false,
@@ -222,25 +267,13 @@ export const HostAnExperienceScreen: React.FC = () => {
             ? image.path
             : image.path.replace('file://', ''),
       };
-      // setImage(file.uri);
+      onSelectedPhoto(index, file);
     })
     .catch((e) => {
     });
   }
 
-  function generateName() {
-    return (
-      Math.random().toString(36).substring(2, 10) +
-      '-' +
-      Math.random().toString(36).substring(2, 6)
-    );
-  }
-
   function onCreateExperience() {
-
-  }
-
-  function onSearchCategory() {
 
   }
 };
@@ -268,8 +301,9 @@ const styles = StyleSheet.create({
     width: '100%',
     height: 33, 
     lineHeight: 33,
-    fontFamily: FONT.AN_Bold, 
-    fontSize: 24, 
+    fontFamily: FONT.AN_Regular, 
+    fontSize: 14, 
+    fontWeight: '600',
     textAlign: 'center',
     color: COLOR.systemBlackColor,
   },
@@ -356,7 +390,8 @@ const styles = StyleSheet.create({
     height: 23,
     lineHeight: 23,
     fontFamily: FONT.AN_Regular,
-    fontSize: 14,
+    fontSize: 12,
+    fontWeight: '600',
     color: COLOR.alphaBlackColor75,
   },
   price: {
@@ -366,6 +401,31 @@ const styles = StyleSheet.create({
     height: 20, 
     lineHeight: 20, 
     marginTop: 17, 
+    color: COLOR.systemBlackColor,
+  },
+  autocompleteContainer: {
+    zIndex: 100,
+    borderColor: COLOR.clearColor,
+    borderWidth: 0,
+  },
+  autocompleteInput: {
+    borderColor: COLOR.clearColor,
+    borderWidth: 0,
+  },
+  autocomplete: {
+    backgroundColor: COLOR.clearColor,
+    borderColor: COLOR.clearColor,
+    borderWidth: 0,
+    height: 45,
+    color: COLOR.systemBlackColor,
+    paddingLeft: 25,
+  },
+  autocompleteContent: {
+    height: 35,
+    lineHeight: 35,
+    fontFamily: FONT.AN_Regular,
+    paddingLeft: 20, 
+    backgroundColor: COLOR.systemWhiteColor, 
     color: COLOR.systemBlackColor,
   },
 });

@@ -17,7 +17,6 @@ import {
   COLOR, 
   CustomText, 
   FONT, 
-  Icon_Back, 
   Icon_Normal_Profile, 
   Img_Edit_Profile_Background, 
   MARGIN_TOP,
@@ -29,7 +28,7 @@ import { IFile } from '../../interfaces/app';
 
 export const SignUpAddProfilePictureScreen: React.FC = () => {
 
-  const { navigate, goBack, reset } = useNavigation();
+  const { navigate, reset } = useNavigation();
 
   const onSkip = () => {
     reset({
@@ -148,7 +147,8 @@ const styles = StyleSheet.create({
     width: '100%',
     height: 33, 
     lineHeight: 33,
-    fontFamily: FONT.AN_Bold, 
+    fontFamily: FONT.AN_Regular,
+    fontWeight: '600', 
     fontSize: 24, 
     textAlign: 'center',
     color: COLOR.systemWhiteColor,
@@ -167,7 +167,8 @@ const styles = StyleSheet.create({
     lineHeight: 33,
     textAlign: 'right',
     fontFamily: FONT.AN_Regular,
-    fontSize: 13,
+    fontSize: 12,
+    fontWeight: '600',
     color: COLOR.systemWhiteColor,
   },
   description_text: {

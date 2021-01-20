@@ -12,7 +12,7 @@ import {
   Alert,
 } from 'react-native';
 import { Container } from 'native-base';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { SvgXml } from 'react-native-svg';
 import DefaultPreference from 'react-native-default-preference';
@@ -205,7 +205,8 @@ const styles = StyleSheet.create({
     width: '100%',
     height: 33, 
     lineHeight: 33,
-    fontFamily: FONT.AN_Bold, 
+    fontFamily: FONT.AN_Regular, 
+    fontWeight: '600',
     fontSize: 24, 
     textAlign: 'center',
     color: COLOR.systemWhiteColor,
@@ -233,8 +234,9 @@ const styles = StyleSheet.create({
     height: 23,
     lineHeight: 23,
     fontFamily: FONT.AN_Regular,
-    fontSize: 14,
-    color: COLOR.systemWhiteColor,
+    fontWeight: '600',
+    fontSize: 12,
+    color: COLOR.alphaWhiteColor75,
   },
   bottom_button: {
     position: 'absolute',

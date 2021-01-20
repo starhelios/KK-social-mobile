@@ -24,7 +24,6 @@ import {
   FACEBOOK_LOGIN,
   GOOGLE_LOGIN,
   APPLE_LOGIN,
-  googleConfigure,
   intialization,
   SetApiConfig,
 } from '../../constants';
@@ -49,7 +48,6 @@ export const SplashScreen: React.FC = () => {
     setFetchingData(true);
 
     intialization();
-    googleConfigure();
 
     loadAutoLoginInformation();
 

@@ -6,8 +6,7 @@ target 'KloutKast' do
   # Pods for KloutKast
   config = use_native_modules!
   use_react_native!(:path => config["reactNativePath"])
-  
-#  pod 'GoogleSignIn'
+
 
   inherit! :complete
 

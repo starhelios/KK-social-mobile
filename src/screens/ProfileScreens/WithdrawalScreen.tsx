@@ -70,9 +70,11 @@ export const WithdrawalScreen: React.FC = () => {
               />
             </View>
 
+            <CustomText style={{...styles.info_title, marginTop: 44}}>Add Account</CustomText>
+
             <TouchableWithoutFeedback onPress={() => onAddBankAccount() }>
-              <View style={{width:'100%', marginTop: 44}}>
-                <TitleArrowButton title={'Add Account'} name={'Add Bank Account'} showArrow={true} white_color={true} />
+              <View style={{width:'100%', marginTop: 22}}>
+                <TitleArrowButton title={''} name={'Add Bank Account'} showArrow={true} white_color={true} />
               </View>
             </TouchableWithoutFeedback>
           </View>
@@ -107,7 +109,8 @@ const styles = StyleSheet.create({
     width: '100%',
     height: 33, 
     lineHeight: 33,
-    fontFamily: FONT.AN_Bold, 
+    fontFamily: FONT.AN_Regular,
+    fontWeight: '600',
     fontSize: 24, 
     textAlign: 'center',
     color: COLOR.systemWhiteColor,
@@ -134,8 +137,9 @@ const styles = StyleSheet.create({
     width: '100%',
     height: 23,
     lineHeight: 23,
+    fontWeight: '600',
     fontFamily: FONT.AN_Regular,
-    fontSize: 14,
-    color: COLOR.systemWhiteColor,
+    fontSize: 12,
+    color: COLOR.alphaWhiteColor75,
   },
 });
