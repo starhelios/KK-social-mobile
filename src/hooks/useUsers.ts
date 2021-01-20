@@ -52,27 +52,49 @@ export const useUsers = () => {
     aboutMe: string,
     location: string,
     categoryName: string,
-    avatar: IFile | null,
-    bankInfo: IBank[],
-    paymentInfo: ICard[],
+    avatarUrl: string,
     isHost: boolean,
+    // bankInfo: IBank[],
+    // paymentInfo: ICard[],
   ): Promise<any> => {
     const url = API_ENDPOINT.USERS + '/' + userId;
-
-    var body = new FormData();
-    // body.append('userId', userId);
-    body.append('email', email);
-    body.append('fullname', fullname);
-    body.append('categoryName', categoryName);
-    body.append('aboutMe', aboutMe);
-    body.append('location', location);
-    body.append('dateOfBirth', dateOfBirth);
-    body.append('isHost', isHost);
-    // body.append('bankInfo', bankInfo.toString());
-    // body.append('paymentInfo', paymentInfo.toString());
-    if (avatar != null) {
-      body.append('avatar', avatar);
+    console.log(avatarUrl);
+    let body = null;
+    if (avatarUrl == '') {
+      body = {
+        userId,
+        email,
+        fullname,
+        dateOfBirth,
+        aboutMe,
+        location,
+        categoryName,
+        isHost,
+      };
+    } else {
+      body = {
+        userId,
+        email,
+        fullname,
+        dateOfBirth,
+        aboutMe,
+        location,
+        categoryName,
+        avatarUrl,
+        isHost,
+      };
     }
+    console.log(body);
+
+    // var body = new FormData();
+    // body.append('email', email);
+    // body.append('fullname', fullname);
+    // body.append('categoryName', categoryName);
+    // body.append('aboutMe', aboutMe);
+    // body.append('location', location);
+    // body.append('dateOfBirth', dateOfBirth);
+    // body.append('isHost', isHost);
+    // body.append('avatarUrl', avatarUrl);
 
     try {
       const { data } = await axios.patch<any>(url, body, API_CONFIG);

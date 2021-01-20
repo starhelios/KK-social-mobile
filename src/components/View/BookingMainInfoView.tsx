@@ -48,6 +48,7 @@ const styles = StyleSheet.create({
     lineHeight: 18,
     color: COLOR.systemWhiteColor,
     fontFamily: FONT.AN_Regular,
+    fontWeight: '600',
     fontSize: 18,
     flexWrap: 'wrap'
   },

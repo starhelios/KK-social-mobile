@@ -1,42 +1,47 @@
-import Moment from 'moment';
 import { Alert, Share } from 'react-native';
+import { LocaleConfig } from 'react-native-calendars';
+import stripe from 'react-native-stripe-payments';
+import Moment from 'moment';
+import firebase from 'firebase';
 
 // from app
-import { IBooking, ICard } from '../interfaces/app';
+import { 
+  convertStringToDateFormat, 
+  firebaseConfigure, 
+  googleConfigure, 
+  STRIPE_PUBLISHABLE_KEY 
+} from '.';
+import { ICard } from '../interfaces/app';
 
 
-export const convertStringToDateFormat = (date: string, format: string) => {
-  if (date == '' || date == undefined) {
-    return '';
-  } else {
-    return Moment(new Date(date)).format(format);
-  }
-}
+export const intialization = () => {
+  googleConfigure();
+  firebaseConfigure();
+  stripe.setOptions({ publishingKey: STRIPE_PUBLISHABLE_KEY });
 
-export const convertStringToDate = (date: string) => {
-  if (date == '' || date == undefined) {
-    return null;
-  } else {
-    // return new Date(date);
-    return Moment(date).format("YYYY-MM-DD HH:mm:ss");
-  }
-}
+  Moment.locale('en');
 
-export const convertDateToDateFormat = (date: Date, format: string) => {
-  if (date == undefined) {
-    return '';
-  } else {
-    // return date.toLocaleString(format);
-    return Moment.utc(date).format(format);
-  }
-}
-
-export const convertDateToMomentDateFormat = (date: Date, format: string) => {
-  if (date == undefined) {
-    return '';
-  } else {
-    return Moment.utc(date).format(format);
-  }
+  LocaleConfig.locales['en'] = {
+    // formatAccessibilityLabel: "dddd d 'of' MMMM 'of' yyyy",
+    monthNames: [
+      'January',
+      'February',
+      'March',
+      'April',
+      'May',
+      'June',
+      'July',
+      'August',
+      'September',
+      'October',
+      'November',
+      'December'
+    ],
+    monthNamesShort: ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec'],
+    dayNames: ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
+    dayNamesShort: ['S', 'M', 'T', 'W', 'T', 'F', 'S']
+  };
+  LocaleConfig.defaultLocale = 'en';  
 }
 
 export const generateName = () => {
@@ -59,31 +64,6 @@ export const GetDurationString = (duration: number) => {
   } else {
     return min.toString() + 'min';
   }
-}
-
-export const SortBookings = (bookings: IBooking[], isAsc: boolean) => {
-  return bookings.sort(function(a: IBooking, b: IBooking) {
-    let aDay = Moment(a.date + ' ' + a.hour);
-    let bDay = Moment(b.date + ' ' + b.hour);
-
-    if (isAsc == true) {
-      if (aDay < bDay) {
-        return -1;
-      } else if (aDay > bDay) {
-        return 1;
-      } else {
-        return 0;
-      }
-    } else {
-      if (aDay > bDay) {
-        return -1;
-      } else if (aDay < bDay) {
-        return 1;
-      } else {
-        return 0;
-      }
-    }
-  });
 }
 
 export const ShowShareView = async (title: string, url: string) => {
@@ -145,4 +125,27 @@ export const CheckCardExpirationDate = (cardExpiryDate: string) => {
   } else {
     return true;
   }
+}
+
+export const UploadImageToFirebase = async (filename: string, uploadUri: string): Promise<any> => {
+    const response = await fetch(uploadUri);
+    const blob = await response.blob();
+    const uploadTask = firebase.storage().ref(`images/${filename}.jpg`).put(blob);
+    // uploadTask.on('state_changed', snapshot => {
+    //   setTransferred(
+    //     Math.round(snapshot.bytesTransferred / snapshot.totalBytes) * 10000
+    //   );
+    // });
+    try {
+      await uploadTask;
+      firebase.storage()
+        .ref('images')
+        .child(`${filename}.jpg`)
+        .getDownloadURL()
+        .then((url) => {
+          return Promise.resolve(url);
+        });
+    } catch (e) {
+      return Promise.reject(e);
+    }
 }

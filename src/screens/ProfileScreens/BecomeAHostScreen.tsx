@@ -20,6 +20,9 @@ import Autocomplete from 'react-native-autocomplete-input';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import ImagePicker from 'react-native-image-crop-picker';
 import LinearGradient from 'react-native-linear-gradient';
+import Spinner from 'react-native-loading-spinner-overlay';
+import firebase from 'firebase';
+
 
 // from app
 import { 
@@ -38,6 +41,7 @@ import {
   LOGIN_STATE,
   MARGIN_TOP,
   SUCCESS_MESSAGE,
+  UploadImageToFirebase,
   viewportWidth,
 } from '../../constants';
 import { ColorButton } from '../../components/Button';
@@ -55,6 +59,8 @@ export const BecomeAHostScreen: React.FC = () => {
 
   const profile: IUser = useGlobalState('userInfo');
   const allCategoryList: ICategory[] = useGlobalState('categoryList'); 
+
+  const [uploading, setUploading] = useState(false);
 
   const comp = (a: string, b: string) => a.toLowerCase().trim() === b.toLowerCase().trim();
   const findCategory = (query: string) => {
@@ -80,6 +86,7 @@ export const BecomeAHostScreen: React.FC = () => {
   const [pickerDate, setPickerDate] = useState<Date>(birthday != undefined && birthday != '' ? new Date(birthday) : new Date());
 
   let isInit = true;
+  let fetchingData = false;
 
   useEffect(() => {
     setImage(profile.avatarUrl);
@@ -163,10 +170,46 @@ export const BecomeAHostScreen: React.FC = () => {
     });
   }
 
-  const onBecomeAHost = () => {
-    updateUserInformation(profile.id, emailAddress, fullName, birthday, aboutMe, location, category, avatarFile, 
-      profile.bankInfo, profile.paymentInfo, true)
+  const onBecomeAHost = async () => {
+    if (fetchingData == true) {
+      return;
+    }
+    fetchingData = true;
+
+    setUploading(true);
+    if (avatarFile != null) {
+      const filename = profile.id;
+      const uploadUri = avatarFile.uri;
+
+      const response = await fetch(uploadUri);
+      const blob = await response.blob();
+
+      const uploadTask = firebase.storage().ref(`images/${filename}.jpg`).put(blob);
+      try {
+        await uploadTask;
+        firebase.storage()
+          .ref('images')
+          .child(`${filename}.jpg`)
+          .getDownloadURL()
+          .then((url) => {
+            saveProfile(url);
+          });
+      } catch (e) {
+        fetchingData = false;
+        setUploading(false);
+        Alert.alert(ERROR_MESSAGE.UPDATE_USER_PROFILE_FAIL);
+        return;
+      }
+    } else {
+      saveProfile('');
+    }
+  }
+
+  const saveProfile = (avatarUrl: string) => {
+    updateUserInformation(profile.id, emailAddress, fullName, birthday, aboutMe, location, category, avatarUrl, true)
     .then(async (result: Promise<IUser>) => {
+      fetchingData = false;
+      setUploading(false);
       setLoginUser(await result);
       Alert.alert(
         SUCCESS_MESSAGE.USER_BECOM_A_HOST,
@@ -177,6 +220,8 @@ export const BecomeAHostScreen: React.FC = () => {
         { cancelable: false }
       );
     }).catch(() => {
+      fetchingData = false;
+      setUploading(false);
       Alert.alert(ERROR_MESSAGE.UPDATE_USER_PROFILE_FAIL);
     });
   }  
@@ -268,7 +313,7 @@ export const BecomeAHostScreen: React.FC = () => {
                           containerStyle={styles.autocompleteContainer}
                           inputContainerStyle={styles.autocompleteInput}
                           style={styles.autocomplete}
-                          data={categoryList.length === 1 && comp(category, categoryList[0].name) ? [] : categoryList}
+                          data={categoryList.length > 0 && comp(category, categoryList[0].name) ? [] : categoryList}
                           defaultValue={category}
                           onChangeText={text => {
                             setCategory(text);
@@ -277,7 +322,10 @@ export const BecomeAHostScreen: React.FC = () => {
                           placeholder="Search Categories"
                           placeholderTextColor={COLOR.alphaWhiteColor50}
                           renderItem={({item}) => (
-                            <TouchableOpacity onPress={() => setCategory(item.name)}>
+                            <TouchableOpacity onPress={() => {
+                              setCategory(item.name);
+                              setCategoryList([]);
+                            }}>
                               <CustomText style={styles.autocompleteContent}>
                                 {item.name}
                               </CustomText>
@@ -352,6 +400,12 @@ export const BecomeAHostScreen: React.FC = () => {
         </View>
       )}
       </SafeAreaView>
+
+      <Spinner
+        visible={uploading}
+        textContent={''}
+        textStyle={{color: COLOR.systemWhiteColor}}
+      />
     </Container>
   );
 };
@@ -379,7 +433,8 @@ const styles = StyleSheet.create({
     width: '100%',
     height: 33, 
     lineHeight: 33,
-    fontFamily: FONT.AN_Bold, 
+    fontFamily: FONT.AN_Regular, 
+    fontWeight: '600',
     fontSize: 24, 
     textAlign: 'center',
     color: COLOR.systemWhiteColor,
@@ -467,8 +522,9 @@ const styles = StyleSheet.create({
     height: 23,
     lineHeight: 23,
     fontFamily: FONT.AN_Regular,
-    fontSize: 14,
-    color: COLOR.systemWhiteColor,
+    fontWeight: '600',
+    fontSize: 12,
+    color: COLOR.alphaWhiteColor75,
   },
   datePickerBackground: {
     position: 'absolute',

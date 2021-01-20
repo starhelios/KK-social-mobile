@@ -77,7 +77,7 @@ export const ExperienceView: React.FC<props> = (props: props) => {
                 source={{uri: experience.icon}} />
             : <SvgXml height='100%' xml={Icon_Category} />
           }           */}
-          <CustomText style={{...styles.experience, color: white_color == true ? COLOR.systemWhiteColor : COLOR.blackColor}}>
+          <CustomText style={{...styles.experience, color: white_color == true ? COLOR.alphaWhiteColor75 : COLOR.alphaBlackColor75}}>
             {experience.categoryName + ' • ' + GetDurationString(experience.duration)}
           </CustomText>
         </View>
@@ -85,9 +85,9 @@ export const ExperienceView: React.FC<props> = (props: props) => {
           <CustomText style={{...styles.price, color: white_color == true ? COLOR.systemWhiteColor : COLOR.blackColor}}>
             {'From $' + experience.price.toString()}
           </CustomText>
-          {/* <CustomText style={{...styles.personal, color: white_color == true ? COLOR.systemWhiteColor : COLOR.blackColor}}>
-            {' / ' + experience.personal}
-          </CustomText> */}
+          <CustomText style={{...styles.personal, color: white_color == true ? COLOR.systemWhiteColor : COLOR.blackColor}}>
+            {' / person'}
+          </CustomText>
         </View>
       </View>
     </TouchableWithoutFeedback>
@@ -112,7 +112,8 @@ const styles = StyleSheet.create({
     lineHeight: 17,
     marginTop: 12,
     color: COLOR.systemWhiteColor,
-    fontFamily: FONT.AN_Bold,
+    // fontWeight: '600',
+    fontFamily: FONT.AN_Regular,
     fontSize: 12,
   },
   experienceContainer: {
@@ -124,7 +125,8 @@ const styles = StyleSheet.create({
     height: 12,
     lineHeight: 12,
     // marginLeft: 5,
-    color: COLOR.systemWhiteColor,
+    // color: COLOR.systemWhiteColor,
+    color: COLOR.alphaWhiteColor75,
     fontFamily: FONT.AN_Regular,
     fontSize: 12,
   },
@@ -137,7 +139,8 @@ const styles = StyleSheet.create({
     height: 12,
     lineHeight: 12,
     color: COLOR.systemWhiteColor,
-    fontFamily: FONT.AN_Bold,
+    fontFamily: FONT.AN_Regular,
+    fontWeight: '600',
     fontSize: 12,
   },
   personal: {

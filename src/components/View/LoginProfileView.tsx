@@ -94,7 +94,7 @@ export const LoginProfileView: React.FC = () => {
 
   return (
     <View style={{flex: 1}}>
-      <ScrollView style={{width: '100%', height: '100%', marginBottom: 20}}>
+      <ScrollView style={{width: '100%', height: '100%'}}>
         <View style={styles.profile_container}>
           <View style={styles.avatar}>
             {
@@ -170,7 +170,7 @@ export const LoginProfileView: React.FC = () => {
           </TouchableWithoutFeedback>
 
           <TouchableWithoutFeedback onPress={() => onLogOut() }>
-            <View style={{width:'100%', marginTop: 22}}>
+            <View style={{width:'100%', marginTop: 22, marginBottom: 20}}>
               <ColorButton title={'Log Out'} backgroundColor={COLOR.redColor} color={COLOR.systemWhiteColor} />
             </View>
           </TouchableWithoutFeedback>
@@ -265,7 +265,8 @@ const styles = StyleSheet.create({
   user_name: {
     height: 24, 
     lineHeight: 24,
-    fontFamily: FONT.AN_Bold, 
+    fontFamily: FONT.AN_Regular, 
+    fontWeight: '600',
     fontSize: 24, 
     color: COLOR.systemWhiteColor,
   },
@@ -278,6 +279,7 @@ const styles = StyleSheet.create({
     height: 14, 
     lineHeight: 14,
     fontFamily: FONT.AN_Regular, 
+    fontWeight: '600',
     fontSize: 14, 
     color: COLOR.alphaWhiteColor50,
   },
@@ -297,6 +299,7 @@ const styles = StyleSheet.create({
     height: 12, 
     lineHeight: 12,
     fontFamily: FONT.AN_Regular, 
+    fontWeight: '600',
     fontSize: 12, 
     color: COLOR.alphaWhiteColor75,
   },

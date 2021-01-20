@@ -7,9 +7,12 @@ import {
   TouchableWithoutFeedback,
   Alert,
 } from 'react-native';
+import { useState } from 'react';
 import { Container } from 'native-base';
 import { useNavigation } from '@react-navigation/native';
 import { SvgXml } from 'react-native-svg';
+import Spinner from 'react-native-loading-spinner-overlay';
+import firebase from 'firebase';
 
 // from app
 import { 
@@ -20,6 +23,7 @@ import {
   Icon_Back, 
   Img_Edit_Profile_Background, 
   MARGIN_TOP,
+  UploadImageToFirebase,
   viewportWidth, 
 } from '../../constants';
 import { ColorButton } from '../../components/Button';
@@ -37,18 +41,40 @@ export const SignUpAddProfilePictureConfirmScreen: React.FC = ({route}) => {
   const profile_icon: IFile = route.params.profile_icon;
   const userInfo: IUser = useGlobalState('userInfo');
 
-  const onContinue = () => {
-    updateUserInformation(userInfo.id, userInfo.email, userInfo.fullname, userInfo.dateOfBirth, userInfo.aboutMe, userInfo.location, 
-      userInfo.categoryName, profile_icon, userInfo.bankInfo, userInfo.paymentInfo, false)
-    .then(async (result: Promise<IUser>) => {
-      setLoginUser(await result);
-      reset({
-        index: 0,
-        routes: [{ name: 'TabBar' }],
-      });
-    }).catch(() => {
+  const [uploading, setUploading] = useState(false);
+
+  const onContinue = async () => {
+    const filename = userInfo.id;
+    const uploadUri = profile_icon.uri;
+
+    const response = await fetch(uploadUri);
+    const blob = await response.blob();
+
+    const uploadTask = firebase.storage().ref(`images/${filename}.jpg`).put(blob);
+    try {
+      await uploadTask;
+      firebase.storage()
+        .ref('images')
+        .child(`${filename}.jpg`)
+        .getDownloadURL()
+        .then((url) => {
+          updateUserInformation(userInfo.id, userInfo.email, userInfo.fullname, '', '', '', '', url, false)
+          .then(async (result: Promise<IUser>) => {
+            setUploading(false);
+            setLoginUser(await result);
+            reset({
+              index: 0,
+              routes: [{ name: 'TabBar' }],
+            });
+          }).catch(() => {
+            setUploading(false);
+            Alert.alert(ERROR_MESSAGE.UPDATE_USER_PROFILE_FAIL);
+          });
+        });
+    } catch (e) {
+      setUploading(false);
       Alert.alert(ERROR_MESSAGE.UPDATE_USER_PROFILE_FAIL);
-    });
+    }
   }
 
   return (
@@ -86,6 +112,12 @@ export const SignUpAddProfilePictureConfirmScreen: React.FC = ({route}) => {
           </TouchableWithoutFeedback>
         </View>
       </SafeAreaView>
+
+      <Spinner
+        visible={uploading}
+        textContent={''}
+        textStyle={{color: COLOR.systemWhiteColor}}
+      />
     </Container>
   );
 };
@@ -113,7 +145,8 @@ const styles = StyleSheet.create({
     width: '100%',
     height: 33, 
     lineHeight: 33,
-    fontFamily: FONT.AN_Bold, 
+    fontFamily: FONT.AN_Regular,
+    fontWeight: '600' ,
     fontSize: 24, 
     textAlign: 'center',
     color: COLOR.systemWhiteColor,

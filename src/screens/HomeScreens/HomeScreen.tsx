@@ -432,7 +432,8 @@ const styles = StyleSheet.create({
     marginTop: 33,
     marginLeft: 24,
     height: 33,
-    fontFamily: FONT.AN_Bold,
+    fontFamily: FONT.AN_Regular,
+    fontWeight: '600',
     fontSize: 24,
     color: COLOR.systemWhiteColor,
   }
