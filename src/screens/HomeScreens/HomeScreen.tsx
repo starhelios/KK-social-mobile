@@ -38,6 +38,7 @@ export const HomeScreen: React.FC = () => {
   
   const dispatch = useDispatch();
   const filter = useGlobalState('filter');
+  const needReloadData = useGlobalState('needReloadData');
 
   const { getCategoryList } = useCategories();
   const { getExperienceList } = useExperiences();
@@ -67,6 +68,20 @@ export const HomeScreen: React.FC = () => {
     loadExperienceList();
     loadHostList();
   }, [API_CONFIG])
+
+  useEffect(() => {
+    if (needReloadData == false) {
+      return;
+    }
+    dispatch({
+      type: ActionType.SET_NEED_RELOAD_DATA,
+      payload: false,
+    });
+
+    loadCategoryList();
+    loadExperienceList();
+    loadHostList();
+  }, [needReloadData])
 
   useEffect(() => {
     onSearch();

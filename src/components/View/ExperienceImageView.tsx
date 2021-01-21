@@ -2,7 +2,7 @@ import * as React from 'react';
 import {
   Image,
   StyleSheet,
-  Text,
+  TouchableWithoutFeedback,
   View,
 } from 'react-native';
 import { SvgXml } from 'react-native-svg';
@@ -15,32 +15,36 @@ import {
 import { IFile } from '../../interfaces/app';
 
 interface props {
-  image: IFile;
-  showPlusIcon: boolean;
+  image: string;
+  imageCount: number;
+  index: number;
+  changeCount: number;
+  onSelectPhoto: (index: number) => void;
 }
 
 export const ExperienceImageView: React.FC<props> = (props: props) => {
 
-  const image: IFile = props.image;
-  const showPlusIcon: boolean = props.showPlusIcon;
+  const image: string = props.image;
+  const imageCount: number = props.imageCount;
+  const index: number = props.index;
 
   return (
+    <TouchableWithoutFeedback onPress={() => props.onSelectPhoto(index) }>
     <View style={styles.container}>
       {
-        image.uri == null || image.uri == ''
+        image == null || image == '' || image == undefined
         ? <View style={{width: '100%', height: '100%', alignItems: 'center'}}>
             <SvgXml width='100%' height='100%' xml={Icon_Add_Experience_Image_Background} />
-            {
-              showPlusIcon == true
-              ? <View style={styles.plus_icon}>
+            { index == imageCount && 
+                <View style={styles.plus_icon}>
                   <SvgXml width={28} height={26} xml={Icon_Add_Experience_Image} />
                 </View>
-              : null
             }
           </View>
-        : <Image style={{width: '100%', height: '100%', resizeMode: 'cover'}} source={{uri: image.uri}} />
+        : <Image style={{width: '100%', height: '100%', resizeMode: 'cover'}} source={{uri: image}} />
       }
     </View>
+    </TouchableWithoutFeedback>
   );
 }
 

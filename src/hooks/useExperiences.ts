@@ -3,7 +3,8 @@ import axios from 'axios';
 // from app
 import { API_ENDPOINT, API_CONFIG } from '../constants';
 import { IApiSuccess } from '../interfaces/api';
-import { IAvailableDateForCreate, IExperience, IExperienceDetail, IFile } from '../interfaces/app';
+import { IAvailableDateForCreate, IExperience, IExperienceDetail } from '../interfaces/app';
+import { handleError } from '../utils';
 
 export const useExperiences = () => {
 
@@ -41,7 +42,7 @@ export const useExperiences = () => {
     startDay: string,
     endDay: string,
     userId: string,
-    images: IFile[],
+    images: string[],
     dateAvaibility: IAvailableDateForCreate[],
   ): Promise<any> => {
     const url = API_ENDPOINT.EXPERIENCES;
@@ -57,12 +58,21 @@ export const useExperiences = () => {
       images,
       dateAvaibility,
     }
+    console.log(url);
+    console.log(body);
     try {
-      const { data } = await axios.get<IApiSuccess>(url, API_CONFIG);
+      const { data } = await axios.post<IApiSuccess>(url, body, API_CONFIG);
+      console.log(data);
       const result: IExperience = data.payload;
       return Promise.resolve(result);
     } catch (err) {
-      return Promise.reject(null);
+      const apiError = handleError(err);
+      if (apiError) {
+        console.log(apiError);
+        return Promise.reject(apiError);
+      } else {
+        return Promise.reject(null);
+      }
     }
   };
 
