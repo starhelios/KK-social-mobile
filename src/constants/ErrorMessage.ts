@@ -33,4 +33,12 @@ export const ERROR_MESSAGE = {
   UNSELECT_CARD: 'Please select payment method.',
   HOST_HAVE_NO_BANK: 'Host didn’t add any withdrawal methods.',
 
+  EMPTY_EXPERIENCE_IMAGE: 'You must add at least one photo.',
+  EMPTY_EXPERIENCE_CATEGORY: 'Please input experience category.',
+  EMPTY_EXPERIENCE_TITLE: 'Please input epxerience title.',
+  EMPTY_EXPERIENCE_DESCRIPTION: 'Please input epxerience title.',
+  EMPTY_EXPERIENCE_DURRATION: 'Please input epxerience duration.',
+  EMPTY_EXPERIENCE_PRICE: 'Please input epxerience price.',
+  CREATE_EXPERIENCE_FAIL: 'Failed to create an experience.',
+  INVALID_EXPERIENCE_END_TIME: 'The end time cannot be earlier than the start time.',
 };

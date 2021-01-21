@@ -3,16 +3,19 @@ import Reducer, { State, Action } from './Reducer';
 
 const initialState: State = {
   userInfo: {
-    id: "",
-    fullname: '',
+    id: '',
+    status: '',
     isHost: false,
     email: '',
-    status: '',
-    aboutMe: '',
-    location: '',
-    categoryName: '',  
+    fullname: '',
     avatarUrl: '',
-    dateOfBirth: '', 
+    dateOfBirth: '',
+    aboutMe: '',
+    categoryName: '',
+    location: '',
+    createdAt: '',
+    bankInfo: [],
+    paymentInfo: [],
   },
 
   accessToken: {
@@ -42,7 +45,8 @@ const initialState: State = {
     cardNumber: '',
     cardExpiryDate: '',
     cvc: '',
-  }
+  },
+  needReloadData: false,
 };
 
 const StoreContext = createContext<State>(initialState);

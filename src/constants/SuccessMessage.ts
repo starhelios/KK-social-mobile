@@ -3,4 +3,5 @@ export const SUCCESS_MESSAGE = {
   UPDATE_USER_PROFILE_SUCCESS: 'Your profile was updated successfully.',
   ADD_CARD_SUCCESS: 'Your card has been added.',
   USER_BECOM_A_HOST: 'You has become a host.',
+  CREATE_EXPERIENCE_SUCCESS: 'Experience was created.',
 };
