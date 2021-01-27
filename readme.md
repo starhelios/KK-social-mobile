@@ -50,3 +50,7 @@ cd android
 cd android
 ./gradlew assembleRelease
 ```
+
+Android Keystore
+alias: kloutkast
+storepassword: jmc@1994121

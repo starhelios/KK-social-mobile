@@ -228,11 +228,9 @@ export const HostAnExperienceScreen: React.FC = () => {
     setDuration(`${minutes}`);
     setEndShowDatePicker(false);
 
-
     var startDateTime = new Date(startDay).getTime();
     var endDateTime = new Date(endDay).getTime();
     var currentTime = startDateTime;
-    console.log(startDateTime + " : " + endDateTime);
 
     var avaibilityDates: IAvailableDateForCreate[] = [];
     while (currentTime <= endDateTime) {
@@ -244,7 +242,6 @@ export const HostAnExperienceScreen: React.FC = () => {
       currentTime += 1000 * 60 * 60 * 24;
     }
     setDateAvaibility(avaibilityDates);
-    console.log(avaibilityDates);
   }
 
   const onDismiss = () => {
