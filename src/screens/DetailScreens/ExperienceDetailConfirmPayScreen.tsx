@@ -49,12 +49,12 @@ export const ExperienceDetailConfirmPayScreen: React.FC = ({route}) => {
   const host: IUser = hostDetail.user;
 
   const onConfirmPay = () => {
-    if (host.bankInfo == undefined || host.bankInfo.length == 0) {
-      Alert.alert(ERROR_MESSAGE.HOST_HAVE_NO_BANK);
-      return;
-    } else if (selectedCard.cardType == '' || selectedCard.cardNumber == '') {
+    if (selectedCard.cardType == '' || selectedCard.cardNumber == '') {
       Alert.alert(ERROR_MESSAGE.UNSELECT_CARD);
       return;
+    // } else if (host.bankInfo == undefined || host.bankInfo.length == 0) {
+    //   Alert.alert(ERROR_MESSAGE.HOST_HAVE_NO_BANK);
+    //   return;
     } else if (CheckCardExpirationDate(selectedCard.cardExpiryDate) == false) {
       Alert.alert(ERROR_MESSAGE.PASSED_CARD_EXPIRATION);
       return;

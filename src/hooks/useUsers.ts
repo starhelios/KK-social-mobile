@@ -58,7 +58,6 @@ export const useUsers = () => {
     // paymentInfo: ICard[],
   ): Promise<any> => {
     const url = API_ENDPOINT.USERS + '/' + userId;
-    console.log(avatarUrl);
     let body = null;
     if (avatarUrl == '') {
       body = {
@@ -84,7 +83,6 @@ export const useUsers = () => {
         isHost,
       };
     }
-    console.log(body);
 
     // var body = new FormData();
     // body.append('email', email);

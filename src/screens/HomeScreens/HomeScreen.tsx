@@ -273,6 +273,7 @@ export const HomeScreen: React.FC = () => {
             <CustomTextInput 
               style={styles.search_text}
               onChangeText={text => setSearchText(text)}
+              autoCapitalize='none'
               value={searchText} 
               onSubmitEditing={onSearch} />
           </View>
