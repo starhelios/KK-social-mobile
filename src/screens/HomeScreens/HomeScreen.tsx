@@ -152,7 +152,7 @@ export const HomeScreen: React.FC = () => {
       }  
 
       // setFetchingData(true);
-      await searchHome(filterMinPrice, filterMaxPrice, filter.startDay, filter.endDay, filter.categoryName, searchText, filter.location)
+      await searchHome(filterMinPrice, filterMaxPrice, filter.startDay, filter.endDay, filter.categoryName, searchText.toLowerCase(), filter.location)
       .then(async (result: Promise<ISearchHome>) => {
         if ((await result).experiences.length == 0 && (await result).hosts.length == 0) {
           Alert.alert(ERROR_MESSAGE.UPDATE_SEARCH_CONDITION);
