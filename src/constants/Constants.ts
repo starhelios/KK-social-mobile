@@ -32,7 +32,9 @@ export const firebaseConfigure = () => {
     measurementId: 'G-ST4DFKQG9Q',
   };
   
-  firebase.initializeApp(firebaseConfig);
+  if (firebase.apps.length === 0) {
+    firebase.initializeApp(firebaseConfig);
+  }
 }
 
 // Login Type

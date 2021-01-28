@@ -32,8 +32,8 @@ export const BookingScreen: React.FC = () => {
   const [completedBookingList, setCompletedBookingList] = useState<IBooking[]>([]);
 
   useEffect(() => {
-    loadUpcomingBookingList();
-    setBookingList();
+    // loadUpcomingBookingList();
+    // setBookingList();
   }, [])
 
   useEffect(() => {
@@ -45,6 +45,10 @@ export const BookingScreen: React.FC = () => {
 
     var upcomingBookings: IBooking[] = [];
     var completedBookings: IBooking[] = [];
+
+    if (userInfo.bookingInfo == undefined || userInfo.bookingInfo == null) {
+      return;
+    }
 
     for (let reservationBooking of userInfo.bookingInfo) {
       for (let experience of experienceList) {

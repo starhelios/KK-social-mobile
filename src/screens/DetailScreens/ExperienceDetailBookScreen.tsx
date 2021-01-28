@@ -118,7 +118,14 @@ export const ExperienceDetailBookScreen: React.FC = ({route}) => {
 
   function onChooseDate(availableDate: IAvailableDate) {
     if (userInfo.id == '') {
-      navigate('ProfileTap');
+      Alert.alert('',
+        ERROR_MESSAGE.NEED_LOGIN_CONTINUE,
+        [
+          { text: "OK", onPress: () => navigate('ProfileTap') }
+        ],
+        { cancelable: false }
+      );
+
       return;
     } else if (guestCount == 0) {
       Alert.alert('', ERROR_MESSAGE.EMPTY_GUEST_COUNT);
