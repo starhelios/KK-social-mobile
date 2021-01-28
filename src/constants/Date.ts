@@ -13,7 +13,8 @@ export const convertStringToDate = (date: string) => {
     return null;
   } else {
     // return new Date(date);
-    return Moment(date).format("YYYY-MM-DD HH:mm:ss");
+    // return Moment(date).format("YYYY-MM-DD HH:mm:ss");
+    return Moment.utc(date).format("YYYY-MM-DD HH:mm:ss");
   }
 }
 

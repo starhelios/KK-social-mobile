@@ -93,6 +93,9 @@ export const ExperienceDetailBookScreen: React.FC = ({route}) => {
           const startTime = convertStringToDate(availableDate.day + ' ' + availableDate.startTime);
           const startDate = convertStringToDate(availableDate.day);
 
+          // console.log(availableDate.day + ' ' + availableDate.startTime + '----===---' + startTime);
+          // console.log(availableDate.day + ' ' + availableDate.startTime + '----===---' + startTime);
+
           if (startTime != null && startDate != null) {
             if (startTime >= from && startDate <= end) {
               availableDates.push(availableDate);
