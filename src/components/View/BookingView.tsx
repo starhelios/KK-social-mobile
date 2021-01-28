@@ -1,5 +1,6 @@
 import * as React from 'react';
 import {
+  Alert,
   Image,
   StyleSheet,
   TouchableWithoutFeedback,
@@ -14,8 +15,9 @@ import {
 } from '../../constants';
 import { IBooking } from '../../interfaces/app';
 import { ColorButton } from '../Button';
-import { BookingMainInfoView } from './BookingMainInfoView';
-import { BookingRatingInfoView } from './BookingRatingInfoView';
+import { BookingMainInfoView, BookingRatingInfoView } from '.';
+import { useUsers } from '../../hooks';
+import { useGlobalState } from '../../redux/Store';
 
 interface props {
   completed_booking: boolean;
@@ -23,6 +25,21 @@ interface props {
 }
 
 export const BookingView: React.FC<props> = (props: props) => {
+
+  const userInfo = useGlobalState('userInfo');
+  const booking = props.booking;
+  
+  const { joinBooking } = useUsers();
+
+  const onJoinExperience = async () => {
+    await joinBooking(userInfo.id, booking.id)
+    .then(() => {
+      Alert.alert('', 'You joined this booking.');
+    })
+    .catch(() => {
+    })
+  }
+
   return (
     <View style={styles.container}>
       <Image
@@ -39,7 +56,7 @@ export const BookingView: React.FC<props> = (props: props) => {
               <BookingMainInfoView booking={props.booking} completed_booking={props.completed_booking} />
 
               <View style={styles.join_container}>
-                <TouchableWithoutFeedback onPress={() => onJoinExperience()}>
+                <TouchableWithoutFeedback onPress={onJoinExperience}>
                   <View style={styles.join_button_container}>
                     <ColorButton title={'Join Experience'} backgroundColor={COLOR.redColor} color={COLOR.systemWhiteColor} />
                   </View>
@@ -55,9 +72,6 @@ export const BookingView: React.FC<props> = (props: props) => {
       
     </View>
   );
-
-  function onJoinExperience() {
-  }
 }
 
 const styles = StyleSheet.create({

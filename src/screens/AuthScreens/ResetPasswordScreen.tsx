@@ -117,13 +117,13 @@ export const ResetPasswordScreen: React.FC = () => {
     if (fetchingData == true) {
       return;
     } else if (newPassword == '') {
-      Alert.alert(ERROR_MESSAGE.EMPTY_NEW_PASSWORD);
+      Alert.alert('', ERROR_MESSAGE.EMPTY_NEW_PASSWORD);
       return;
     } else if (confirmPassword == '') {
-      Alert.alert(ERROR_MESSAGE.EMPTY_CONFIRM_PASSWORD);
+      Alert.alert('', ERROR_MESSAGE.EMPTY_CONFIRM_PASSWORD);
       return;
     } else if (newPassword != confirmPassword) {
-      Alert.alert(ERROR_MESSAGE.MISMATCH_PASSWORD);
+      Alert.alert('', ERROR_MESSAGE.MISMATCH_PASSWORD);
       return;
     }
     setFetchingData(true);
@@ -134,16 +134,16 @@ export const ResetPasswordScreen: React.FC = () => {
       if ((await result).error == false) {
         setNewPassword('');
         setConfirmPassword('');
-        Alert.alert((await result).message);
+        Alert.alert('', (await result).message);
       } else {
-        Alert.alert((await result).message);
+        Alert.alert('', (await result).message);
       }
     }).catch(async (error: Promise<IApiError>) => {
       setFetchingData(false);
-      Alert.alert((await error).error.message);
+      Alert.alert('', (await error).error.message);
     }).catch(() => {
       setFetchingData(false);
-      Alert.alert(ERROR_MESSAGE.RESET_PASSWORD_FAIL);
+      Alert.alert('', ERROR_MESSAGE.RESET_PASSWORD_FAIL);
     });
   }
 };

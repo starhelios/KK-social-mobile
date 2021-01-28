@@ -112,7 +112,7 @@ export const ExperienceDetailBookScreen: React.FC = ({route}) => {
 
   function onChooseDate(availableDate: IAvailableDate) {
     if (guestCount == 0) {
-      Alert.alert(ERROR_MESSAGE.EMPTY_GUEST_COUNT);
+      Alert.alert('', ERROR_MESSAGE.EMPTY_GUEST_COUNT);
       return;
     }
     

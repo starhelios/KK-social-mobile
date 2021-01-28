@@ -51,7 +51,7 @@ export const SelectDateRangeView: React.FC<props> = (props: props) => {
 
   const onFilter = () => {
     if (selectedFromDate != null && selectedEndDate == null) {
-      Alert.alert(ERROR_MESSAGE.EMPTY_END_DATE);
+      Alert.alert('', ERROR_MESSAGE.EMPTY_END_DATE);
       return;
     }
 

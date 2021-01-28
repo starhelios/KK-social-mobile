@@ -12,3 +12,4 @@ declare module 'react-native-stars';
 declare module 'react-native-user-defaults';
 declare module 'rn-range-slider';
 declare module 'react-native-image-base64';
+declare module '@agaweb/react-native-stripe';

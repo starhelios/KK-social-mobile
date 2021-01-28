@@ -197,7 +197,7 @@ export const BecomeAHostScreen: React.FC = () => {
       } catch (e) {
         fetchingData = false;
         setUploading(false);
-        Alert.alert(ERROR_MESSAGE.UPDATE_USER_PROFILE_FAIL);
+        Alert.alert('', ERROR_MESSAGE.UPDATE_USER_PROFILE_FAIL);
         return;
       }
     } else {
@@ -211,9 +211,8 @@ export const BecomeAHostScreen: React.FC = () => {
       fetchingData = false;
       setUploading(false);
       setLoginUser(await result);
-      Alert.alert(
+      Alert.alert('',
         SUCCESS_MESSAGE.USER_BECOM_A_HOST,
-        '',
         [
           { text: "OK", onPress: () => goBack() }
         ],
@@ -222,7 +221,7 @@ export const BecomeAHostScreen: React.FC = () => {
     }).catch(() => {
       fetchingData = false;
       setUploading(false);
-      Alert.alert(ERROR_MESSAGE.UPDATE_USER_PROFILE_FAIL);
+      Alert.alert('', ERROR_MESSAGE.UPDATE_USER_PROFILE_FAIL);
     });
   }  
 

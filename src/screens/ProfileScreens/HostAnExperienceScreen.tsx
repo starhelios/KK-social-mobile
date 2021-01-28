@@ -106,22 +106,22 @@ export const HostAnExperienceScreen: React.FC = () => {
     if (fetchingData == true) {
       return;
     } if (imageCount == 0) {
-      Alert.alert(ERROR_MESSAGE.EMPTY_EXPERIENCE_IMAGE);
+      Alert.alert('', ERROR_MESSAGE.EMPTY_EXPERIENCE_IMAGE);
       return;
     } else if (title == '') {
-      Alert.alert(ERROR_MESSAGE.EMPTY_EXPERIENCE_TITLE);
+      Alert.alert('', ERROR_MESSAGE.EMPTY_EXPERIENCE_TITLE);
       return;
     } else if (description == '') {
-      Alert.alert(ERROR_MESSAGE.EMPTY_EXPERIENCE_DESCRIPTION);
+      Alert.alert('', ERROR_MESSAGE.EMPTY_EXPERIENCE_DESCRIPTION);
       return;
     } else if (category == '') {
-      Alert.alert(ERROR_MESSAGE.EMPTY_EXPERIENCE_CATEGORY);
+      Alert.alert('', ERROR_MESSAGE.EMPTY_EXPERIENCE_CATEGORY);
       return;
     } else if (duration == '') {
-      Alert.alert(ERROR_MESSAGE.EMPTY_EXPERIENCE_DURRATION);
+      Alert.alert('', ERROR_MESSAGE.EMPTY_EXPERIENCE_DURRATION);
       return;
     } else if (price == '' || parseInt(price) == 0) {
-      Alert.alert(ERROR_MESSAGE.EMPTY_EXPERIENCE_PRICE);
+      Alert.alert('', ERROR_MESSAGE.EMPTY_EXPERIENCE_PRICE);
       return;
     }
 
@@ -141,9 +141,8 @@ export const HostAnExperienceScreen: React.FC = () => {
           type: ActionType.SET_NEED_RELOAD_DATA,
           payload: true,
         })
-        Alert.alert(
+        Alert.alert('',
           SUCCESS_MESSAGE.CREATE_EXPERIENCE_SUCCESS,
-          '',
           [
             { text: "OK", onPress: () => goBack() }
           ],
@@ -152,7 +151,7 @@ export const HostAnExperienceScreen: React.FC = () => {
       }).catch(() => {
         fetchingData = false;
         setUploading(false);
-        Alert.alert(ERROR_MESSAGE.CREATE_EXPERIENCE_FAIL);
+        Alert.alert('', ERROR_MESSAGE.CREATE_EXPERIENCE_FAIL);
       })
       return;
     }
@@ -221,7 +220,7 @@ export const HostAnExperienceScreen: React.FC = () => {
     var msDiff = endPickerDate.getTime() - startPickerDate.getTime();
     var minutes = Math.round(msDiff / (1000 * 60));
     if (minutes <= 0) {
-      Alert.alert(ERROR_MESSAGE.INVALID_EXPERIENCE_END_TIME);
+      Alert.alert('', ERROR_MESSAGE.INVALID_EXPERIENCE_END_TIME);
       return;
     }
 

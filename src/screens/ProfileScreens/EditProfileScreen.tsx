@@ -387,7 +387,7 @@ export const EditProfileScreen: React.FC = () => {
       } catch (e) {
         fetchingData = false;
         setUploading(false);
-        Alert.alert(ERROR_MESSAGE.UPDATE_USER_PROFILE_FAIL);
+        Alert.alert('', ERROR_MESSAGE.UPDATE_USER_PROFILE_FAIL);
         return;
       }
     } else {
@@ -401,11 +401,11 @@ export const EditProfileScreen: React.FC = () => {
       setUploading(false);
       fetchingData = false;
       setLoginUser(await result);
-      Alert.alert(SUCCESS_MESSAGE.UPDATE_USER_PROFILE_SUCCESS);
+      Alert.alert('', SUCCESS_MESSAGE.UPDATE_USER_PROFILE_SUCCESS);
     }).catch(() => {
       setUploading(false);
       fetchingData = false;
-      Alert.alert(ERROR_MESSAGE.UPDATE_USER_PROFILE_FAIL);
+      Alert.alert('', ERROR_MESSAGE.UPDATE_USER_PROFILE_FAIL);
     });
   }
 

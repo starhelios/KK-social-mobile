@@ -196,12 +196,12 @@ export const NotLoginProfileView: React.FC = () => {
             if ((await result) == true) {
               DefaultPreference.set(LOGIN_TYPE, GOOGLE_LOGIN).then(() => { }); 
             } else {
-              Alert.alert(ERROR_MESSAGE.LOGIN_FAIL);
+              Alert.alert('', ERROR_MESSAGE.LOGIN_FAIL);
             }
           }).catch(async (error: Promise<IApiError>) => {
-            Alert.alert((await error).error.message);
+            Alert.alert('', (await error).error.message);
           }).catch(() => {
-            Alert.alert(ERROR_MESSAGE.LOGIN_FAIL);
+            Alert.alert('', ERROR_MESSAGE.LOGIN_FAIL);
           });
         })
       });

@@ -55,13 +55,13 @@ export const SignUpScreen: React.FC = () => {
     if (fetchingData == true) {
       return;
     } if (fullName == '') {
-      Alert.alert(ERROR_MESSAGE.EMPTY_FULL_NAME);
+      Alert.alert('', ERROR_MESSAGE.EMPTY_FULL_NAME);
       return;
     } else if (emailAddress == '') {
-      Alert.alert(ERROR_MESSAGE.EMPTY_EMAIL_ADDRESS);
+      Alert.alert('', ERROR_MESSAGE.EMPTY_EMAIL_ADDRESS);
       return;
     } else if (password == '') {
-      Alert.alert(ERROR_MESSAGE.EMPTY_PASSWORD);
+      Alert.alert('', ERROR_MESSAGE.EMPTY_PASSWORD);
       return;
     }
     setFetchingData(true);
@@ -76,14 +76,14 @@ export const SignUpScreen: React.FC = () => {
           routes: [{ name: 'SignUpAddProfilePicture' }],
         });
       } else {
-        Alert.alert(ERROR_MESSAGE.REGISTER_FAIL);
+        Alert.alert('', ERROR_MESSAGE.REGISTER_FAIL);
       }
     }).catch(async (error: Promise<IApiError>) => {
       setFetchingData(false);
-      Alert.alert((await error).error.message);
+      Alert.alert('', (await error).error.message);
     }).catch(() => {
       setFetchingData(false);
-      Alert.alert(ERROR_MESSAGE.REGISTER_FAIL);
+      Alert.alert('', ERROR_MESSAGE.REGISTER_FAIL);
     });
   }
 

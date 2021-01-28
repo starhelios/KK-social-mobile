@@ -3,10 +3,13 @@ import axios from 'axios';
 // from app
 import { API_ENDPOINT, API_CONFIG } from '../constants';
 import { IApiSuccess } from '../interfaces/api';
-import { IBank, ICard, IFile, IUser, IUserList } from '../interfaces/app';
+import { IUser, IUserList } from '../interfaces/app';
 import { handleError } from '../utils';
+import { useAuthentication } from '.';
 
 export const useUsers = () => {
+
+  const { setLoginUser } = useAuthentication();
 
   const getUserList = async (
   ): Promise<any> => {
@@ -108,5 +111,57 @@ export const useUsers = () => {
     }
   };
 
-  return { getUserList, getUserInformation, deleteUser, updateUserInformation };
+  const reservationBooking = async (
+    userId: string,
+    experienceID: string,
+    dateAvaibilityID: string,
+    completed: boolean,
+  ): Promise<any> => {
+    const url = API_ENDPOINT.BOOKING_RESERVATION + '/' + userId;
+    let body = {
+      experienceID,
+      dateAvaibilityID,
+      completed,
+    };
+
+    try {
+      const { data } = await axios.post<any>(url, body, API_CONFIG);
+      const result: IUser = data.payload;
+      setLoginUser(result);
+      return Promise.resolve(result);
+    } catch (err) {
+      const apiError = handleError(err);
+      if (apiError) {
+        return Promise.reject(apiError);
+      } else {
+        return Promise.reject(null);
+      }
+    }
+  };
+
+  const joinBooking = async (
+    userId: string,
+    id: string,
+  ): Promise<any> => {
+    const url = API_ENDPOINT.BOOKING_JOIN + '/' + userId + '/' + id + '/';
+    let body = {
+    };
+    console.log(url);
+    try {
+      const { data } = await axios.post<any>(url, body, API_CONFIG);
+      const result: IUser = data.payload;
+      console.log(data);
+      setLoginUser(result);
+      return Promise.resolve(result);
+    } catch (err) {
+      const apiError = handleError(err);
+      if (apiError) {
+        return Promise.reject(apiError);
+      } else {
+        return Promise.reject(null);
+      }
+    }
+  };
+
+  return { getUserList, getUserInformation, deleteUser, updateUserInformation, reservationBooking, joinBooking };
 };

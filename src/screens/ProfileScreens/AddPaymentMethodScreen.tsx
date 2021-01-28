@@ -26,6 +26,9 @@ import {
   EMAIL_LOGIN, 
   ERROR_MESSAGE, 
   FONT, 
+  GetCardExpirationMonth, 
+  GetCardExpirationYear, 
+  GetCardNumber, 
   Icon_Back,
   LOGIN_STATE,
   MARGIN_TOP,
@@ -85,52 +88,54 @@ export const AddPaymentMethodScreen: React.FC = () => {
 
   const onAddPaymentMethod = () => {
     if (cardNumber.length != 19) {
-      Alert.alert(ERROR_MESSAGE.EMPTY_CARD_NUMBER);
+      Alert.alert('', ERROR_MESSAGE.EMPTY_CARD_NUMBER);
       return;
     } else if (cardExpiration.length != 5) {
-      Alert.alert(ERROR_MESSAGE.EMPTY_CARD_EXPIRATION);
+      Alert.alert('', ERROR_MESSAGE.EMPTY_CARD_EXPIRATION);
       return;
     } else if (cvc.length != 3) {
-      Alert.alert(ERROR_MESSAGE.EMPTY_CVC);
+      Alert.alert('', ERROR_MESSAGE.EMPTY_CVC);
       return;
     }
 
-    // const cardNumberValue = cardNumber.split(' ').join('');
-    const cardNumberValue = cardNumber;
-    const expMonth = cardExpiration.substring(0, 2);
-    const expYear = cardExpiration.substring(3, 5);
+    const expYear = GetCardExpirationYear(cardExpiration);
+    const expMonth = GetCardExpirationMonth(cardExpiration);
 
-    if (CheckCardExpirationDate(cardExpiration) == false) {
-      Alert.alert(ERROR_MESSAGE.WRONG_CARD_EXPIRATION);
+    if (CheckCardExpirationDate(expYear, expMonth) == false) {
+      Alert.alert('', ERROR_MESSAGE.WRONG_CARD_EXPIRATION);
       return;
     }
 
     const cardDetails = {
-      number: cardNumberValue,
-      expMonth: parseInt(expMonth),
-      expYear: parseInt(expYear),
+      number: cardNumber,
+      expMonth: expMonth,
+      expYear: expYear,
       cvc: cvc,
     }
 
     // const isCardValid = stripe.isCardValid(cardDetails);
     // if (isCardValid == false) {
-    //   Alert.alert(ERROR_MESSAGE.WRONG_CARD_NUMBER);
+    //   Alert.alert('', ERROR_MESSAGE.WRONG_CARD_NUMBER);
     //   return;
     // }
 
     let visaCards = creditCardType(cardNumber);
+    if (visaCards == null || visaCards == undefined || visaCards.length == 0) {
+      Alert.alert('', ERROR_MESSAGE.WRONG_CARD_NUMBER);
+      return;
+    }
     let cardType = visaCards[0].niceType;
 
     let paymentMethodList = userInfo.paymentInfo;
     let newPaymentMethod: ICard = {
       cardType: cardType,
-      cardNumber: cardNumberValue,
+      cardNumber: cardNumber,
       cardExpiryDate: cardExpiration,
       cvc: cvc,
     };
     let isAdded = false;
     for (let paymentMethod of userInfo.paymentInfo) {
-      if (paymentMethod.cardNumber == cardNumberValue) {
+      if (paymentMethod.cardNumber == cardNumber) {
         isAdded = true;
         break;
       }
@@ -142,18 +147,17 @@ export const AddPaymentMethodScreen: React.FC = () => {
       setLoginUser(userInfo);
 
       if (userInfo.id != '') {
-        addCard(userInfo.id, cardType, cardNumberValue, cardExpiration, cvc)
+        addCard(userInfo.id, cardType, cardNumber, cardExpiration, cvc)
         .then((result: IApiSuccess) => {
-          Alert.alert(
+          Alert.alert('',
             SUCCESS_MESSAGE.ADD_CARD_SUCCESS,
-            '',
             [
               { text: "OK", onPress: () => goBack() }
             ],
             { cancelable: false }
           );
         }).catch(() => {
-          Alert.alert(ERROR_MESSAGE.ADD_PAYMENT_METHOD_FAIL);
+          Alert.alert('', ERROR_MESSAGE.ADD_PAYMENT_METHOD_FAIL);
         });
       }
     }
@@ -168,7 +172,7 @@ export const AddPaymentMethodScreen: React.FC = () => {
     //   setLoginUser(await result);
     //   goBack();
     // }).catch(() => {
-    //   Alert.alert(ERROR_MESSAGE.ADD_PAYMENT_METHOD_FAIL);
+    //   Alert.alert('', ERROR_MESSAGE.ADD_PAYMENT_METHOD_FAIL);
     // });
 
     // stripe.confirmPayment(STRIPE_SECRET_KEY, cardDetails)
@@ -244,7 +248,7 @@ export const AddPaymentMethodScreen: React.FC = () => {
 
                     <TouchableWithoutFeedback onPress={onAddPaymentMethod}>
                       <View style={styles.bottom_button}>
-                        <ColorButton title={'Confirm & Pay'} backgroundColor={COLOR.whiteColor} color={COLOR.blackColor} />
+                        <ColorButton title={'Add Card'} backgroundColor={COLOR.whiteColor} color={COLOR.blackColor} />
                       </View>
                     </TouchableWithoutFeedback>
                   </View>

@@ -1,4 +1,5 @@
 import { ICard, IBank } from ".";
+import { IReservationBooking } from "./ReservationBooking";
 
 export interface IUser {
 	id: string,
@@ -15,4 +16,5 @@ export interface IUser {
 
 	bankInfo: IBank[],
 	paymentInfo: ICard[],
+	bookingInfo: IReservationBooking[],
 }

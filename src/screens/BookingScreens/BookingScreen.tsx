@@ -20,6 +20,7 @@ import { useGlobalState } from '../../redux/Store';
 
 export const BookingScreen: React.FC = () => {
   
+  const userInfo = useGlobalState('userInfo');
   const hostList = useGlobalState('hostList');
   const experienceList = useGlobalState('experienceList');
   const { navigate, goBack } = useNavigation();
@@ -37,62 +38,35 @@ export const BookingScreen: React.FC = () => {
 
   useEffect(() => {
     setBookingList();
-  }, [experienceList]);
+  }, [experienceList, userInfo]);
 
   function setBookingList() {
     let currentDate = new Date();
 
     var upcomingBookings: IBooking[] = [];
     var completedBookings: IBooking[] = [];
-    for (let i = 0; i < experienceList.length; i++) {
-      let experience = experienceList[i];
-      for (let j = 0; j < experience.dateAvaibility.length; j++) {
-        let booking = experience.dateAvaibility[j];
-        let startDateString = booking.day + " " + booking.startTime;
-        // let startDate = Moment(startDateString).format('MMMM D, YYYY hh:mm a');
-        let startDate = new Date(startDateString);
-        if (startDate > currentDate) {
-          var host: IUser | null = null;
-          for (let k = 0; k < hostList.length; k++) {
-            if (hostList[k].id == experience.userId) {
-              host = hostList[k];
-              break;
-            }
-          }
-          var newBooking: IBooking = {
-            id: 0,
-            image: experience.images.length > 0 ? experience.images[0] : '',
-            experience_icon: '',
-            experience: experience.title,
-            date: booking.day,
-            hour: booking.startTime,
-            duration: experience.duration,
-            rating: 0,
-            is_host: false,
-            is_joined: false,
-            host: host,
-            paid: null,
-            receive: null,
-            completed: null,
-            show_date: null,
-          };
-          upcomingBookings.push(newBooking);
+
+    for (let reservationBooking of userInfo.bookingInfo) {
+      for (let experience of experienceList) {
+        if (reservationBooking.experienceID != experience.id) {
           continue;
         }
 
-        let endDateString = booking.day + " " + booking.endTime;
-        // let endDate = Moment(endDateString).format('MMMM D, YYYY hh:mm a');
-        let endDate = new Date(endDateString);
-        if (endDate < currentDate) {
-          var host: IUser | null = null;
-          for (let k = 0; k < hostList.length; k++) {
-            if (hostList[k].id == experience.userId) {
-              host = hostList[k];
+        for (let booking of experience.dateAvaibility) {
+          if (reservationBooking.dateAvaibilityID != booking._id) {
+            continue;
+          }
+
+          var experienceHost: IUser | null = null;
+          for (let host of hostList) {
+            if (host.id == experience.userId) {
+              experienceHost = host;
               break;
             }
           }
+  
           var newBooking: IBooking = {
-            id: 0,
+            id: reservationBooking._id,
             image: experience.images.length > 0 ? experience.images[0] : '',
             experience_icon: '',
             experience: experience.title,
@@ -102,14 +76,85 @@ export const BookingScreen: React.FC = () => {
             rating: 0,
             is_host: false,
             is_joined: false,
-            host: host,
+            host: experienceHost,
             paid: null,
             receive: null,
             completed: null,
             show_date: null,
           };
-          completedBookings.push(newBooking);
-          continue;
+          if (reservationBooking.completed == false) {
+            upcomingBookings.push(newBooking);
+          } else {
+            completedBookings.push(newBooking);
+          }
+  
+  
+          /*
+          let startDateString = booking.day + " " + booking.startTime;
+          // let startDate = Moment(startDateString).format('MMMM D, YYYY hh:mm a');
+          let startDate = new Date(startDateString);
+          if (startDate > currentDate) {
+            var host: IUser | null = null;
+            for (let k = 0; k < hostList.length; k++) {
+              if (hostList[k].id == experience.userId) {
+                host = hostList[k];
+                break;
+              }
+            }
+  
+            var newBooking: IBooking = {
+              id: 0,
+              image: experience.images.length > 0 ? experience.images[0] : '',
+              experience_icon: '',
+              experience: experience.title,
+              date: booking.day,
+              hour: booking.startTime,
+              duration: experience.duration,
+              rating: 0,
+              is_host: false,
+              is_joined: false,
+              host: host,
+              paid: null,
+              receive: null,
+              completed: null,
+              show_date: null,
+            };
+            upcomingBookings.push(newBooking);
+            continue;
+          }
+  
+          let endDateString = booking.day + " " + booking.endTime;
+          // let endDate = Moment(endDateString).format('MMMM D, YYYY hh:mm a');
+          let endDate = new Date(endDateString);
+          if (endDate < currentDate) {
+            var host: IUser | null = null;
+            for (let k = 0; k < hostList.length; k++) {
+              if (hostList[k].id == experience.userId) {
+                host = hostList[k];
+                break;
+              }
+            }
+            var newBooking: IBooking = {
+              id: 0,
+              image: experience.images.length > 0 ? experience.images[0] : '',
+              experience_icon: '',
+              experience: experience.title,
+              date: booking.day,
+              hour: booking.startTime,
+              duration: experience.duration,
+              rating: 0,
+              is_host: false,
+              is_joined: false,
+              host: host,
+              paid: null,
+              receive: null,
+              completed: null,
+              show_date: null,
+            };
+            completedBookings.push(newBooking);
+            continue;
+          }
+          */
         }
       }
     }

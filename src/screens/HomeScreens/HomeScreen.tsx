@@ -155,7 +155,7 @@ export const HomeScreen: React.FC = () => {
       await searchHome(filterMinPrice, filterMaxPrice, filter.startDay, filter.endDay, filter.categoryName, searchText.toLowerCase(), filter.location)
       .then(async (result: Promise<ISearchHome>) => {
         if ((await result).experiences.length == 0 && (await result).hosts.length == 0) {
-          Alert.alert(ERROR_MESSAGE.UPDATE_SEARCH_CONDITION);
+          Alert.alert('', ERROR_MESSAGE.UPDATE_SEARCH_CONDITION);
         }
 
         setExperienceList((await result).experiences);
@@ -165,7 +165,7 @@ export const HomeScreen: React.FC = () => {
       }).catch(() => {
         setExperienceList([]);
         setHostList([]);
-        Alert.alert(ERROR_MESSAGE.UPDATE_SEARCH_CONDITION);
+        Alert.alert('', ERROR_MESSAGE.UPDATE_SEARCH_CONDITION);
         // setFetchingData(false);
       });
     }

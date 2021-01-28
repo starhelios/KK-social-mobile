@@ -16,6 +16,7 @@ const initialState: State = {
     createdAt: '',
     bankInfo: [],
     paymentInfo: [],
+    bookingInfo: [],
   },
 
   accessToken: {

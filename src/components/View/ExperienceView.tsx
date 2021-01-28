@@ -45,7 +45,7 @@ export const ExperienceView: React.FC<props> = (props: props) => {
       getHostDetailInformation(await experienceDetail);
     }).catch(() => {
       props.onFetchingData(false);
-      Alert.alert(ERROR_MESSAGE.GET_EXPERIENCE_DETAIL_FAIL);
+      Alert.alert('', ERROR_MESSAGE.GET_EXPERIENCE_DETAIL_FAIL);
     });
   }
 
@@ -56,7 +56,7 @@ export const ExperienceView: React.FC<props> = (props: props) => {
       navigate('ExperienceDetail' , {experienceDetail: experienceDetail, hostDetail: hostDetail});
     }).catch(() => {
       props.onFetchingData(false);
-      Alert.alert(ERROR_MESSAGE.GET_HOST_DETAIL_FAIL);
+      Alert.alert('', ERROR_MESSAGE.GET_HOST_DETAIL_FAIL);
     });
   }
   

@@ -41,4 +41,5 @@ export const ERROR_MESSAGE = {
   EMPTY_EXPERIENCE_PRICE: 'Please input epxerience price.',
   CREATE_EXPERIENCE_FAIL: 'Failed to create an experience.',
   INVALID_EXPERIENCE_END_TIME: 'The end time cannot be earlier than the start time.',
+  RESERVATION_EXPERIENCE_FAIL: 'This experience was not reserved. Please try again.',
 };

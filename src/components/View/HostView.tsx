@@ -63,7 +63,7 @@ export const HostView: React.FC<props> = (props: props) => {
       navigate('HostDetail', {hostDetail: hostDetail});
     }).catch(() => {
       props.onFetchingData(false);
-      Alert.alert(ERROR_MESSAGE.GET_HOST_DETAIL_FAIL);
+      Alert.alert('', ERROR_MESSAGE.GET_HOST_DETAIL_FAIL);
     });
   }
 }

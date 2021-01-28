@@ -1,6 +1,6 @@
 import { Alert, Share } from 'react-native';
 import { LocaleConfig } from 'react-native-calendars';
-// import stripe from 'react-native-stripe-payments';
+import stripe from '@agaweb/react-native-stripe';
 import Moment from 'moment';
 import firebase from 'firebase';
 
@@ -17,7 +17,7 @@ import { ICard } from '../interfaces/app';
 export const intialization = () => {
   googleConfigure();
   firebaseConfigure();
-  // stripe.setOptions({ publishingKey: STRIPE_PUBLISHABLE_KEY });
+  stripe.initModule(STRIPE_PUBLISHABLE_KEY);
 
   Moment.locale('en');
 
@@ -79,7 +79,7 @@ export const ShowShareView = async (title: string, url: string) => {
     } else if (result.action === Share.dismissedAction) {
     }
   } catch (error) {
-    Alert.alert(error.message);
+    Alert.alert('', error.message);
   }
 }
 
@@ -110,13 +110,10 @@ export const GetCardVisibleName = (card: ICard) => {
   return cardName;
 }
 
-export const CheckCardExpirationDate = (cardExpiryDate: string) => {
-  if (cardExpiryDate.length != 5) {
+export const CheckCardExpirationDate = (expYear: number, expMonth: number) => {
+  if (expYear == 0 || expMonth == 0) {
     return false;
   }
-
-  const expMonth = cardExpiryDate.substring(0, 2);
-  const expYear = cardExpiryDate.substring(3, 5);
 
   const today = new Date();
   const expiryDay = new Date(`20${expYear}-${expMonth}-01`);
@@ -148,4 +145,27 @@ export const UploadImageToFirebase = async (filename: string, uploadUri: string)
     } catch (e) {
       return Promise.reject(e);
     }
+}
+
+export const GetCardExpirationMonth = (cardExpirationDate: string) => {
+  if (cardExpirationDate.length < 2) {
+    return 0;
+  }
+  return parseInt(cardExpirationDate.substring(0, 2));
+}
+
+export const GetCardExpirationYear = (cardExpirationDate: string) => {
+  if (cardExpirationDate.length < 5) {
+    return 0;
+  }
+  return parseInt(cardExpirationDate.substring(3, 5));
+}
+
+export const GetCardNumber = (number: string) => {
+  const strCardNumber = number.split(' ').join('');
+  if (strCardNumber.length != 16) {
+    return '';
+  }
+  const cardNumber = `${strCardNumber.substring(0, 4)} ${strCardNumber.substring(4, 8)} ${strCardNumber.substring(8, 12)} ${strCardNumber.substring(12, 16)}`;
+  return cardNumber;
 }
