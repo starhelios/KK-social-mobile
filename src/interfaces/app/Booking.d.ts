@@ -1,7 +1,7 @@
 import { IUser } from ".";
 
 export interface IBooking {
-	id: number;
+	id: string;
 	image: string;
 	experience_icon: string;
 	experience: string;

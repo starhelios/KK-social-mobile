@@ -130,10 +130,10 @@ export const LogInScreen: React.FC = () => {
     if (fetchingData == true) {
       return;
     } else if (emailAddress == '') {
-      Alert.alert(ERROR_MESSAGE.EMPTY_EMAIL_ADDRESS);
+      Alert.alert('', ERROR_MESSAGE.EMPTY_EMAIL_ADDRESS);
       return;
     } else if (password == '') {
-      Alert.alert(ERROR_MESSAGE.EMPTY_PASSWORD);
+      Alert.alert('', ERROR_MESSAGE.EMPTY_PASSWORD);
       return;
     }
     setFetchingData(true);
@@ -145,14 +145,14 @@ export const LogInScreen: React.FC = () => {
         saveUserInfo();
         goBack();
       } else {
-        Alert.alert(ERROR_MESSAGE.LOGIN_FAIL);
+        Alert.alert('', ERROR_MESSAGE.LOGIN_FAIL);
       }
     }).catch(async (error: Promise<IApiError>) => {
       setFetchingData(false);
-      Alert.alert((await error).error.message);
+      Alert.alert('', (await error).error.message);
     }).catch(() => {
       setFetchingData(false);
-      Alert.alert(ERROR_MESSAGE.LOGIN_FAIL);
+      Alert.alert('', ERROR_MESSAGE.LOGIN_FAIL);
     });
   }
 

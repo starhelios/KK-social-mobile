@@ -13,6 +13,7 @@
     "build:ios": "react-native bundle --entry-file='index.js' --bundle-output='./ios/main.jsbundle' --dev=false --platform='ios'"
   },
   "dependencies": {
+    "@agaweb/react-native-stripe": "^0.3.4",
     "@invertase/react-native-apple-authentication": "^2.1.0",
     "@react-native-community/datetimepicker": "^3.0.9",
     "@react-native-community/google-signin": "^5.0.0",
@@ -63,7 +64,6 @@
     "react-native-snap-carousel": "^3.9.1",
     "react-native-splash-screen": "^3.2.0",
     "react-native-stars": "^1.2.2",
-    "react-native-stripe-payments": "^1.0.6",
     "react-native-svg": "^12.1.0",
     "react-native-tag-selector": "^0.0.3",
     "react-native-tags-input": "^1.0.10",

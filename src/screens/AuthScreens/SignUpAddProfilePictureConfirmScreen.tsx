@@ -68,12 +68,12 @@ export const SignUpAddProfilePictureConfirmScreen: React.FC = ({route}) => {
             });
           }).catch(() => {
             setUploading(false);
-            Alert.alert(ERROR_MESSAGE.UPDATE_USER_PROFILE_FAIL);
+            Alert.alert('', ERROR_MESSAGE.UPDATE_USER_PROFILE_FAIL);
           });
         });
     } catch (e) {
       setUploading(false);
-      Alert.alert(ERROR_MESSAGE.UPDATE_USER_PROFILE_FAIL);
+      Alert.alert('', ERROR_MESSAGE.UPDATE_USER_PROFILE_FAIL);
     }
   }
 

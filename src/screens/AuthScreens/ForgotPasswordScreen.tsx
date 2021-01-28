@@ -101,7 +101,7 @@ export const ForgotPasswordScreen: React.FC = () => {
     if (fetchingData == true) {
       return;
     } else if (emailAddress == '') {
-      Alert.alert(ERROR_MESSAGE.EMPTY_EMAIL_ADDRESS);
+      Alert.alert('', ERROR_MESSAGE.EMPTY_EMAIL_ADDRESS);
       return;
     }
     setFetchingData(true);
@@ -110,16 +110,16 @@ export const ForgotPasswordScreen: React.FC = () => {
     .then(async (result: Promise<IApiSuccessMessage>) => {
       setFetchingData(false);
       if ((await result).error == false) {
-        Alert.alert((await result).message);
+        Alert.alert('', (await result).message);
       } else {
-        Alert.alert((await result).message);
+        Alert.alert('', (await result).message);
       }
     }).catch(async (error: Promise<IApiError>) => {
       setFetchingData(false);
-      Alert.alert((await error).error.message);
+      Alert.alert('', (await error).error.message);
     }).catch(() => {
       setFetchingData(false);
-      Alert.alert(ERROR_MESSAGE.FORGOT_PASSWORD_FAIL);
+      Alert.alert('', ERROR_MESSAGE.FORGOT_PASSWORD_FAIL);
     });
   }
 };

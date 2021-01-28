@@ -9,10 +9,9 @@ import {
   Alert,
 } from 'react-native';
 import { Container } from 'native-base';
-import { useEffect, useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { SvgXml } from 'react-native-svg';
-import stripe from 'react-native-stripe-payments';
+import stripe from '@agaweb/react-native-stripe';
 
 // from app
 import { 
@@ -22,25 +21,33 @@ import {
   CustomText, 
   ERROR_MESSAGE, 
   FONT, 
+  GetCardExpirationMonth, 
+  GetCardExpirationYear, 
+  GetCardNumber, 
   GetCardVisibleName, 
-  GetVisibleDateString, 
   Icon_Back_Black,
   Icon_Experience_Rating,
   Img_Experience,
   MARGIN_TOP,
-  STRIPE_SECRET_KEY,
+  SUCCESS_MESSAGE,
   viewportWidth,
 } from '../../constants';
 import { ColorButton, TitleArrowButton } from '../../components/Button';
-import { IAvailableDate, ICard, IExperience, IHostDetail, IUser } from '../../interfaces/app';
+import { IAvailableDate, ICard, IExperience, IHostDetail, IStripePaymentIntent, IUser } from '../../interfaces/app';
 import { useGlobalState } from '../../redux/Store';
+import { StripePayment } from '../../constants/StripePayment';
+import { usePayments, useUsers } from '../../hooks';
 
 
 export const ExperienceDetailConfirmPayScreen: React.FC = ({route}) => {
 
+  const userInfo: IUser = useGlobalState('userInfo');
   const selectedCard: ICard = useGlobalState('selectedCard');
 
   const { goBack, navigate } = useNavigation();
+  const { getClientSecretForConfirmPayment } = StripePayment();
+  const { saveTransation } = usePayments();
+  const { reservationBooking } = useUsers();
 
   const experience: IExperience = route.params.experience;
   const availableDate: IAvailableDate = route.params.availableDate;
@@ -48,46 +55,78 @@ export const ExperienceDetailConfirmPayScreen: React.FC = ({route}) => {
   const hostDetail: IHostDetail = route.params.hostDetail;
   const host: IUser = hostDetail.user;
 
-  const onConfirmPay = () => {
+  let fetching = false;
+
+  const onConfirmPay = async () => {
+    if (fetching == true) {
+      return;
+    }
+
     if (selectedCard.cardType == '' || selectedCard.cardNumber == '') {
-      Alert.alert(ERROR_MESSAGE.UNSELECT_CARD);
-      return;
-    // } else if (host.bankInfo == undefined || host.bankInfo.length == 0) {
-    //   Alert.alert(ERROR_MESSAGE.HOST_HAVE_NO_BANK);
-    //   return;
-    } else if (CheckCardExpirationDate(selectedCard.cardExpiryDate) == false) {
-      Alert.alert(ERROR_MESSAGE.PASSED_CARD_EXPIRATION);
+      Alert.alert('', ERROR_MESSAGE.UNSELECT_CARD);
       return;
     }
 
-    const expMonth = selectedCard.cardExpiryDate.substring(0, 2);
-    const expYear = selectedCard.cardExpiryDate.substring(3, 5);
+    const expYear = GetCardExpirationYear(selectedCard.cardExpiryDate);
+    const expMonth = GetCardExpirationMonth(selectedCard.cardExpiryDate);
 
-    if (CheckCardExpirationDate(selectedCard.cardExpiryDate) == false) {
-      Alert.alert(ERROR_MESSAGE.WRONG_CARD_EXPIRATION);
+    if (CheckCardExpirationDate(expYear, expMonth) == false) {
+      Alert.alert('', ERROR_MESSAGE.PASSED_CARD_EXPIRATION);
       return;
     }
 
-    const cardDetails = {
-      number: selectedCard.cardNumber,
-      expMonth: parseInt(expMonth),
-      expYear: parseInt(expYear),
+    const cardParams = {
+      number: GetCardNumber(selectedCard.cardNumber),
+      expMonth: expMonth,
+      expYear: expYear,
       cvc: selectedCard.cvc,
-    }
+    };
 
-    const isCardValid = stripe.isCardValid(cardDetails);
-    if (isCardValid == false) {
-      Alert.alert(ERROR_MESSAGE.WRONG_CARD_NUMBER);
-      return;
-    }
+    fetching = true;
+    await getClientSecretForConfirmPayment('', Math.floor(experience.price * guestCount))
+    .then(async (result: Promise<IStripePaymentIntent>) => {
+      const clientSecret = (await result).client_secret;
+      const paymentID = (await result).id;
+      const { data } = stripe.confirmPaymentWithCard(clientSecret, cardParams, false)
+      .then(() => {
+        fetching = false;
+        console.log('Paid');
 
-    stripe.confirmPayment(STRIPE_SECRET_KEY, cardDetails)
-    .then(result => {
-      console.log(result);
+        // saveTransation(clientSecret, paymentID, userInfo.id, experience.id)
+        // .then(() => {
+        //   console.log('saveTransation success');
+        // })
+        // .catch(() => {
+        // })
+
+        reservationBooking(userInfo.id, experience.id, availableDate._id, false)
+        .then(() => {
+          console.log('reservationBooking success');
+        })
+        .catch(() => {
+        })
+
+        Alert.alert('',
+          SUCCESS_MESSAGE.RESERVATION_BOOKING_SUCCESS,
+          [
+            { text: "OK", onPress: () => goBack() }
+          ],
+          { cancelable: false }
+        );
+      })
+      .catch((err) => {
+        fetching = false;
+        Alert.alert('', err);
+      });
     })
-    .catch(err => {
-      console.log(err);
-    });
+    .catch(async (error: Promise<string>) => {
+      fetching = false;
+      Alert.alert('', await error);
+    })
+    .catch(() => {
+      fetching = false;
+      Alert.alert('', ERROR_MESSAGE.RESERVATION_EXPERIENCE_FAIL);
+    })
   }
 
   return (
@@ -140,7 +179,7 @@ export const ExperienceDetailConfirmPayScreen: React.FC = ({route}) => {
           <View style={styles.line} />
 
           <CustomText style={styles.info_title}>Payment</CustomText>
-          <TouchableWithoutFeedback onPress={() => navigate('PaymentOptions') }>
+          <TouchableWithoutFeedback onPress={() => navigate('PaymentOptions', {experience: experience, availableDate: availableDate, guestCount: guestCount}) }>
             <View style={{marginLeft: 24, width: viewportWidth - 48, marginTop: 16}}>
               <TitleArrowButton title={'Credit Card'} name={GetCardVisibleName(selectedCard)} showArrow={true} white_color={false} />
             </View>

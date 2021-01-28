@@ -130,16 +130,16 @@ export const ChangePasswordScreen: React.FC = () => {
     if (fetchingData == true) {
       return;
     } else if (currentPassword == '') {
-      Alert.alert(ERROR_MESSAGE.EMPTY_CURRENT_PASSWORD);
+      Alert.alert('', ERROR_MESSAGE.EMPTY_CURRENT_PASSWORD);
       return;
     } else if (newPassword == '') {
-      Alert.alert(ERROR_MESSAGE.EMPTY_NEW_PASSWORD);
+      Alert.alert('', ERROR_MESSAGE.EMPTY_NEW_PASSWORD);
       return;
     } else if (confirmPassword == '') {
-      Alert.alert(ERROR_MESSAGE.EMPTY_CONFIRM_PASSWORD);
+      Alert.alert('', ERROR_MESSAGE.EMPTY_CONFIRM_PASSWORD);
       return;
     } else if (newPassword != confirmPassword) {
-      Alert.alert(ERROR_MESSAGE.MISMATCH_PASSWORD);
+      Alert.alert('', ERROR_MESSAGE.MISMATCH_PASSWORD);
       return;
     }
     setFetchingData(true);
@@ -151,16 +151,16 @@ export const ChangePasswordScreen: React.FC = () => {
         setCurrentPassword('');
         setNewPassword('');
         setConfirmPassword('');
-        Alert.alert((await result).error.message);
+        Alert.alert('', (await result).error.message);
       } else {
-        Alert.alert((await result).error.message);
+        Alert.alert('', (await result).error.message);
       }
     }).catch(async (error: Promise<IApiError>) => {
       setFetchingData(false);
-      Alert.alert((await error).error.message);
+      Alert.alert('', (await error).error.message);
     }).catch(() => {
       setFetchingData(false);
-      Alert.alert(ERROR_MESSAGE.CHANGE_PASSWORD_FAIL);
+      Alert.alert('', ERROR_MESSAGE.CHANGE_PASSWORD_FAIL);
     });
   }
 };

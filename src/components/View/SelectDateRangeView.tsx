@@ -51,9 +51,12 @@ export const SelectDateRangeView: React.FC<props> = (props: props) => {
 
   const onFilter = () => {
     if (selectedFromDate != null && selectedEndDate == null) {
-      Alert.alert(ERROR_MESSAGE.EMPTY_END_DATE);
+      Alert.alert('', ERROR_MESSAGE.EMPTY_END_DATE);
       return;
     }
+
+    console.log(selectedFromDate);
+    console.log(convertDateToDateFormat(selectedFromDate, 'YYYY-MM-DD HH:mm:ss'));
 
     props.onSelectDate(
       selectedFromDate != null ? convertDateToDateFormat(selectedFromDate, 'YYYY-MM-DD') : '', 

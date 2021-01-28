@@ -8,6 +8,7 @@ export * from './useUsers';
 export * from './useTutorials';
 export * from './useSearch';
 export * from './useCard';
+export * from './usePayments';
 
 // export * from './useUpcomingBookings';
 // export * from './useCompletedBookings';
