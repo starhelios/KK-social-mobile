@@ -54,6 +54,10 @@ export const ConfirmedBookingsScreen: React.FC = () => {
 
     var upcomingBookings: IBooking[] = [];
     var completedBookings: IBooking[] = [];
+
+    if (userInfo.bookingInfo == undefined || userInfo.bookingInfo == null) {
+      return;
+    }
     
     for (let reservationBooking of userInfo.bookingInfo) {
       for (let experience of experienceList) {

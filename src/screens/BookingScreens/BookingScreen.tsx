@@ -33,7 +33,7 @@ export const BookingScreen: React.FC = () => {
 
   useEffect(() => {
     // loadUpcomingBookingList();
-    // setBookingList();
+    setBookingList();
   }, [])
 
   useEffect(() => {
