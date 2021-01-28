@@ -1,6 +1,6 @@
 import { Alert, Share } from 'react-native';
 import { LocaleConfig } from 'react-native-calendars';
-import stripe from 'react-native-stripe-payments';
+// import stripe from 'react-native-stripe-payments';
 import Moment from 'moment';
 import firebase from 'firebase';
 
@@ -17,7 +17,7 @@ import { ICard } from '../interfaces/app';
 export const intialization = () => {
   googleConfigure();
   firebaseConfigure();
-  stripe.setOptions({ publishingKey: STRIPE_PUBLISHABLE_KEY });
+  // stripe.setOptions({ publishingKey: STRIPE_PUBLISHABLE_KEY });
 
   Moment.locale('en');
 

@@ -12,7 +12,7 @@ import { Container } from 'native-base';
 import { useEffect, useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { SvgXml } from 'react-native-svg';
-import stripe from 'react-native-stripe-payments';
+// import stripe from 'react-native-stripe-payments';
 
 // from app
 import { 
@@ -75,19 +75,19 @@ export const ExperienceDetailConfirmPayScreen: React.FC = ({route}) => {
       cvc: selectedCard.cvc,
     }
 
-    const isCardValid = stripe.isCardValid(cardDetails);
-    if (isCardValid == false) {
-      Alert.alert(ERROR_MESSAGE.WRONG_CARD_NUMBER);
-      return;
-    }
+    // const isCardValid = stripe.isCardValid(cardDetails);
+    // if (isCardValid == false) {
+    //   Alert.alert(ERROR_MESSAGE.WRONG_CARD_NUMBER);
+    //   return;
+    // }
 
-    stripe.confirmPayment(STRIPE_SECRET_KEY, cardDetails)
-    .then(result => {
-      console.log(result);
-    })
-    .catch(err => {
-      console.log(err);
-    });
+    // stripe.confirmPayment(STRIPE_SECRET_KEY, cardDetails)
+    // .then(result => {
+    //   console.log(result);
+    // })
+    // .catch(err => {
+    //   console.log(err);
+    // });
   }
 
   return (
