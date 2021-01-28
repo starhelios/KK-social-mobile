@@ -33,10 +33,12 @@ import {
 } from '../../constants';
 import { IAvailableDate, IExperience, IHostDetail, IUser } from '../../interfaces/app';
 import { ExperienceDetailBookView, SelectDateRangeView } from '../../components/View';
+import { useGlobalState } from '../../redux/Store';
 
 
 export const ExperienceDetailBookScreen: React.FC = ({route}) => {
 
+  const userInfo = useGlobalState('userInfo');
   const experience: IExperience = route.params.experience;
   const hostDetail: IHostDetail = route.params.hostDetail;
   const host: IUser = hostDetail.user;
@@ -53,11 +55,14 @@ export const ExperienceDetailBookScreen: React.FC = ({route}) => {
   useEffect(() => {
     var availableDates: IAvailableDate[] = [];
     var beforeDate = '';
+
+    const today = convertStringToDate(new Date().toLocaleDateString());
+
     for (let i = 0; i < experience.dateAvaibility.length; i++) {
       var availableDate = experience.dateAvaibility[i];
 
       const startTime = convertStringToDate(availableDate.day + ' ' + availableDate.startTime);
-      if (startTime == null || startTime < convertDateToMomentDateFormat(new Date(), 'YYYY-MM-DD HH:mm:ss')) {
+      if (startTime == null || today == null || startTime < today) {
         continue;
       }
 
@@ -71,9 +76,11 @@ export const ExperienceDetailBookScreen: React.FC = ({route}) => {
     }
     setAllAvailableDates(availableDates);
     setAvailableDates(availableDates);
-
-    onFilterSelectDate(selectedFromDate, selectedEndDate);
   }, []);
+
+  useEffect(() => {
+    onFilterSelectDate(selectedFromDate, selectedEndDate);
+  }, [allAvailableDates]);
 
   const onFilterSelectDate = (fromDate: string, endDate: string) => {
     setSelectedFromDate(fromDate);
@@ -88,13 +95,9 @@ export const ExperienceDetailBookScreen: React.FC = ({route}) => {
 
       if (from != null && end != null) {
         var availableDates: IAvailableDate[] = [];
-        for (let i = 0; i < experience.dateAvaibility.length; i++) {
-          var availableDate = experience.dateAvaibility[i];
+        for (let availableDate of allAvailableDates) {
           const startTime = convertStringToDate(availableDate.day + ' ' + availableDate.startTime);
           const startDate = convertStringToDate(availableDate.day);
-
-          // console.log(availableDate.day + ' ' + availableDate.startTime + '----===---' + startTime);
-          // console.log(availableDate.day + ' ' + availableDate.startTime + '----===---' + startTime);
 
           if (startTime != null && startDate != null) {
             if (startTime >= from && startDate <= end) {
@@ -114,7 +117,10 @@ export const ExperienceDetailBookScreen: React.FC = ({route}) => {
   }
 
   function onChooseDate(availableDate: IAvailableDate) {
-    if (guestCount == 0) {
+    if (userInfo.id == '') {
+      navigate('ProfileTap');
+      return;
+    } else if (guestCount == 0) {
       Alert.alert('', ERROR_MESSAGE.EMPTY_GUEST_COUNT);
       return;
     }

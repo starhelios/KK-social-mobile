@@ -55,9 +55,6 @@ export const SelectDateRangeView: React.FC<props> = (props: props) => {
       return;
     }
 
-    console.log(selectedFromDate);
-    console.log(convertDateToDateFormat(selectedFromDate, 'YYYY-MM-DD HH:mm:ss'));
-
     props.onSelectDate(
       selectedFromDate != null ? convertDateToDateFormat(selectedFromDate, 'YYYY-MM-DD') : '', 
       selectedEndDate != null ? convertDateToDateFormat(selectedEndDate, 'YYYY-MM-DD') : '')
