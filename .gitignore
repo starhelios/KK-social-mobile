@@ -74,10 +74,11 @@ buck-out/
 /ios/Pods/
 
 # Android
-*.apk
-/android/build/
-/android/app/build/
-/android/gradle/
+# *.apk
+# /android/build/
+# /android/app/build/
+# /android/app/release/
+# /android/gradle/
 
 # Expo
 .expo/*
