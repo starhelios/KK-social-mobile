@@ -165,23 +165,6 @@ export const AddPaymentMethodScreen: React.FC = () => {
     if (userInfo.id == '') {
       goBack();
     }
-    
-    // updateUserInformation(userInfo.id, userInfo.email, userInfo.fullname, userInfo.dateOfBirth, userInfo.aboutMe, userInfo.location, 
-    //   userInfo.categoryName, null, userInfo.bankInfo, paymentMethodList, userInfo.isHost)
-    // .then(async (result: Promise<IUser>) => {
-    //   setLoginUser(await result);
-    //   goBack();
-    // }).catch(() => {
-    //   Alert.alert('', ERROR_MESSAGE.ADD_PAYMENT_METHOD_FAIL);
-    // });
-
-    // stripe.confirmPayment(STRIPE_SECRET_KEY, cardDetails)
-    // .then(result => {
-    //   console.log(result);
-    // })
-    // .catch(err => {
-    //   console.log(err);
-    // });
   }
 
   return (

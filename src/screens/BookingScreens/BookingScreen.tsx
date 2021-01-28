@@ -159,8 +159,17 @@ export const BookingScreen: React.FC = () => {
       }
     }
 
-    setUpcomingBookingList(SortBookings(upcomingBookings, true));
-    setCompletedBookingList(SortBookings(completedBookings, false));
+    if (upcomingBookings.length > 0) {
+      setUpcomingBookingList(SortBookings(upcomingBookings, true));
+    } else {
+      setUpcomingBookingList([]);
+    }
+
+    if (completedBookings.length > 0) {
+      setCompletedBookingList(SortBookings(completedBookings, false));
+    } else {
+      setCompletedBookingList([]);
+    }
   }
 
   async function loadUpcomingBookingList() {

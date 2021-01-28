@@ -86,8 +86,8 @@ export const SelectDateView: React.FC<props> = (props: props) => {
               //   updateMarkerDate('');
               // }
             }}
-            onDayLongPress={(day) => { console.log('selected day', day) }}
-            onMonthChange={(month) => { console.log('month changed', month) }}
+            onDayLongPress={(day) => { }}
+            onMonthChange={(month) => { }}
             enableSwipeMonths={true}
           /> */}
 

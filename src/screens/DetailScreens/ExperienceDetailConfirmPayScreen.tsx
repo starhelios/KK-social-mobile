@@ -90,18 +90,14 @@ export const ExperienceDetailConfirmPayScreen: React.FC = ({route}) => {
       const { data } = stripe.confirmPaymentWithCard(clientSecret, cardParams, false)
       .then(() => {
         fetching = false;
-        console.log('Paid');
-
         // saveTransation(clientSecret, paymentID, userInfo.id, experience.id)
         // .then(() => {
-        //   console.log('saveTransation success');
         // })
         // .catch(() => {
         // })
 
         reservationBooking(userInfo.id, experience.id, availableDate._id, false)
         .then(() => {
-          console.log('reservationBooking success');
         })
         .catch(() => {
         })

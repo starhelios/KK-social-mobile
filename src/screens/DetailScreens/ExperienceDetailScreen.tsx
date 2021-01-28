@@ -259,7 +259,7 @@ export const ExperienceDetailScreen: React.FC = ({route}) => {
   }
 
   function onBook() {
-    if (userInfo.id != "" && userInfo.id == experience.userId) {
+    if (userInfo.id != '' && userInfo.id == experience.userId) {
       Alert.alert('', ERROR_MESSAGE.ENABLE_BOOK_OWN_EXPERIENCE);
     } else {
       navigate('ExperienceDetailBook', {experience: experience, hostDetail: hostDetail});

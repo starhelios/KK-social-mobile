@@ -71,6 +71,7 @@ export const LoginProfileView: React.FC = () => {
   
         paymentInfo: [],
         bankInfo: [],
+        bookingInfo: [],
       },
     });
   

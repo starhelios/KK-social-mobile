@@ -4,7 +4,7 @@ export const convertStringToDateFormat = (date: string, format: string) => {
   if (date == '' || date == undefined) {
     return '';
   } else {
-    return Moment(new Date(date)).format(format);
+    return Moment.utc(new Date(date)).format(format);
   }
 }
 

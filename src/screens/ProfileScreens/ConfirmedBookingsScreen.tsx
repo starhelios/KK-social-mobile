@@ -18,6 +18,7 @@ import {
   FONT, 
   Icon_Back,
   MARGIN_TOP,
+  SortBookings,
 } from '../../constants';
 import { IBooking, IUser } from '../../interfaces/app';
 // import { useConfirmedUpcomingBookings, useConfirmedCompletedBookings } from '../../hooks';
@@ -99,8 +100,17 @@ export const ConfirmedBookingsScreen: React.FC = () => {
       }
     }
 
-    setUpcomingBookingList(upcomingBookings);
-    setCompletedBookingList(completedBookings);
+    if (upcomingBookings.length > 0) {
+      setUpcomingBookingList(SortBookings(upcomingBookings, true));
+    } else {
+      setUpcomingBookingList([]);
+    }
+
+    if (completedBookings.length > 0) {
+      setCompletedBookingList(SortBookings(completedBookings, false));
+    } else {
+      setCompletedBookingList([]);
+    }
   }
 
   // async function loadUpcomingBookingList() {

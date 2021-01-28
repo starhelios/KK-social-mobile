@@ -146,11 +146,9 @@ export const useUsers = () => {
     const url = API_ENDPOINT.BOOKING_JOIN + '/' + userId + '/' + id + '/';
     let body = {
     };
-    console.log(url);
     try {
       const { data } = await axios.post<any>(url, body, API_CONFIG);
       const result: IUser = data.payload;
-      console.log(data);
       setLoginUser(result);
       return Promise.resolve(result);
     } catch (err) {

@@ -37,7 +37,6 @@ export const StripePayment = () => {
     try {
       const { data } = await stripe.confirmPaymentWithCard(clientSecret, cardParams, !!customerToAppend)
       .then(() => {
-        console.log('Paid');
         return Promise.resolve('Paid');
       })
       .catch((err) => {
