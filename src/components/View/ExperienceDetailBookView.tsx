@@ -3,22 +3,22 @@ import { StyleSheet, TouchableWithoutFeedback, View } from 'react-native';
 
 // from app
 import { COLOR, convertStringToDateFormat, CustomText, FONT, viewportWidth } from '../../constants';
-import { IAvailableDate, IExperience } from '../../interfaces/app';
+import { ISpecificExperience, IExperience } from '../../interfaces/app';
 import { ColorButton } from '../Button';
 import GlobalStyle from '../../styles/global';
 
 
 interface props {
   experience: IExperience;
-  availableDate: IAvailableDate;
-  onChooseDate: (availableDate: IAvailableDate) => void;
+  availableDate: ISpecificExperience;
+  onChooseDate: (availableDate: ISpecificExperience) => void;
 }
 
 
 export const ExperienceDetailBookView: React.FC<props> = (props: props) => {
 
   const experience: IExperience = props.experience;
-  const availableDate: IAvailableDate = props.availableDate;
+  const availableDate: ISpecificExperience = props.availableDate;
 
   return (
     <View>

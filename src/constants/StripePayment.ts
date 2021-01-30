@@ -1,9 +1,8 @@
 import axios, { AxiosRequestConfig } from 'axios';
-import stripe from '@agaweb/react-native-stripe';
 
 // from app
-import { GetCardExpirationMonth, GetCardExpirationYear, GetCardNumber, STRIPE_SECRET_KEY } from '.';
-import { ICard, IStripePaymentIntent } from '../interfaces/app';
+import { STRIPE_SECRET_KEY } from '.';
+import { IStripePaymentIntent } from '../interfaces/app';
 
 export const StripePayment = () => {
 
@@ -24,29 +23,6 @@ export const StripePayment = () => {
       return Promise.reject(err);
     }
   }
-
-  const confirmPaymentWithCard = async (customerId: string, card: ICard, clientSecret: string): Promise<any> => {
-    const customerToAppend = customerId ? '&customer=' + customerId : '';
-    const cardParams = {
-      number: GetCardNumber(card.cardNumber),
-      expMonth: GetCardExpirationMonth(card.cardExpiryDate),
-      expYear: GetCardExpirationYear(card.cardExpiryDate),
-      cvc: card.cvc,
-    };
-
-    try {
-      const { data } = await stripe.confirmPaymentWithCard(clientSecret, cardParams, !!customerToAppend)
-      .then(() => {
-        return Promise.resolve('Paid');
-      })
-      .catch((err) => {
-        return Promise.reject(err);
-      });
-    } catch (err) {
-      return Promise.reject(err);
-    }
-  };
-
 
   const getClientSecretForSetupPayment = async (customerId: string): Promise<any> => {
     if (!customerId) {
@@ -70,5 +46,5 @@ export const StripePayment = () => {
     }
   }
 
-  return { getClientSecretForConfirmPayment, confirmPaymentWithCard, getClientSecretForSetupPayment };
+  return { getClientSecretForConfirmPayment, getClientSecretForSetupPayment };
 }

@@ -5,6 +5,7 @@ import {
   IUser,
   IToken,
   ICard,
+  ICardInfo,
 } from "../interfaces/app";
 
 export enum ActionType {
@@ -33,7 +34,7 @@ export interface State {
   experienceList: IExperience[];
   hostList: IUser[];
   categoryList: ICategory[];
-  selectedCard: ICard,
+  selectedCard: ICardInfo,
   needReloadData: boolean,
 }
 

@@ -11,7 +11,7 @@ import {
 import { Container } from 'native-base';
 import { useNavigation } from '@react-navigation/native';
 import { SvgXml } from 'react-native-svg';
-import stripe from '@agaweb/react-native-stripe';
+import stripe from 'tipsi-stripe'
 
 // from app
 import { 
@@ -21,108 +21,130 @@ import {
   CustomText, 
   ERROR_MESSAGE, 
   FONT, 
-  GetCardExpirationMonth, 
-  GetCardExpirationYear, 
   GetCardNumber, 
-  GetCardVisibleName, 
   Icon_Back_Black,
   Icon_Experience_Rating,
   Img_Experience,
   MARGIN_TOP,
+  STRIPE_SECRET_KEY,
   SUCCESS_MESSAGE,
   viewportWidth,
 } from '../../constants';
 import { ColorButton, TitleArrowButton } from '../../components/Button';
-import { IAvailableDate, ICard, IExperience, IHostDetail, IStripePaymentIntent, IUser } from '../../interfaces/app';
+import { ISpecificExperience, ICard, IExperience, IHostDetail, IStripePaymentIntent, IUser, ICardInfo } from '../../interfaces/app';
 import { useGlobalState } from '../../redux/Store';
 import { StripePayment } from '../../constants/StripePayment';
 import { usePayments, useUsers } from '../../hooks';
 
+// const stripePay = require('stripe')(STRIPE_SECRET_KEY);
 
 export const ExperienceDetailConfirmPayScreen: React.FC = ({route}) => {
 
   const userInfo: IUser = useGlobalState('userInfo');
-  const selectedCard: ICard = useGlobalState('selectedCard');
+  const selectedCard: ICardInfo = useGlobalState('selectedCard');
 
   const { goBack, navigate } = useNavigation();
   const { getClientSecretForConfirmPayment } = StripePayment();
-  const { saveTransation } = usePayments();
+  const { generatePaymentIntent, saveTransation } = usePayments();
   const { reservationBooking } = useUsers();
 
   const experience: IExperience = route.params.experience;
-  const availableDate: IAvailableDate = route.params.availableDate;
+  const availableDate: ISpecificExperience = route.params.availableDate;
   const guestCount: number = route.params.guestCount;
   const hostDetail: IHostDetail = route.params.hostDetail;
   const host: IUser = hostDetail.user;
 
   let fetching = false;
 
+  const confirmCardPayment = async (client_secret: string) => {
+    const paymentType = 'saved'; // card
+    try {
+      var paymentMethod = await stripe.createPaymentMethod({
+        card : {
+          number : '4000002500003155',
+          cvc : '123',
+          expMonth : 11,
+          expYear : 2021
+        },
+        billingDetails: {
+          // address: {"city": null, "country": null, "line1": null, "line2": null, "postalCode": null, "state": null},
+          email: userInfo.email,
+          name: userInfo.fullname,
+          // phone: 'phone',
+        },
+        // metadata: '',
+      })
+      console.log(paymentMethod);
+
+      // paymentMethod.card.number = '4000002500003155';
+      // paymentMethod.metadata = 'dddd';
+      // const paymentMethod = await stripe.createPaymentMethod({
+      //   card : {
+      //     token : '1F70U2HbHFZUJkLLGyJ26n5rWDBfofzDJmdnal0dMrcEHTvKd',
+      //   }
+      // })
+      const result = await stripe.confirmPaymentIntent({
+        clientSecret: client_secret,
+        // paymentMethod: paymentMethod,
+        paymentMethodId: paymentMethod.id,
+      })
+      // {"paymentIntentId": "pi_1IFQ6fBSC3KohNVteLCtlief", "paymentMethodId": "pm_1IFQ6hBSC3KohNVtxETzjLFx", "status": "succeeded"}
+      if (result.status == 'succeeded') {
+        await saveTransation(client_secret, result.paymentIntentId, userInfo.id, experience.id)
+        .then(() => {
+          reservationBooking(userInfo.id, experience.id, availableDate.id, false)
+          .then(() => {
+          })
+          .catch(() => {
+          })
+
+          Alert.alert('',
+            SUCCESS_MESSAGE.RESERVATION_BOOKING_SUCCESS,
+            [
+              { text: "OK", onPress: () => goBack() }
+            ],
+            { cancelable: false }
+          );
+        })
+        .catch(() => {
+          goBack();
+        })
+      }
+    } catch (e) {
+      // Handle error
+      console.log(e);
+    }
+  }
+
   const onConfirmPay = async () => {
     if (fetching == true) {
       return;
     }
 
-    if (selectedCard.cardType == '' || selectedCard.cardNumber == '') {
+    if (selectedCard.cardBrand == '' || selectedCard.last4digits == '') {
       Alert.alert('', ERROR_MESSAGE.UNSELECT_CARD);
       return;
     }
 
-    const expYear = GetCardExpirationYear(selectedCard.cardExpiryDate);
-    const expMonth = GetCardExpirationMonth(selectedCard.cardExpiryDate);
-
-    if (CheckCardExpirationDate(expYear, expMonth) == false) {
+    if (CheckCardExpirationDate(selectedCard.expiryYear, selectedCard.expiryMonth) == false) {
       Alert.alert('', ERROR_MESSAGE.PASSED_CARD_EXPIRATION);
       return;
     }
 
-    const cardParams = {
-      number: GetCardNumber(selectedCard.cardNumber),
-      expMonth: expMonth,
-      expYear: expYear,
-      cvc: selectedCard.cvc,
-    };
-
     fetching = true;
-    await getClientSecretForConfirmPayment('', Math.floor(experience.price * guestCount))
-    .then(async (result: Promise<IStripePaymentIntent>) => {
-      const clientSecret = (await result).client_secret;
-      const paymentID = (await result).id;
-      const { data } = stripe.confirmPaymentWithCard(clientSecret, cardParams, false)
-      .then(() => {
-        fetching = false;
-        // saveTransation(clientSecret, paymentID, userInfo.id, experience.id)
-        // .then(() => {
-        // })
-        // .catch(() => {
-        // })
-
-        reservationBooking(userInfo.id, experience.id, availableDate._id, false)
-        .then(() => {
-        })
-        .catch(() => {
-        })
-
-        Alert.alert('',
-          SUCCESS_MESSAGE.RESERVATION_BOOKING_SUCCESS,
-          [
-            { text: "OK", onPress: () => goBack() }
-          ],
-          { cancelable: false }
-        );
-      })
-      .catch((err) => {
-        fetching = false;
-        Alert.alert('', err);
-      });
+    
+    let payment_type = 'saved'; // 'card'
+    await generatePaymentIntent(experience.id, Math.floor(experience.price * guestCount * 100), payment_type)
+    .then(async (clientToken: Promise<string>) => {
+      console.log(clientToken);
+      confirmCardPayment(await clientToken);
     })
-    .catch(async (error: Promise<string>) => {
-      fetching = false;
-      Alert.alert('', await error);
+    .catch(async (message: Promise<string>) => {
+      Alert.alert('', await message);
     })
     .catch(() => {
-      fetching = false;
-      Alert.alert('', ERROR_MESSAGE.RESERVATION_EXPERIENCE_FAIL);
-    })
+      Alert.alert('', ERROR_MESSAGE.PAYMENT_FAIL);
+    });
   }
 
   return (
@@ -177,7 +199,7 @@ export const ExperienceDetailConfirmPayScreen: React.FC = ({route}) => {
           <CustomText style={styles.info_title}>Payment</CustomText>
           <TouchableWithoutFeedback onPress={() => navigate('PaymentOptions', {experience: experience, availableDate: availableDate, guestCount: guestCount}) }>
             <View style={{marginLeft: 24, width: viewportWidth - 48, marginTop: 16}}>
-              <TitleArrowButton title={'Credit Card'} name={GetCardVisibleName(selectedCard)} showArrow={true} white_color={false} />
+              <TitleArrowButton title={'Credit Card'} name={`${selectedCard.cardBrand} ${selectedCard.last4digits}`} showArrow={true} white_color={false} />
             </View>
           </TouchableWithoutFeedback>
         </ScrollView>

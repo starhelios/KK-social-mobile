@@ -11,6 +11,7 @@ import { Container } from 'native-base';
 import { useEffect, useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { SvgXml } from 'react-native-svg';
+import stripe from 'tipsi-stripe'
 
 // from app
 import { 
@@ -23,7 +24,7 @@ import {
   viewportHeight,
 } from '../../constants';
 import { TitleArrowButton, YourCardButton } from '../../components/Button';
-import { ICard, IUser } from '../../interfaces/app';
+import { ICardInfo, IUser } from '../../interfaces/app';
 import { useDispatch, useGlobalState } from '../../redux/Store';
 import { ActionType } from '../../redux/Reducer';
 
@@ -35,18 +36,24 @@ export const PaymentOptionsScreen: React.FC = ({route}) => {
   const dispatch = useDispatch();
   const { navigate, goBack } = useNavigation();
 
-  const [cardList, setCardList] = useState<ICard[]>(userInfo.paymentInfo);
+  const [cardList, setCardList] = useState<ICardInfo[]>(userInfo.availableMethods);
 
   useEffect(() => {
-    setCardList(userInfo.paymentInfo);
+    setCardList(userInfo.availableMethods);
   }, [userInfo]);
 
-  const onSelectCard = (card: ICard) => {
+  const onSelectCard = (card: ICardInfo) => {
     dispatch({
       type: ActionType.SET_SELECT_CARD,
       payload: card,
     });
     goBack();
+  }
+
+  const onAddPaymentMethod = async () => {
+    navigate('AddPaymentMethod');
+    // const paymentMethod = await stripe.paymentRequestWithCardForm();
+    // console.log(paymentMethod);
   }
 
   return (
@@ -85,7 +92,7 @@ export const PaymentOptionsScreen: React.FC = ({route}) => {
 
           <CustomText style={{...styles.info_title, marginTop: 44}}>Add Card</CustomText>
 
-          <TouchableWithoutFeedback onPress={() => navigate('AddPaymentMethod')}>
+          <TouchableWithoutFeedback onPress={onAddPaymentMethod}>
             <View style={{width:'100%', marginTop: 22}}>
               <TitleArrowButton title={''} name={'Add Payment Method'} showArrow={true} white_color={true} />
             </View>
