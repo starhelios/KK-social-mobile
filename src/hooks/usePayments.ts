@@ -9,21 +9,57 @@ export const usePayments = () => {
 
   const generatePaymentIntent = async (
     experienceID: string,
-    payment_type: string,
-    amount: string,
+    amount: number,
+    payment_type: string, // saved, card
   ): Promise<any> => {
     const url = API_ENDPOINT.GENERATE_PAYMENT_INTENT;
     const body = {
       experienceID,
-      payment_type,
       amount,
+      payment_type,
     }
+    console.log(url);
+    console.log(body);
+    try {
+      const { data } = await axios.post<IApiSuccess>(url, body, API_CONFIG);
+      console.log(data);
+      const clientToken: string = data.payload;
+      return Promise.resolve(clientToken);
+    } catch (err) {
+      const apiError = handleError(err);
+      if (apiError) {
+        console.log(apiError.error.message);
+        return Promise.reject(apiError.error.message);
+      } else {
+        return Promise.reject(null);
+      }
+    }
+  };
 
+  const addCard = async (
+    cardNumber: string,
+    expiryYear: number,
+    expiryMonth: number,
+    cardCVV: string,
+  ): Promise<any> => {
+    const url = API_ENDPOINT.ADD_CARD;
+    const body = { 
+      data: {
+        cardNumber,
+        cardExpiryDate: `${expiryMonth} ${expiryYear}`,
+        cardCVV,
+      }
+    }
     try {
       const { data } = await axios.post<IApiSuccess>(url, body, API_CONFIG);
       return Promise.resolve(data.payload);
     } catch (err) {
-      return Promise.reject(null);
+      const apiError = handleError(err);
+      if (apiError) {
+        return Promise.reject(apiError);
+      } else {
+        return Promise.reject(null);
+      }
     }
   };
 
@@ -47,7 +83,6 @@ export const usePayments = () => {
     } catch (err) {
       const apiError = handleError(err);
       if (apiError) {
-        console.log(apiError);
         return Promise.reject(apiError);
       } else {
         return Promise.reject(null);
@@ -55,5 +90,5 @@ export const usePayments = () => {
     }
   };
 
-  return { generatePaymentIntent, saveTransation };
+  return { generatePaymentIntent, addCard, saveTransation };
 };

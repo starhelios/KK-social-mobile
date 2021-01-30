@@ -2,19 +2,19 @@ import * as React from 'react';
 import { StyleSheet, TouchableWithoutFeedback, View } from 'react-native';
 
 // from app
-import { COLOR, CustomText, FONT, GetCardVisibleName } from '../../constants';
-import { ICard } from '../../interfaces/app';
+import { COLOR, CustomText, FONT } from '../../constants';
+import { ICardInfo } from '../../interfaces/app';
 
 interface props {
-  card: ICard;
-  onSelectCard: (card: ICard) => void;
+  card: ICardInfo;
+  onSelectCard: (card: ICardInfo) => void;
 }
 
 export const YourCardButton: React.FC<props> = (props: props) => {
   return (
     <TouchableWithoutFeedback onPress={() => props.onSelectCard(props.card)}>
       <View style={styles.container}>
-        <CustomText style={styles.card_number}>{GetCardVisibleName(props.card)}</CustomText>
+        <CustomText style={styles.card_number}>{`${props.card.cardBrand} ${props.card.last4digits}`}</CustomText>
         <View style={styles.info_line} />
       </View>
     </TouchableWithoutFeedback>

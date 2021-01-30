@@ -17,7 +17,6 @@ export const API_ENDPOINT = {
   USERS         : `${API_HOST}/users`,
   BOOKING_RESERVATION : `${API_HOST}/users/booking/reservation`,
   BOOKING_JOIN : `${API_HOST}/users/booking/join`,
-  CARD          : `${API_HOST}/users/card`,
 
   // Categories
   CATEGORIES        : `${API_HOST}/categories`,
@@ -39,5 +38,6 @@ export const API_ENDPOINT = {
   // Payments
   GENERATE_PAYMENT_INTENT : `${API_HOST}/payments/charge-generate-intent/experience`,
   SAVE_TRANSACTION        : `${API_HOST}/payments/save-transaction`,
+  ADD_CARD                : `${API_HOST}/payments/methods/card`,
   
 };

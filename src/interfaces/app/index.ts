@@ -33,5 +33,8 @@ export * from './SearchHome';
 export * from './Booking';
 export * from './ReservationBooking';
 export * from './Bank';
+
+// Payments
 export * from './Card';
+export * from './CardInfo';
 export * from './StripePaymentIntent';

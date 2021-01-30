@@ -31,7 +31,7 @@ import {
   ShowShareView,
   viewportWidth,
 } from '../../constants';
-import { IAvailableDate, IExperience, IHostDetail, IUser } from '../../interfaces/app';
+import { IExperience, IHostDetail, ISpecificExperience, IUser } from '../../interfaces/app';
 import { ExperienceDetailBookView, SelectDateRangeView } from '../../components/View';
 import { useGlobalState } from '../../redux/Store';
 
@@ -49,33 +49,35 @@ export const ExperienceDetailBookScreen: React.FC = ({route}) => {
   const [selectedEndDate, setSelectedEndDate] = useState<string>(convertStringToDateFormat(new Date().toLocaleDateString(), 'YYYY-MM-DD'));
   const [showSelectDates, setShowSelectDates] = useState<boolean>(false);
   const [guestCount, setGuestCount] = useState<number>(1)
-  const [allAvailableDates, setAllAvailableDates] = useState<IAvailableDate[]>([]);
-  const [availableDates, setAvailableDates] = useState<IAvailableDate[]>([]);
+  const [allAvailableDates, setAllAvailableDates] = useState<ISpecificExperience[]>([]);
+  const [availableDates, setAvailableDates] = useState<ISpecificExperience[]>([]);
 
   useEffect(() => {
-    var availableDates: IAvailableDate[] = [];
+    var availableDates: ISpecificExperience[] = [];
     var beforeDate = '';
 
     const today = convertStringToDate(new Date().toLocaleDateString());
 
-    for (let i = 0; i < experience.dateAvaibility.length; i++) {
-      var availableDate = experience.dateAvaibility[i];
-
-      const startTime = convertStringToDate(availableDate.day + ' ' + availableDate.startTime);
-      if (startTime == null || today == null || startTime < today) {
-        continue;
+    if (experience.specificExperience != null && experience.specificExperience != undefined && experience.specificExperience.length > 0) {
+      for (let i = 0; i < experience.specificExperience.length; i++) {
+        var availableDate = experience.specificExperience[i];
+  
+        const startTime = convertStringToDate(availableDate.day + ' ' + availableDate.startTime);
+        if (startTime == null || today == null || startTime < today) {
+          continue;
+        }
+  
+        if (availableDate.day != beforeDate) {
+          availableDate.show_date = true;
+          beforeDate = availableDate.day;
+        } else {
+          availableDate.show_date = false;
+        }
+        availableDates.push(availableDate);
       }
-
-      if (availableDate.day != beforeDate) {
-        availableDate.show_date = true;
-        beforeDate = availableDate.day;
-      } else {
-        availableDate.show_date = false;
-      }
-      availableDates.push(availableDate);
+      setAllAvailableDates(availableDates);
+      setAvailableDates(availableDates);
     }
-    setAllAvailableDates(availableDates);
-    setAvailableDates(availableDates);
   }, []);
 
   useEffect(() => {
@@ -94,7 +96,7 @@ export const ExperienceDetailBookScreen: React.FC = ({route}) => {
       const end = convertStringToDate(endDate);
 
       if (from != null && end != null) {
-        var availableDates: IAvailableDate[] = [];
+        var availableDates: ISpecificExperience[] = [];
         for (let availableDate of allAvailableDates) {
           const startTime = convertStringToDate(availableDate.day + ' ' + availableDate.startTime);
           const startDate = convertStringToDate(availableDate.day);
@@ -116,7 +118,7 @@ export const ExperienceDetailBookScreen: React.FC = ({route}) => {
     ShowShareView('KloutKast', 'https://kloutkast.herokuapp.com');
   }
 
-  function onChooseDate(availableDate: IAvailableDate) {
+  function onChooseDate(availableDate: ISpecificExperience) {
     if (userInfo.id == '') {
       Alert.alert('',
         ERROR_MESSAGE.NEED_LOGIN_CONTINUE,

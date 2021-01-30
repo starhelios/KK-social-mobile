@@ -1,4 +1,4 @@
-import { IAvailableDate } from ".";
+import { ISpecificExperience } from ".";
 
 export interface IExperience {
 	id: string,
@@ -11,7 +11,7 @@ export interface IExperience {
 	price: number,
 	categoryName: string,
 	images: string[],
-	dateAvaibility: IAvailableDate[],
+	specificExperience: ISpecificExperience[],
 
 	// test
 	icon: string,

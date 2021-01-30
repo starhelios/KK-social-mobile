@@ -1,6 +1,6 @@
 import { Alert, Share } from 'react-native';
 import { LocaleConfig } from 'react-native-calendars';
-import stripe from '@agaweb/react-native-stripe';
+import stripe from 'tipsi-stripe'
 import Moment from 'moment';
 import firebase from 'firebase';
 
@@ -17,7 +17,12 @@ import { ICard } from '../interfaces/app';
 export const intialization = () => {
   googleConfigure();
   firebaseConfigure();
-  stripe.initModule(STRIPE_PUBLISHABLE_KEY);
+  
+  stripe.setOptions({
+    publishableKey: STRIPE_PUBLISHABLE_KEY,
+    merchantId: '',
+    androidPayMode: 'test',
+  })
 
   Moment.locale('en');
 
@@ -95,28 +100,14 @@ export const GetVisibleDateString = (defaultDate: string, selectedFromDate: stri
   return visibleDateString;
 }
 
-export const GetCardVisibleName = (card: ICard) => {
-  if (card.cardType == '' || card.cardNumber == '') {
-    return '';
-  }
-
-  let cardName = `${card.cardType} `;
-  if (card.cardNumber.length <= 4) {
-    cardName += card.cardNumber;
-  } else {
-    const length = card.cardNumber.length;
-    cardName += card.cardNumber.substring(length - 4, length);
-  }
-  return cardName;
-}
-
 export const CheckCardExpirationDate = (expYear: number, expMonth: number) => {
   if (expYear == 0 || expMonth == 0) {
     return false;
   }
 
   const today = new Date();
-  const expiryDay = new Date(`20${expYear}-${expMonth}-01`);
+  const expiryDay = new Date(`${expYear}-${expMonth}-01`);
+  
   if (expiryDay < today) {
     return false;
   } else {

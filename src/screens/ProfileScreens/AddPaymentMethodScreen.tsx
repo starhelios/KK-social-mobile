@@ -14,7 +14,7 @@ import { Container } from 'native-base';
 import { useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { SvgXml } from 'react-native-svg';
-// import stripe from 'react-native-stripe-payments';
+import stripeValid from 'react-native-stripe-payments';
 var creditCardType = require("credit-card-type");
 
 // from app
@@ -23,33 +23,28 @@ import {
   COLOR, 
   CustomText, 
   CustomTextInput, 
-  EMAIL_LOGIN, 
   ERROR_MESSAGE, 
   FONT, 
   GetCardExpirationMonth, 
   GetCardExpirationYear, 
-  GetCardNumber, 
   Icon_Back,
-  LOGIN_STATE,
   MARGIN_TOP,
-  STRIPE_SECRET_KEY,
   SUCCESS_MESSAGE,
   viewportWidth,
 } from '../../constants';
 import { ColorButton } from '../../components/Button';
 import { useGlobalState } from '../../redux/Store';
-import { ICard, IUser } from '../../interfaces/app';
-import { useAuthentication, useCard, useUsers } from '../../hooks';
-import { IApiSuccess } from '../../interfaces/api';
+import { IUser } from '../../interfaces/app';
+import { useAuthentication, usePayments, useUsers } from '../../hooks';
 import GlobalStyle from '../../styles/global';
 
 
 export const AddPaymentMethodScreen: React.FC = () => {
 
   const { goBack } = useNavigation();
-  const { updateUserInformation } = useUsers();
+  const { getUserInformation } = useUsers();
   const { setLoginUser } = useAuthentication();
-  const { addCard } = useCard();
+  const { addCard } = usePayments();
 
   const userInfo: IUser = useGlobalState('userInfo');
 
@@ -70,6 +65,13 @@ export const AddPaymentMethodScreen: React.FC = () => {
       }
     }
     setCardExpiration(value);
+  }
+
+  const loadUserInfo = async () => {
+    await getUserInformation(userInfo.id)
+    .then(async (result: Promise<IUser>) => {
+      setLoginUser(await result);
+    })
   }
 
   const setCardNumberValue = (text: string) => {
@@ -101,7 +103,7 @@ export const AddPaymentMethodScreen: React.FC = () => {
     const expYear = GetCardExpirationYear(cardExpiration);
     const expMonth = GetCardExpirationMonth(cardExpiration);
 
-    if (CheckCardExpirationDate(expYear, expMonth) == false) {
+    if (CheckCardExpirationDate(expYear + 2000, expMonth) == false) {
       Alert.alert('', ERROR_MESSAGE.WRONG_CARD_EXPIRATION);
       return;
     }
@@ -113,11 +115,11 @@ export const AddPaymentMethodScreen: React.FC = () => {
       cvc: cvc,
     }
 
-    // const isCardValid = stripe.isCardValid(cardDetails);
-    // if (isCardValid == false) {
-    //   Alert.alert('', ERROR_MESSAGE.WRONG_CARD_NUMBER);
-    //   return;
-    // }
+    const isCardValid = stripeValid.isCardValid(cardDetails);
+    if (isCardValid == false) {
+      Alert.alert('', ERROR_MESSAGE.WRONG_CARD_NUMBER);
+      return;
+    }
 
     let visaCards = creditCardType(cardNumber);
     if (visaCards == null || visaCards == undefined || visaCards.length == 0) {
@@ -126,29 +128,22 @@ export const AddPaymentMethodScreen: React.FC = () => {
     }
     let cardType = visaCards[0].niceType;
 
-    let paymentMethodList = userInfo.paymentInfo;
-    let newPaymentMethod: ICard = {
-      cardType: cardType,
-      cardNumber: cardNumber,
-      cardExpiryDate: cardExpiration,
-      cvc: cvc,
-    };
     let isAdded = false;
-    for (let paymentMethod of userInfo.paymentInfo) {
-      if (paymentMethod.cardNumber == cardNumber) {
-        isAdded = true;
-        break;
+    for (let paymentMethod of userInfo.availableMethods) {
+      if (paymentMethod.cardBrand == cardType && paymentMethod.expiryYear == expYear && paymentMethod.expiryMonth == expMonth) {
+        if (paymentMethod.last4digits.length >= 4 && paymentMethod.last4digits.substring(0, 4) == cardNumber.substring(cardNumber.length - 4, cardNumber.length)) {
+          isAdded = true;
+          break;
+        }
       }
     }
 
     if (isAdded == false) {
-      paymentMethodList.push(newPaymentMethod);
-      userInfo.paymentInfo = paymentMethodList;
-      setLoginUser(userInfo);
-
       if (userInfo.id != '') {
-        addCard(userInfo.id, cardType, cardNumber, cardExpiration, cvc)
-        .then((result: IApiSuccess) => {
+        addCard(cardNumber, expYear, expMonth, cvc)
+        .then(() => {
+          loadUserInfo();
+
           Alert.alert('',
             SUCCESS_MESSAGE.ADD_CARD_SUCCESS,
             [

@@ -57,8 +57,6 @@ export const useUsers = () => {
     categoryName: string,
     avatarUrl: string,
     isHost: boolean,
-    // bankInfo: IBank[],
-    // paymentInfo: ICard[],
   ): Promise<any> => {
     const url = API_ENDPOINT.USERS + '/' + userId;
     let body = null;
@@ -123,6 +121,8 @@ export const useUsers = () => {
       dateAvaibilityID,
       completed,
     };
+    console.log(url);
+    console.log(body);
 
     try {
       const { data } = await axios.post<any>(url, body, API_CONFIG);

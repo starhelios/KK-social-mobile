@@ -77,9 +77,13 @@ export const SplashScreen: React.FC = () => {
         location: '',
         categoryName: '',
         createdAt: '',
-  
-        paymentInfo: [],
+        stripeCustomerID: '',
+        stripeConnectID: '',
+        experiences: [],
+        ratingsGiven: [],
+        availableMethods: [],
         bankInfo: [],
+        bookingInfo: [],
       },
     });
   
