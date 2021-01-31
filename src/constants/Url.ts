@@ -25,6 +25,8 @@ export const API_ENDPOINT = {
   // Experiences
   EXPERIENCES         : `${API_HOST}/experiences`,
   EXPERIENCES_FILTER  : `${API_HOST}/experiences/filter`,
+  // BOOKING_RESERVATION : `${API_HOST}/experiences/reserve`,
+  // BOOKING_JOIN        : `${API_HOST}/experiences/join`,
 
   // Hosts
   HOSTS : `${API_HOST}/hosts`,

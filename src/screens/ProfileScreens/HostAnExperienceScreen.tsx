@@ -47,6 +47,12 @@ import { ActionType } from '../../redux/Reducer';
 import GlobalStyle from '../../styles/global';
 
 
+interface DurationInfo {
+	step: number,
+	startTime: Date,
+	endTime: Date,
+}
+
 export const HostAnExperienceScreen: React.FC = () => {
 
   const dispatch = useDispatch();
@@ -66,12 +72,8 @@ export const HostAnExperienceScreen: React.FC = () => {
   const [endDay, setEndDay] = useState<string>('');
   const [dateAvaibility, setDateAvaibility] = useState<IAvailableDateForCreate[]>([]);
   const [uploading, setUploading] = useState(false);
-  const [showSelectDates, setShowSelectDates] = useState<boolean>(false);
-  const [showStartDatePicker, setStartShowDatePicker] = useState<boolean>(false);
-  const [startPickerDate, setStartPickerDate] = useState<Date>(new Date());
-  const [showEndDatePicker, setEndShowDatePicker] = useState<boolean>(false);
-  const [endPickerDate, setEndPickerDate] = useState<Date>(new Date());
-
+  const [durationInfo, setDurationInfo] = useState<DurationInfo>({ step: 0, startTime: new Date(), endTime: new Date() });
+  
   const profile: IUser = useGlobalState('userInfo');
   const allCategoryList: ICategory[] = useGlobalState('categoryList');
 
@@ -193,21 +195,38 @@ export const HostAnExperienceScreen: React.FC = () => {
     setStartDay(fromDate);
     setEndDay(endDate);
     setDuration('');
-    setShowSelectDates(false);
-    setStartShowDatePicker(true);
+    setDurationInfo({ step: 2, startTime: durationInfo.startTime, endTime: durationInfo.endTime });
   }
 
   const onChangeStartDate = (event: any, selectedDate: any) => {
-    setStartPickerDate(selectedDate);
+    if (selectedDate === undefined) {
+      onDismiss();
+    } else {
+      if (Platform.OS != 'ios') {
+        console.log('start');
+        setDurationInfo({ step: 3, startTime: selectedDate, endTime: durationInfo.endTime });
+      } else {
+        setDurationInfo({ step: 2, startTime: selectedDate, endTime: durationInfo.endTime });
+      }
+    }    
   };
 
   const onConfirmStartDate = () => {
-    setStartShowDatePicker(false);
-    setEndShowDatePicker(true);
+    setDurationInfo({ step: 3, startTime: durationInfo.startTime, endTime: durationInfo.endTime });
   }
 
   const onChangeEndDate = (event: any, selectedDate: any) => {
-    setEndPickerDate(selectedDate);
+    if (selectedDate === undefined) {
+      onDismiss();
+    } else {
+      if (Platform.OS != 'ios') {
+        console.log('end');
+        setDurationInfo({ step: 0, startTime: durationInfo.startTime, endTime: selectedDate });
+        onConfirmEndDate(durationInfo.startTime, selectedDate);
+      } else {
+        setDurationInfo({ step: 3, startTime: durationInfo.startTime, endTime: selectedDate });
+      }
+    }   
   };
 
   const longToDate = (millisec: string) => {
@@ -216,8 +235,8 @@ export const HostAnExperienceScreen: React.FC = () => {
     return (new Date(date).toUTCString());
   }
 
-  const onConfirmEndDate = () => {
-    var msDiff = endPickerDate.getTime() - startPickerDate.getTime();
+  const onConfirmEndDate = (startDate: Date, endDate: Date) => {
+    var msDiff = endDate.getTime() - startDate.getTime();
     var minutes = Math.round(msDiff / (1000 * 60));
     if (minutes <= 0) {
       Alert.alert('', ERROR_MESSAGE.INVALID_EXPERIENCE_END_TIME);
@@ -225,7 +244,7 @@ export const HostAnExperienceScreen: React.FC = () => {
     }
 
     setDuration(`${minutes}`);
-    setEndShowDatePicker(false);
+    setDurationInfo({ step: 0, startTime: durationInfo.startTime, endTime: durationInfo.endTime });
 
     var startDateTime = new Date(startDay).getTime();
     var endDateTime = new Date(endDay).getTime();
@@ -235,8 +254,8 @@ export const HostAnExperienceScreen: React.FC = () => {
     while (currentTime <= endDateTime) {
       let avaibilityDate: IAvailableDateForCreate = {
         day: convertDateToDateFormat(new Date(currentTime), 'MMMM D, YYYY'), 
-        startTime: convertDateToDateFormat(startPickerDate, 'hh:mm a'), 
-        endTime: convertDateToDateFormat(endPickerDate, 'hh:mm a')};
+        startTime: convertDateToDateFormat(startDate, 'hh:mm a'), 
+        endTime: convertDateToDateFormat(endDate, 'hh:mm a')};
       avaibilityDates.push(avaibilityDate);
       currentTime += 1000 * 60 * 60 * 24;
     }
@@ -245,9 +264,11 @@ export const HostAnExperienceScreen: React.FC = () => {
 
   const onDismiss = () => {
     Keyboard.dismiss;
-    setShowSelectDates(false);
-    setStartShowDatePicker(false);
-    setEndShowDatePicker(false);
+    setDurationInfo({ step: 0, startTime: durationInfo.startTime, endTime: durationInfo.endTime });
+  }
+
+  const setCancelSelectDates = (visible: boolean) => {
+    setDurationInfo({ step: 0, startTime: durationInfo.startTime, endTime: durationInfo.endTime });
   }
 
 
@@ -285,7 +306,7 @@ export const HostAnExperienceScreen: React.FC = () => {
                   </View>
 
                   <TouchableWithoutFeedback onPress={onDismiss} accessible={false}>
-                    <View style={{marginLeft: 24, marginRight: 24, width: viewportWidth - 48, marginBottom: 22}}>
+                    <View style={{marginLeft: 24, marginRight: 24, width: viewportWidth - 48}}>
                       <View style={{width:'100%', zIndex: 100}}>
                         <CustomText style={styles.info_title}>Category</CustomText>
                         <Autocomplete
@@ -344,7 +365,7 @@ export const HostAnExperienceScreen: React.FC = () => {
                         <View style={{...GlobalStyle.auth_line, backgroundColor: COLOR.alphaBlackColor20}} />
                       </View>
 
-                      <TouchableWithoutFeedback onPress={() => setShowSelectDates(true)}>
+                      <TouchableWithoutFeedback onPress={() => setDurationInfo({ step: 1, startTime: durationInfo.startTime, endTime: durationInfo.endTime }) }>
                         <View style={{width:'100%', marginTop: 22}}>
                           <CustomText style={styles.info_title}>Duration (in minutes)</CustomText>
                           <CustomText style={{...GlobalStyle.auth_input, color: duration == '' ? COLOR.alphaBlackColor75 : COLOR.systemBlackColor, lineHeight: 45}}>
@@ -371,64 +392,67 @@ export const HostAnExperienceScreen: React.FC = () => {
                       </View>
                     </View>
                   </TouchableWithoutFeedback>
+
+                  <TouchableWithoutFeedback onPress={onCreateExperience}>
+                    <View style={styles.bottom_button}>
+                      <ColorButton title={'Create Experience'} backgroundColor={COLOR.redColor} color={COLOR.systemWhiteColor} />
+                    </View>
+                  </TouchableWithoutFeedback>
+
                 </ScrollView>
               </KeyboardAvoidingView>   
             </View>
-
-            <TouchableWithoutFeedback onPress={onCreateExperience}>
-              <View style={styles.bottom_button}>
-                <ColorButton title={'Create Experience'} backgroundColor={COLOR.redColor} color={COLOR.systemWhiteColor} />
-              </View>
-            </TouchableWithoutFeedback>
-
           </View>
         </View>
 
         <Modal animationType = {"slide"} transparent = {true}
-          visible = {showSelectDates}
+          visible = {durationInfo.step == 1 ? true : false}
           onRequestClose = {() => { } }>
-          <SelectDateRangeView selectedFromDate={startDay} selectedEndDate={endDay} onCloseView={setShowSelectDates} onSelectDate={onFilterSelectDate} />
+          <SelectDateRangeView selectedFromDate={startDay} selectedEndDate={endDay} onCloseView={setCancelSelectDates} onSelectDate={onFilterSelectDate} />
         </Modal>
 
-        {showStartDatePicker && (
-          <View style={styles.datePickerBackground} >
+        {durationInfo.step == 2 && (
+          <View style={{...styles.datePickerBackground, backgroundColor: Platform.OS == 'ios' ? COLOR.whiteColor : COLOR.clearColor }} >
             <View style={styles.datePickerContainer}>
               <DateTimePicker
-                testID="dateTimePicker"
-                value={startPickerDate}
+                value={durationInfo.startTime}
                 onChange={onChangeStartDate}
                 mode='time'
                 style={styles.datePicker}
                 dateFormat={'shortdate'}
                 placeholderText="Select Start Time"
               />
-              <TouchableWithoutFeedback onPress={() => onConfirmStartDate() }>
-                <View style={styles.datePickerConfirm}>
-                  <CustomText style={styles.confirm_text}>Confirm Start Time</CustomText>
-                </View>
-              </TouchableWithoutFeedback>
+              { Platform.OS == 'ios' && 
+                <TouchableWithoutFeedback onPress={() => onConfirmStartDate() }>
+                  <View style={styles.datePickerConfirm}>
+                    <CustomText style={styles.confirm_text}>Confirm Start Time</CustomText>
+                  </View>
+                </TouchableWithoutFeedback>
+              }
             </View>
           </View>
         )}
 
-        {showEndDatePicker && (
-          <View style={styles.datePickerBackground} >
+        {durationInfo.step == 3 && (
+          <View style={{...styles.datePickerBackground, backgroundColor: Platform.OS == 'ios' ? COLOR.whiteColor : COLOR.clearColor }} >
             <View style={styles.datePickerContainer}>
               <DateTimePicker
-                testID="dateTimePicker"
-                value={endPickerDate}
+                value={durationInfo.endTime}
                 onChange={onChangeEndDate}
                 style={styles.datePicker}
-                minimumDate={startPickerDate}
+                minimumDate={durationInfo.startTime}
                 mode='time'
                 dateFormat={'shortdate'}
                 placeholderText="Select End Time"
               />
-              <TouchableWithoutFeedback onPress={() => onConfirmEndDate() }>
-                <View style={styles.datePickerConfirm}>
-                  <CustomText style={styles.confirm_text}>Confirm End Time</CustomText>
-                </View>
-              </TouchableWithoutFeedback>
+
+              { Platform.OS == 'ios' && 
+                <TouchableWithoutFeedback onPress={() => onConfirmEndDate(durationInfo.startTime, durationInfo.endTime) }>
+                  <View style={styles.datePickerConfirm}>
+                    <CustomText style={styles.confirm_text}>Confirm End Time</CustomText>
+                  </View>
+                </TouchableWithoutFeedback>
+              }
             </View>
           </View>
         )}
@@ -536,7 +560,7 @@ const styles = StyleSheet.create({
     width: '100%', 
     position: 'absolute', 
     top: 0, 
-    bottom: 66,
+    bottom: 0,
   },
   profile_container: {
     width: '100%',
@@ -585,8 +609,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   bottom_button: {
-    position: 'absolute',
-    bottom: 20,
+    marginTop: 22,
+    marginBottom: 33,
     marginLeft: 48,
     marginRight: 48,
     width: viewportWidth - 96,

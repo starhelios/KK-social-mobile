@@ -41,7 +41,6 @@ import {
   LOGIN_STATE,
   MARGIN_TOP,
   SUCCESS_MESSAGE,
-  UploadImageToFirebase,
   viewportWidth,
 } from '../../constants';
 import { ColorButton } from '../../components/Button';
@@ -108,7 +107,15 @@ export const BecomeAHostScreen: React.FC = () => {
   }, [category]);
 
   const onChange = (event: any, selectedDate: any) => {
-    setPickerDate(selectedDate);
+    if (Platform.OS != 'ios') {
+      setShowDatePicker(false);
+    }
+    
+    if (selectedDate === undefined) {
+    } else {
+      setPickerDate(selectedDate);
+      setBirthday(convertDateToMomentDateFormat(selectedDate, 'YYYY-MM-DD'));
+    }
   };
 
   const showMode = (currentMode: "date" | "time" | undefined) => {
@@ -296,7 +303,10 @@ export const BecomeAHostScreen: React.FC = () => {
 
                       <View style={{width:'100%', marginTop: 22}}>
                         <CustomText style={styles.info_title}>Date of Birth</CustomText>
-                        <TouchableWithoutFeedback onPress={() => setShowDatePicker(true)}>
+                        <TouchableWithoutFeedback onPress={() => {
+                          console.log('------')
+                          setShowDatePicker(true)
+                        }}>
                           <CustomText style={{...GlobalStyle.auth_input, color: birthday != '' ? COLOR.systemWhiteColor : COLOR.alphaWhiteColor50, lineHeight: 45}}>
                             {birthday != '' ? birthday : 'Date of Birth'}
                           </CustomText>
@@ -376,28 +386,31 @@ export const BecomeAHostScreen: React.FC = () => {
         </View>
 
         {showDatePicker && (
-        <View style={styles.datePickerBackground} >
-          <View style={styles.datePickerContainer}>
-            <DateTimePicker
-              testID="dateTimePicker"
-              value={pickerDate}
-              onChange={onChange}
-              style={styles.datePicker}
-              firstDayOfWeek={2}
-              maximumDate={new Date()}
-              minimumDate={new Date('1960')}
-              dateFormat={'shortdate'}
-              dayOfWeekFormat={'{dayofweek.abbreviated(2)}'}
-              placeholderText="Select Date"
-            />
-            <TouchableWithoutFeedback onPress={() => onConfirmBirthday() }>
-              <View style={styles.datePickerConfirm}>
-                <CustomText style={styles.confirm_text}>Confirm</CustomText>
-              </View>
-            </TouchableWithoutFeedback>
+          <View style={{...styles.datePickerBackground, backgroundColor: Platform.OS == 'ios' ? COLOR.whiteColor : COLOR.clearColor }} >
+            <View style={styles.datePickerContainer}>
+
+              <DateTimePicker
+                value={pickerDate}
+                onChange={onChange}
+                style={styles.datePicker}
+                firstDayOfWeek={2}
+                maximumDate={new Date()}
+                minimumDate={new Date('1960')}
+                dateFormat={'shortdate'}
+                dayOfWeekFormat={'{dayofweek.abbreviated(2)}'}
+                placeholderText="Select Date"
+              />
+
+              { Platform.OS == 'ios' && 
+                <TouchableWithoutFeedback onPress={() => onConfirmBirthday() }>
+                  <View style={styles.datePickerConfirm}>
+                    <CustomText style={styles.confirm_text}>Confirm</CustomText>
+                  </View>
+                </TouchableWithoutFeedback>
+              }
+            </View>
           </View>
-        </View>
-      )}
+        )}
       </SafeAreaView>
 
       <Spinner

@@ -1,6 +1,7 @@
 import { Alert, Share } from 'react-native';
 import { LocaleConfig } from 'react-native-calendars';
-import stripe from 'tipsi-stripe'
+// import stripe from 'tipsi-stripe'
+import stripe from 'react-native-stripe-payments';
 import Moment from 'moment';
 import firebase from 'firebase';
 
@@ -11,18 +12,16 @@ import {
   googleConfigure, 
   STRIPE_PUBLISHABLE_KEY 
 } from '.';
-import { ICard } from '../interfaces/app';
 
 
 export const intialization = () => {
   googleConfigure();
   firebaseConfigure();
   
-  stripe.setOptions({
-    publishableKey: STRIPE_PUBLISHABLE_KEY,
-    merchantId: '',
-    androidPayMode: 'test',
-  })
+  // stripe.setOptions({
+  //   publishableKey: STRIPE_PUBLISHABLE_KEY
+  // })
+  stripe.setOptions({ publishingKey: STRIPE_PUBLISHABLE_KEY });
 
   Moment.locale('en');
 

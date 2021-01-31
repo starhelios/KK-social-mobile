@@ -37,7 +37,7 @@ export const ERROR_MESSAGE = {
   EMPTY_EXPERIENCE_IMAGE: 'You must add at least one photo.',
   EMPTY_EXPERIENCE_CATEGORY: 'Please input experience category.',
   EMPTY_EXPERIENCE_TITLE: 'Please input epxerience title.',
-  EMPTY_EXPERIENCE_DESCRIPTION: 'Please input epxerience title.',
+  EMPTY_EXPERIENCE_DESCRIPTION: 'Please input epxerience description.',
   EMPTY_EXPERIENCE_DURRATION: 'Please input epxerience duration.',
   EMPTY_EXPERIENCE_PRICE: 'Please input epxerience price.',
   CREATE_EXPERIENCE_FAIL: 'Failed to create an experience.',
