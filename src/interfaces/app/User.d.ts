@@ -1,5 +1,4 @@
-import { ICardInfo, IBank } from ".";
-import { IReservationBooking } from ".";
+import { ICardInfo, IBank, IReservationBooking } from ".";
 
 export interface IUser {
 	id: string,
@@ -15,6 +14,7 @@ export interface IUser {
 	createdAt: string,
 	stripeCustomerID: string,
 	stripeConnectID: string,
+
 	experiences: [],
 	ratingsGiven: [],
 	bankInfo: IBank[],

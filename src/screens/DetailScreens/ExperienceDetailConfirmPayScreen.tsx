@@ -11,7 +11,8 @@ import {
 import { Container } from 'native-base';
 import { useNavigation } from '@react-navigation/native';
 import { SvgXml } from 'react-native-svg';
-import stripe from 'tipsi-stripe'
+// import stripe from 'tipsi-stripe'
+import stripe from 'react-native-stripe-payments';
 
 // from app
 import { 
@@ -31,7 +32,7 @@ import {
   viewportWidth,
 } from '../../constants';
 import { ColorButton, TitleArrowButton } from '../../components/Button';
-import { ISpecificExperience, ICard, IExperience, IHostDetail, IStripePaymentIntent, IUser, ICardInfo } from '../../interfaces/app';
+import { ISpecificExperience, IHostDetail, IUser, ICardInfo, IExperienceDetail } from '../../interfaces/app';
 import { useGlobalState } from '../../redux/Store';
 import { StripePayment } from '../../constants/StripePayment';
 import { usePayments, useUsers } from '../../hooks';
@@ -48,7 +49,7 @@ export const ExperienceDetailConfirmPayScreen: React.FC = ({route}) => {
   const { generatePaymentIntent, saveTransation } = usePayments();
   const { reservationBooking } = useUsers();
 
-  const experience: IExperience = route.params.experience;
+  const experienceDetail: IExperienceDetail = route.params.experienceDetail;
   const availableDate: ISpecificExperience = route.params.availableDate;
   const guestCount: number = route.params.guestCount;
   const hostDetail: IHostDetail = route.params.hostDetail;
@@ -57,12 +58,46 @@ export const ExperienceDetailConfirmPayScreen: React.FC = ({route}) => {
   let fetching = false;
 
   const confirmCardPayment = async (client_secret: string) => {
-    const paymentType = 'saved'; // card
+    
+    const cardDetails = {
+      number: '4000002500003155',
+      expMonth: 10,
+      expYear: 21,
+      cvc: '888',
+    }
+    await stripe.confirmPayment(client_secret, cardDetails)
+    .then(async result => {
+      console.log('success');
+      console.log(await result);
+
+      reservationBooking(userInfo.id, experienceDetail.id, availableDate.id, false)
+      .then(() => {
+      })
+      .catch(() => {
+      })
+
+      Alert.alert('',
+        SUCCESS_MESSAGE.RESERVATION_BOOKING_SUCCESS,
+        [
+          { text: "OK", onPress: () => goBack() }
+        ],
+        { cancelable: false }
+      );
+    })
+    .catch(async err => {
+      console.log('fail');
+      console.log(await err);
+    })
+
+    /*
     try {
+      const paymentType = 'saved'; // card
+
       var paymentMethod = await stripe.createPaymentMethod({
         card : {
-          number : '4000002500003155',
-          cvc : '123',
+          // number : '4000002500003155',
+          number : '4242 4242 4242 4242',
+          cvc : '888',
           expMonth : 11,
           expYear : 2021
         },
@@ -83,11 +118,14 @@ export const ExperienceDetailConfirmPayScreen: React.FC = ({route}) => {
       //     token : '1F70U2HbHFZUJkLLGyJ26n5rWDBfofzDJmdnal0dMrcEHTvKd',
       //   }
       // })
+      console.log(client_secret);
+      console.log(paymentMethod.id);
       const result = await stripe.confirmPaymentIntent({
         clientSecret: client_secret,
         // paymentMethod: paymentMethod,
         paymentMethodId: paymentMethod.id,
       })
+      console.log(result);
       // {"paymentIntentId": "pi_1IFQ6fBSC3KohNVteLCtlief", "paymentMethodId": "pm_1IFQ6hBSC3KohNVtxETzjLFx", "status": "succeeded"}
       if (result.status == 'succeeded') {
         await saveTransation(client_secret, result.paymentIntentId, userInfo.id, experience.id)
@@ -111,9 +149,9 @@ export const ExperienceDetailConfirmPayScreen: React.FC = ({route}) => {
         })
       }
     } catch (e) {
-      // Handle error
       console.log(e);
     }
+    */
   }
 
   const onConfirmPay = async () => {
@@ -134,9 +172,8 @@ export const ExperienceDetailConfirmPayScreen: React.FC = ({route}) => {
     fetching = true;
     
     let payment_type = 'saved'; // 'card'
-    await generatePaymentIntent(experience.id, Math.floor(experience.price * guestCount * 100), payment_type)
+    await generatePaymentIntent(experienceDetail.id, Math.floor(experienceDetail.price * guestCount * 100), payment_type)
     .then(async (clientToken: Promise<string>) => {
-      console.log(clientToken);
       confirmCardPayment(await clientToken);
     })
     .catch(async (message: Promise<string>) => {
@@ -165,10 +202,10 @@ export const ExperienceDetailConfirmPayScreen: React.FC = ({route}) => {
           <View style={image_styles.container}>
             <Image
               style={image_styles.image}
-              source={experience.images.length > 0 ? {uri: experience.images[0]} : Img_Experience} />
+              source={experienceDetail.images.length > 0 ? {uri: experienceDetail.images[0]} : Img_Experience} />
 
             <View style={{...image_styles.content_container, width: viewportWidth - 89}}>
-              <CustomText style={image_styles.title} numberOfLines={2}>{experience.title}</CustomText>
+              <CustomText style={image_styles.title} numberOfLines={2}>{experienceDetail.title}</CustomText>
 
               <View style={image_styles.rating_container}>
                 <SvgXml width={15} height={15} xml={Icon_Experience_Rating} />
@@ -191,25 +228,24 @@ export const ExperienceDetailConfirmPayScreen: React.FC = ({route}) => {
 
           <CustomText style={styles.info_detail_title}>Price Detail</CustomText>
           <View style={{flexDirection: 'row'}}>
-            <CustomText style={styles.info_detail_content}>{'$' + experience.price + ' x ' + guestCount.toString() + ' person'}</CustomText>
-            <CustomText style={styles.price_unit}>{'$' + Math.floor(experience.price * guestCount).toString()}</CustomText>
+            <CustomText style={styles.info_detail_content}>{'$' + experienceDetail.price + ' x ' + guestCount.toString() + ' person'}</CustomText>
+            <CustomText style={styles.price_unit}>{'$' + Math.floor(experienceDetail.price * guestCount).toString()}</CustomText>
           </View>
           <View style={styles.line} />
 
           <CustomText style={styles.info_title}>Payment</CustomText>
-          <TouchableWithoutFeedback onPress={() => navigate('PaymentOptions', {experience: experience, availableDate: availableDate, guestCount: guestCount}) }>
+          <TouchableWithoutFeedback onPress={() => navigate('PaymentOptions') }>
             <View style={{marginLeft: 24, width: viewportWidth - 48, marginTop: 16}}>
               <TitleArrowButton title={'Credit Card'} name={`${selectedCard.cardBrand} ${selectedCard.last4digits}`} showArrow={true} white_color={false} />
             </View>
           </TouchableWithoutFeedback>
-        </ScrollView>
 
-        <TouchableWithoutFeedback onPress={onConfirmPay}>
-          <View style={styles.bottom_button}>
-            <ColorButton title={'Confirm & Pay'} backgroundColor={COLOR.redColor} color={COLOR.systemWhiteColor} />
-          </View>
-        </TouchableWithoutFeedback>
-        
+          <TouchableWithoutFeedback onPress={onConfirmPay}>
+            <View style={styles.bottom_button}>
+              <ColorButton title={'Confirm & Pay'} backgroundColor={COLOR.redColor} color={COLOR.systemWhiteColor} />
+            </View>
+          </TouchableWithoutFeedback>
+        </ScrollView>
       </SafeAreaView>
     </Container>
   );
@@ -269,7 +305,6 @@ const styles = StyleSheet.create({
   },
   container: {
     width: '100%',  
-    marginBottom: 85,
   },
   profile_container: {
     width: '100%',
@@ -318,8 +353,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   bottom_button: {
-    position: 'absolute',
-    bottom: 33,
+    marginTop: 22,
+    marginBottom: 33,
     marginLeft: 48,
     marginRight: 48,
     width: viewportWidth - 96,

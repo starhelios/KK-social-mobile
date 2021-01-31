@@ -94,7 +94,15 @@ export const EditProfileScreen: React.FC = () => {
   }, [profile]);
 
   const onChange = (event: any, selectedDate: any) => {
-    setPickerDate(selectedDate);
+    if (Platform.OS != 'ios') {
+      setShowDatePicker(false);
+    }
+    
+    if (selectedDate === undefined) {
+    } else {
+      setPickerDate(selectedDate);
+      setBirthday(convertDateToMomentDateFormat(selectedDate, 'YYYY-MM-DD'));
+    }
   };
 
   const showMode = (currentMode: "date" | "time" | undefined) => {
@@ -256,22 +264,21 @@ export const EditProfileScreen: React.FC = () => {
                     </View>
                   </View>
                 </TouchableWithoutFeedback>
+
+                <TouchableWithoutFeedback onPress={() => onSave() }>
+                  <View style={styles.bottom_button}>
+                    <ColorButton title={'Save'} backgroundColor={COLOR.whiteColor} color={COLOR.blackColor} />
+                  </View>
+                </TouchableWithoutFeedback>
               </ScrollView>
             </KeyboardAvoidingView>
           </View>
         </View>
 
-        <TouchableWithoutFeedback onPress={() => onSave() }>
-          <View style={styles.bottom_button}>
-            <ColorButton title={'Save'} backgroundColor={COLOR.whiteColor} color={COLOR.blackColor} />
-          </View>
-        </TouchableWithoutFeedback>
-
         {showDatePicker && (
-          <View style={styles.datePickerBackground} >
+          <View style={{...styles.datePickerBackground, backgroundColor: Platform.OS == 'ios' ? COLOR.whiteColor : COLOR.clearColor }} >
             <View style={styles.datePickerContainer}>
               <DateTimePicker
-                testID="dateTimePicker"
                 value={pickerDate}
                 onChange={onChange}
                 style={styles.datePicker}
@@ -282,11 +289,14 @@ export const EditProfileScreen: React.FC = () => {
                 dayOfWeekFormat={'{dayofweek.abbreviated(2)}'}
                 placeholderText="Select Date"
               />
-              <TouchableWithoutFeedback onPress={() => onConfirmBirthday() }>
-                <View style={styles.datePickerConfirm}>
-                  <CustomText style={styles.confirm_text}>Confirm</CustomText>
-                </View>
-              </TouchableWithoutFeedback>
+
+              { Platform.OS == 'ios' && 
+                <TouchableWithoutFeedback onPress={() => onConfirmBirthday() }>
+                  <View style={styles.datePickerConfirm}>
+                    <CustomText style={styles.confirm_text}>Confirm</CustomText>
+                  </View>
+                </TouchableWithoutFeedback>
+              }
             </View>
           </View>
         )}
@@ -463,9 +473,6 @@ const styles = StyleSheet.create({
   },
   container: {
     width: '100%', 
-    position: 'absolute', 
-    top: 0, 
-    bottom: 77,
   },
   profile_container: {
     width: '100%',
@@ -515,8 +522,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   bottom_button: {
-    position: 'absolute',
-    bottom: 33,
+    marginTop: 22,
+    marginBottom: 33,
     marginLeft: 48,
     marginRight: 48,
     width: viewportWidth - 96,

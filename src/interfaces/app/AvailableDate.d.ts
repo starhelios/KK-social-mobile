@@ -13,18 +13,3 @@ export interface IAvailableDateForCreate {
 	startTime: string,
 	endTime: string,
 }
-
-export interface ISpecificExperience {
-	id: string,
-	day: string,
-	startTime: string,
-	endTime: string,
-	experience: string, 
-	imageUrl: string, 
-	ratings: [], 
-	reservations: [], 
-	usersGoing: [],
-
-	// internal working
-	show_date: boolean,
-}

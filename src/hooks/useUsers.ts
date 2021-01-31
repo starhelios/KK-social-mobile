@@ -111,9 +111,10 @@ export const useUsers = () => {
 
   const reservationBooking = async (
     userId: string,
-    experienceID: string,
-    dateAvaibilityID: string,
-    completed: boolean,
+    experienceId: string,
+    paymentIntent: string, 
+    guests: number, 
+    imageUrl: string
   ): Promise<any> => {
     const url = API_ENDPOINT.BOOKING_RESERVATION + '/' + userId;
     let body = {
@@ -126,6 +127,7 @@ export const useUsers = () => {
 
     try {
       const { data } = await axios.post<any>(url, body, API_CONFIG);
+      console.log(data);
       const result: IUser = data.payload;
       setLoginUser(result);
       return Promise.resolve(result);

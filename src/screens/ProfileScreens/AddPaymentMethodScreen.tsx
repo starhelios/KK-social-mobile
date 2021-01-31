@@ -14,7 +14,7 @@ import { Container } from 'native-base';
 import { useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { SvgXml } from 'react-native-svg';
-import stripeValid from 'react-native-stripe-payments';
+import stripe from 'react-native-stripe-payments';
 var creditCardType = require("credit-card-type");
 
 // from app
@@ -115,7 +115,7 @@ export const AddPaymentMethodScreen: React.FC = () => {
       cvc: cvc,
     }
 
-    const isCardValid = stripeValid.isCardValid(cardDetails);
+    const isCardValid = stripe.isCardValid(cardDetails);
     if (isCardValid == false) {
       Alert.alert('', ERROR_MESSAGE.WRONG_CARD_NUMBER);
       return;

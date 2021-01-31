@@ -3,13 +3,13 @@ import { StyleSheet, TouchableWithoutFeedback, View } from 'react-native';
 
 // from app
 import { COLOR, convertStringToDateFormat, CustomText, FONT, viewportWidth } from '../../constants';
-import { ISpecificExperience, IExperience } from '../../interfaces/app';
+import { ISpecificExperience, IExperienceDetail } from '../../interfaces/app';
 import { ColorButton } from '../Button';
 import GlobalStyle from '../../styles/global';
 
 
 interface props {
-  experience: IExperience;
+  experienceDetail: IExperienceDetail;
   availableDate: ISpecificExperience;
   onChooseDate: (availableDate: ISpecificExperience) => void;
 }
@@ -17,7 +17,7 @@ interface props {
 
 export const ExperienceDetailBookView: React.FC<props> = (props: props) => {
 
-  const experience: IExperience = props.experience;
+  const experienceDetail: IExperienceDetail = props.experienceDetail;
   const availableDate: ISpecificExperience = props.availableDate;
 
   return (
@@ -30,7 +30,7 @@ export const ExperienceDetailBookView: React.FC<props> = (props: props) => {
         <View>
           <CustomText style={styles.time}>{availableDate.startTime + ' - ' + availableDate.endTime + ' (EDT)'}</CustomText>
           <View style={styles.price_container}>
-            <CustomText style={{...styles.time, fontWeight: '600'}}>{'$' + experience.price}</CustomText>
+            <CustomText style={{...styles.time, fontWeight: '600'}}>{'$' + experienceDetail.price}</CustomText>
             <CustomText style={styles.time}>{' / person'}</CustomText>
           </View>
         </View>

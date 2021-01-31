@@ -59,7 +59,6 @@ export const ExperienceDetailScreen: React.FC = ({route}) => {
   const userInfo: IUser = useGlobalState('userInfo');
   const experienceList = useGlobalState('experienceList');
   const experienceDetail: IExperienceDetail = route.params.experienceDetail;
-  const experience: IExperience = experienceDetail.experience;
   const hostDetail: IHostDetail = route.params.hostDetail;
   const host: IUser = hostDetail.user;
   var scrollViewRef: ScrollView | null;
@@ -116,7 +115,7 @@ export const ExperienceDetailScreen: React.FC = ({route}) => {
               pagingEnabled={true}
               bounces={false}
               horizontal={true}
-              data={experience.images}
+              data={experienceDetail.images}
               keyExtractor={(item, index) => index.toString()}
               onMomentumScrollEnd={({nativeEvent}) => { 
                 setCurrentPage(Math.round(nativeEvent.contentOffset.x / viewportWidth));
@@ -132,7 +131,7 @@ export const ExperienceDetailScreen: React.FC = ({route}) => {
             <View style={styles.page_control_container}>  
               <PageControl
                 style={styles.page_control}
-                numberOfPages={experience.images.length}
+                numberOfPages={experienceDetail.images.length}
                 currentPage={currentPage}
                 hidesForSinglePage
                 pageIndicatorTintColor='gray'
@@ -146,7 +145,7 @@ export const ExperienceDetailScreen: React.FC = ({route}) => {
           </View>
 
           <View style={styles.content_container}>
-            <CustomText style={styles.title}>{experience.title}</CustomText>
+            <CustomText style={styles.title}>{experienceDetail.title}</CustomText>
             <CustomText style={styles.location}>{host.location}</CustomText>
             <View style={{...GlobalStyle.auth_line, backgroundColor: COLOR.alphaBlackColor20, marginTop: 22}} />
             
@@ -159,17 +158,17 @@ export const ExperienceDetailScreen: React.FC = ({route}) => {
 
             <View style={{marginTop: 12, height: 16, flexDirection: 'row'}}>
               <SvgXml width={16} height={16} xml={Icon_Time_Black} />
-              <CustomText style={{...styles.location, marginTop: 1, marginLeft: 8}}>{GetDurationString(experience.duration)}</CustomText>
+              <CustomText style={{...styles.location, marginTop: 1, marginLeft: 8}}>{GetDurationString(experienceDetail.duration)}</CustomText>
             </View>
 
             <View style={{marginTop: 12, height: 16, flexDirection: 'row'}}>
               <SvgXml width={16} height={16} xml={Icon_Experience_Black} />
-              <CustomText style={{...styles.location, marginTop: 1, marginLeft: 8}}>{experience.categoryName}</CustomText>
+              <CustomText style={{...styles.location, marginTop: 1, marginLeft: 8}}>{experienceDetail.categoryName}</CustomText>
             </View>
             <View style={{...GlobalStyle.auth_line, backgroundColor: COLOR.alphaBlackColor20, marginTop: 22}} />
 
             <CustomText style={{...styles.host_name, marginTop: 22}}>About the experience</CustomText>
-            <CustomText style={styles.about}>{experience.description}</CustomText>
+            <CustomText style={styles.about}>{experienceDetail.description}</CustomText>
             <View style={{...GlobalStyle.auth_line, backgroundColor: COLOR.alphaBlackColor20, marginTop: 22}} />
 
             <View style={{marginTop: 22, flexDirection: 'row'}}>
@@ -222,13 +221,13 @@ export const ExperienceDetailScreen: React.FC = ({route}) => {
           </TouchableWithoutFeedback>
 
           { isBlackHeader == false && 
-            <CustomText style={styles.navigation_title}>{experience.title}</CustomText>
+            <CustomText style={styles.navigation_title}>{experienceDetail.title}</CustomText>
           }
         </View>
 
         <View style={styles.bottom_container}>
           <View style={styles.price_container}>
-            <CustomText style={styles.price}>{'From $' + experience.price}</CustomText>
+            <CustomText style={styles.price}>{'From $' + experienceDetail.price}</CustomText>
             <CustomText style={styles.personal}>{' / person'}</CustomText>
           </View>
 
@@ -259,10 +258,10 @@ export const ExperienceDetailScreen: React.FC = ({route}) => {
   }
 
   function onBook() {
-    if (userInfo.id != '' && userInfo.id == experience.userId) {
+    if (userInfo.id != '' && userInfo.id == experienceDetail.userId) {
       Alert.alert('', ERROR_MESSAGE.ENABLE_BOOK_OWN_EXPERIENCE);
     } else {
-      navigate('ExperienceDetailBook', {experience: experience, hostDetail: hostDetail});
+      navigate('ExperienceDetailBook', {experienceDetail: experienceDetail, hostDetail: hostDetail});
     }
   }
 };

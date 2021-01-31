@@ -56,7 +56,7 @@ export const BookingScreen: React.FC = () => {
           continue;
         }
 
-        for (let booking of experience.specificExperience) {
+        for (let booking of experience.dateAvaibility) {
           if (reservationBooking.dateAvaibilityID != booking._id) {
             continue;
           }

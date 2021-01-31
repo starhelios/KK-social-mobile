@@ -1,8 +1,4 @@
 apply plugin: "com.android.application"
-apply plugin: 'com.google.gms.google-services'
-googleServices {
-    disableVersionCheck = true
-}
 
 import com.android.build.OutputFile
 
@@ -156,6 +152,12 @@ android {
             keyAlias 'androiddebugkey'
             keyPassword 'android'
         }
+        release {
+            storeFile file('kloutkast-keystore')
+            storePassword 'jmc@1994121'
+            keyAlias 'kloutkast'
+            keyPassword 'jmc@1994121'
+        }
     }
     buildTypes {
         debug {
@@ -194,6 +196,12 @@ dependencies {
     //noinspection GradleDynamicVersion
     implementation "com.facebook.react:react-native:+"  // From node_modules
     implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.0.0"
+    implementation 'com.google.firebase:firebase-core:16.0.7'
+    implementation 'com.android.support:design:27.1.0'
+//    implementation project(':tipsi-stripe')
+//    implementation 'com.stripe:stripe-android:14.2.1'
+
+
     debugImplementation("com.facebook.flipper:flipper:${FLIPPER_VERSION}") {
       exclude group:'com.facebook.fbjni'
     }
@@ -222,7 +230,17 @@ task copyDownloadableDepsToLibs(type: Copy) {
     into 'libs'
 }
 
-apply from: file("../../node_modules/@react-native-community/cli-platform-android/native_modules.gradle"); 
+apply from: file("../../node_modules/@react-native-community/cli-platform-android/native_modules.gradle");
 applyNativeModulesAppBuildGradle(project)
+
 apply from: 'script/clearcache.gradle'
-// compile project(':tipsi-stripe')
+
+apply plugin: 'com.google.gms.google-services'
+googleServices {
+    disableVersionCheck = true
+}
+
+//compile (project(':tipsi-stripe')) {
+//    exclude group: 'com.google.android.gms'
+//    exclude group: 'com.google.firebase'
+//}

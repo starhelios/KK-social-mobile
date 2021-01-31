@@ -11,7 +11,6 @@ import { Container } from 'native-base';
 import { useEffect, useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { SvgXml } from 'react-native-svg';
-import stripe from 'tipsi-stripe'
 
 // from app
 import { 
@@ -29,7 +28,7 @@ import { useDispatch, useGlobalState } from '../../redux/Store';
 import { ActionType } from '../../redux/Reducer';
 
 
-export const PaymentOptionsScreen: React.FC = ({route}) => {
+export const PaymentOptionsScreen: React.FC = () => {
 
   const userInfo: IUser = useGlobalState('userInfo');
 
@@ -52,8 +51,6 @@ export const PaymentOptionsScreen: React.FC = ({route}) => {
 
   const onAddPaymentMethod = async () => {
     navigate('AddPaymentMethod');
-    // const paymentMethod = await stripe.paymentRequestWithCardForm();
-    // console.log(paymentMethod);
   }
 
   return (

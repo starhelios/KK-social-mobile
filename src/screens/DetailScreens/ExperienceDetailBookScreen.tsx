@@ -31,7 +31,7 @@ import {
   ShowShareView,
   viewportWidth,
 } from '../../constants';
-import { IExperience, IHostDetail, ISpecificExperience, IUser } from '../../interfaces/app';
+import { IExperienceDetail, IHostDetail, ISpecificExperience, IUser } from '../../interfaces/app';
 import { ExperienceDetailBookView, SelectDateRangeView } from '../../components/View';
 import { useGlobalState } from '../../redux/Store';
 
@@ -39,7 +39,7 @@ import { useGlobalState } from '../../redux/Store';
 export const ExperienceDetailBookScreen: React.FC = ({route}) => {
 
   const userInfo = useGlobalState('userInfo');
-  const experience: IExperience = route.params.experience;
+  const experienceDetail: IExperienceDetail = route.params.experienceDetail;
   const hostDetail: IHostDetail = route.params.hostDetail;
   const host: IUser = hostDetail.user;
 
@@ -58,9 +58,9 @@ export const ExperienceDetailBookScreen: React.FC = ({route}) => {
 
     const today = convertStringToDate(new Date().toLocaleDateString());
 
-    if (experience.specificExperience != null && experience.specificExperience != undefined && experience.specificExperience.length > 0) {
-      for (let i = 0; i < experience.specificExperience.length; i++) {
-        var availableDate = experience.specificExperience[i];
+    if (experienceDetail.specificExperience != null && experienceDetail.specificExperience != undefined && experienceDetail.specificExperience.length > 0) {
+      for (let i = 0; i < experienceDetail.specificExperience.length; i++) {
+        var availableDate = experienceDetail.specificExperience[i];
   
         const startTime = convertStringToDate(availableDate.day + ' ' + availableDate.startTime);
         if (startTime == null || today == null || startTime < today) {
@@ -134,7 +134,7 @@ export const ExperienceDetailBookScreen: React.FC = ({route}) => {
       return;
     }
     
-    navigate('ExperienceDetailConfirmPay', {experience: experience, availableDate: availableDate, guestCount: guestCount, hostDetail: hostDetail});
+    navigate('ExperienceDetailConfirmPay', {experienceDetail: experienceDetail, availableDate: availableDate, guestCount: guestCount, hostDetail: hostDetail});
   }
 
   const onDecreaseGuestCount = () => {
@@ -199,7 +199,7 @@ export const ExperienceDetailBookScreen: React.FC = ({route}) => {
           horizontal={false}
           data={availableDates}
           keyExtractor={(item, index) => index.toString()}
-          renderItem={({item}) => <ExperienceDetailBookView experience={experience} availableDate={item} onChooseDate={onChooseDate} />}
+          renderItem={({item}) => <ExperienceDetailBookView experienceDetail={experienceDetail} availableDate={item} onChooseDate={onChooseDate} />}
         />
       </SafeAreaView>
 
