@@ -13,3 +13,15 @@ export interface IAvailableDateForCreate {
 	startTime: string,
 	endTime: string,
 }
+
+export interface DurationInfo {
+	step: number,
+	startTime: Date,
+	endTime: Date,
+}
+
+export interface IDateAvailabilityInfo {
+	startDay: string,
+  endDay: string,
+  dateAvaibility: IAvailableDateForCreate[],
+}
