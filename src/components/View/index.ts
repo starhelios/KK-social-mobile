@@ -15,3 +15,4 @@ export * from './SelectDateView';
 export * from './SelectDateRangeView';
 export * from './FiltersView';
 export * from './ExperienceDetailBookView';
+export * from './AvailabilityDateView';

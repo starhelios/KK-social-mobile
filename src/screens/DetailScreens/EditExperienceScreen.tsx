@@ -130,7 +130,7 @@ export const EditExperienceScreen: React.FC = ({route}) => {
                         <CustomText style={styles.info_title}>Duration (in minutes)</CustomText>
                         <CustomTextInput
                           style={{...GlobalStyle.auth_input, color: COLOR.systemBlackColor}}
-                          keyboardType={'numeric'}
+                          keyboardType={'number-pad'}
                           numberOfLines={1}
                           placeholder={'Duration'}
                           placeholderTextColor={COLOR.alphaBlackColor75}
@@ -146,7 +146,7 @@ export const EditExperienceScreen: React.FC = ({route}) => {
                           <CustomText style={styles.price}>$</CustomText>
                           <CustomTextInput
                             style={{...GlobalStyle.auth_input, color: COLOR.systemBlackColor}}
-                            keyboardType={'numeric'}
+                            keyboardType={'number-pad'}
                             placeholder={'Price'}
                             numberOfLines={1}
                             placeholderTextColor={COLOR.alphaBlackColor75}

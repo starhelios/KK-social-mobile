@@ -40,30 +40,24 @@ import {
 } from '../../constants';
 import { ColorButton } from '../../components/Button';
 import { useDispatch, useGlobalState } from '../../redux/Store';
-import { IAvailableDateForCreate, ICategory, IExperience, IUser } from '../../interfaces/app';
+import { DurationInfo, IAvailableDateForCreate, ICategory, IExperience, IUser } from '../../interfaces/app';
 import { ExperienceImageView, SelectDateRangeView } from '../../components/View';
 import { useExperiences } from '../../hooks';
 import { ActionType } from '../../redux/Reducer';
 import GlobalStyle from '../../styles/global';
 
 
-interface DurationInfo {
-	step: number,
-	startTime: Date,
-	endTime: Date,
-}
-
 export const HostAnExperienceScreen: React.FC = () => {
 
   const dispatch = useDispatch();
-  const { goBack } = useNavigation();
+  const { navigate, goBack } = useNavigation();
   const { createExperience } = useExperiences();
 
   const [imageList, setImageList] = useState<string[]>([]);
   const [title, setTitle] = useState<string>('');
   const [description, setDescription] = useState<string>('');
   const [duration, setDuration] = useState<string>('');
-  const [price, setPrice] = useState<string>('0');
+  const [price, setPrice] = useState<string>('');
   const [category, setCategory] = useState<string>('');
   const [categoryList, setCategoryList] = useState<ICategory[]>([]);
   const [imageCount, setImageCount] = useState<number>(0);
@@ -242,8 +236,8 @@ export const HostAnExperienceScreen: React.FC = () => {
       Alert.alert('', ERROR_MESSAGE.INVALID_EXPERIENCE_END_TIME);
       return;
     }
+    // setDuration(`${minutes}`);
 
-    setDuration(`${minutes}`);
     setDurationInfo({ step: 0, startTime: durationInfo.startTime, endTime: durationInfo.endTime });
 
     var startDateTime = new Date(startDay).getTime();
@@ -365,15 +359,21 @@ export const HostAnExperienceScreen: React.FC = () => {
                         <View style={{...GlobalStyle.auth_line, backgroundColor: COLOR.alphaBlackColor20}} />
                       </View>
 
-                      <TouchableWithoutFeedback onPress={() => setDurationInfo({ step: 1, startTime: durationInfo.startTime, endTime: durationInfo.endTime }) }>
-                        <View style={{width:'100%', marginTop: 22}}>
-                          <CustomText style={styles.info_title}>Duration (in minutes)</CustomText>
-                          <CustomText style={{...GlobalStyle.auth_input, color: duration == '' ? COLOR.alphaBlackColor75 : COLOR.systemBlackColor, lineHeight: 45}}>
-                            { duration == '' ? 'Duration' : duration }
-                          </CustomText>
-                          <View style={{...GlobalStyle.auth_line, backgroundColor: COLOR.alphaBlackColor20}} />
-                        </View>
-                      </TouchableWithoutFeedback>
+                      <View style={{width:'100%', marginTop: 22}}>
+                        <CustomText style={styles.info_title}>Duration (in minutes)</CustomText>
+                        {/* <CustomText style={{...GlobalStyle.auth_input, color: duration == '' ? COLOR.alphaBlackColor75 : COLOR.systemBlackColor, lineHeight: 45}}>
+                          { duration == '' ? 'Duration' : duration }
+                        </CustomText> */}
+                        <CustomTextInput
+                          style={{...GlobalStyle.auth_input, color: COLOR.systemBlackColor}}
+                          placeholder={'Duration'}
+                          keyboardType={'number-pad'}
+                          placeholderTextColor={COLOR.alphaBlackColor75}
+                          onChangeText={text => setDuration(text)}
+                          value={duration}
+                        />
+                        <View style={{...GlobalStyle.auth_line, backgroundColor: COLOR.alphaBlackColor20}} />
+                      </View>
 
                       <View style={{width:'100%', marginTop: 22}}>
                         <CustomText style={styles.info_title}>Price / Person</CustomText>
@@ -381,7 +381,7 @@ export const HostAnExperienceScreen: React.FC = () => {
                           <CustomText style={styles.price}>$</CustomText>
                           <CustomTextInput
                             style={{...GlobalStyle.auth_input, color: COLOR.systemBlackColor}}
-                            keyboardType={'numeric'}
+                            keyboardType={'number-pad'}
                             placeholder={'Price'}
                             placeholderTextColor={COLOR.alphaBlackColor75}
                             onChangeText={text => setPrice(text)}
@@ -390,6 +390,13 @@ export const HostAnExperienceScreen: React.FC = () => {
                         </View>
                         <View style={{...GlobalStyle.auth_line, backgroundColor: COLOR.alphaBlackColor20}} />
                       </View>
+                    </View>
+                  </TouchableWithoutFeedback>
+
+                  {/* <TouchableWithoutFeedback onPress={() => setDurationInfo({ step: 1, startTime: durationInfo.startTime, endTime: durationInfo.endTime }) }> */}
+                  <TouchableWithoutFeedback onPress={() => navigate('SelectAvailabilityDates') }>
+                    <View style={{height: 44, marginLeft: 48, marginRight: 48, marginTop: 22}}>
+                      <ColorButton title={'Select Dates of Availability'} backgroundColor={COLOR.alphaBlackColor20} color={COLOR.systemBlackColor} />
                     </View>
                   </TouchableWithoutFeedback>
 
@@ -404,58 +411,6 @@ export const HostAnExperienceScreen: React.FC = () => {
             </View>
           </View>
         </View>
-
-        <Modal animationType = {"slide"} transparent = {true}
-          visible = {durationInfo.step == 1 ? true : false}
-          onRequestClose = {() => { } }>
-          <SelectDateRangeView selectedFromDate={startDay} selectedEndDate={endDay} onCloseView={setCancelSelectDates} onSelectDate={onFilterSelectDate} />
-        </Modal>
-
-        {durationInfo.step == 2 && (
-          <View style={{...styles.datePickerBackground, backgroundColor: Platform.OS == 'ios' ? COLOR.whiteColor : COLOR.clearColor }} >
-            <View style={styles.datePickerContainer}>
-              <DateTimePicker
-                value={durationInfo.startTime}
-                onChange={onChangeStartDate}
-                mode='time'
-                style={styles.datePicker}
-                dateFormat={'shortdate'}
-                placeholderText="Select Start Time"
-              />
-              { Platform.OS == 'ios' && 
-                <TouchableWithoutFeedback onPress={() => onConfirmStartDate() }>
-                  <View style={styles.datePickerConfirm}>
-                    <CustomText style={styles.confirm_text}>Confirm Start Time</CustomText>
-                  </View>
-                </TouchableWithoutFeedback>
-              }
-            </View>
-          </View>
-        )}
-
-        {durationInfo.step == 3 && (
-          <View style={{...styles.datePickerBackground, backgroundColor: Platform.OS == 'ios' ? COLOR.whiteColor : COLOR.clearColor }} >
-            <View style={styles.datePickerContainer}>
-              <DateTimePicker
-                value={durationInfo.endTime}
-                onChange={onChangeEndDate}
-                style={styles.datePicker}
-                minimumDate={durationInfo.startTime}
-                mode='time'
-                dateFormat={'shortdate'}
-                placeholderText="Select End Time"
-              />
-
-              { Platform.OS == 'ios' && 
-                <TouchableWithoutFeedback onPress={() => onConfirmEndDate(durationInfo.startTime, durationInfo.endTime) }>
-                  <View style={styles.datePickerConfirm}>
-                    <CustomText style={styles.confirm_text}>Confirm End Time</CustomText>
-                  </View>
-                </TouchableWithoutFeedback>
-              }
-            </View>
-          </View>
-        )}
       </SafeAreaView>
 
       <Spinner
@@ -682,7 +637,7 @@ const styles = StyleSheet.create({
   datePickerConfirm: {
     position: 'absolute',
     right: 0,
-    width: 200,
+    width: 100,
     height: 35,
     borderColor: COLOR.alphaBlackColor20,
     borderWidth: 1,
@@ -696,5 +651,24 @@ const styles = StyleSheet.create({
     fontFamily: FONT.AN_Regular,
     fontSize: 16,
     color: COLOR.blueColor,
+  },
+  time_top_container: {
+    position: 'absolute', 
+    width: '100%',
+    top: 0,
+    height: 100,
+    backgroundColor: COLOR.whiteColor,
+  },
+  time_text: {
+    position: 'absolute', 
+    width: '100%',
+    bottom: 5,
+    height: 35,
+    lineHeight: 35,
+    textAlign: 'center',
+    fontFamily: FONT.AN_Regular,
+    fontWeight: '600',
+    fontSize: 20,
+    color: COLOR.blackColor,
   },
 });
