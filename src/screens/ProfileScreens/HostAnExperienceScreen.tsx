@@ -11,7 +11,6 @@ import {
   KeyboardAvoidingView,
   TouchableOpacity,
   Alert,
-  Modal,
 } from 'react-native';
 import { Container } from 'native-base';
 import { useEffect, useState } from 'react';
@@ -19,14 +18,12 @@ import { useNavigation } from '@react-navigation/native';
 import { SvgXml } from 'react-native-svg';
 import ImagePicker from 'react-native-image-crop-picker';
 import Autocomplete from 'react-native-autocomplete-input';
-import DateTimePicker from '@react-native-community/datetimepicker';
 import Spinner from 'react-native-loading-spinner-overlay';
 import firebase from 'firebase';
 
 // from app
 import { 
   COLOR, 
-  convertDateToDateFormat, 
   CustomText, 
   CustomTextInput, 
   ERROR_MESSAGE, 
@@ -40,8 +37,8 @@ import {
 } from '../../constants';
 import { ColorButton } from '../../components/Button';
 import { useDispatch, useGlobalState } from '../../redux/Store';
-import { DurationInfo, IAvailableDateForCreate, ICategory, IExperience, IUser } from '../../interfaces/app';
-import { ExperienceImageView, SelectDateRangeView } from '../../components/View';
+import { DurationInfo, IAvailableDateForCreate, ICategory, IDateAvailabilityInfo, IExperience, IUser } from '../../interfaces/app';
+import { ExperienceImageView } from '../../components/View';
 import { useExperiences } from '../../hooks';
 import { ActionType } from '../../redux/Reducer';
 import GlobalStyle from '../../styles/global';
@@ -62,11 +59,8 @@ export const HostAnExperienceScreen: React.FC = () => {
   const [categoryList, setCategoryList] = useState<ICategory[]>([]);
   const [imageCount, setImageCount] = useState<number>(0);
   const [changeCount, setChangeCount] = useState<number>(0);
-  const [startDay, setStartDay] = useState<string>('');
-  const [endDay, setEndDay] = useState<string>('');
-  const [dateAvaibility, setDateAvaibility] = useState<IAvailableDateForCreate[]>([]);
+  const [dateAvaibilityInfo, setDateAvaibilityInfo] = useState<IDateAvailabilityInfo>({startDay: '', endDay: '', dateAvaibility: []});
   const [uploading, setUploading] = useState(false);
-  const [durationInfo, setDurationInfo] = useState<DurationInfo>({ step: 0, startTime: new Date(), endTime: new Date() });
   
   const profile: IUser = useGlobalState('userInfo');
   const allCategoryList: ICategory[] = useGlobalState('categoryList');
@@ -119,6 +113,9 @@ export const HostAnExperienceScreen: React.FC = () => {
     } else if (price == '' || parseInt(price) == 0) {
       Alert.alert('', ERROR_MESSAGE.EMPTY_EXPERIENCE_PRICE);
       return;
+    } else if (dateAvaibilityInfo.startDay == '' || dateAvaibilityInfo.endDay == '') {
+      Alert.alert('', ERROR_MESSAGE.EMPTY_EXPERIENCE_AVAILABILITY_DATES);
+      return;
     }
 
     fetchingData = true;
@@ -129,7 +126,7 @@ export const HostAnExperienceScreen: React.FC = () => {
   const uploadExperienceImage = async (experienceImageList: string[], imageIndex: number) => {
     const firebaseHeader = 'https://firebasestorage.googleapis.com/';
     if (imageIndex >= imageList.length) {
-      createExperience(title, description, parseInt(duration), parseInt(price), category, startDay, endDay, profile.id, experienceImageList, dateAvaibility)
+      createExperience(title, description, parseInt(duration), parseInt(price), category, dateAvaibilityInfo.startDay, dateAvaibilityInfo.endDay, profile.id, experienceImageList, dateAvaibilityInfo.dateAvaibility)
       .then(async (result: IExperience) => {
         fetchingData = false;
         setUploading(false);
@@ -185,86 +182,47 @@ export const HostAnExperienceScreen: React.FC = () => {
     }
   }
 
-  const onFilterSelectDate = (fromDate: string, endDate: string) => {
-    setStartDay(fromDate);
-    setEndDay(endDate);
-    setDuration('');
-    setDurationInfo({ step: 2, startTime: durationInfo.startTime, endTime: durationInfo.endTime });
-  }
+  function onSelectedPhoto(index: number, file: string) {
+    let images: string[] = imageList;
+    images[index] = file;
+    setImageList(images);
 
-  const onChangeStartDate = (event: any, selectedDate: any) => {
-    if (selectedDate === undefined) {
-      onDismiss();
-    } else {
-      if (Platform.OS != 'ios') {
-        console.log('start');
-        setDurationInfo({ step: 3, startTime: selectedDate, endTime: durationInfo.endTime });
-      } else {
-        setDurationInfo({ step: 2, startTime: selectedDate, endTime: durationInfo.endTime });
-      }
-    }    
-  };
-
-  const onConfirmStartDate = () => {
-    setDurationInfo({ step: 3, startTime: durationInfo.startTime, endTime: durationInfo.endTime });
-  }
-
-  const onChangeEndDate = (event: any, selectedDate: any) => {
-    if (selectedDate === undefined) {
-      onDismiss();
-    } else {
-      if (Platform.OS != 'ios') {
-        console.log('end');
-        setDurationInfo({ step: 0, startTime: durationInfo.startTime, endTime: selectedDate });
-        onConfirmEndDate(durationInfo.startTime, selectedDate);
-      } else {
-        setDurationInfo({ step: 3, startTime: durationInfo.startTime, endTime: selectedDate });
-      }
-    }   
-  };
-
-  const longToDate = (millisec: string) => {
-    var length = millisec.length - 7;
-    var date = parseInt(millisec.substring(6,length));
-    return (new Date(date).toUTCString());
-  }
-
-  const onConfirmEndDate = (startDate: Date, endDate: Date) => {
-    var msDiff = endDate.getTime() - startDate.getTime();
-    var minutes = Math.round(msDiff / (1000 * 60));
-    if (minutes <= 0) {
-      Alert.alert('', ERROR_MESSAGE.INVALID_EXPERIENCE_END_TIME);
-      return;
+    if (index == imageCount) {
+      setImageCount(imageCount + 1);
     }
-    // setDuration(`${minutes}`);
-
-    setDurationInfo({ step: 0, startTime: durationInfo.startTime, endTime: durationInfo.endTime });
-
-    var startDateTime = new Date(startDay).getTime();
-    var endDateTime = new Date(endDay).getTime();
-    var currentTime = startDateTime;
-
-    var avaibilityDates: IAvailableDateForCreate[] = [];
-    while (currentTime <= endDateTime) {
-      let avaibilityDate: IAvailableDateForCreate = {
-        day: convertDateToDateFormat(new Date(currentTime), 'MMMM D, YYYY'), 
-        startTime: convertDateToDateFormat(startDate, 'hh:mm a'), 
-        endTime: convertDateToDateFormat(endDate, 'hh:mm a')};
-      avaibilityDates.push(avaibilityDate);
-      currentTime += 1000 * 60 * 60 * 24;
-    }
-    setDateAvaibility(avaibilityDates);
+    setChangeCount(changeCount + 1);
   }
 
-  const onDismiss = () => {
-    Keyboard.dismiss;
-    setDurationInfo({ step: 0, startTime: durationInfo.startTime, endTime: durationInfo.endTime });
+  function onChoosePhoto(index: number) {
+    ImagePicker.openPicker({
+      includeBase64: true,
+      multiple: false,
+      cropping: false,
+      mediaType: "photo",
+    })
+    .then((image) => {
+      onSelectedPhoto(index, Platform.OS === 'android'
+        ? image.path
+        : image.path.replace('file://', ''));
+    })
+    .catch((e) => {});
   }
 
-  const setCancelSelectDates = (visible: boolean) => {
-    setDurationInfo({ step: 0, startTime: durationInfo.startTime, endTime: durationInfo.endTime });
+  function onTakePicture(index: number) {
+    ImagePicker.openCamera({
+      includeBase64: true,
+      multiple: false,
+      cropping: false,
+      mediaType: "photo",
+    })
+    .then((image) => {
+      onSelectedPhoto(index, Platform.OS === 'android'
+        ? image.path
+        : image.path.replace('file://', ''));
+    })
+    .catch((e) => {
+    });
   }
-
 
   return (
     <Container style={{...styles.background, backgroundColor: COLOR.whiteColor}}>
@@ -299,7 +257,7 @@ export const HostAnExperienceScreen: React.FC = () => {
                     </View>
                   </View>
 
-                  <TouchableWithoutFeedback onPress={onDismiss} accessible={false}>
+                  <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
                     <View style={{marginLeft: 24, marginRight: 24, width: viewportWidth - 48}}>
                       <View style={{width:'100%', zIndex: 100}}>
                         <CustomText style={styles.info_title}>Category</CustomText>
@@ -361,9 +319,7 @@ export const HostAnExperienceScreen: React.FC = () => {
 
                       <View style={{width:'100%', marginTop: 22}}>
                         <CustomText style={styles.info_title}>Duration (in minutes)</CustomText>
-                        {/* <CustomText style={{...GlobalStyle.auth_input, color: duration == '' ? COLOR.alphaBlackColor75 : COLOR.systemBlackColor, lineHeight: 45}}>
-                          { duration == '' ? 'Duration' : duration }
-                        </CustomText> */}
+                        
                         <CustomTextInput
                           style={{...GlobalStyle.auth_input, color: COLOR.systemBlackColor}}
                           placeholder={'Duration'}
@@ -393,8 +349,7 @@ export const HostAnExperienceScreen: React.FC = () => {
                     </View>
                   </TouchableWithoutFeedback>
 
-                  {/* <TouchableWithoutFeedback onPress={() => setDurationInfo({ step: 1, startTime: durationInfo.startTime, endTime: durationInfo.endTime }) }> */}
-                  <TouchableWithoutFeedback onPress={() => navigate('SelectAvailabilityDates') }>
+                  <TouchableWithoutFeedback onPress={() => navigate('SelectAvailabilityDates', {dateAvaibilityInfo: dateAvaibilityInfo, setDateAvaibilityInfo: setDateAvaibilityInfo}) }>
                     <View style={{height: 44, marginLeft: 48, marginRight: 48, marginTop: 22}}>
                       <ColorButton title={'Select Dates of Availability'} backgroundColor={COLOR.alphaBlackColor20} color={COLOR.systemBlackColor} />
                     </View>
@@ -420,49 +375,6 @@ export const HostAnExperienceScreen: React.FC = () => {
       />
     </Container>
   );
-
-
-  function onSelectedPhoto(index: number, file: string) {
-    let images: string[] = imageList;
-    images[index] = file;
-    setImageList(images);
-
-    if (index == imageCount) {
-      setImageCount(imageCount + 1);
-    }
-    setChangeCount(changeCount + 1);
-  }
-
-  function onChoosePhoto(index: number) {
-    ImagePicker.openPicker({
-      includeBase64: true,
-      multiple: false,
-      cropping: false,
-      mediaType: "photo",
-    })
-    .then((image) => {
-      onSelectedPhoto(index, Platform.OS === 'android'
-        ? image.path
-        : image.path.replace('file://', ''));
-    })
-    .catch((e) => {});
-  }
-
-  function onTakePicture(index: number) {
-    ImagePicker.openCamera({
-      includeBase64: true,
-      multiple: false,
-      cropping: false,
-      mediaType: "photo",
-    })
-    .then((image) => {
-      onSelectedPhoto(index, Platform.OS === 'android'
-        ? image.path
-        : image.path.replace('file://', ''));
-    })
-    .catch((e) => {
-    });
-  }
 };
 
 const styles = StyleSheet.create({
@@ -614,61 +526,5 @@ const styles = StyleSheet.create({
     paddingLeft: 20, 
     backgroundColor: COLOR.systemWhiteColor, 
     color: COLOR.systemBlackColor,
-  },
-  datePickerBackground: {
-    position: 'absolute',
-    flex: 1,
-    bottom: 0,
-    width: '100%',
-    height: 150,
-    backgroundColor: COLOR.whiteColor,
-  },
-  datePickerContainer: {
-    flexDirection: 'row', 
-    marginTop: 15, 
-    marginLeft: 15, 
-    width: viewportWidth - 30,
-  },
-  datePicker: {
-    alignContent: 'center',
-    marginTop: 3,
-    width: viewportWidth - 30,
-  },
-  datePickerConfirm: {
-    position: 'absolute',
-    right: 0,
-    width: 100,
-    height: 35,
-    borderColor: COLOR.alphaBlackColor20,
-    borderWidth: 1,
-    borderRadius: 10,
-  },
-  confirm_text: {
-    width: '100%',
-    height: 35,
-    lineHeight: 35,
-    textAlign: 'center',
-    fontFamily: FONT.AN_Regular,
-    fontSize: 16,
-    color: COLOR.blueColor,
-  },
-  time_top_container: {
-    position: 'absolute', 
-    width: '100%',
-    top: 0,
-    height: 100,
-    backgroundColor: COLOR.whiteColor,
-  },
-  time_text: {
-    position: 'absolute', 
-    width: '100%',
-    bottom: 5,
-    height: 35,
-    lineHeight: 35,
-    textAlign: 'center',
-    fontFamily: FONT.AN_Regular,
-    fontWeight: '600',
-    fontSize: 20,
-    color: COLOR.blackColor,
   },
 });

@@ -19,3 +19,9 @@ export interface DurationInfo {
 	startTime: Date,
 	endTime: Date,
 }
+
+export interface IDateAvailabilityInfo {
+	startDay: string,
+  endDay: string,
+  dateAvaibility: IAvailableDateForCreate[],
+}

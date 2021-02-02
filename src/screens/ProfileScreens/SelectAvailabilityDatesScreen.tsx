@@ -29,18 +29,23 @@ import {
 } from '../../constants';
 import { DurationInfo, IAvailableDateForCreate } from '../../interfaces/app';
 import { AvailabilityDateView, SelectDateRangeView } from '../../components/View';
+import { ColorButton } from '../../components/Button';
 
 
-export const SelectAvailabilityDatesScreen: React.FC = () => {
+export const SelectAvailabilityDatesScreen: React.FC = ({route}) => {
   
   const { goBack } = useNavigation();
 
-  const [startDay, setStartDay] = useState<string>('');
-  const [endDay, setEndDay] = useState<string>('');
-  const [dateAvaibility, setDateAvaibility] = useState<IAvailableDateForCreate[]>([]);
+  const [selectedIndex, setSelectedIndex] = useState<number>(-1);
+  const [startDay, setStartDay] = useState<string>(route.params.dateAvaibilityInfo.startDay);
+  const [endDay, setEndDay] = useState<string>(route.params.dateAvaibilityInfo.endDay);
+  const [dateAvaibility, setDateAvaibility] = useState<IAvailableDateForCreate[]>(route.params.dateAvaibilityInfo.dateAvaibility);
   const [durationInfo, setDurationInfo] = useState<DurationInfo>({ step: 0, startTime: new Date(), endTime: new Date() });
 
   useEffect(() => {
+    if (dateAvaibility.length == 0) {
+      onEditActiveDates();
+    }
   }, [])
 
   const onEditActiveDates = () => {
@@ -103,23 +108,37 @@ export const SelectAvailabilityDatesScreen: React.FC = () => {
 
     setDurationInfo({ step: 0, startTime: durationInfo.startTime, endTime: durationInfo.endTime });
 
-    var startDateTime = new Date(startDay).getTime();
-    var endDateTime = new Date(endDay).getTime();
-    var currentTime = startDateTime;
-
-    var avaibilityDates: IAvailableDateForCreate[] = [];
-    while (currentTime <= endDateTime) {
-      let avaibilityDate: IAvailableDateForCreate = {
-        day: convertDateToDateFormat(new Date(currentTime), 'MMMM D, YYYY'), 
-        startTime: convertDateToDateFormat(startDate, 'hh:mm a'), 
-        endTime: convertDateToDateFormat(endDate, 'hh:mm a')};
-      avaibilityDates.push(avaibilityDate);
-      currentTime += 1000 * 60 * 60 * 24;
+    if (selectedIndex == -1) {
+      var startDateTime = new Date(startDay).getTime();
+      var endDateTime = new Date(endDay).getTime();
+      var currentTime = startDateTime;
+  
+      var avaibilityDates: IAvailableDateForCreate[] = [];
+      while (currentTime <= endDateTime) {
+        let avaibilityDate: IAvailableDateForCreate = {
+          day: convertDateToDateFormat(new Date(currentTime), 'MMMM D, YYYY'), 
+          startTime: convertDateToDateFormat(startDate, 'hh:mm a'), 
+          endTime: convertDateToDateFormat(endDate, 'hh:mm a')};
+        avaibilityDates.push(avaibilityDate);
+        currentTime += 1000 * 60 * 60 * 24;
+      }
+      setDateAvaibility(avaibilityDates);
+    } else if (selectedIndex < dateAvaibility.length) {
+      var avaibilityDates: IAvailableDateForCreate[] = dateAvaibility;
+      avaibilityDates[selectedIndex].startTime = convertDateToDateFormat(startDate, 'hh:mm a');
+      avaibilityDates[selectedIndex].endTime = convertDateToDateFormat(endDate, 'hh:mm a');
+      setDateAvaibility(avaibilityDates);
     }
-    setDateAvaibility(avaibilityDates);
   }
 
   const onEditActiveDate = (index: number, availableDate: IAvailableDateForCreate) => {
+    setSelectedIndex(index);
+    setDurationInfo({ step: 2, startTime: new Date(availableDate.day + ' ' + availableDate.startTime), endTime: new Date(availableDate.day + ' ' + availableDate.endTime) });
+  }
+
+  const onSave = () => {
+    route.params.setDateAvaibilityInfo({startDay: startDay, endDay: endDay, dateAvaibility: dateAvaibility});
+    goBack();
   }
   
 
@@ -150,6 +169,12 @@ export const SelectAvailabilityDatesScreen: React.FC = () => {
           keyExtractor={(item, index) => index.toString()}
           renderItem={({item, index}) => <AvailabilityDateView availableDate={item} index={index} onChooseDate={onEditActiveDate} />}
         />
+
+        <TouchableWithoutFeedback onPress={onSave}>
+          <View style={styles.bottom_button}>
+            <ColorButton title={'Save'} backgroundColor={COLOR.redColor} color={COLOR.systemWhiteColor} />
+          </View>
+        </TouchableWithoutFeedback>
       </SafeAreaView>
 
       <Modal animationType = {"slide"} transparent = {true}
@@ -233,6 +258,7 @@ const styles = StyleSheet.create({
     width: '100%',
     height: 33,
     flexDirection: 'row',
+    backgroundColor: COLOR.whiteColor
   },
   title: {
     width: '100%',
@@ -323,7 +349,20 @@ const styles = StyleSheet.create({
     color: COLOR.blackColor,
   },
   booking_list: {
-    marginTop: 22,
+    marginTop: 10,
+    marginBottom: 50,
     width: '100%',
-  }
+    flex: 1,
+    overflow: 'hidden',
+  },
+  bottom_button: {
+    position: 'absolute',
+    marginTop: 22,
+    bottom: 33,
+    marginLeft: 48,
+    marginRight: 48,
+    width: viewportWidth - 96,
+    height: 44,
+    flex: 1,
+  },
 });

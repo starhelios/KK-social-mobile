@@ -60,16 +60,6 @@ export const BecomeAHostScreen: React.FC = () => {
   const allCategoryList: ICategory[] = useGlobalState('categoryList'); 
 
   const [uploading, setUploading] = useState(false);
-
-  const comp = (a: string, b: string) => a.toLowerCase().trim() === b.toLowerCase().trim();
-  const findCategory = (query: string) => {
-    if (query === '') {
-      return [];
-    }
-    const regex = new RegExp(`${query}`, 'i');
-    return allCategoryList.filter(category => category.name.search(regex) >= 0);
-  }
-
   const [image, setImage] = useState<string>(profile.avatarUrl);
   const [fullName, setFullName] = useState<string>(profile.fullname);
   const [emailAddress, setEmailAddress] = useState<string>(profile.email);
@@ -78,7 +68,6 @@ export const BecomeAHostScreen: React.FC = () => {
   const [location, setLocation] = useState<string>(profile.location);
   const [category, setCategory] = useState<string>(profile.categoryName);
   const [categoryList, setCategoryList] = useState<ICategory[]>([]);
-  const [showCategoryList, setShowCategoryList] = useState<boolean>(true);
   const [avatarFile, setAvatarFile] = useState<IFile | null>(null);
   const [showDatePicker, setShowDatePicker] = useState<boolean>(false);
   const [mode, setMode] = useState<"date" | "time" | undefined>('date');
@@ -105,6 +94,15 @@ export const BecomeAHostScreen: React.FC = () => {
     
     setCategoryList(findCategory(category));
   }, [category]);
+
+  const comp = (a: string, b: string) => a.toLowerCase().trim() === b.toLowerCase().trim();
+  const findCategory = (query: string) => {
+    if (query === '') {
+      return [];
+    }
+    const regex = new RegExp(`${query}`, 'i');
+    return allCategoryList.filter(category => category.name.search(regex) >= 0);
+  }
 
   const onChange = (event: any, selectedDate: any) => {
     if (Platform.OS != 'ios') {
@@ -303,10 +301,7 @@ export const BecomeAHostScreen: React.FC = () => {
 
                       <View style={{width:'100%', marginTop: 22}}>
                         <CustomText style={styles.info_title}>Date of Birth</CustomText>
-                        <TouchableWithoutFeedback onPress={() => {
-                          console.log('------')
-                          setShowDatePicker(true)
-                        }}>
+                        <TouchableWithoutFeedback onPress={() => setShowDatePicker(true) }>
                           <CustomText style={{...GlobalStyle.auth_input, color: birthday != '' ? COLOR.systemWhiteColor : COLOR.alphaWhiteColor50, lineHeight: 45}}>
                             {birthday != '' ? birthday : 'Date of Birth'}
                           </CustomText>
