@@ -111,10 +111,9 @@ export const useUsers = () => {
 
   const reservationBooking = async (
     userId: string,
-    experienceId: string,
-    paymentIntent: string, 
-    guests: number, 
-    imageUrl: string
+    experienceID: string,
+    dateAvaibilityID: string,
+    completed: boolean
   ): Promise<any> => {
     const url = API_ENDPOINT.BOOKING_RESERVATION + '/' + userId;
     let body = {
