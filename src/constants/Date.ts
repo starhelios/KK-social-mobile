@@ -18,6 +18,14 @@ export const convertStringToDate = (date: string) => {
   }
 }
 
+export const convertStringToMomentDateFormat = (date: string, format: string) => {
+  if (date == '' || date == undefined) {
+    return '';
+  } else {
+    return Moment.utc(date).format(format);
+  }
+}
+
 export const convertDateToDateFormat = (date: Date, format: string) => {
   if (date == undefined) {
     return '';

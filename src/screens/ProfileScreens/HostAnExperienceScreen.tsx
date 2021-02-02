@@ -37,7 +37,7 @@ import {
 } from '../../constants';
 import { ColorButton } from '../../components/Button';
 import { useDispatch, useGlobalState } from '../../redux/Store';
-import { DurationInfo, IAvailableDateForCreate, ICategory, IDateAvailabilityInfo, IExperience, IUser } from '../../interfaces/app';
+import { ICategory, IDateAvailabilityInfo, IExperience, IUser } from '../../interfaces/app';
 import { ExperienceImageView } from '../../components/View';
 import { useExperiences } from '../../hooks';
 import { ActionType } from '../../redux/Reducer';

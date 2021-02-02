@@ -20,6 +20,9 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import { 
   COLOR, 
   convertDateToDateFormat, 
+  convertDateToMomentDateFormat, 
+  convertStringToDateFormat, 
+  convertStringToMomentDateFormat, 
   CustomText, 
   ERROR_MESSAGE, 
   FONT, 
@@ -27,20 +30,30 @@ import {
   MARGIN_TOP,
   viewportWidth,
 } from '../../constants';
-import { DurationInfo, IAvailableDateForCreate } from '../../interfaces/app';
+import { IAvailableDateForCreate } from '../../interfaces/app';
 import { AvailabilityDateView, SelectDateRangeView } from '../../components/View';
 import { ColorButton } from '../../components/Button';
+import moment from 'moment';
 
 
 export const SelectAvailabilityDatesScreen: React.FC = ({route}) => {
   
   const { goBack } = useNavigation();
 
+  const toLocalTimeString = (date: Date) => {
+    return convertStringToMomentDateFormat(date.toLocaleDateString() + ' ' + date.toLocaleTimeString(), 'hh:mm a')
+  }
+
+  const [startTime, setStartTime] = useState<Date>(new Date());
+  const [endTime, setEndTime] = useState<Date>(new Date());
+  const [startTimeString, setStartTimeString] = useState<string>(toLocalTimeString(startTime));
+  const [endTimeString, setEndTimeString] = useState<string>(toLocalTimeString(endTime));
+  const [modalType, setModalType] = useState<number>(0);
+  const [showBottomBar, setShowBottomBar] = useState<boolean>(false);
   const [selectedIndex, setSelectedIndex] = useState<number>(-1);
   const [startDay, setStartDay] = useState<string>(route.params.dateAvaibilityInfo.startDay);
   const [endDay, setEndDay] = useState<string>(route.params.dateAvaibilityInfo.endDay);
   const [dateAvaibility, setDateAvaibility] = useState<IAvailableDateForCreate[]>(route.params.dateAvaibilityInfo.dateAvaibility);
-  const [durationInfo, setDurationInfo] = useState<DurationInfo>({ step: 0, startTime: new Date(), endTime: new Date() });
 
   useEffect(() => {
     if (dateAvaibility.length == 0) {
@@ -49,64 +62,56 @@ export const SelectAvailabilityDatesScreen: React.FC = ({route}) => {
   }, [])
 
   const onEditActiveDates = () => {
-    setDurationInfo({ step: 1, startTime: durationInfo.startTime, endTime: durationInfo.endTime })
+    setModalType(1);
   }
 
   const onDismiss = () => {
     Keyboard.dismiss;
-    setDurationInfo({ step: 0, startTime: durationInfo.startTime, endTime: durationInfo.endTime });
+    setModalType(0);
+    setShowBottomBar(false);
   }
 
   const setCancelSelectDates = (visible: boolean) => {
-    setDurationInfo({ step: 0, startTime: durationInfo.startTime, endTime: durationInfo.endTime });
+    setModalType(0);
+    setShowBottomBar(false);
   }
-
-  const onChangeStartDate = (event: any, selectedDate: any) => {
-    if (selectedDate === undefined) {
-      onDismiss();
-    } else {
-      if (Platform.OS != 'ios') {
-        console.log('start');
-        setDurationInfo({ step: 3, startTime: selectedDate, endTime: durationInfo.endTime });
-      } else {
-        setDurationInfo({ step: 2, startTime: selectedDate, endTime: durationInfo.endTime });
-      }
-    }    
-  };
-
-  const onConfirmStartDate = () => {
-    setDurationInfo({ step: 3, startTime: durationInfo.startTime, endTime: durationInfo.endTime });
-  }
-
-  const onChangeEndDate = (event: any, selectedDate: any) => {
-    if (selectedDate === undefined) {
-      onDismiss();
-    } else {
-      if (Platform.OS != 'ios') {
-        console.log('end');
-        setDurationInfo({ step: 0, startTime: durationInfo.startTime, endTime: selectedDate });
-        onConfirmEndDate(durationInfo.startTime, selectedDate);
-      } else {
-        setDurationInfo({ step: 3, startTime: durationInfo.startTime, endTime: selectedDate });
-      }
-    }   
-  };
 
   const onFilterSelectDate = (fromDate: string, endDate: string) => {
     setStartDay(fromDate);
     setEndDay(endDate);
-    setDurationInfo({ step: 2, startTime: durationInfo.startTime, endTime: durationInfo.endTime });
+    setModalType(0);
+    setShowBottomBar(true);
   }
 
-  const onConfirmEndDate = (startDate: Date, endDate: Date) => {
-    var msDiff = endDate.getTime() - startDate.getTime();
+  const onChangeStartDate = (event: any, selectedDate: any) => {
+    setModalType(0);
+    if (selectedDate === undefined) {
+    } else {
+      setStartTime(selectedDate);
+      setStartTimeString(toLocalTimeString(selectedDate));
+    }    
+  };
+
+  const onChangeEndDate = (event: any, selectedDate: any) => {
+    setModalType(0);
+
+    if (selectedDate === undefined) {
+    } else {
+      setEndTime(selectedDate);
+      setEndTimeString(toLocalTimeString(selectedDate));
+    }   
+  };
+
+  const onConfirmTime = () => {
+    var msDiff = endTime.getTime() - startTime.getTime();
     var minutes = Math.round(msDiff / (1000 * 60));
     if (minutes <= 0) {
       Alert.alert('', ERROR_MESSAGE.INVALID_EXPERIENCE_END_TIME);
       return;
     }
 
-    setDurationInfo({ step: 0, startTime: durationInfo.startTime, endTime: durationInfo.endTime });
+    setModalType(0);
+    setShowBottomBar(false);
 
     if (selectedIndex == -1) {
       var startDateTime = new Date(startDay).getTime();
@@ -116,24 +121,30 @@ export const SelectAvailabilityDatesScreen: React.FC = ({route}) => {
       var avaibilityDates: IAvailableDateForCreate[] = [];
       while (currentTime <= endDateTime) {
         let avaibilityDate: IAvailableDateForCreate = {
-          day: convertDateToDateFormat(new Date(currentTime), 'MMMM D, YYYY'), 
-          startTime: convertDateToDateFormat(startDate, 'hh:mm a'), 
-          endTime: convertDateToDateFormat(endDate, 'hh:mm a')};
+          day: convertStringToDateFormat(new Date(currentTime).toLocaleDateString(), 'MMMM D, YYYY'), 
+          startTime: startTimeString, 
+          endTime: endTimeString};
         avaibilityDates.push(avaibilityDate);
         currentTime += 1000 * 60 * 60 * 24;
       }
       setDateAvaibility(avaibilityDates);
+
     } else if (selectedIndex < dateAvaibility.length) {
       var avaibilityDates: IAvailableDateForCreate[] = dateAvaibility;
-      avaibilityDates[selectedIndex].startTime = convertDateToDateFormat(startDate, 'hh:mm a');
-      avaibilityDates[selectedIndex].endTime = convertDateToDateFormat(endDate, 'hh:mm a');
+      avaibilityDates[selectedIndex].startTime = startTimeString;
+      avaibilityDates[selectedIndex].endTime = endTimeString;
       setDateAvaibility(avaibilityDates);
     }
   }
 
   const onEditActiveDate = (index: number, availableDate: IAvailableDateForCreate) => {
     setSelectedIndex(index);
-    setDurationInfo({ step: 2, startTime: new Date(availableDate.day + ' ' + availableDate.startTime), endTime: new Date(availableDate.day + ' ' + availableDate.endTime) });
+
+    setStartTimeString(availableDate.startTime);
+    setEndTimeString(availableDate.endTime);
+    setStartTime(new Date(availableDate.day + ' ' + availableDate.startTime));
+    setEndTime(new Date(availableDate.day + ' ' + availableDate.endTime));
+    setShowBottomBar(true);
   }
 
   const onSave = () => {
@@ -141,7 +152,6 @@ export const SelectAvailabilityDatesScreen: React.FC = ({route}) => {
     goBack();
   }
   
-
   return (
     <Container style={{...styles.background, backgroundColor: COLOR.whiteColor}}>
       <SafeAreaView style={styles.safe_area}>
@@ -178,67 +188,91 @@ export const SelectAvailabilityDatesScreen: React.FC = ({route}) => {
       </SafeAreaView>
 
       <Modal animationType = {"slide"} transparent = {true}
-        visible = {durationInfo.step == 1 ? true : false}
+        visible = {modalType == 1 ? true : false}
         onRequestClose = {() => { } }>
         <SelectDateRangeView selectedFromDate={startDay} selectedEndDate={endDay} onCloseView={setCancelSelectDates} onSelectDate={onFilterSelectDate} />
       </Modal>
 
-      { (durationInfo.step == 2 || durationInfo.step == 3) && (
+      { showBottomBar == true && 
         <TouchableWithoutFeedback onPress={onDismiss} accessible={false}>
           <View style={{position: 'absolute', top: 0, bottom: 0, width: '100%', backgroundColor: COLOR.alphaBlackColor20}}>
-            <View style={{...styles.datePickerBackground, backgroundColor: Platform.OS == 'ios' ? COLOR.whiteColor : COLOR.clearColor }} >
+            <View style={styles.datePickerBackground} >
               <View style={styles.datePickerContainer}>
-                { durationInfo.step == 2
-                ? <View>
-                    <DateTimePicker
-                      value={durationInfo.startTime}
-                      onChange={onChangeStartDate}
-                      mode='time'
-                      style={styles.datePicker}
-                      dateFormat={'shortdate'}
-                      placeholderText="Select Start Time"
-                    />
+                <View style={{flexDirection: 'row', marginTop: 10, width: '100%'}}>
+                  <CustomText style={styles.time_title}>{ 'Start Time' }</CustomText>
 
-                    { Platform.OS == 'ios' &&
-                      <TouchableWithoutFeedback onPress={() => onConfirmStartDate() }>
-                        <View style={styles.datePickerConfirm}>
-                          <CustomText style={styles.confirm_text}>Confirm</CustomText>
+                  { Platform.OS != 'android'
+                    ? <DateTimePicker
+                        value={startTime}
+                        onChange={onChangeStartDate}
+                        mode='time'
+                        style={styles.datePicker}
+                        dateFormat={'shortdate'}
+                        placeholderText="Select Start Time"
+                      />
+                    : <TouchableWithoutFeedback onPress={() => setModalType(2)} accessible={false}>
+                        <View style={styles.time_content_container}>
+                          <CustomText style={styles.time_content}>{ startTimeString }</CustomText>
                         </View>
                       </TouchableWithoutFeedback>
-                    }
-                  </View>
-                : <View>
-                    <DateTimePicker
-                      value={durationInfo.endTime}
-                      onChange={onChangeEndDate}
-                      style={styles.datePicker}
-                      minimumDate={durationInfo.startTime}
-                      mode='time'
-                      dateFormat={'shortdate'}
-                      placeholderText="Select End Time"
-                    />
+                  }                  
+                  <TouchableWithoutFeedback onPress={() => onConfirmTime() }>
+                    <View style={styles.datePickerConfirm}>
+                      <CustomText style={styles.confirm_text}>Confirm</CustomText>
+                    </View>
+                  </TouchableWithoutFeedback>
+                </View>
 
-                    { Platform.OS == 'ios' && 
-                      <TouchableWithoutFeedback onPress={() => onConfirmEndDate(durationInfo.startTime, durationInfo.endTime) }>
-                        <View style={styles.datePickerConfirm}>
-                          <CustomText style={styles.confirm_text}>Confirm</CustomText>
+                <View style={{flexDirection: 'row', marginTop: 15, width: '100%'}}>
+                  <CustomText style={styles.time_title}>{ 'End Time' }</CustomText>
+
+                  { Platform.OS != 'android'
+                    ? <DateTimePicker
+                        value={endTime}
+                        onChange={onChangeEndDate}
+                        style={styles.datePicker}
+                        mode='time'
+                        dateFormat={'shortdate'}
+                        placeholderText="Select End Time"
+                      />
+                    : <TouchableWithoutFeedback onPress={() => setModalType(3)} accessible={false}>
+                        <View style={styles.time_content_container}>
+                          <CustomText style={styles.time_content}>{ endTimeString }</CustomText>
                         </View>
                       </TouchableWithoutFeedback>
-                    }
-                  </View>
-                }
+                  }
+                </View>
               </View>
             </View>
 
-            <View style={styles.time_top_container}>
-              <CustomText style={styles.time_text}>{ durationInfo.step == 2 ? 'Start Time' : 'End Time' }</CustomText>
-              </View>
+            { Platform.OS == 'android' && modalType == 2 && 
+              <DateTimePicker
+                value={startTime}
+                onChange={onChangeStartDate}
+                mode='time'
+                style={styles.datePicker}
+                dateFormat={'shortdate'}
+                placeholderText="Select Start Time"
+              />
+            }
+            { Platform.OS == 'android' && modalType == 3 && 
+              <DateTimePicker
+                value={endTime}
+                onChange={onChangeEndDate}
+                style={styles.datePicker}
+                // minimumDate={new Date('2021-01-01 ' + startTime)}
+                mode='time'
+                dateFormat={'shortdate'}
+                placeholderText="Select End Time"
+              />
+            }
           </View>
         </TouchableWithoutFeedback>
-      )}
+      }
     </Container>
   );
 };
+
 
 const styles = StyleSheet.create({
   background: {
@@ -297,60 +331,65 @@ const styles = StyleSheet.create({
     flex: 1,
     bottom: 0,
     width: '100%',
-    height: 150,
+    height: 200,
     backgroundColor: COLOR.whiteColor,
   },
   datePickerContainer: {
-    flexDirection: 'row', 
     marginTop: 15, 
     marginLeft: 15, 
     width: viewportWidth - 30,
   },
   datePicker: {
+    marginLeft: 20,
     alignContent: 'center',
-    marginTop: 3,
-    width: viewportWidth - 30,
+    width: 200,
+    height: 44,
   },
   datePickerConfirm: {
     position: 'absolute',
     right: 0,
     width: 100,
-    height: 35,
+    height: 44,
     borderColor: COLOR.alphaBlackColor20,
     borderWidth: 1,
     borderRadius: 10,
   },
   confirm_text: {
     width: '100%',
-    height: 35,
-    lineHeight: 35,
+    height: 44,
+    lineHeight: 44,
     textAlign: 'center',
     fontFamily: FONT.AN_Regular,
     fontSize: 16,
     color: COLOR.blueColor,
   },
-  time_top_container: {
-    position: 'absolute', 
-    width: '100%',
-    top: 0,
-    height: 100,
-    backgroundColor: COLOR.whiteColor,
-  },
-  time_text: {
-    position: 'absolute', 
-    width: '100%',
-    bottom: 5,
-    height: 35,
-    lineHeight: 35,
-    textAlign: 'center',
+  time_title: {
+    width: 80,
+    height: 44,
+    lineHeight: 44,
     fontFamily: FONT.AN_Regular,
-    fontWeight: '600',
-    fontSize: 20,
+    fontSize: 14,
     color: COLOR.blackColor,
+  },
+  time_content_container: {
+    width: 120,
+    height: 44,
+    backgroundColor: '#0001',
+    borderRadius: 10,
+  },
+  time_content: {
+    width: 120,
+    height: 44,
+    lineHeight: 44,
+    fontFamily: FONT.AN_Regular,
+    fontSize: 16,
+    fontWeight: '500',
+    color: COLOR.blueColor,
+    textAlign: 'center',
   },
   booking_list: {
     marginTop: 10,
-    marginBottom: 50,
+    marginBottom: 80,
     width: '100%',
     flex: 1,
     overflow: 'hidden',

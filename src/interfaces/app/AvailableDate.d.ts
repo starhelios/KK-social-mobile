@@ -14,12 +14,6 @@ export interface IAvailableDateForCreate {
 	endTime: string,
 }
 
-export interface DurationInfo {
-	step: number,
-	startTime: Date,
-	endTime: Date,
-}
-
 export interface IDateAvailabilityInfo {
 	startDay: string,
   endDay: string,
