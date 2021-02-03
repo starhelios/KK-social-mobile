@@ -75,7 +75,6 @@ export const usePayments = () => {
     }
     try {
       const { data } = await axios.post<IApiSuccess>(url, body, API_CONFIG);
-      console.log(data);
       return Promise.resolve(data);
     } catch (err) {
       const apiError = handleError(err);

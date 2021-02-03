@@ -1,7 +1,7 @@
 import { Alert, Share } from 'react-native';
 import { LocaleConfig } from 'react-native-calendars';
-// import stripe from 'tipsi-stripe'
-import stripe from 'react-native-stripe-payments';
+import stripe from 'tipsi-stripe'
+// import stripe from 'react-native-stripe-payments';
 import Moment from 'moment';
 import firebase from 'firebase';
 
@@ -18,10 +18,10 @@ export const intialization = () => {
   googleConfigure();
   firebaseConfigure();
   
-  // stripe.setOptions({
-  //   publishableKey: STRIPE_PUBLISHABLE_KEY
-  // })
-  stripe.setOptions({ publishingKey: STRIPE_PUBLISHABLE_KEY });
+  stripe.setOptions({
+    publishableKey: STRIPE_PUBLISHABLE_KEY
+  })
+  // stripe.setOptions({ publishingKey: STRIPE_PUBLISHABLE_KEY });
 
   Moment.locale('en');
 

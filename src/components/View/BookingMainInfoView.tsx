@@ -3,27 +3,25 @@ import { StyleSheet, View } from 'react-native';
 
 // from app
 import { COLOR, CustomText, FONT, GetDurationString } from '../../constants';
-import { IBooking } from '../../interfaces/app';
+import { IUserBooking } from '../../interfaces/app';
 
 interface props {
   completed_booking: boolean;
-  booking: IBooking;
+  booking: IUserBooking;
 }
 
 export const BookingMainInfoView: React.FC<props> = (props: props) => {
 
   const completed_booking: boolean = props.completed_booking;
-  const booking: IBooking = props.booking;
+  const booking: IUserBooking = props.booking;
 
   return (
     <View>
-      <CustomText style={styles.experience}>{booking.experience}</CustomText>
+      <CustomText style={styles.experience}>{booking.experience.title}</CustomText>
       <View style={styles.date_container}>
-        <CustomText style={styles.date}>{booking.date + ' • ' + booking.hour}</CustomText>
-        { 
-          completed_booking == false
-          ? <CustomText style={styles.duration}>{GetDurationString(booking.duration)}</CustomText>
-          : null
+        <CustomText style={styles.date}>{booking.day + ' • ' + booking.startTime}</CustomText>
+        { completed_booking == false &&
+          <CustomText style={styles.duration}>{GetDurationString(booking.experience.duration)}</CustomText>
         }
       </View>
     </View>

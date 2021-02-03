@@ -10,28 +10,28 @@ import {
   Img_Rating_Empty,
   Img_Rating_Full, 
 } from '../../constants';
-import { IBooking } from '../../interfaces/app';
+import { IUserBooking } from '../../interfaces/app';
 
 interface props {
-  booking: IBooking;
+  booking: IUserBooking;
 }
 
 export const BookingRatingInfoView: React.FC<props> = (props: props) => {
 
-  const booking: IBooking = props.booking;
+  const booking: IUserBooking = props.booking;
 
   return (
     <View>
       <View style={styles.line} />
-      <CustomText style={styles.rating_title}>
+      {/* <CustomText style={styles.rating_title}>
         {
           booking.is_host == true 
           ? (booking.host != null ? 'Rate your host, ' + booking.host.fullname : 'Rate your host')
           : 'Rate this experience:'}
-      </CustomText>
+      </CustomText> */}
       <View style={styles.rating}>
         <Stars
-          value={booking.rating}
+          value={5}
           spacing={12}
           count={5}
           starSize={29}

@@ -52,6 +52,7 @@ const initialState: State = {
     last4digits: '',
   },
   needReloadData: false,
+  needReloadReservedBookings: false,
 };
 
 const StoreContext = createContext<State>(initialState);

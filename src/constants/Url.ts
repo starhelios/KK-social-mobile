@@ -1,6 +1,6 @@
-const API_HOST = 'https://kloutkast-backend.herokuapp.com/v1';
+// const API_HOST = 'https://kloutkast-backend.herokuapp.com/v1';
 // const API_HOST = 'http://192.168.101.16:4000/v1';
-// const API_HOST = 'http://127.0.0.1:4000/v1';
+const API_HOST = 'http://127.0.0.1:4000/v1';
 
 export const API_ENDPOINT = {
   // Authentication
@@ -15,8 +15,8 @@ export const API_ENDPOINT = {
   
   // Users
   USERS         : `${API_HOST}/users`,
-  BOOKING_RESERVATION : `${API_HOST}/users/booking/reservation`,
-  BOOKING_JOIN : `${API_HOST}/users/booking/join`,
+  // BOOKING_RESERVATION : `${API_HOST}/users/booking/reservation`,
+  // BOOKING_JOIN : `${API_HOST}/users/booking/join`,
 
   // Categories
   CATEGORIES        : `${API_HOST}/categories`,
@@ -25,8 +25,9 @@ export const API_ENDPOINT = {
   // Experiences
   EXPERIENCES         : `${API_HOST}/experiences`,
   EXPERIENCES_FILTER  : `${API_HOST}/experiences/filter`,
-  // BOOKING_RESERVATION : `${API_HOST}/experiences/reserve`,
-  // BOOKING_JOIN        : `${API_HOST}/experiences/join`,
+  BOOKING_RESERVE     : `${API_HOST}/experiences/reserve`,
+  BOOKING_JOIN        : `${API_HOST}/experiences/join`,
+  BOOKING_RESERVED    : `${API_HOST}/experiences/reserved`,
 
   // Hosts
   HOSTS : `${API_HOST}/hosts`,

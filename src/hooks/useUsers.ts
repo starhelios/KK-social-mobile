@@ -96,7 +96,7 @@ export const useUsers = () => {
     // body.append('avatarUrl', avatarUrl);
 
     try {
-      const { data } = await axios.patch<any>(url, body, API_CONFIG);
+      const { data } = await axios.patch<IApiSuccess>(url, body, API_CONFIG);
       const result: IUser = data.payload;
       return Promise.resolve(result);
     } catch (err) {
@@ -109,58 +109,5 @@ export const useUsers = () => {
     }
   };
 
-  const reservationBooking = async (
-    userId: string,
-    experienceID: string,
-    dateAvaibilityID: string,
-    completed: boolean
-  ): Promise<any> => {
-    const url = API_ENDPOINT.BOOKING_RESERVATION + '/' + userId;
-    let body = {
-      experienceID,
-      dateAvaibilityID,
-      completed,
-    };
-    console.log(url);
-    console.log(body);
-
-    try {
-      const { data } = await axios.post<any>(url, body, API_CONFIG);
-      console.log(data);
-      const result: IUser = data.payload;
-      setLoginUser(result);
-      return Promise.resolve(result);
-    } catch (err) {
-      const apiError = handleError(err);
-      if (apiError) {
-        return Promise.reject(apiError);
-      } else {
-        return Promise.reject(null);
-      }
-    }
-  };
-
-  const joinBooking = async (
-    userId: string,
-    id: string,
-  ): Promise<any> => {
-    const url = API_ENDPOINT.BOOKING_JOIN + '/' + userId + '/' + id + '/';
-    let body = {
-    };
-    try {
-      const { data } = await axios.post<any>(url, body, API_CONFIG);
-      const result: IUser = data.payload;
-      setLoginUser(result);
-      return Promise.resolve(result);
-    } catch (err) {
-      const apiError = handleError(err);
-      if (apiError) {
-        return Promise.reject(apiError);
-      } else {
-        return Promise.reject(null);
-      }
-    }
-  };
-
-  return { getUserList, getUserInformation, deleteUser, updateUserInformation, reservationBooking, joinBooking };
+  return { getUserList, getUserInformation, deleteUser, updateUserInformation };
 };
