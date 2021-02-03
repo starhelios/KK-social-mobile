@@ -3,7 +3,7 @@ import axios from 'axios';
 // from app
 import { API_ENDPOINT, API_CONFIG } from '../constants';
 import { IApiSuccess } from '../interfaces/api';
-import { IAvailableDateForCreate, IExperience, IExperienceDetail, IReservationBooking } from '../interfaces/app';
+import { IAvailableDateForCreate, IExperience, IExperienceDetail, IReservationBooking, IUserBooking } from '../interfaces/app';
 import { handleError } from '../utils';
 
 export const useExperiences = () => {
@@ -104,26 +104,42 @@ export const useExperiences = () => {
   const reserveBooking = async (
     userId: string,
     experienceId: string,
+    id: string,
     paymentIntent: string, 
     guests: number, 
-    imageUrl: string
+    imageUrl: string,
   ): Promise<any> => {
-    const url = API_ENDPOINT.BOOKING_RESERVATION;
+    const url = API_ENDPOINT.BOOKING_RESERVE;
     let body = {
       userId,
       experienceId,
+      id,
       paymentIntent,
       guests,
       imageUrl,
     };
-    console.log(url);
-    console.log(body);
 
     try {
-      const { data } = await axios.post<any>(url, body, API_CONFIG);
-      console.log(data);
+      const { data } = await axios.post<IApiSuccess>(url, body, API_CONFIG);
       const result: IReservationBooking = data.payload;
-      // setLoginUser(result);
+      return Promise.resolve(result);
+    } catch (err) {
+      const apiError = handleError(err);
+      if (apiError) {
+        return Promise.reject(apiError);
+      } else {
+        return Promise.reject(null);
+      }
+    }
+  };
+
+  const getReservedBookingList = async (
+    id: string,
+  ): Promise<any> => {
+    const url = `${API_ENDPOINT.BOOKING_RESERVED}/${id}`;
+    try {
+      const { data } = await axios.get<IApiSuccess>(url, API_CONFIG);
+      const result: IUserBooking[] = data.payload.userBookings;
       return Promise.resolve(result);
     } catch (err) {
       const apiError = handleError(err);
@@ -157,5 +173,5 @@ export const useExperiences = () => {
     // }
   };
 
-  return { getExperienceList, getExperienceDetail, createExperience, filterExperiences, reserveBooking, joinBooking };
+  return { getExperienceList, getExperienceDetail, createExperience, filterExperiences, reserveBooking, getReservedBookingList, joinBooking };
 };

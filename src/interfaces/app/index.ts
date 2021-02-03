@@ -14,6 +14,7 @@ export * from './Experience';
 export * from './ExperienceDetail';
 export * from './AvailableDate';
 export * from './Filter';
+export * from './UserBooking';
 
 // Hosts
 export * from './HostDetail';

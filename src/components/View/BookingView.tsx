@@ -13,42 +13,39 @@ import {
   Img_Experience,
   viewportWidth, 
 } from '../../constants';
-import { IBooking } from '../../interfaces/app';
+import { IUserBooking } from '../../interfaces/app';
 import { ColorButton } from '../Button';
 import { BookingMainInfoView, BookingRatingInfoView } from '.';
-import { useUsers } from '../../hooks';
+import { useExperiences, useUsers } from '../../hooks';
 import { useGlobalState } from '../../redux/Store';
 
 interface props {
   completed_booking: boolean;
-  booking: IBooking;
+  booking: IUserBooking;
 }
 
 export const BookingView: React.FC<props> = (props: props) => {
 
   const userInfo = useGlobalState('userInfo');
-  const booking = props.booking;
+  const booking: IUserBooking = props.booking;
+  const isJoined = false;
   
-  const { joinBooking } = useUsers();
+  const { joinBooking } = useExperiences();
 
   const onJoinExperience = async () => {
-    await joinBooking(userInfo.id, booking.id)
-    .then(() => {
-      Alert.alert('', 'You joined this booking.');
-    })
-    .catch(() => {
-    })
+    // await joinBooking(userInfo.id, booking.id)
+    // .then(() => {
+    //   Alert.alert('', 'You joined this booking.');
+    // })
+    // .catch(() => {
+    // })
   }
 
   return (
     <View style={styles.container}>
-      <Image
-        style={styles.image}
-        source={(props.booking.image == null || props.booking.image == '') ? Img_Experience : {uri: props.booking.image}}
-      />
-      {
-        props.completed_booking == false
-        ? ( props.booking.is_joined == true
+      <Image style={styles.image} source={{uri: booking.imageUrl}} />
+      { props.completed_booking == false
+        ? ( isJoined == true
           ? <View style={{...styles.content_container, height: 98}}>
               <BookingMainInfoView booking={props.booking} completed_booking={props.completed_booking} />
             </View>
