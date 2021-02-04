@@ -11,11 +11,13 @@ import {
   KeyboardAvoidingView,
   Alert,
   TouchableOpacity,
+  Modal,
 } from 'react-native';
 import { Container } from 'native-base';
 import { useEffect, useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { SvgXml } from 'react-native-svg';
+import { GooglePlaceData, GooglePlaceDetail } from 'react-native-google-places-autocomplete';
 import Autocomplete from 'react-native-autocomplete-input';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import ImagePicker from 'react-native-image-crop-picker';
@@ -47,6 +49,7 @@ import { ColorButton } from '../../components/Button';
 import { useGlobalState } from '../../redux/Store';
 import { ICategory, IFile, IUser } from '../../interfaces/app';
 import { useAuthentication, useUsers } from '../../hooks';
+import { GoogleAddressSelectView } from '../../components/View';
 import GlobalStyle from '../../styles/global';
 
 
@@ -72,6 +75,7 @@ export const BecomeAHostScreen: React.FC = () => {
   const [showDatePicker, setShowDatePicker] = useState<boolean>(false);
   const [mode, setMode] = useState<"date" | "time" | undefined>('date');
   const [pickerDate, setPickerDate] = useState<Date>(birthday != undefined && birthday != '' ? new Date(birthday) : new Date());
+  const [showAddressPicker, setShowAddressPicker] = useState<boolean>(false);
 
   let isInit = true;
   let fetchingData = false;
@@ -228,7 +232,12 @@ export const BecomeAHostScreen: React.FC = () => {
       setUploading(false);
       Alert.alert('', ERROR_MESSAGE.UPDATE_USER_PROFILE_FAIL);
     });
-  }  
+  }
+
+  const selectAddress = (address: GooglePlaceData, details: GooglePlaceDetail | null) => {
+    setLocation(address.description);
+    setShowAddressPicker(false);
+  };
 
   return (
     <Container style={styles.background}>
@@ -355,17 +364,21 @@ export const BecomeAHostScreen: React.FC = () => {
                         <View style={GlobalStyle.auth_line} />
                       </View>
 
-                      <View style={{width:'100%', marginTop: 22}}>
-                        <CustomText style={styles.info_title}>Location</CustomText>
-                        <CustomTextInput
-                          style={GlobalStyle.auth_input}
-                          placeholder={'Location'}
-                          placeholderTextColor={COLOR.alphaWhiteColor50}
-                          onChangeText={text => setLocation(text)}
-                          value={location}
-                        />
-                        <View style={GlobalStyle.auth_line} />
-                      </View>
+                      <TouchableWithoutFeedback onPress={() => setShowAddressPicker(true) }>
+                        <View style={{width:'100%', marginTop: 22}}>
+                          <CustomText style={styles.info_title}>Location</CustomText>
+                          {/* <CustomTextInput
+                            style={GlobalStyle.auth_input}
+                            placeholder={'Location'}
+                            placeholderTextColor={COLOR.alphaWhiteColor50}
+                            onChangeText={text => setLocation(text)}
+                            value={location}
+                            editable={false}
+                          /> */}
+                          <CustomText style={{...GlobalStyle.auth_input, lineHeight: 45}}>{location}</CustomText>
+                          <View style={GlobalStyle.auth_line} />
+                        </View>
+                      </TouchableWithoutFeedback>
 
                       <TouchableWithoutFeedback onPress={() => onBecomeAHost() }>
                         <View style={styles.bottom_button}>
@@ -379,34 +392,38 @@ export const BecomeAHostScreen: React.FC = () => {
             </KeyboardAvoidingView>
           </View>
         </View>
-
-        {showDatePicker && (
-          <View style={{...styles.datePickerBackground, backgroundColor: Platform.OS == 'ios' ? COLOR.whiteColor : COLOR.clearColor }} >
-            <View style={styles.datePickerContainer}>
-
-              <DateTimePicker
-                value={pickerDate}
-                onChange={onChange}
-                style={styles.datePicker}
-                firstDayOfWeek={2}
-                maximumDate={new Date()}
-                minimumDate={new Date('1960')}
-                dateFormat={'shortdate'}
-                dayOfWeekFormat={'{dayofweek.abbreviated(2)}'}
-                placeholderText="Select Date"
-              />
-
-              { Platform.OS == 'ios' && 
-                <TouchableWithoutFeedback onPress={() => onConfirmBirthday() }>
-                  <View style={styles.datePickerConfirm}>
-                    <CustomText style={styles.confirm_text}>Confirm</CustomText>
-                  </View>
-                </TouchableWithoutFeedback>
-              }
-            </View>
-          </View>
-        )}
       </SafeAreaView>
+
+      { showDatePicker && (
+        <View style={{...styles.datePickerBackground, backgroundColor: Platform.OS == 'ios' ? COLOR.whiteColor : COLOR.clearColor }} >
+          <View style={styles.datePickerContainer}>
+
+            <DateTimePicker
+              value={pickerDate}
+              onChange={onChange}
+              style={styles.datePicker}
+              firstDayOfWeek={2}
+              maximumDate={new Date()}
+              minimumDate={new Date('1960')}
+              dateFormat={'shortdate'}
+              dayOfWeekFormat={'{dayofweek.abbreviated(2)}'}
+              placeholderText="Select Date"
+            />
+
+            { Platform.OS == 'ios' && 
+              <TouchableWithoutFeedback onPress={() => onConfirmBirthday() }>
+                <View style={styles.datePickerConfirm}>
+                  <CustomText style={styles.confirm_text}>Confirm</CustomText>
+                </View>
+              </TouchableWithoutFeedback>
+            }
+          </View>
+        </View>
+      )}
+
+      <Modal animationType = {"slide"} transparent = {true} visible = {showAddressPicker} onRequestClose = {() => { } }>
+        <GoogleAddressSelectView onCloseView={setShowAddressPicker} onSelectAddress={selectAddress} />
+      </Modal>
 
       <Spinner
         visible={uploading}

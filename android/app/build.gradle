@@ -194,14 +194,18 @@ android {
 }
 
 dependencies {
+    implementation project(':tipsi-stripe')
     implementation fileTree(dir: "libs", include: ["*.jar"])
     //noinspection GradleDynamicVersion
     implementation "com.facebook.react:react-native:+"  // From node_modules
     implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.0.0"
     implementation 'com.google.firebase:firebase-core:16.0.7'
-    implementation 'com.android.support:design:27.1.0'
-//    implementation project(':tipsi-stripe')
-//    implementation 'com.stripe:stripe-android:14.2.1'
+    implementation 'com.android.support:design: 28.0.0'
+    implementation 'com.stripe:stripe-android:10.4.0'
+
+    implementation "com.android.support:support-v4:28.0.0"
+    implementation "com.android.support:appcompat-v7:28.0.0"
+    implementation 'com.android.support:multidex:1.0.3'
 
 
     debugImplementation("com.facebook.flipper:flipper:${FLIPPER_VERSION}") {
@@ -242,7 +246,6 @@ googleServices {
     disableVersionCheck = true
 }
 
-//compile (project(':tipsi-stripe')) {
-//    exclude group: 'com.google.android.gms'
-//    exclude group: 'com.google.firebase'
-//}
+repositories {
+    google()
+}

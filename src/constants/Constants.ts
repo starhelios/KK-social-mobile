@@ -65,15 +65,20 @@ export const LOADING_TIME = 1500;
 
 export const { width: viewportWidth, height: viewportHeight } = Dimensions.get('window');
 
+export const GOOGLE_MAP_KEY = 'AIzaSyAcHUaRR1URQlQR54ebNGeByyDR7Y6pJn4';
+
 // Global Values
 export var API_CONFIG: AxiosRequestConfig;
 export const SetApiConfig = (token: string) => {
   console.log('access_token: ' + token);
   API_CONFIG = {
-    headers: {
+    headers: token != '' ? {
       'accept': 'application/json',
       'Content-Type': 'application/json',
       'Authorization': 'Bearer ' + token,
+    } : {
+      'accept': 'application/json',
+      'Content-Type': 'application/json',
     },
   }
 }
