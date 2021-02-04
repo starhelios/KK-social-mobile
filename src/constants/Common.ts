@@ -1,6 +1,5 @@
 import { Alert, Platform, Share } from 'react-native';
 import { LocaleConfig } from 'react-native-calendars';
-// import stripe from 'tipsi-stripe'
 import Moment from 'moment';
 import firebase from 'firebase';
 
@@ -9,15 +8,12 @@ import {
   convertStringToDateFormat, 
   firebaseConfigure, 
   googleConfigure, 
-  STRIPE_PUBLISHABLE_KEY 
 } from '.';
 
 
 export const intialization = () => {
   googleConfigure();
   firebaseConfigure();
-  
-  // stripe.setOptions({ publishableKey: STRIPE_PUBLISHABLE_KEY })
 
   Moment.locale('en');
 

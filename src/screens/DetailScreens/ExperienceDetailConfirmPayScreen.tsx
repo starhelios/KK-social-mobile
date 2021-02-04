@@ -7,12 +7,10 @@ import {
   ScrollView,
   Image,
   Alert,
-  Platform,
 } from 'react-native';
 import { Container } from 'native-base';
 import { useNavigation } from '@react-navigation/native';
 import { SvgXml } from 'react-native-svg';
-// import stripe from 'tipsi-stripe'
 import Spinner from 'react-native-loading-spinner-overlay';
 import { useState } from 'react';
 
@@ -24,12 +22,10 @@ import {
   CustomText, 
   ERROR_MESSAGE, 
   FONT, 
-  GetCardNumber, 
   Icon_Back_Black,
   Icon_Experience_Rating,
   Img_Experience,
   MARGIN_TOP,
-  STRIPE_SECRET_KEY,
   SUCCESS_MESSAGE,
   viewportWidth,
 } from '../../constants';
@@ -41,7 +37,6 @@ import { ActionType } from '../../redux/Reducer';
 import { useStripePaymentIntents } from '../../constants/stripe/useStripePaymentIntents';
 import { IStripePaymentIntent } from '../../constants/stripe/StripePaymentIntent';
 
-// const stripePay = require('stripe')(STRIPE_SECRET_KEY);
 
 export const ExperienceDetailConfirmPayScreen: React.FC = ({route}) => {
 
@@ -110,9 +105,15 @@ export const ExperienceDetailConfirmPayScreen: React.FC = ({route}) => {
     .then(async (paymentIntent: IStripePaymentIntent) => {
       onReserveBooking(client_secret, (await paymentIntent).id);
     })
+    .catch(async (message: Promise<string>) => {
+      fetching = false;
+      setShowSpinner(false);
+      Alert.alert('', await message);
+    })
     .catch(() => {
       fetching = false;
       setShowSpinner(false);
+      Alert.alert('', ERROR_MESSAGE.PAYMENT_FAIL);
     })
   }
 
