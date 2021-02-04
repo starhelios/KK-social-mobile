@@ -44,7 +44,7 @@ export interface IStripePaymentIntent {
 	source: null,
 	statement_descriptor: null,
 	statement_descriptor_suffix: null,
-	status: string, // requires_payment_method
+	status: string, 								// requires_payment_method
 	transfer_data: null,
-	transfer_group: null
+	transfer_group: null,
 }
