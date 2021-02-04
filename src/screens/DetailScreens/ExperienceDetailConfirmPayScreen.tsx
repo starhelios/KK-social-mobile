@@ -12,9 +12,9 @@ import {
 import { Container } from 'native-base';
 import { useNavigation } from '@react-navigation/native';
 import { SvgXml } from 'react-native-svg';
-import stripe from 'tipsi-stripe'
-import androidStripe from 'react-native-stripe-payments';
+// import stripe from 'tipsi-stripe'
 import Spinner from 'react-native-loading-spinner-overlay';
+import { useState } from 'react';
 
 // from app
 import { 
@@ -36,10 +36,10 @@ import {
 import { ColorButton, TitleArrowButton } from '../../components/Button';
 import { ISpecificExperience, IHostDetail, IUser, ICardInfo, IExperienceDetail } from '../../interfaces/app';
 import { useDispatch, useGlobalState } from '../../redux/Store';
-import { StripePayment } from '../../constants/StripePayment';
-import { useExperiences, usePayments, useUsers } from '../../hooks';
+import { useExperiences, usePayments } from '../../hooks';
 import { ActionType } from '../../redux/Reducer';
-import { useState } from 'react';
+import { useStripePaymentIntents } from '../../constants/stripe/useStripePaymentIntents';
+import { IStripePaymentIntent } from '../../constants/stripe/StripePaymentIntent';
 
 // const stripePay = require('stripe')(STRIPE_SECRET_KEY);
 
@@ -50,9 +50,9 @@ export const ExperienceDetailConfirmPayScreen: React.FC = ({route}) => {
 
   const dispatch = useDispatch();
   const { goBack, navigate } = useNavigation();
-  const { getClientSecretForConfirmPayment } = StripePayment();
   const { generatePaymentIntent, saveTransation } = usePayments();
   const { reserveBooking } = useExperiences();
+  const { confirmPaymentIntent } = useStripePaymentIntents();
 
   const [showSpinner, setShowSpinner] = useState<boolean>(false);
 
@@ -99,63 +99,21 @@ export const ExperienceDetailConfirmPayScreen: React.FC = ({route}) => {
   }
 
   const confirmCardPayment = async (client_secret: string) => {
-    if (Platform.OS == 'ios') {
-      try {
-        var paymentMethod = await stripe.createPaymentMethod({
-          card : {
-            number : '4000002500003155',
-            cvc : '888',
-            expMonth : 11,
-            expYear : 2021
-          },
-          billingDetails: {
-            email: userInfo.email,
-            name: userInfo.fullname,
-          },
-        })
-        const paymentType = 'saved'; // card
-        // const paymentMethod = await stripe.createPaymentMethod({
-        //   card : {
-        //     token : '1F70U2HbHFZUJkLLGyJ26n5rWDBfofzDJmdnal0dMrcEHTvKd',
-        //   }
-        // })
-        const result = await stripe.confirmPaymentIntent({
-          clientSecret: client_secret,
-          // paymentMethod: paymentMethod,
-          paymentMethodId: paymentMethod.id,
-        })
-        // console.log(result.paymentIntentId); pi_1IH8T6BSC3KohNVtjxbr204z
-        // {"paymentIntentId": "pi_1IFQ6fBSC3KohNVteLCtlief", "paymentMethodId": "pm_1IFQ6hBSC3KohNVtxETzjLFx", "status": "succeeded"}
-  
-        if (result.status == 'succeeded') {
-          onReserveBooking(client_secret, result.paymentIntentId);
-        } else {
-          fetching = false;
-          setShowSpinner(false);
-        }
-      } catch (e) {
-        console.log(e);
-        fetching = false;
-        setShowSpinner(false);
-      }
-    } else {
-      const cardDetails = {
-        number: '4000002500003155',
-        expMonth: 10,
-        expYear: 21,
-        cvc: '888',
-      }
-      await androidStripe.confirmPayment(client_secret, cardDetails)
-      .then(() => {
-        // console.log(await result);
-        onReserveBooking(client_secret, 'pi_1IH8T6BSC3KohNVtjxbr204z');
-      })
-      .catch(() => {
-        console.log('fail');
-        fetching = false;
-        setShowSpinner(false);
-      })
+    const paymentIntentInfo = client_secret.split('_secret_');
+    if (paymentIntentInfo.length != 2) {
+      fetching = false;
+      setShowSpinner(false);
+      return;
     }
+
+    await confirmPaymentIntent(paymentIntentInfo[0], 'lightlight1115@gmail.com')
+    .then(async (paymentIntent: IStripePaymentIntent) => {
+      onReserveBooking(client_secret, (await paymentIntent).id);
+    })
+    .catch(() => {
+      fetching = false;
+      setShowSpinner(false);
+    })
   }
 
   const onReserveBooking = async (client_secret: string, paymentIntentId: string) => {

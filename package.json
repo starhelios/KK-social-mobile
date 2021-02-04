@@ -76,7 +76,6 @@
     "redux-persist": "^6.0.0",
     "redux-thunk": "^2.3.0",
     "rn-range-slider": "^2.0.4",
-    "tipsi-stripe": "^8.0.2",
     "uuid": "^8.3.2"
   },
   "devDependencies": {
