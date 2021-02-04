@@ -11,11 +11,13 @@ import {
   Keyboard,
   KeyboardAvoidingView,
   TouchableOpacity,
+  Modal,
 } from 'react-native';
 import { Container } from 'native-base';
 import { useEffect, useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { SvgXml } from 'react-native-svg';
+import { GooglePlaceData, GooglePlaceDetail } from 'react-native-google-places-autocomplete';
 import firebase from 'firebase';
 import Autocomplete from 'react-native-autocomplete-input';
 import ImagePicker from 'react-native-image-crop-picker';
@@ -47,6 +49,7 @@ import { ColorButton, TitleArrowButton } from '../../components/Button';
 import { useGlobalState } from '../../redux/Store';
 import { ICategory, IFile, IUser } from '../../interfaces/app';
 import { useUsers, useAuthentication } from '../../hooks';
+import { GoogleAddressSelectView } from '../../components/View';
 import GlobalStyle from '../../styles/global';
 
 
@@ -55,9 +58,6 @@ export const EditProfileScreen: React.FC = () => {
   const { goBack, navigate } = useNavigation();
   const { updateUserInformation } = useUsers();
   const { setLoginUser } = useAuthentication();
-
-  const [uploading, setUploading] = useState(false);
-  const [transferred, setTransferred] = useState(0);
 
   const profile: IUser = useGlobalState('userInfo');
   const allCategoryList: ICategory[] = useGlobalState('categoryList');
@@ -71,6 +71,8 @@ export const EditProfileScreen: React.FC = () => {
     return allCategoryList.filter(category => category.name.search(regex) >= 0);
   }
 
+  const [uploading, setUploading] = useState(false);
+  const [transferred, setTransferred] = useState(0);
   const [image, setImage] = useState<string>(profile.avatarUrl);
   const [avatarFile, setAvatarFile] = useState<IFile | null>(null);
   const [fullName, setFullName] = useState<string>(profile.fullname);
@@ -83,6 +85,7 @@ export const EditProfileScreen: React.FC = () => {
   const [aboutMe, setAboutMe] = useState<string>(profile.aboutMe);
   const [location, setLocation] = useState<string>(profile.location);
   const [category, setCategory] = useState<string>(profile.categoryName);
+  const [showAddressPicker, setShowAddressPicker] = useState<boolean>(false);
 
   let fetchingData = false;
 
@@ -110,6 +113,11 @@ export const EditProfileScreen: React.FC = () => {
     setMode(currentMode);
     // showMode('date');
     // showMode('time');
+  };
+
+  const selectAddress = (address: GooglePlaceData, details: GooglePlaceDetail | null) => {
+    setLocation(address.description);
+    setShowAddressPicker(false);
   };
 
   return (
@@ -189,7 +197,7 @@ export const EditProfileScreen: React.FC = () => {
                         <View style={GlobalStyle.auth_line} />
                       </View>
 
-                      {profile.isHost == true &&
+                      { profile.isHost == true &&
                         <View>
                           <View style={{width:'100%', marginTop: 22, zIndex: 100}}>
                             <CustomText style={styles.info_title}>Category</CustomText>
@@ -237,21 +245,25 @@ export const EditProfileScreen: React.FC = () => {
                             <View style={GlobalStyle.auth_line} />
                           </View>
 
-                          <View style={{width:'100%', marginTop: 22}}>
-                            <CustomText style={styles.info_title}>Location</CustomText>
-                            <CustomTextInput
-                              style={GlobalStyle.auth_input}
-                              placeholder={'Location'}
-                              placeholderTextColor={COLOR.alphaWhiteColor50}
-                              onChangeText={text => setLocation(text)}
-                              value={location}
-                            />
-                            <View style={GlobalStyle.auth_line} />
-                          </View>
+                          <TouchableWithoutFeedback onPress={() => setShowAddressPicker(true) }>
+                            <View style={{width:'100%', marginTop: 22}}>
+                              <CustomText style={styles.info_title}>Location</CustomText>
+                              {/* <CustomTextInput
+                                style={GlobalStyle.auth_input}
+                                placeholder={'Location'}
+                                placeholderTextColor={COLOR.alphaWhiteColor50}
+                                onChangeText={text => setLocation(text)}
+                                value={location}
+                                editable={false}
+                              /> */}
+                              <CustomText style={{...GlobalStyle.auth_input, lineHeight: 45}}>{location}</CustomText>
+                              <View style={GlobalStyle.auth_line} />
+                            </View>
+                          </TouchableWithoutFeedback>
                         </View>
                       }
 
-                      {LOGIN_STATE == EMAIL_LOGIN &&
+                      { LOGIN_STATE == EMAIL_LOGIN &&
                         <TouchableWithoutFeedback onPress={() => navigate('ChangePassword') }>
                           <View style={{width:'100%', marginTop: 44}}>
                             <CustomText style={styles.info_title}>Security</CustomText>
@@ -273,35 +285,38 @@ export const EditProfileScreen: React.FC = () => {
               </ScrollView>
             </KeyboardAvoidingView>
           </View>
-        </View>
-
-        {showDatePicker && (
-          <View style={{...styles.datePickerBackground, backgroundColor: Platform.OS == 'ios' ? COLOR.whiteColor : COLOR.clearColor }} >
-            <View style={styles.datePickerContainer}>
-              <DateTimePicker
-                value={pickerDate}
-                onChange={onChange}
-                style={styles.datePicker}
-                firstDayOfWeek={2}
-                maximumDate={new Date()}
-                minimumDate={new Date('1960')}
-                dateFormat={'shortdate'}
-                dayOfWeekFormat={'{dayofweek.abbreviated(2)}'}
-                placeholderText="Select Date"
-              />
-
-              { Platform.OS == 'ios' && 
-                <TouchableWithoutFeedback onPress={() => onConfirmBirthday() }>
-                  <View style={styles.datePickerConfirm}>
-                    <CustomText style={styles.confirm_text}>Confirm</CustomText>
-                  </View>
-                </TouchableWithoutFeedback>
-              }
-            </View>
-          </View>
-        )}
-        
+        </View>        
       </SafeAreaView>
+
+      { showDatePicker && (
+        <View style={{...styles.datePickerBackground, backgroundColor: Platform.OS == 'ios' ? COLOR.whiteColor : COLOR.clearColor }} >
+          <View style={styles.datePickerContainer}>
+            <DateTimePicker
+              value={pickerDate}
+              onChange={onChange}
+              style={styles.datePicker}
+              firstDayOfWeek={2}
+              maximumDate={new Date()}
+              minimumDate={new Date('1960')}
+              dateFormat={'shortdate'}
+              dayOfWeekFormat={'{dayofweek.abbreviated(2)}'}
+              placeholderText="Select Date"
+            />
+
+            { Platform.OS == 'ios' && 
+              <TouchableWithoutFeedback onPress={() => onConfirmBirthday() }>
+                <View style={styles.datePickerConfirm}>
+                  <CustomText style={styles.confirm_text}>Confirm</CustomText>
+                </View>
+              </TouchableWithoutFeedback>
+            }
+          </View>
+        </View>
+      )}
+
+      <Modal animationType = {"slide"} transparent = {true} visible = {showAddressPicker} onRequestClose = {() => { } }>
+        <GoogleAddressSelectView onCloseView={setShowAddressPicker} onSelectAddress={selectAddress} />
+      </Modal>
 
       <Spinner
         visible={uploading}
@@ -592,6 +607,8 @@ const styles = StyleSheet.create({
     height: 45,
     color: COLOR.systemWhiteColor,
     paddingLeft: 25,
+    fontFamily: FONT.AN_Regular,
+    fontSize: 16,
   },
   autocompleteContent: {
     height: 35,

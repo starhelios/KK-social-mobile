@@ -37,6 +37,10 @@ export ANDROID_NDK=<path to Android NDK directory>
 export PATH=$PATH:$ANDROID_SDK/tools:$ANDROID_SDK/platform-tools:$ANDROID_NDK
 
 export JAVA_HOME="/Applications/Android Studio.app/Contents/jre/jdk/Contents/Home"
+
+export PATH=/Volumes/Other/Data/Android_SDK/platform-tools:$PATH
+export PATH=/Volumes/Other/Data/Android_SDK/tools:$PATH
+export JAVA_HOME="/Volumes/Other/Data/Applications/Android Studio.app/Contents/jre/jdk/Contents/Home"
 ```
 
 5. Clean before building files.

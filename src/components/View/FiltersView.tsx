@@ -2,6 +2,7 @@ import * as React from 'react';
 import {
   Keyboard,
   KeyboardAvoidingView,
+  Modal,
   Platform,
   ScrollView,
   StyleSheet,
@@ -10,8 +11,8 @@ import {
 } from 'react-native';
 import { useCallback, useEffect, useState } from 'react';
 import { SvgXml } from 'react-native-svg';
+import { GooglePlaceData, GooglePlaceDetail, GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 import RangeSlider from 'rn-range-slider';
-import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 
 
 // from app
@@ -30,6 +31,7 @@ import {
 import { ColorButton } from '../Button';
 import { useGlobalState } from '../../redux/Store';
 import GlobalStyle from '../../styles/global';
+import { GoogleAddressSelectView } from '.';
 
 
 interface props {
@@ -44,6 +46,7 @@ export const FiltersView: React.FC<props> = (props: props) => {
   const [searchLocation, setSearchLocation] = useState<string>('');
   const [lowPrice, setLowPrice] = useState<number>(filter.minPrice != null ? filter.minPrice : 0);
   const [highPrice, setHighPrice] = useState<number>(filter.maxPrice != null && filter.maxPrice != 0 ? filter.maxPrice : 1000);
+  const [showAddressPicker, setShowAddressPicker] = useState<boolean>(false);
 
   const renderThumb = useCallback(() => <SvgXml width={34} height={24} xml={Icon_Slider_Left} />, []);
   const renderRail = useCallback(() => <View style={styles.slider_rail} />, []);
@@ -64,8 +67,12 @@ export const FiltersView: React.FC<props> = (props: props) => {
     setHighPrice(high);
   }, []);
 
+  const selectAddress = (address: GooglePlaceData, details: GooglePlaceDetail | null) => {
+    setSearchLocation(address.description);
+    setShowAddressPicker(false);
+  };
+
   return (
-    
     <View style={{flex: 1}}>
       <TouchableWithoutFeedback onPress={() => props.onCloseView(false)}>
         <View style = {styles.container} />
@@ -84,87 +91,54 @@ export const FiltersView: React.FC<props> = (props: props) => {
           </View>
 
           <View style={{...GlobalStyle.auth_line, backgroundColor: COLOR.alphaBlackColor20, marginLeft: 24, marginRight: 24, width: viewportWidth - 48, marginTop: 0}} />
-            <View style={styles.content_container}>
-              <CustomText style={{...styles.content_title, marginTop: 33}}>Price</CustomText>
 
-              <View style={styles.slider_value_container}>
-                <CustomText style={{...styles.slider_value, textAlign: 'left'}}>
-                  {'$' + lowPrice.toString()}
-                </CustomText>
-                <CustomText style={{...styles.slider_value, textAlign: 'right', position: 'absolute', right: 0,}}>
-                  {'$' + (highPrice == 1000 ? '1000+' : highPrice.toString())}
-                </CustomText>
-              </View>
+          <View style={styles.content_container}>
+            <CustomText style={{...styles.content_title, marginTop: 33}}>Price</CustomText>
 
-              <RangeSlider
-                style={styles.slider}
-                min={0}
-                max={1000}
-                step={10}
-                low={lowPrice}
-                high={highPrice}
-                floatingLabel
-                renderThumb={renderThumb}
-                renderRail={renderRail}
-                renderRailSelected={renderRailSelected}
-                renderLabel={renderLabel}
-                renderNotch={renderNotch}
-                onValueChanged={handleValueChange}
-              />
-              <View style={{...GlobalStyle.auth_line, backgroundColor: COLOR.alphaBlackColor20, marginTop: 22}} />
-
-              {/* <CustomText style={{...styles.content_title, marginTop: 44}}>Location</CustomText>
-
-              <View style={{width:'100%', marginTop: 22, flexDirection: 'row'}}>
-                <TouchableWithoutFeedback onPress={() => onSearchLocation()}>
-                  <View style={{position: 'absolute', left: 0, width: 14, height: 45}}>
-                    <SvgXml width='100%' height='100%' xml={Icon_Search_Black} />
-                  </View>
-                </TouchableWithoutFeedback>
-
-                <GooglePlacesAutocomplete
-                  placeholder='Enter Location'
-                  minLength={2}
-                  // autoFocus={false}
-                  // returnKeyType={'default'}
-                  fetchDetails={true}
-                  styles={{
-                    textInputContainer: {
-                      backgroundColor: COLOR.clearColor,
-                    },
-                    textInput: {
-                      height: 45,
-                      color: '#5d5d5d',
-                      fontSize: 16,
-                      backgroundColor: COLOR.clearColor,
-                      marginLeft: 20,
-                    },
-                    predefinedPlacesDescription: {
-                      color: '#1faadb',
-                    },
-                  }}
-                  query={{
-                    key: 'YOUR API KEY',
-                    language: 'en',
-                  }}
-                />
-                
-                <TouchableWithoutFeedback onPress={() => onSelectLocation()}>
-                  <View style={{position: 'absolute', right: 0, width: 14, height: 45}}>
-                    <SvgXml width='100%' height='100%' xml={Icon_Location} />
-                  </View>
-                </TouchableWithoutFeedback>
-                
-              </View>
-
-              <View style={{...GlobalStyle.auth_line, backgroundColor: COLOR.alphaBlackColor20, marginTop: 0}} />
-              <CustomText style={styles.content_text}>New Orleans, LA</CustomText>
-              <View style={{...GlobalStyle.auth_line, backgroundColor: COLOR.alphaBlackColor20, marginTop: 22}} />
-              <CustomText style={styles.content_text}>Nashville, TN</CustomText>
-              <View style={{...GlobalStyle.auth_line, backgroundColor: COLOR.alphaBlackColor20, marginTop: 22}} />
-              <CustomText style={styles.content_text}>New York, NY</CustomText> */}
-
+            <View style={styles.slider_value_container}>
+              <CustomText style={{...styles.slider_value, textAlign: 'left'}}>
+                {'$' + lowPrice.toString()}
+              </CustomText>
+              <CustomText style={{...styles.slider_value, textAlign: 'right', position: 'absolute', right: 0,}}>
+                {'$' + (highPrice == 1000 ? '1000+' : highPrice.toString())}
+              </CustomText>
             </View>
+
+            <RangeSlider
+              style={styles.slider}
+              min={0}
+              max={1000}
+              step={10}
+              low={lowPrice}
+              high={highPrice}
+              floatingLabel
+              renderThumb={renderThumb}
+              renderRail={renderRail}
+              renderRailSelected={renderRailSelected}
+              renderLabel={renderLabel}
+              renderNotch={renderNotch}
+              onValueChanged={handleValueChange}
+            />
+            <View style={{...GlobalStyle.auth_line, backgroundColor: COLOR.alphaBlackColor20, marginTop: 22}} />
+
+            <CustomText style={{...styles.content_title, marginTop: 44}}>Location</CustomText>
+
+            <TouchableWithoutFeedback onPress={() => setShowAddressPicker(true)}>
+              <View style={{width:'100%', marginTop: 22, flexDirection: 'row'}}>
+                <View style={{position: 'absolute', left: 0, width: 14, height: 45}}>
+                  <SvgXml width='100%' height='100%' xml={Icon_Search_Black} />
+                </View>
+
+                <CustomText style={{...GlobalStyle.auth_input, lineHeight: 45, marginLeft: 25, color: COLOR.blackColor}}>{searchLocation}</CustomText>
+                
+                <View style={{position: 'absolute', right: 0, width: 14, height: 45}}>
+                  <SvgXml width='100%' height='100%' xml={Icon_Location} />
+                </View>
+              </View>
+            </TouchableWithoutFeedback>
+
+            <View style={{...GlobalStyle.auth_line, backgroundColor: COLOR.alphaBlackColor20, marginTop: 22}} />
+          </View>
             
           <TouchableWithoutFeedback onPress={() => props.onFilter(lowPrice, highPrice, searchLocation)}>
             <View style={styles.bottom_button}>
@@ -173,17 +147,12 @@ export const FiltersView: React.FC<props> = (props: props) => {
           </TouchableWithoutFeedback>
         </View>
       </TouchableWithoutFeedback>
+
+      <Modal animationType = {"slide"} transparent = {true} visible = {showAddressPicker} onRequestClose = {() => { } }>
+        <GoogleAddressSelectView onCloseView={setShowAddressPicker} onSelectAddress={selectAddress} />
+      </Modal>
     </View>
-    
   );
-
-  function onSearchLocation() {
-    
-  }
-
-  function onSelectLocation() {
-
-  }
 
   function renderSliderLabel(value: number) {
     <View style={styles.slider_label_container}>

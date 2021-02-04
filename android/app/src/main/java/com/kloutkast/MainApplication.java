@@ -9,37 +9,40 @@ import com.facebook.react.ReactPackage;
 import com.facebook.soloader.SoLoader;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
+
 import com.gettipsi.stripe.StripeReactPackage;
+// import com.facebook.react.shell.MainReactPackage;
 
 public class MainApplication extends Application implements ReactApplication {
 
   private final ReactNativeHost mReactNativeHost =
-          new ReactNativeHost(this) {
-            @Override
-            public boolean getUseDeveloperSupport() {
-              return BuildConfig.DEBUG;
-            }
+      new ReactNativeHost(this) {
+        @Override
+        public boolean getUseDeveloperSupport() {
+          return BuildConfig.DEBUG;
+        }
 
-            @Override
-            protected List<ReactPackage> getPackages() {
-              /*
-              @SuppressWarnings("UnnecessaryLocalVariable")
-              List<ReactPackage> packages = new PackageList(this).getPackages();
-              // Packages that cannot be autolinked yet can be added manually here, for example:
-              // packages.add(new MyReactNativePackage());
-              return packages;
-              */
-              return Arrays<ReactPackage>asList(
-                new MainReactPackage(),
-                new StripeReactPackage()
-              );
-            }
+        @Override
+        protected List<ReactPackage> getPackages() {
+          @SuppressWarnings("UnnecessaryLocalVariable")
+          List<ReactPackage> packages = new PackageList(this).getPackages();
+          // Packages that cannot be autolinked yet can be added manually here, for example:
+          // packages.add(new MyReactNativePackage());
+          // packages.add(new MainReactPackage());
+          // packages.add(new StripeReactPackage());
 
-            @Override
-            protected String getJSMainModuleName() {
-              return "index";
-            }
-          };
+          return packages;
+        }
+
+        @Override
+        protected String getJSMainModuleName() {
+          return "index";
+        }
+
+        public boolean canOverrideExistingModule() {  
+          return true; 
+        }
+      };
 
   @Override
   public ReactNativeHost getReactNativeHost() {
