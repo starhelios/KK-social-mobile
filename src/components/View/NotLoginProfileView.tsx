@@ -300,7 +300,9 @@ const styles = StyleSheet.create({
     width: viewportWidth - 48,
     height: '100%',
     resizeMode: 'cover',
-    overflow: 'hidden'
+    overflow: 'hidden',
+    borderTopLeftRadius: 22,
+    borderTopRightRadius: 22,
   },
   profile_help_description_container: {
     position: 'absolute',

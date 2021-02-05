@@ -38,6 +38,7 @@ export const GoogleAddressSelectView: React.FC<props> = (props: props) => {
             query={{
               key: GOOGLE_MAP_KEY,
               language: 'en',
+              components: 'country:us',
             }}
           />
         </View>

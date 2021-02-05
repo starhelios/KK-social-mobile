@@ -1,5 +1,6 @@
 import * as React from 'react';
 import {
+  EmitterSubscription,
   Keyboard,
   KeyboardAvoidingView,
   Modal,
@@ -9,7 +10,7 @@ import {
   TouchableWithoutFeedback,
   View,
 } from 'react-native';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { SvgXml } from 'react-native-svg';
 import { GooglePlaceData, GooglePlaceDetail, GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 import RangeSlider from 'rn-range-slider';
@@ -21,6 +22,7 @@ import {
   CustomText, 
   CustomTextInput, 
   FONT,
+  GOOGLE_MAP_KEY,
   Icon_Close_Black,
   Icon_Location,
   Icon_Search_Black,
@@ -31,7 +33,6 @@ import {
 import { ColorButton } from '../Button';
 import { useGlobalState } from '../../redux/Store';
 import GlobalStyle from '../../styles/global';
-import { GoogleAddressSelectView } from '.';
 
 
 interface props {
@@ -46,7 +47,7 @@ export const FiltersView: React.FC<props> = (props: props) => {
   const [searchLocation, setSearchLocation] = useState<string>('');
   const [lowPrice, setLowPrice] = useState<number>(filter.minPrice != null ? filter.minPrice : 0);
   const [highPrice, setHighPrice] = useState<number>(filter.maxPrice != null && filter.maxPrice != 0 ? filter.maxPrice : 1000);
-  const [showAddressPicker, setShowAddressPicker] = useState<boolean>(false);
+  const [showKeyboard, setShowKeyboard] = useState<boolean>(false);
 
   const renderThumb = useCallback(() => <SvgXml width={34} height={24} xml={Icon_Slider_Left} />, []);
   const renderRail = useCallback(() => <View style={styles.slider_rail} />, []);
@@ -68,9 +69,40 @@ export const FiltersView: React.FC<props> = (props: props) => {
   }, []);
 
   const selectAddress = (address: GooglePlaceData, details: GooglePlaceDetail | null) => {
-    setSearchLocation(address.description);
-    setShowAddressPicker(false);
+    setSearchLocation(address.structured_formatting.main_text);
+    ref.current?.setAddressText(address.structured_formatting.main_text);
   };
+
+  const keyboardDidShow = () => {
+    setShowKeyboard(true);
+  }
+
+  const keyboardDidHide = () => {
+    setShowKeyboard(false);
+  }
+
+  var keyboardDidShowListener: EmitterSubscription;
+  var keyboardDidHideListener: EmitterSubscription;
+  const ref = useRef();
+
+  useEffect(() => {
+    // console.log('mounted');
+    keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', keyboardDidShow);
+    keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', keyboardDidHide);
+  }, []);
+
+  useEffect(() => {
+    // console.log('mounted or updated');
+    ref.current?.setAddressText(filter.location);
+  });
+
+  useEffect(() => {
+    return () => {
+      // console.log('will unmount');
+      keyboardDidShowListener.remove();
+      keyboardDidHideListener.remove();
+    }
+  }, []);  
 
   return (
     <View style={{flex: 1}}>
@@ -92,7 +124,7 @@ export const FiltersView: React.FC<props> = (props: props) => {
 
           <View style={{...GlobalStyle.auth_line, backgroundColor: COLOR.alphaBlackColor20, marginLeft: 24, marginRight: 24, width: viewportWidth - 48, marginTop: 0}} />
 
-          <View style={styles.content_container}>
+          <View style={{...styles.content_container, zIndex: 10}}>
             <CustomText style={{...styles.content_title, marginTop: 33}}>Price</CustomText>
 
             <View style={styles.slider_value_container}>
@@ -123,34 +155,59 @@ export const FiltersView: React.FC<props> = (props: props) => {
 
             <CustomText style={{...styles.content_title, marginTop: 44}}>Location</CustomText>
 
-            <TouchableWithoutFeedback onPress={() => setShowAddressPicker(true)}>
-              <View style={{width:'100%', marginTop: 22, flexDirection: 'row'}}>
-                <View style={{position: 'absolute', left: 0, width: 14, height: 45}}>
-                  <SvgXml width='100%' height='100%' xml={Icon_Search_Black} />
-                </View>
+            <View style={{width:'100%', marginTop: 22, flexDirection: 'row'}}>
+              <View style={{position: 'absolute', left: 0, width: 14, height: 13, marginTop: 14}}>
+                <SvgXml width='13' height='13' xml={Icon_Search_Black} />
+              </View>
 
-                <CustomText style={{...GlobalStyle.auth_input, lineHeight: 45, marginLeft: 25, color: COLOR.blackColor}}>{searchLocation}</CustomText>
-                
-                <View style={{position: 'absolute', right: 0, width: 14, height: 45}}>
-                  <SvgXml width='100%' height='100%' xml={Icon_Location} />
-                </View>
+              {/* <CustomText style={{...GlobalStyle.auth_input, lineHeight: 45, marginLeft: 25, color: COLOR.blackColor}}>{searchLocation}</CustomText> */}
+              <View style={{marginLeft: 15, width: viewportWidth - 80, height: showKeyboard == false ? 45 : 200}}>
+                <GooglePlacesAutocomplete
+                  ref={ref}
+                  placeholder='Search Location'
+                  onPress={(data, details = null) => {
+                    selectAddress(data, details);
+
+                  }}
+                  styles={{
+                    textInputContainer: {
+                      backgroundColor: COLOR.clearColor,
+                    },
+                    textInput: {
+                      height: 38,
+                      color: '#5d5d5d',
+                      fontSize: 16,
+                      backgroundColor: COLOR.clearColor,
+                    },
+                    predefinedPlacesDescription: {
+                      color: '#1faadb',
+                    },
+                  }}
+                  query={{
+                    // key: GOOGLE_MAP_KEY,
+                    language: 'en',
+                    components: 'country:us',
+                  }}
+                />
+              </View>
+              
+              <View style={{position: 'absolute', right: 0, width: 14, height: 45}}>
+                <SvgXml width='100%' height='100%' xml={Icon_Location} />
+              </View>
+            </View>
+
+            <View style={{...GlobalStyle.auth_line, backgroundColor: COLOR.alphaBlackColor20}} />
+          </View>
+          
+          { showKeyboard == false &&
+            <TouchableWithoutFeedback onPress={() => props.onFilter(lowPrice, highPrice, searchLocation)}>
+              <View style={{...styles.bottom_button}}>
+                <ColorButton title={'Apply Filters'} backgroundColor={COLOR.systemBlackColor} color={COLOR.systemWhiteColor} />
               </View>
             </TouchableWithoutFeedback>
-
-            <View style={{...GlobalStyle.auth_line, backgroundColor: COLOR.alphaBlackColor20, marginTop: 22}} />
-          </View>
-            
-          <TouchableWithoutFeedback onPress={() => props.onFilter(lowPrice, highPrice, searchLocation)}>
-            <View style={styles.bottom_button}>
-              <ColorButton title={'Apply Filters'} backgroundColor={COLOR.systemBlackColor} color={COLOR.systemWhiteColor} />
-            </View>
-          </TouchableWithoutFeedback>
+          }
         </View>
       </TouchableWithoutFeedback>
-
-      <Modal animationType = {"slide"} transparent = {true} visible = {showAddressPicker} onRequestClose = {() => { } }>
-        <GoogleAddressSelectView onCloseView={setShowAddressPicker} onSelectAddress={selectAddress} />
-      </Modal>
     </View>
   );
 

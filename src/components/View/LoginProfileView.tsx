@@ -46,12 +46,11 @@ export const LoginProfileView: React.FC = () => {
   const { getUserInformation } = useUsers();
   const dispatch = useDispatch();
 
-  const [currentPage, setCurrentPage] = useState<number>(0);
   const [profile, setProfile] = useState<IUser>(userInfo);
 
-  useEffect(() => {
-    setProfile(userInfo);
-  }, [userInfo]);
+  // useEffect(() => {
+  //   setProfile(userInfo);
+  // }, [userInfo]);
 
   const initUserInfo = () => {
     dispatch({
@@ -100,7 +99,7 @@ export const LoginProfileView: React.FC = () => {
     <View style={{flex: 1}}>
       <ScrollView style={{width: '100%', height: '100%'}}>
         <View style={styles.profile_container}>
-          <View style={styles.avatar}>
+          {/* <View style={styles.avatar}>
             {
               profile.avatarUrl != ''
               ? <Image style={{...styles.avatar, resizeMode: 'cover'}} source={{uri: profile.avatarUrl}} />
@@ -110,7 +109,7 @@ export const LoginProfileView: React.FC = () => {
                   </View>
                 </View>
             }
-          </View>
+          </View> */}
 
           <TouchableWithoutFeedback onPress={() => {}}>
             <View style={styles.profile_info}>
@@ -126,7 +125,7 @@ export const LoginProfileView: React.FC = () => {
           </TouchableWithoutFeedback>
         </View>
 
-        <View style={styles.content_container}>
+        {/* <View style={styles.content_container}>
           <CustomText style={{...styles.content_title, marginTop: 33}}>Account Settings</CustomText>
           <TouchableWithoutFeedback onPress={() => navigate('EditProfile')}>
             <View style={{width:'100%', marginTop: 22}}>
@@ -178,7 +177,7 @@ export const LoginProfileView: React.FC = () => {
               <ColorButton title={'Log Out'} backgroundColor={COLOR.redColor} color={COLOR.systemWhiteColor} />
             </View>
           </TouchableWithoutFeedback>
-        </View>
+        </View> */}
       </ScrollView>
     </View>
   );
