@@ -126,7 +126,8 @@ export const HostAnExperienceScreen: React.FC = () => {
   const uploadExperienceImage = async (experienceImageList: string[], imageIndex: number) => {
     const firebaseHeader = 'https://firebasestorage.googleapis.com/';
     if (imageIndex >= imageList.length) {
-      createExperience(title, description, parseInt(duration), parseInt(price), category, dateAvaibilityInfo.startDay, dateAvaibilityInfo.endDay, profile.id, experienceImageList, dateAvaibilityInfo.dateAvaibility)
+      createExperience(title, description, parseInt(duration), parseInt(price), category, dateAvaibilityInfo.startDay, dateAvaibilityInfo.endDay, 
+            profile.id, experienceImageList, dateAvaibilityInfo.dateAvaibility, profile.location)
       .then(async (result: IExperience) => {
         fetchingData = false;
         setUploading(false);

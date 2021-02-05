@@ -49,6 +49,7 @@ export const useExperiences = () => {
     userId: string,
     images: string[],
     specificExperiences: IAvailableDateForCreate[],
+    location: string,
   ): Promise<any> => {
     const url = API_ENDPOINT.EXPERIENCES;
     const body = {
@@ -62,6 +63,7 @@ export const useExperiences = () => {
       userId,
       images,
       specificExperiences,
+      location,
     }
     try {
       const { data } = await axios.post<IApiSuccess>(url, body, API_CONFIG);

@@ -101,7 +101,7 @@ export const ExperienceDetailConfirmPayScreen: React.FC = ({route}) => {
       return;
     }
 
-    await confirmPaymentIntent(paymentIntentInfo[0], 'lightlight1115@gmail.com')
+    await confirmPaymentIntent(paymentIntentInfo[0], userInfo.email)
     .then(async (paymentIntent: IStripePaymentIntent) => {
       onReserveBooking(client_secret, (await paymentIntent).id);
     })

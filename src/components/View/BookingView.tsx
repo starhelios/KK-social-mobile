@@ -28,7 +28,6 @@ export const BookingView: React.FC<props> = (props: props) => {
 
   const userInfo = useGlobalState('userInfo');
   const booking: IUserBooking = props.booking;
-  const isJoined = false;
   
   const { joinBooking } = useExperiences();
 
@@ -45,28 +44,22 @@ export const BookingView: React.FC<props> = (props: props) => {
     <View style={styles.container}>
       <Image style={styles.image} source={{uri: booking.imageUrl}} />
       { props.completed_booking == false
-        ? ( isJoined == true
-          ? <View style={{...styles.content_container, height: 98}}>
-              <BookingMainInfoView booking={props.booking} completed_booking={props.completed_booking} />
-            </View>
-          : <View style={{...styles.content_container, height: 190}}>
-              <BookingMainInfoView booking={props.booking} completed_booking={props.completed_booking} />
+        ? <View style={{...styles.content_container, height: 190}}>
+            <BookingMainInfoView booking={props.booking} completed_booking={props.completed_booking} />
 
-              <View style={styles.join_container}>
-                <TouchableWithoutFeedback onPress={onJoinExperience}>
-                  <View style={styles.join_button_container}>
-                    <ColorButton title={'Join Experience'} backgroundColor={COLOR.redColor} color={COLOR.systemWhiteColor} />
-                  </View>
-                </TouchableWithoutFeedback>
-              </View>
+            <View style={styles.join_container}>
+              <TouchableWithoutFeedback onPress={onJoinExperience}>
+                <View style={styles.join_button_container}>
+                  <ColorButton title={'Join Experience'} backgroundColor={COLOR.redColor} color={COLOR.systemWhiteColor} />
+                </View>
+              </TouchableWithoutFeedback>
             </View>
-        )
+          </View>
         : <View style={{...styles.content_container, height: 209}}>
             <BookingMainInfoView booking={props.booking} completed_booking={props.completed_booking} />
             <BookingRatingInfoView booking={props.booking} />
           </View>
       }
-      
     </View>
   );
 }
