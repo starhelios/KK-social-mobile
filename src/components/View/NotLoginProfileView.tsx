@@ -14,7 +14,7 @@ import { GoogleSignin, statusCodes, User } from '@react-native-community/google-
 import { appleAuth, appleAuthAndroid } from '@invertase/react-native-apple-authentication';
 import { v4 as uuid } from 'uuid'
 import PageControl from 'react-native-page-control';
-import DefaultPreference from 'react-native-default-preference';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import BackgroundTimer from 'react-native-background-timer';
 
 // from app
@@ -194,7 +194,7 @@ export const NotLoginProfileView: React.FC = () => {
           loginByGoogle(res.accessToken)
           .then(async (result: Promise<boolean>) => {
             if ((await result) == true) {
-              DefaultPreference.set(LOGIN_TYPE, GOOGLE_LOGIN).then(() => { }); 
+              await AsyncStorage.setItem(LOGIN_TYPE, GOOGLE_LOGIN);
             } else {
               Alert.alert('', ERROR_MESSAGE.LOGIN_FAIL);
             }
@@ -300,7 +300,9 @@ const styles = StyleSheet.create({
     width: viewportWidth - 48,
     height: '100%',
     resizeMode: 'cover',
-    overflow: 'hidden'
+    overflow: 'hidden',
+    borderTopLeftRadius: 22,
+    borderTopRightRadius: 22,
   },
   profile_help_description_container: {
     position: 'absolute',

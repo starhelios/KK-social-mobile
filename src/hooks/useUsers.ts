@@ -5,11 +5,8 @@ import { API_ENDPOINT, API_CONFIG } from '../constants';
 import { IApiSuccess } from '../interfaces/api';
 import { IUser, IUserList } from '../interfaces/app';
 import { handleError } from '../utils';
-import { useAuthentication } from '.';
 
 export const useUsers = () => {
-
-  const { setLoginUser } = useAuthentication();
 
   const getUserList = async (
   ): Promise<any> => {

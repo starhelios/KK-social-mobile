@@ -34,9 +34,6 @@ export const WithdrawalScreen: React.FC = () => {
 
   useEffect(() => {
     var list: IBank[] = [];
-      list.push({name: 'Chase Business Checking', number: 'Bank ** 0023'});
-      list.push({name: 'Chase Business Checking', number: 'Bank ** 0024'});
-      list.push({name: 'Chase Business Checking', number: 'Bank ** 0025'});
       setBankList(list);
   }, [])
 

@@ -116,7 +116,7 @@ export const EditProfileScreen: React.FC = () => {
   };
 
   const selectAddress = (address: GooglePlaceData, details: GooglePlaceDetail | null) => {
-    setLocation(address.description);
+    setLocation(address.structured_formatting.main_text);
     setShowAddressPicker(false);
   };
 

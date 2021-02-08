@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { StyleSheet, TouchableWithoutFeedback, View } from 'react-native';
+import { Platform, StyleSheet, TouchableWithoutFeedback, View } from 'react-native';
 
 // from app
 import { COLOR, GOOGLE_MAP_KEY } from '../../constants';
@@ -16,7 +16,7 @@ export const GoogleAddressSelectView: React.FC<props> = (props: props) => {
   return (
     <TouchableWithoutFeedback onPress={() => props.onCloseView(false)}>
       <View style={styles.container}>
-        <View style={styles.addressContainer}>
+        <View style={{...styles.addressContainer, marginTop: Platform.OS == 'ios' ? 50 : 0}}>
           <GooglePlacesAutocomplete
             placeholder='Search'
             onPress={(data, details = null) => {
@@ -38,6 +38,7 @@ export const GoogleAddressSelectView: React.FC<props> = (props: props) => {
             query={{
               key: GOOGLE_MAP_KEY,
               language: 'en',
+              components: 'country:us',
             }}
           />
         </View>
