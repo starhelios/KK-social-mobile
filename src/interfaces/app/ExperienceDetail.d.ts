@@ -12,6 +12,7 @@ export interface IExperienceDetail {
 	userId: string,
 	updatedAt: string,
 	hostData: IHostData,
+	location: string,
 }
 
 export interface IHostData {

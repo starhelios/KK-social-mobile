@@ -9,7 +9,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { SvgXml } from 'react-native-svg';
 import { GoogleSignin } from '@react-native-community/google-signin';
-import DefaultPreference from 'react-native-default-preference';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 // from app
 import { 
@@ -106,11 +106,11 @@ export const SplashScreen: React.FC = () => {
   }
 
   const loadAutoLoginInformation = () => {
-    DefaultPreference.get(LOGIN_TYPE).then(function(loginType) {
+    AsyncStorage.getItem(LOGIN_TYPE).then((loginType) => {
       if (loginType == EMAIL_LOGIN) {
-        DefaultPreference.get(USER_EMAIL).then(function(emailAddress) {
+        AsyncStorage.getItem(USER_EMAIL).then((emailAddress) => {
           if (emailAddress != null && emailAddress != '') {
-            DefaultPreference.get(PASSWORD).then(function(passwordString) {
+            AsyncStorage.getItem(USER_EMAIL).then((passwordString) => {
               if (passwordString != null && passwordString != '') {
                 onAutoLoginByEmail(emailAddress, passwordString);
               }

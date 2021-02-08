@@ -15,7 +15,7 @@ import { Container } from 'native-base';
 import { useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { SvgXml } from 'react-native-svg';
-import DefaultPreference from 'react-native-default-preference';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 // from app
 import { 
@@ -156,14 +156,14 @@ export const LogInScreen: React.FC = () => {
     });
   }
 
-  function saveUserInfo() {
-    DefaultPreference.set(LOGIN_TYPE, EMAIL_LOGIN).then(() => { });
-    DefaultPreference.set(USER_EMAIL, emailAddress).then(() => { });
-    DefaultPreference.set(PASSWORD, password).then(() => { });
-    DefaultPreference.get(IS_FIRST_LOGIN).then(function(is_first_login) {
+  async function saveUserInfo() {
+    await AsyncStorage.setItem(LOGIN_TYPE, EMAIL_LOGIN);
+    await AsyncStorage.setItem(USER_EMAIL, emailAddress);
+    await AsyncStorage.setItem(USER_EMAIL, password);
+    AsyncStorage.getItem(IS_FIRST_LOGIN).then(async (is_first_login) => {
       if (is_first_login != null && is_first_login == 'false') {
       } else {
-        DefaultPreference.set(IS_FIRST_LOGIN, 'false').then(() => { });
+        await AsyncStorage.setItem(IS_FIRST_LOGIN, 'false');
       }
     });
   }

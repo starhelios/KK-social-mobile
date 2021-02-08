@@ -12,7 +12,7 @@ import { useNavigation } from '@react-navigation/native';
 import { SvgXml } from 'react-native-svg';
 import { GoogleSignin } from '@react-native-community/google-signin';
 import { appleAuth, appleAuthAndroid } from '@invertase/react-native-apple-authentication';
-import DefaultPreference from 'react-native-default-preference';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 // from app
 import { 
@@ -34,7 +34,6 @@ import {
 } from '../../constants';
 import { ColorButton, TitleArrowButton } from '../Button';
 import { IUser } from '../../interfaces/app';
-import { useUsers } from '../../hooks';
 import { useDispatch, useGlobalState } from '../../redux/Store';
 import { ActionType } from '../../redux/Reducer';
 
@@ -43,14 +42,13 @@ export const LoginProfileView: React.FC = () => {
   const userInfo: IUser = useGlobalState('userInfo');
 
   const { navigate, goBack } = useNavigation();
-  const { getUserInformation } = useUsers();
   const dispatch = useDispatch();
 
   const [profile, setProfile] = useState<IUser>(userInfo);
 
-  // useEffect(() => {
-  //   setProfile(userInfo);
-  // }, [userInfo]);
+  useEffect(() => {
+    setProfile(userInfo);
+  }, [userInfo]);
 
   const initUserInfo = () => {
     dispatch({
@@ -99,7 +97,7 @@ export const LoginProfileView: React.FC = () => {
     <View style={{flex: 1}}>
       <ScrollView style={{width: '100%', height: '100%'}}>
         <View style={styles.profile_container}>
-          {/* <View style={styles.avatar}>
+          <View style={styles.avatar}>
             {
               profile.avatarUrl != ''
               ? <Image style={{...styles.avatar, resizeMode: 'cover'}} source={{uri: profile.avatarUrl}} />
@@ -109,7 +107,7 @@ export const LoginProfileView: React.FC = () => {
                   </View>
                 </View>
             }
-          </View> */}
+          </View>
 
           <TouchableWithoutFeedback onPress={() => {}}>
             <View style={styles.profile_info}>
@@ -125,7 +123,7 @@ export const LoginProfileView: React.FC = () => {
           </TouchableWithoutFeedback>
         </View>
 
-        {/* <View style={styles.content_container}>
+        <View style={styles.content_container}>
           <CustomText style={{...styles.content_title, marginTop: 33}}>Account Settings</CustomText>
           <TouchableWithoutFeedback onPress={() => navigate('EditProfile')}>
             <View style={{width:'100%', marginTop: 22}}>
@@ -177,7 +175,7 @@ export const LoginProfileView: React.FC = () => {
               <ColorButton title={'Log Out'} backgroundColor={COLOR.redColor} color={COLOR.systemWhiteColor} />
             </View>
           </TouchableWithoutFeedback>
-        </View> */}
+        </View>
       </ScrollView>
     </View>
   );
@@ -186,7 +184,7 @@ export const LoginProfileView: React.FC = () => {
   }
 
   function onLogOut() {
-    DefaultPreference.get(LOGIN_TYPE).then(function(loginType) {
+    AsyncStorage.getItem(LOGIN_TYPE).then((loginType) => {
       if (loginType == EMAIL_LOGIN) {
       } else if (loginType == FACEBOOK_LOGIN) {
       } else if (loginType == GOOGLE_LOGIN) {
@@ -200,10 +198,10 @@ export const LoginProfileView: React.FC = () => {
     });
   }
 
-  function clearData() {
-    DefaultPreference.set(LOGIN_TYPE, '').then(() => { });
-    DefaultPreference.set(USER_EMAIL, '').then(() => { });
-    DefaultPreference.set(PASSWORD, '').then(() => { });
+  async function clearData() {
+    await AsyncStorage.removeItem(LOGIN_TYPE);
+    await AsyncStorage.removeItem(USER_EMAIL);
+    await AsyncStorage.removeItem(PASSWORD);
 
     initUserInfo();
   }

@@ -26,7 +26,6 @@ export const BookingScreen: React.FC = () => {
   const hostList = useGlobalState('hostList');
   const experienceList = useGlobalState('experienceList');
   const needReloadReservedBookings = useGlobalState('needReloadReservedBookings');
-  const { navigate, goBack } = useNavigation();
   const { getReservedBookingList } = useExperiences();
 
   const [selectedTab, setSelectedTab] = useState<number>(0);
@@ -34,7 +33,7 @@ export const BookingScreen: React.FC = () => {
   const [completedBookingList, setCompletedBookingList] = useState<IUserBooking[]>([]);
 
   const getUpcomingBookingList = async () => {
-    await getReservedBookingList(userInfo.id)
+    getReservedBookingList(userInfo.id)
     .then(async (result: Promise<IUserBooking[]>) => {
       setUpcomingBookingList(await result);
     })
@@ -61,7 +60,7 @@ export const BookingScreen: React.FC = () => {
       type: ActionType.SET_NEED_RELOAD_RESERVERD_BOOKINGS,
       payload: false,
     })
-  }, [needReloadReservedBookings]);
+  }, [needReloadReservedBookings, userInfo]);
 
   return (
     <Container style={{width: viewportWidth, flex: 1, backgroundColor: COLOR.blackColor}}>

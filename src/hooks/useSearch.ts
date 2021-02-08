@@ -26,7 +26,7 @@ export const useSearch = () => {
       keyword,
       location,
     }
-
+console.log(body);
     try {
       const { data } = await axios.post<IApiSuccess>(url, body, API_CONFIG);
       const result: ISearchHome = data.payload;

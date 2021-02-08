@@ -10,9 +10,9 @@ import {
   TouchableWithoutFeedback,
   View,
 } from 'react-native';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { SvgXml } from 'react-native-svg';
-import { GooglePlaceData, GooglePlaceDetail, GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
+import { GooglePlaceData, GooglePlaceDetail, GooglePlacesAutocomplete, GooglePlacesAutocompleteRef } from 'react-native-google-places-autocomplete';
 import RangeSlider from 'rn-range-slider';
 
 
@@ -44,7 +44,6 @@ export const FiltersView: React.FC<props> = (props: props) => {
 
   const filter = useGlobalState('filter');
 
-  const [searchLocation, setSearchLocation] = useState<string>('');
   const [lowPrice, setLowPrice] = useState<number>(filter.minPrice != null ? filter.minPrice : 0);
   const [highPrice, setHighPrice] = useState<number>(filter.maxPrice != null && filter.maxPrice != 0 ? filter.maxPrice : 1000);
   const [showKeyboard, setShowKeyboard] = useState<boolean>(false);
@@ -56,6 +55,9 @@ export const FiltersView: React.FC<props> = (props: props) => {
   const renderNotch = useCallback(() => <View style={styles.slider_notch} />, []);
 
   var isInit = true;
+  var keyboardDidShowListener: EmitterSubscription;
+  var keyboardDidHideListener: EmitterSubscription;
+  var googleAddressRef: GooglePlacesAutocompleteRef | null;
 
   const handleValueChange = useCallback((low, high) => {
     if (isInit == true) {
@@ -69,8 +71,7 @@ export const FiltersView: React.FC<props> = (props: props) => {
   }, []);
 
   const selectAddress = (address: GooglePlaceData, details: GooglePlaceDetail | null) => {
-    setSearchLocation(address.structured_formatting.main_text);
-    ref.current?.setAddressText(address.structured_formatting.main_text);
+    googleAddressRef?.setAddressText(address.structured_formatting.main_text);
   };
 
   const keyboardDidShow = () => {
@@ -81,20 +82,25 @@ export const FiltersView: React.FC<props> = (props: props) => {
     setShowKeyboard(false);
   }
 
-  var keyboardDidShowListener: EmitterSubscription;
-  var keyboardDidHideListener: EmitterSubscription;
-  const ref = useRef();
-
   useEffect(() => {
     // console.log('mounted');
     keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', keyboardDidShow);
     keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', keyboardDidHide);
+
+    googleAddressRef?.setAddressText(filter.location);
   }, []);
 
   useEffect(() => {
     // console.log('mounted or updated');
-    ref.current?.setAddressText(filter.location);
   });
+
+  const onFilterAction = () => {
+    let searchAddress = googleAddressRef?.getAddressText();
+    if (searchAddress == null || searchAddress == undefined) {
+      searchAddress = '';
+    }
+    props.onFilter(lowPrice, highPrice, searchAddress);
+  }
 
   useEffect(() => {
     return () => {
@@ -131,7 +137,7 @@ export const FiltersView: React.FC<props> = (props: props) => {
               <CustomText style={{...styles.slider_value, textAlign: 'left'}}>
                 {'$' + lowPrice.toString()}
               </CustomText>
-              <CustomText style={{...styles.slider_value, textAlign: 'right', position: 'absolute', right: 0,}}>
+              <CustomText style={{...styles.slider_value, textAlign: 'right', position: 'absolute', right: 0}}>
                 {'$' + (highPrice == 1000 ? '1000+' : highPrice.toString())}
               </CustomText>
             </View>
@@ -160,14 +166,14 @@ export const FiltersView: React.FC<props> = (props: props) => {
                 <SvgXml width='13' height='13' xml={Icon_Search_Black} />
               </View>
 
-              {/* <CustomText style={{...GlobalStyle.auth_input, lineHeight: 45, marginLeft: 25, color: COLOR.blackColor}}>{searchLocation}</CustomText> */}
-              <View style={{marginLeft: 15, width: viewportWidth - 80, height: showKeyboard == false ? 45 : 200}}>
+              <View style={{marginLeft: 15, width: viewportWidth - 80, height: showKeyboard == false ? 45 : (Platform.OS == 'ios' ? 550 : 200)}}>
                 <GooglePlacesAutocomplete
-                  ref={ref}
+                  ref={ref => {
+                    googleAddressRef = ref; 
+                  }}
                   placeholder='Search Location'
                   onPress={(data, details = null) => {
                     selectAddress(data, details);
-
                   }}
                   styles={{
                     textInputContainer: {
@@ -184,7 +190,7 @@ export const FiltersView: React.FC<props> = (props: props) => {
                     },
                   }}
                   query={{
-                    // key: GOOGLE_MAP_KEY,
+                    key: GOOGLE_MAP_KEY,
                     language: 'en',
                     components: 'country:us',
                   }}
@@ -200,7 +206,7 @@ export const FiltersView: React.FC<props> = (props: props) => {
           </View>
           
           { showKeyboard == false &&
-            <TouchableWithoutFeedback onPress={() => props.onFilter(lowPrice, highPrice, searchLocation)}>
+            <TouchableWithoutFeedback onPress={() => onFilterAction()}>
               <View style={{...styles.bottom_button}}>
                 <ColorButton title={'Apply Filters'} backgroundColor={COLOR.systemBlackColor} color={COLOR.systemWhiteColor} />
               </View>
