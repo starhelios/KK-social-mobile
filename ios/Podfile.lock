@@ -48,10 +48,17 @@ PODS:
   - Flipper-PeerTalk (0.0.4)
   - Flipper-RSocket (1.3.0):
     - Flipper-Folly (~> 2.5)
+<<<<<<< HEAD
   - FlipperKit (0.74.0):
     - FlipperKit/Core (= 0.74.0)
   - FlipperKit/Core (0.74.0):
     - Flipper (~> 0.74.0)
+=======
+  - FlipperKit (0.54.0):
+    - FlipperKit/Core (= 0.54.0)
+  - FlipperKit/Core (0.54.0):
+    - Flipper (~> 0.54.0)
+>>>>>>> dddc3523f5ff4950ecc28be81b581262d60bc478
     - FlipperKit/CppBridge
     - FlipperKit/FBCxxFollyDynamicConvert
     - FlipperKit/FBDefines
@@ -363,6 +370,11 @@ PODS:
     - React
   - RNDateTimePicker (3.0.9):
     - React-Core
+<<<<<<< HEAD
+=======
+  - RNDefaultPreference (1.4.3):
+    - React
+>>>>>>> dddc3523f5ff4950ecc28be81b581262d60bc478
   - RNFBApp (10.6.4):
     - Firebase/CoreOnly (~> 7.5.0)
     - React-Core
@@ -612,13 +624,21 @@ SPEC CHECKSUMS:
   FirebaseCore: 06a2b68af8901f2244eb989419eb89edc3789b4d
   FirebaseCoreDiagnostics: 35685db68b11fe7d19d2d8b557fd7e3a56ac81cc
   FirebaseStorage: 9cbdff7bdcdc8289c8efc20945fc91c1066d0b43
+<<<<<<< HEAD
   Flipper: c1ad50344bffdce628b1906b48f6e7cd06724236
+=======
+  Flipper: be611d4b742d8c87fbae2ca5f44603a02539e365
+>>>>>>> dddc3523f5ff4950ecc28be81b581262d60bc478
   Flipper-DoubleConversion: 38631e41ef4f9b12861c67d17cb5518d06badc41
   Flipper-Folly: f7a3caafbd74bda4827954fd7a6e000e36355489
   Flipper-Glog: 1dfd6abf1e922806c52ceb8701a3599a79a200a6
   Flipper-PeerTalk: 116d8f857dc6ef55c7a5a75ea3ceaafe878aadc9
   Flipper-RSocket: 602921fee03edacf18f5d6f3d3594ba477f456e5
+<<<<<<< HEAD
   FlipperKit: f42987ea58737ac0fb3fbc38f8e703452ba56940
+=======
+  FlipperKit: ab353d41aea8aae2ea6daaf813e67496642f3d7d
+>>>>>>> dddc3523f5ff4950ecc28be81b581262d60bc478
   Folly: b73c3869541e86821df3c387eb0af5f65addfab4
   glog: 40a13f7840415b9a77023fbcae0f1e6f43192af3
   GoogleDataTransport: 1024b1a4dfbd7a0e92cb20d7e0a6f1fb66b449a4
@@ -660,6 +680,10 @@ SPEC CHECKSUMS:
   RNCAsyncStorage: 44539979e1f234262d64d3ce86ec21cceb1b2c5e
   RNCMaskedView: 5a8ec07677aa885546a0d98da336457e2bea557f
   RNDateTimePicker: 8a51a2216c307769e69ef827293d59549ab1ca23
+<<<<<<< HEAD
+=======
+  RNDefaultPreference: 2f8d6d54230edbd78708ada8d63bb275e5a8415b
+>>>>>>> dddc3523f5ff4950ecc28be81b581262d60bc478
   RNFBApp: 6664dfccd0c93a194767e1c64af14a08074a087d
   RNFBStorage: 71e9120f5ea2aac82072ef25b3605d4b2111597c
   RNGestureHandler: 9b7e605a741412e20e13c512738a31bd1611759b

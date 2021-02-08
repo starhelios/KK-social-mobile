@@ -185,7 +185,11 @@
 				00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */,
 				AF7BF8C823CE838DA4182532 /* [CP] Copy Pods Resources */,
 				06D556EC49AE1899288A367A /* [CP-User] [RNFB] Core Configuration */,
+<<<<<<< HEAD
 				38BC3C889D45A04C2A2F0D44 /* [CP] Embed Pods Frameworks */,
+=======
+				CAB7235A7BC9673C0E46269A /* [CP] Embed Pods Frameworks */,
+>>>>>>> dddc3523f5ff4950ecc28be81b581262d60bc478
 			);
 			buildRules = (
 			);
@@ -369,6 +373,24 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-KloutKast/Pods-KloutKast-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		CAB7235A7BC9673C0E46269A /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-KloutKast/Pods-KloutKast-frameworks.sh",
+				"${PODS_XCFRAMEWORKS_BUILD_DIR}/OpenSSL/OpenSSL.framework/OpenSSL",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/OpenSSL.framework",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-KloutKast/Pods-KloutKast-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		FD10A7F022414F080027D42C /* Start Packager */ = {
