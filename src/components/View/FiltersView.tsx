@@ -75,10 +75,7 @@ export const FiltersView: React.FC<props> = (props: props) => {
   const selectAddress = (address: GooglePlaceData, details: GooglePlaceDetail | null) => {
     setSearchLocation(address.structured_formatting.main_text);
     ref.current?.setAddressText(address.structured_formatting.main_text);
-<<<<<<< HEAD
     googleAddressRef?.setAddressText(address.structured_formatting.main_text);
-=======
->>>>>>> dddc3523f5ff4950ecc28be81b581262d60bc478
   };
 
   const keyboardDidShow = () => {
@@ -89,31 +86,17 @@ export const FiltersView: React.FC<props> = (props: props) => {
     setShowKeyboard(false);
   }
 
-<<<<<<< HEAD
-=======
-  var keyboardDidShowListener: EmitterSubscription;
-  var keyboardDidHideListener: EmitterSubscription;
-  const ref = useRef();
-
->>>>>>> dddc3523f5ff4950ecc28be81b581262d60bc478
   useEffect(() => {
     // console.log('mounted');
     keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', keyboardDidShow);
     keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', keyboardDidHide);
-<<<<<<< HEAD
 
     ref.current?.setAddressText(filter.location);
     googleAddressRef?.setAddressText(filter.location);
-=======
->>>>>>> dddc3523f5ff4950ecc28be81b581262d60bc478
   }, []);
 
   useEffect(() => {
     // console.log('mounted or updated');
-<<<<<<< HEAD
-=======
-    ref.current?.setAddressText(filter.location);
->>>>>>> dddc3523f5ff4950ecc28be81b581262d60bc478
   });
 
   useEffect(() => {
@@ -179,7 +162,6 @@ export const FiltersView: React.FC<props> = (props: props) => {
               <View style={{position: 'absolute', left: 0, width: 14, height: 13, marginTop: 14}}>
                 <SvgXml width='13' height='13' xml={Icon_Search_Black} />
               </View>
-<<<<<<< HEAD
 
               {/* <CustomText style={{...GlobalStyle.auth_input, lineHeight: 45, marginLeft: 25, color: COLOR.blackColor}}>{searchLocation}</CustomText> */}
               <View style={{marginLeft: 15, width: viewportWidth - 80, height: showKeyboard == false ? 45 : (Platform.OS == 'ios' ? 550 : 200)}}>
@@ -191,17 +173,6 @@ export const FiltersView: React.FC<props> = (props: props) => {
                   placeholder='Search Location'
                   onPress={(data, details = null) => {
                     selectAddress(data, details);
-=======
-
-              {/* <CustomText style={{...GlobalStyle.auth_input, lineHeight: 45, marginLeft: 25, color: COLOR.blackColor}}>{searchLocation}</CustomText> */}
-              <View style={{marginLeft: 15, width: viewportWidth - 80, height: showKeyboard == false ? 45 : 200}}>
-                <GooglePlacesAutocomplete
-                  ref={ref}
-                  placeholder='Search Location'
-                  onPress={(data, details = null) => {
-                    selectAddress(data, details);
-
->>>>>>> dddc3523f5ff4950ecc28be81b581262d60bc478
                   }}
                   styles={{
                     textInputContainer: {
@@ -218,11 +189,7 @@ export const FiltersView: React.FC<props> = (props: props) => {
                     },
                   }}
                   query={{
-<<<<<<< HEAD
                     key: GOOGLE_MAP_KEY,
-=======
-                    // key: GOOGLE_MAP_KEY,
->>>>>>> dddc3523f5ff4950ecc28be81b581262d60bc478
                     language: 'en',
                     components: 'country:us',
                   }}
