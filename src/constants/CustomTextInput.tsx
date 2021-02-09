@@ -5,6 +5,8 @@ const defaultProps: TextInputProps = {
     allowFontScaling: false
 }
 
+export const getInnerRef = () => ref;
+
 export const CustomTextInput: React.FC<TextInputProps> = ({ children, ...props }) => {
-    return <TextInput {...{ ...defaultProps, ...props }}>{children}</TextInput>
+    return <TextInput ref={(r) => ref = r} {...{ ...defaultProps, ...props }}>{children}</TextInput>
 }

@@ -5,10 +5,8 @@ import {
   View,
   TouchableWithoutFeedback,
   Platform,
-  ScrollView,
   FlatList,
   Keyboard,
-  KeyboardAvoidingView,
   TouchableOpacity,
   Alert,
 } from 'react-native';
@@ -16,6 +14,7 @@ import { Container } from 'native-base';
 import { useEffect, useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { SvgXml } from 'react-native-svg';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scrollview'
 import ImagePicker from 'react-native-image-crop-picker';
 import Autocomplete from 'react-native-autocomplete-input';
 import Spinner from 'react-native-loading-spinner-overlay';
@@ -241,129 +240,131 @@ export const HostAnExperienceScreen: React.FC = () => {
 
           <View style={{flex: 1}}>
             <View style={styles.container}>
-              <KeyboardAvoidingView behavior={Platform.OS == "ios" ? "padding" : "height"} keyboardVerticalOffset={150} >
-                <ScrollView style={{}}>
-                  <View style={styles.profile_container}>
-                    <View style={{width:'100%'}}>
-                      <CustomText style={{...styles.info_title, marginLeft: 24}}>Photos</CustomText>
-                      <FlatList
-                        style={{height: 75, marginTop: 16 }}
-                        contentContainerStyle={{paddingHorizontal: 24}}
-                        showsHorizontalScrollIndicator={false}
-                        horizontal={true}
-                        data={imageList}
-                        keyExtractor={(item, index) => index.toString()}
-                        renderItem={({item, index}) => <ExperienceImageView image={item} imageCount={imageCount} index={index} onSelectPhoto={onSelectPhoto} changeCount={changeCount} />}
+              <KeyboardAwareScrollView 
+                style={{width: '100%', height: '100%', flex: 1}} 
+                keyboardDismissMode="interactive" 
+                keyboardShouldPersistTaps="always"
+              >
+                <View style={styles.profile_container}>
+                  <View style={{width:'100%'}}>
+                    <CustomText style={{...styles.info_title, marginLeft: 24}}>Photos</CustomText>
+                    <FlatList
+                      style={{height: 75, marginTop: 16 }}
+                      contentContainerStyle={{paddingHorizontal: 24}}
+                      showsHorizontalScrollIndicator={false}
+                      horizontal={true}
+                      data={imageList}
+                      keyExtractor={(item, index) => index.toString()}
+                      renderItem={({item, index}) => <ExperienceImageView image={item} imageCount={imageCount} index={index} onSelectPhoto={onSelectPhoto} changeCount={changeCount} />}
+                    />
+                  </View>
+                </View>
+
+                <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+                  <View style={{marginLeft: 24, marginRight: 24, width: viewportWidth - 48}}>
+                    <View style={{width:'100%', zIndex: 100}}>
+                      <CustomText style={styles.info_title}>Category</CustomText>
+                      <Autocomplete
+                        autoCapitalize="none"
+                        autoCorrect={false}
+                        containerStyle={styles.autocompleteContainer}
+                        inputContainerStyle={styles.autocompleteInput}
+                        style={styles.autocomplete}
+                        data={categoryList.length === 1 && comp(category, categoryList[0].name) ? [] : categoryList}
+                        defaultValue={category}
+                        onChangeText={text => {
+                          setCategory(text);
+                          setCategoryList(findCategory(text));
+                        }}
+                        placeholder="Search Categories"
+                        placeholderTextColor={COLOR.alphaBlackColor75}
+                        renderItem={({item}) => (
+                          <TouchableOpacity onPress={() => {
+                            setCategory(item.name);
+                            setCategoryList([]);
+                          }}>
+                            <CustomText style={styles.autocompleteContent}>
+                              {item.name}
+                            </CustomText>
+                          </TouchableOpacity>
+                        )}
                       />
+                      <View style={{...GlobalStyle.auth_line, backgroundColor: COLOR.alphaBlackColor20}} />
+
+                      <View style={{position: 'absolute', top: 40, left: 0, width: 14, height: 14}}>
+                        <SvgXml width='100%' height='100%' xml={Icon_Search_Black} />
+                      </View>
+                    </View>
+
+                    <View style={{width:'100%', marginTop: 22}}>
+                      <CustomText style={styles.info_title}>Title</CustomText>
+                      <CustomTextInput
+                        style={{...GlobalStyle.auth_input, color: COLOR.systemBlackColor}}
+                        placeholder={'Title'}
+                        placeholderTextColor={COLOR.alphaBlackColor75}
+                        onChangeText={text => setTitle(text)}
+                        value={title}
+                      />
+                      <View style={{...GlobalStyle.auth_line, backgroundColor: COLOR.alphaBlackColor20}} />
+                    </View>
+
+                    <View style={{width:'100%', marginTop: 22}}>
+                      <CustomText style={styles.info_title}>Description</CustomText>
+                      <CustomTextInput
+                        style={{...GlobalStyle.auth_input, color: COLOR.systemBlackColor}}
+                        placeholder={'Description'}
+                        placeholderTextColor={COLOR.alphaBlackColor75}
+                        onChangeText={text => setDescription(text)}
+                        value={description}
+                      />
+                      <View style={{...GlobalStyle.auth_line, backgroundColor: COLOR.alphaBlackColor20}} />
+                    </View>
+
+                    <View style={{width:'100%', marginTop: 22}}>
+                      <CustomText style={styles.info_title}>Duration (in minutes)</CustomText>
+                      
+                      <CustomTextInput
+                        style={{...GlobalStyle.auth_input, color: COLOR.systemBlackColor}}
+                        placeholder={'Duration'}
+                        keyboardType={'number-pad'}
+                        placeholderTextColor={COLOR.alphaBlackColor75}
+                        onChangeText={text => setDuration(text)}
+                        value={duration}
+                      />
+                      <View style={{...GlobalStyle.auth_line, backgroundColor: COLOR.alphaBlackColor20}} />
+                    </View>
+
+                    <View style={{width:'100%', marginTop: 22}}>
+                      <CustomText style={styles.info_title}>Price / Person</CustomText>
+                      <View style={{flexDirection: 'row'}}>
+                        <CustomText style={styles.price}>$</CustomText>
+                        <CustomTextInput
+                          style={{...GlobalStyle.auth_input, color: COLOR.systemBlackColor}}
+                          keyboardType={'number-pad'}
+                          placeholder={'Price'}
+                          placeholderTextColor={COLOR.alphaBlackColor75}
+                          onChangeText={text => setPrice(text)}
+                          value={price}
+                        />
+                      </View>
+                      <View style={{...GlobalStyle.auth_line, backgroundColor: COLOR.alphaBlackColor20}} />
                     </View>
                   </View>
+                </TouchableWithoutFeedback>
 
-                  <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
-                    <View style={{marginLeft: 24, marginRight: 24, width: viewportWidth - 48}}>
-                      <View style={{width:'100%', zIndex: 100}}>
-                        <CustomText style={styles.info_title}>Category</CustomText>
-                        <Autocomplete
-                          autoCapitalize="none"
-                          autoCorrect={false}
-                          containerStyle={styles.autocompleteContainer}
-                          inputContainerStyle={styles.autocompleteInput}
-                          style={styles.autocomplete}
-                          data={categoryList.length === 1 && comp(category, categoryList[0].name) ? [] : categoryList}
-                          defaultValue={category}
-                          onChangeText={text => {
-                            setCategory(text);
-                            setCategoryList(findCategory(text));
-                          }}
-                          placeholder="Search Categories"
-                          placeholderTextColor={COLOR.alphaBlackColor75}
-                          renderItem={({item}) => (
-                            <TouchableOpacity onPress={() => {
-                              setCategory(item.name);
-                              setCategoryList([]);
-                            }}>
-                              <CustomText style={styles.autocompleteContent}>
-                                {item.name}
-                              </CustomText>
-                            </TouchableOpacity>
-                          )}
-                        />
-                        <View style={{...GlobalStyle.auth_line, backgroundColor: COLOR.alphaBlackColor20}} />
+                <TouchableWithoutFeedback onPress={() => navigate('SelectAvailabilityDates', {dateAvaibilityInfo: dateAvaibilityInfo, setDateAvaibilityInfo: setDateAvaibilityInfo, duration: duration}) }>
+                  <View style={{height: 44, marginLeft: 48, marginRight: 48, marginTop: 22}}>
+                    <ColorButton title={'Select Dates of Availability'} backgroundColor={COLOR.alphaBlackColor20} color={COLOR.systemBlackColor} />
+                  </View>
+                </TouchableWithoutFeedback>
 
-                        <View style={{position: 'absolute', top: 40, left: 0, width: 14, height: 14}}>
-                          <SvgXml width='100%' height='100%' xml={Icon_Search_Black} />
-                        </View>
-                      </View>
+                <TouchableWithoutFeedback onPress={onCreateExperience}>
+                  <View style={styles.bottom_button}>
+                    <ColorButton title={'Create Experience'} backgroundColor={COLOR.redColor} color={COLOR.systemWhiteColor} />
+                  </View>
+                </TouchableWithoutFeedback>
 
-                      <View style={{width:'100%', marginTop: 22}}>
-                        <CustomText style={styles.info_title}>Title</CustomText>
-                        <CustomTextInput
-                          style={{...GlobalStyle.auth_input, color: COLOR.systemBlackColor}}
-                          placeholder={'Title'}
-                          placeholderTextColor={COLOR.alphaBlackColor75}
-                          onChangeText={text => setTitle(text)}
-                          value={title}
-                        />
-                        <View style={{...GlobalStyle.auth_line, backgroundColor: COLOR.alphaBlackColor20}} />
-                      </View>
-
-                      <View style={{width:'100%', marginTop: 22}}>
-                        <CustomText style={styles.info_title}>Description</CustomText>
-                        <CustomTextInput
-                          style={{...GlobalStyle.auth_input, color: COLOR.systemBlackColor}}
-                          placeholder={'Description'}
-                          placeholderTextColor={COLOR.alphaBlackColor75}
-                          onChangeText={text => setDescription(text)}
-                          value={description}
-                        />
-                        <View style={{...GlobalStyle.auth_line, backgroundColor: COLOR.alphaBlackColor20}} />
-                      </View>
-
-                      <View style={{width:'100%', marginTop: 22}}>
-                        <CustomText style={styles.info_title}>Duration (in minutes)</CustomText>
-                        
-                        <CustomTextInput
-                          style={{...GlobalStyle.auth_input, color: COLOR.systemBlackColor}}
-                          placeholder={'Duration'}
-                          keyboardType={'number-pad'}
-                          placeholderTextColor={COLOR.alphaBlackColor75}
-                          onChangeText={text => setDuration(text)}
-                          value={duration}
-                        />
-                        <View style={{...GlobalStyle.auth_line, backgroundColor: COLOR.alphaBlackColor20}} />
-                      </View>
-
-                      <View style={{width:'100%', marginTop: 22}}>
-                        <CustomText style={styles.info_title}>Price / Person</CustomText>
-                        <View style={{flexDirection: 'row'}}>
-                          <CustomText style={styles.price}>$</CustomText>
-                          <CustomTextInput
-                            style={{...GlobalStyle.auth_input, color: COLOR.systemBlackColor}}
-                            keyboardType={'number-pad'}
-                            placeholder={'Price'}
-                            placeholderTextColor={COLOR.alphaBlackColor75}
-                            onChangeText={text => setPrice(text)}
-                            value={price}
-                          />
-                        </View>
-                        <View style={{...GlobalStyle.auth_line, backgroundColor: COLOR.alphaBlackColor20}} />
-                      </View>
-                    </View>
-                  </TouchableWithoutFeedback>
-
-                  <TouchableWithoutFeedback onPress={() => navigate('SelectAvailabilityDates', {dateAvaibilityInfo: dateAvaibilityInfo, setDateAvaibilityInfo: setDateAvaibilityInfo, duration: duration}) }>
-                    <View style={{height: 44, marginLeft: 48, marginRight: 48, marginTop: 22}}>
-                      <ColorButton title={'Select Dates of Availability'} backgroundColor={COLOR.alphaBlackColor20} color={COLOR.systemBlackColor} />
-                    </View>
-                  </TouchableWithoutFeedback>
-
-                  <TouchableWithoutFeedback onPress={onCreateExperience}>
-                    <View style={styles.bottom_button}>
-                      <ColorButton title={'Create Experience'} backgroundColor={COLOR.redColor} color={COLOR.systemWhiteColor} />
-                    </View>
-                  </TouchableWithoutFeedback>
-
-                </ScrollView>
-              </KeyboardAvoidingView>   
+              </KeyboardAwareScrollView>   
             </View>
           </View>
         </View>

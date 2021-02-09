@@ -19,8 +19,6 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 // from app
 import { 
   COLOR, 
-  convertDateToDateFormat, 
-  convertDateToMomentDateFormat, 
   convertStringToDateFormat, 
   convertStringToMomentDateFormat, 
   CustomText, 
@@ -68,7 +66,7 @@ export const SelectAvailabilityDatesScreen: React.FC = ({route}) => {
   }
 
   const onDismiss = () => {
-    Keyboard.dismiss;
+    Keyboard.dismiss();
     setModalType(0);
     setShowBottomBar(false);
   }
@@ -98,7 +96,6 @@ export const SelectAvailabilityDatesScreen: React.FC = ({route}) => {
         tempEndDate.setHours(tempEndDate.getHours(), tempEndDate.getMinutes() + durationValue , 0 , 0);
         setEndTime(tempEndDate);
         setEndTimeString(toLocalTimeString(tempEndDate));
-        console.log(toLocalTimeString(tempEndDate))
       } else {
         setEndTime(selectedDate);
         setEndTimeString(toLocalTimeString(selectedDate));

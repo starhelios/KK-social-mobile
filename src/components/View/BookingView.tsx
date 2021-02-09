@@ -10,6 +10,9 @@ import {
 // from app
 import { 
   COLOR, 
+  CustomText, 
+  FONT, 
+  GetDurationString, 
   Img_Experience,
   viewportWidth, 
 } from '../../constants';
@@ -45,18 +48,25 @@ export const BookingView: React.FC<props> = (props: props) => {
       <Image style={styles.image} source={{uri: booking.imageUrl}} />
       { completed_booking == false
         ? <View style={{...styles.content_container, height: 190}}>
-            <BookingMainInfoView booking={booking} completed_booking={completed_booking} />
+            <CustomText style={styles.experience}>{booking.experience.title}</CustomText>
+            <View style={styles.date_container}>
+              <CustomText style={styles.date}>{booking.day + ' • ' + booking.startTime}</CustomText>
+              <CustomText style={styles.duration}>{GetDurationString(booking.experience.duration)}</CustomText>
+            </View>
 
             <View style={styles.join_container}>
-              {/* <TouchableWithoutFeedback onPress={onJoinExperience}> */}
+              <TouchableWithoutFeedback onPress={onJoinExperience}>
                 <View style={styles.join_button_container}>
                   <ColorButton title={'Join Experience'} backgroundColor={COLOR.redColor} color={COLOR.systemWhiteColor} />
                 </View>
-              {/* </TouchableWithoutFeedback> */}
+              </TouchableWithoutFeedback>
             </View>
           </View>
         : <View style={{...styles.content_container, height: 209}}>
-            <BookingMainInfoView booking={booking} completed_booking={completed_booking} />
+            <CustomText style={styles.experience}>{booking.experience.title}</CustomText>
+            <View style={styles.date_container}>
+              <CustomText style={styles.date}>{booking.day + ' • ' + booking.startTime}</CustomText>
+            </View>
             <BookingRatingInfoView booking={booking} />
           </View>
       }
@@ -99,5 +109,42 @@ const styles = StyleSheet.create({
     marginTop: 24,
     marginRight: 24,
     height: 44,
+  },
+  experience: {
+    marginTop: 24,
+    marginLeft: 24,
+    marginRight: 24,
+    height: 18,
+    lineHeight: 18,
+    color: COLOR.systemWhiteColor,
+    fontFamily: FONT.AN_Regular,
+    fontWeight: '600',
+    fontSize: 18,
+    flexWrap: 'wrap'
+  },
+  date_container: {
+    marginTop: 16,
+    marginLeft: 24,
+    marginRight: 24,
+    height: 16,
+    flexDirection: 'column',
+  },
+  date: {
+    height: 16,
+    lineHeight: 16,
+    color: COLOR.systemWhiteColor,
+    fontFamily: FONT.AN_Regular,
+    fontSize: 16,
+    flexWrap: 'wrap'
+  },
+  duration: {
+    position: 'absolute',
+    right: 0,
+    height: 16,
+    lineHeight: 16,
+    color: COLOR.systemWhiteColor,
+    fontFamily: FONT.AN_Regular,
+    fontSize: 14,
+    flexWrap: 'wrap'
   },
 });

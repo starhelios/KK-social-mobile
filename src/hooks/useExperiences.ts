@@ -139,8 +139,6 @@ export const useExperiences = () => {
     id: string,
   ): Promise<any> => {
     const url = `${API_ENDPOINT.BOOKING_RESERVED}/${id}`;
-    console.log(url)
-    console.log(API_CONFIG)
     try {
       const { data } = await axios.get<IApiSuccess>(url, API_CONFIG);
       const result: IUserBooking[] = data.payload.userBookings;

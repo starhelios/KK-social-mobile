@@ -53,28 +53,28 @@ export const WithdrawalScreen: React.FC = () => {
           </TouchableWithoutFeedback>
         </View>
 
-          <View style={styles.input_container}>
-            <View style={{width:'100%'}}>
-              <CustomText style={styles.info_title}>Connected Account</CustomText>
-              <FlatList
-                style={{width: '100%', marginTop: 5, height: bankList.length * 78 <= viewportHeight - 350 ? bankList.length * 78 : viewportHeight - 350 }}
-                contentContainerStyle={{paddingVertical: 0}}
-                showsHorizontalScrollIndicator={false}
-                horizontal={false}
-                data={bankList}
-                keyExtractor={(item, index) => index.toString()}
-                renderItem={({item}) => <BankButton card={item} />}
-              />
-            </View>
-
-            <CustomText style={{...styles.info_title, marginTop: 44}}>Add Account</CustomText>
-
-            <TouchableWithoutFeedback onPress={() => onAddBankAccount() }>
-              <View style={{width:'100%', marginTop: 22}}>
-                <TitleArrowButton title={''} name={'Add Bank Account'} showArrow={true} white_color={true} />
-              </View>
-            </TouchableWithoutFeedback>
+        <View style={styles.input_container}>
+          <View style={{width:'100%'}}>
+            <CustomText style={styles.info_title}>Connected Account</CustomText>
+            <FlatList
+              style={{width: '100%', marginTop: 5, height: bankList.length * 78 <= viewportHeight - 350 ? bankList.length * 78 : viewportHeight - 350 }}
+              contentContainerStyle={{paddingVertical: 0}}
+              showsHorizontalScrollIndicator={false}
+              horizontal={false}
+              data={bankList}
+              keyExtractor={(item, index) => index.toString()}
+              renderItem={({item}) => <BankButton card={item} />}
+            />
           </View>
+
+          <CustomText style={{...styles.info_title, marginTop: 44}}>Add Account</CustomText>
+
+          <TouchableWithoutFeedback onPress={() => onAddBankAccount() }>
+            <View style={{width:'100%', marginTop: 22}}>
+              <TitleArrowButton title={''} name={'Add Bank Account'} showArrow={true} white_color={true} />
+            </View>
+          </TouchableWithoutFeedback>
+        </View>
       </SafeAreaView>
     </Container>
   );

@@ -18,7 +18,6 @@ export const usePayments = () => {
       amount,
       payment_type,
     }
-console.log(body);
     try {
       const { data } = await axios.post<IApiSuccess>(url, body, API_CONFIG);
       const clientToken: string = data.payload;
@@ -26,7 +25,6 @@ console.log(body);
     } catch (err) {
       const apiError = handleError(err);
       if (apiError) {
-        console.log(apiError);
         return Promise.reject(apiError.error.message);
       } else {
         return Promise.reject(null);
