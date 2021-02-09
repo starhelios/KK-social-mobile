@@ -2,32 +2,31 @@ import * as React from 'react';
 import {
   EmitterSubscription,
   Keyboard,
-  KeyboardAvoidingView,
-  Modal,
   Platform,
-  ScrollView,
   StyleSheet,
   TouchableWithoutFeedback,
   View,
 } from 'react-native';
+import { 
+  GooglePlaceData, 
+  GooglePlaceDetail, 
+  GooglePlacesAutocomplete, 
+  GooglePlacesAutocompleteRef, 
+} from 'react-native-google-places-autocomplete';
 import { useCallback, useEffect, useState } from 'react';
 import { SvgXml } from 'react-native-svg';
-import { GooglePlaceData, GooglePlaceDetail, GooglePlacesAutocomplete, GooglePlacesAutocompleteRef } from 'react-native-google-places-autocomplete';
 import RangeSlider from 'rn-range-slider';
-
 
 // from app
 import { 
   COLOR, 
   CustomText, 
-  CustomTextInput, 
   FONT,
   GOOGLE_MAP_KEY,
   Icon_Close_Black,
   Icon_Location,
   Icon_Search_Black,
   Icon_Slider_Left,
-  Icon_Slider_Right,
   viewportWidth,
 } from '../../constants';
 import { ColorButton } from '../Button';
@@ -42,6 +41,11 @@ interface props {
 
 export const FiltersView: React.FC<props> = (props: props) => {
 
+  var isInit = true;
+  var keyboardDidShowListener: EmitterSubscription;
+  var keyboardDidHideListener: EmitterSubscription;
+  var googleAddressRef: GooglePlacesAutocompleteRef | null;
+
   const filter = useGlobalState('filter');
 
   const [lowPrice, setLowPrice] = useState<number>(filter.minPrice != null ? filter.minPrice : 0);
@@ -53,11 +57,8 @@ export const FiltersView: React.FC<props> = (props: props) => {
   const renderRailSelected = useCallback(() => <View style={styles.slider_rail_selected} />, []);
   const renderLabel = useCallback(value => renderSliderLabel(value), []);
   const renderNotch = useCallback(() => <View style={styles.slider_notch} />, []);
-
-  var isInit = true;
-  var keyboardDidShowListener: EmitterSubscription;
-  var keyboardDidHideListener: EmitterSubscription;
-  var googleAddressRef: GooglePlacesAutocompleteRef | null;
+  const keyboardDidShow = () => { setShowKeyboard(true); }
+  const keyboardDidHide = () => { setShowKeyboard(false); }
 
   const handleValueChange = useCallback((low, high) => {
     if (isInit == true) {
@@ -75,19 +76,10 @@ export const FiltersView: React.FC<props> = (props: props) => {
     googleAddressRef?.setAddressText(address.description.replace(', USA', ''));
   };
 
-  const keyboardDidShow = () => {
-    setShowKeyboard(true);
-  }
-
-  const keyboardDidHide = () => {
-    setShowKeyboard(false);
-  }
-
   useEffect(() => {
     // console.log('mounted');
     keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', keyboardDidShow);
     keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', keyboardDidHide);
-
     googleAddressRef?.setAddressText(filter.location);
   }, []);
 

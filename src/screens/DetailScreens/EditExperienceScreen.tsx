@@ -80,7 +80,7 @@ export const EditExperienceScreen: React.FC = ({route}) => {
             </TouchableWithoutFeedback>
           </View>
 
-          <KeyboardAvoidingView behavior={Platform.OS == "ios" ? "padding" : "height"} keyboardVerticalOffset={150} >
+          <KeyboardAvoidingView behavior={Platform.OS == "ios" ? "padding" : "height"}>
             <View style={{flex: 1}}>
               <View style={styles.container}>
                 <ScrollView bounces={false}>

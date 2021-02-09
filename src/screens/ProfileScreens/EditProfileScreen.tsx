@@ -6,20 +6,22 @@ import {
   TouchableWithoutFeedback,
   Image,
   Platform,
-  ScrollView,
   Alert,
   Keyboard,
-  KeyboardAvoidingView,
   TouchableOpacity,
-  Modal,
   EmitterSubscription,
-  ViewPagerAndroidComponent,
 } from 'react-native';
+import { 
+  GooglePlaceData, 
+  GooglePlaceDetail, 
+  GooglePlacesAutocomplete, 
+  GooglePlacesAutocompleteRef, 
+} from 'react-native-google-places-autocomplete';
 import { Container } from 'native-base';
 import { useEffect, useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { SvgXml } from 'react-native-svg';
-import { GooglePlaceData, GooglePlaceDetail, GooglePlacesAutocomplete, GooglePlacesAutocompleteRef } from 'react-native-google-places-autocomplete';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scrollview'
 import firebase from 'firebase';
 import Autocomplete from 'react-native-autocomplete-input';
 import ImagePicker from 'react-native-image-crop-picker';
@@ -51,7 +53,6 @@ import { ColorButton, TitleArrowButton } from '../../components/Button';
 import { useGlobalState } from '../../redux/Store';
 import { ICategory, IFile, IUser } from '../../interfaces/app';
 import { useUsers, useAuthentication } from '../../hooks';
-import { GoogleAddressSelectView } from '../../components/View';
 import GlobalStyle from '../../styles/global';
 
 
@@ -86,15 +87,12 @@ export const EditProfileScreen: React.FC = () => {
   const [categoryList, setCategoryList] = useState<ICategory[]>([]);
   const [aboutMe, setAboutMe] = useState<string>(profile.aboutMe);
   const [category, setCategory] = useState<string>(profile.categoryName);
-  const [showAddressPicker, setShowAddressPicker] = useState<boolean>(false);
   const [showKeyboard, setShowKeyboard] = useState<boolean>(false);
 
   let fetchingData = false;
-  var isInit = true;
   var keyboardDidShowListener: EmitterSubscription;
   var keyboardDidHideListener: EmitterSubscription;
   var googleAddressRef: GooglePlacesAutocompleteRef | null;
-  var scrollViewRef: ScrollView | null;
 
   useEffect(() => {
     setImage(profile.avatarUrl);
@@ -105,7 +103,6 @@ export const EditProfileScreen: React.FC = () => {
 
   const selectAddress = (address: GooglePlaceData, details: GooglePlaceDetail | null) => {
     googleAddressRef?.setAddressText(address.description.replace(', USA', ''));
-    setShowAddressPicker(false);
   };
 
   const keyboardDidShow = () => {
@@ -156,193 +153,181 @@ export const EditProfileScreen: React.FC = () => {
         </View>
 
         <View style={{flex: 1}}>
-          <View style={styles.container}>
-            <KeyboardAvoidingView behavior={Platform.OS == "ios" ? "padding" : "height"} keyboardVerticalOffset={150} >
-              <ScrollView ref={ref => { scrollViewRef = ref }} bounces={false} keyboardShouldPersistTaps={'always'}>
-                <TouchableWithoutFeedback onPress={() => onDismiss()} accessible={false}>
-                  <View>
-                    <View style={styles.profile_container}>
-                      <TouchableWithoutFeedback onPress={() => onSelectPhoto()}>
-                        <View style={styles.profile}>
-                          {
-                            image != ''
-                            ? <Image style={{width: '100%', height: '100%'}} source={{uri: image}} />
-                            : <View style={styles.profile_no_image}>
-                                <SvgXml width={46} height={58} xml={Icon_Normal_Profile} />
-                              </View>
-                          }
-                          <LinearGradient
-                            colors={['#00000010', '#00000070']}
-                            style={styles.camera_container}
-                            start={{x: 0.5, y: 0}}
-                            end={{x: 0.5, y: 1}} >
-                            <View style={styles.camera_icon}>
-                              <SvgXml width='100%' height='100%' xml={Icon_Camera} />
-                            </View>
-                          </LinearGradient>
+          <KeyboardAwareScrollView 
+            style={{width: '100%', height: '100%', flex: 1}} 
+            keyboardDismissMode="interactive" 
+            keyboardShouldPersistTaps="always"
+          >
+            <TouchableWithoutFeedback onPress={() => onDismiss()} accessible={false}>
+              <View>
+                <View style={styles.profile_container}>
+                  <TouchableWithoutFeedback onPress={() => onSelectPhoto()}>
+                    <View style={styles.profile}>
+                      { image != ''
+                        ? <Image style={{width: '100%', height: '100%'}} source={{uri: image}} />
+                        : <View style={styles.profile_no_image}>
+                            <SvgXml width={46} height={58} xml={Icon_Normal_Profile} />
+                          </View>
+                      }
+                      <LinearGradient
+                        colors={['#00000010', '#00000070']}
+                        style={styles.camera_container}
+                        start={{x: 0.5, y: 0}}
+                        end={{x: 0.5, y: 1}} >
+                        <View style={styles.camera_icon}>
+                          <SvgXml width='100%' height='100%' xml={Icon_Camera} />
                         </View>
-                      </TouchableWithoutFeedback>
+                      </LinearGradient>
                     </View>
+                  </TouchableWithoutFeedback>
+                </View>
 
-                    <View style={{marginLeft: 24, marginRight: 24, width: viewportWidth - 48, paddingBottom: 10}}>
-                      <View style={{width:'100%', marginTop: 33}}>
-                        <CustomText style={styles.info_title}>Full Name</CustomText>
+                <View style={{marginLeft: 24, marginRight: 24, width: viewportWidth - 48, paddingBottom: 10}}>
+                  <View style={{width:'100%', marginTop: 33}}>
+                    <CustomText style={styles.info_title}>Full Name</CustomText>
+                    <CustomTextInput
+                      style={GlobalStyle.auth_input}
+                      placeholder={'Full Name'}
+                      placeholderTextColor={COLOR.alphaWhiteColor50}
+                      onChangeText={text => setFullName(text)}
+                      value={fullName}
+                    />
+                    <View style={GlobalStyle.auth_line} />
+                  </View>
+
+                  <View style={{width:'100%', marginTop: 22}}>
+                    <CustomText style={styles.info_title}>Email Address</CustomText>
+                    <CustomTextInput
+                      style={{...GlobalStyle.auth_input, color: LOGIN_STATE == EMAIL_LOGIN ? COLOR.systemWhiteColor : COLOR.alphaWhiteColor50}}
+                      keyboardType={'email-address'}
+                      placeholder={'Email Address'}
+                      placeholderTextColor={COLOR.alphaWhiteColor50}
+                      onChangeText={text => setEmailAddress(text)}
+                      value={emailAddress}
+                      editable={LOGIN_STATE == EMAIL_LOGIN ? true : false}
+                    />
+                    <View style={GlobalStyle.auth_line} />
+                  </View>
+
+                  <View style={{width:'100%', marginTop: 22}}>
+                    <CustomText style={styles.info_title}>Date of Birth</CustomText>
+                    <TouchableWithoutFeedback onPress={() => onSelectBirthday()}>
+                      <CustomText style={{...GlobalStyle.auth_input, lineHeight: 45}}>{birthday}</CustomText>
+                    </TouchableWithoutFeedback>
+                    <View style={GlobalStyle.auth_line} />
+                  </View>
+
+                  { profile.isHost == true &&
+                    <View>
+                      <View style={{width:'100%', marginTop: 22, zIndex: 100}}>
+                        <CustomText style={styles.info_title}>Category</CustomText>
+                        <Autocomplete
+                          autoCapitalize="none"
+                          autoCorrect={false}
+                          containerStyle={styles.autocompleteContainer}
+                          inputContainerStyle={styles.autocompleteInput}
+                          style={styles.autocomplete}
+                          data={categoryList.length === 1 && comp(category, categoryList[0].name) ? [] : categoryList}
+                          defaultValue={category}
+                          onChangeText={text => {
+                            setCategory(text);
+                            setCategoryList(findCategory(text));
+                          }}
+                          placeholder="Search Categories"
+                          placeholderTextColor={COLOR.alphaWhiteColor50}
+                          renderItem={({item}) => (
+                            <TouchableOpacity onPress={() => {
+                              setCategory(item.name);
+                              setCategoryList([]);
+                            }}>
+                              <CustomText style={styles.autocompleteContent}>
+                                {item.name}
+                              </CustomText>
+                            </TouchableOpacity>
+                          )}
+                        />
+                        <View style={GlobalStyle.auth_line} />
+
+                        <View style={{position: 'absolute', top: 40, left: 0, width: 14, height: 14}}>
+                          <SvgXml width='100%' height='100%' xml={Icon_Search_White} />
+                        </View>
+                      </View>
+
+                      <View style={{width:'100%', marginTop: 22}}>
+                        <CustomText style={styles.info_title}>About Me</CustomText>
                         <CustomTextInput
                           style={GlobalStyle.auth_input}
-                          placeholder={'Full Name'}
+                          placeholder={'About Me'}
                           placeholderTextColor={COLOR.alphaWhiteColor50}
-                          onChangeText={text => setFullName(text)}
-                          value={fullName}
+                          onChangeText={text => setAboutMe(text)}
+                          value={aboutMe}
                         />
                         <View style={GlobalStyle.auth_line} />
                       </View>
 
-                      <View style={{width:'100%', marginTop: 22}}>
-                        <CustomText style={styles.info_title}>Email Address</CustomText>
-                        <CustomTextInput
-                          style={{...GlobalStyle.auth_input, color: LOGIN_STATE == EMAIL_LOGIN ? COLOR.systemWhiteColor : COLOR.alphaWhiteColor50}}
-                          keyboardType={'email-address'}
-                          placeholder={'Email Address'}
-                          placeholderTextColor={COLOR.alphaWhiteColor50}
-                          onChangeText={text => setEmailAddress(text)}
-                          value={emailAddress}
-                          editable={LOGIN_STATE == EMAIL_LOGIN ? true : false}
-                        />
-                        <View style={GlobalStyle.auth_line} />
-                      </View>
-
-                      <View style={{width:'100%', marginTop: 22}}>
-                        <CustomText style={styles.info_title}>Date of Birth</CustomText>
-                        <TouchableWithoutFeedback onPress={() => onSelectBirthday()}>
-                          <CustomText style={{...GlobalStyle.auth_input, lineHeight: 45}}>{birthday}</CustomText>
-                        </TouchableWithoutFeedback>
-                        <View style={GlobalStyle.auth_line} />
-                      </View>
-
-                      { profile.isHost == true &&
-                        <View>
-                          <View style={{width:'100%', marginTop: 22, zIndex: 100}}>
-                            <CustomText style={styles.info_title}>Category</CustomText>
-                            <Autocomplete
-                              autoCapitalize="none"
-                              autoCorrect={false}
-                              containerStyle={styles.autocompleteContainer}
-                              inputContainerStyle={styles.autocompleteInput}
-                              style={styles.autocomplete}
-                              data={categoryList.length === 1 && comp(category, categoryList[0].name) ? [] : categoryList}
-                              defaultValue={category}
-                              onChangeText={text => {
-                                setCategory(text);
-                                setCategoryList(findCategory(text));
-                              }}
-                              placeholder="Search Categories"
-                              placeholderTextColor={COLOR.alphaWhiteColor50}
-                              renderItem={({item}) => (
-                                <TouchableOpacity onPress={() => {
-                                  setCategory(item.name);
-                                  setCategoryList([]);
-                                }}>
-                                  <CustomText style={styles.autocompleteContent}>
-                                    {item.name}
-                                  </CustomText>
-                                </TouchableOpacity>
-                              )}
-                            />
-                            <View style={GlobalStyle.auth_line} />
-
-                            <View style={{position: 'absolute', top: 40, left: 0, width: 14, height: 14}}>
-                              <SvgXml width='100%' height='100%' xml={Icon_Search_White} />
-                            </View>
-                          </View>
-
-                          <View style={{width:'100%', marginTop: 22}}>
-                            <CustomText style={styles.info_title}>About Me</CustomText>
-                            <CustomTextInput
-                              style={GlobalStyle.auth_input}
-                              placeholder={'About Me'}
-                              placeholderTextColor={COLOR.alphaWhiteColor50}
-                              onChangeText={text => setAboutMe(text)}
-                              value={aboutMe}
-                            />
-                            <View style={GlobalStyle.auth_line} />
-                          </View>
-
-                          {/* <TouchableWithoutFeedback onPress={() => setShowAddressPicker(true) }> */}
-                            <View style={{width:'100%', marginTop: 22, zIndex: 10}}>
-                              <CustomText style={styles.info_title}>Location</CustomText>
-                              {/* <CustomTextInput
-                                style={GlobalStyle.auth_input}
-                                placeholder={'Location'}
-                                placeholderTextColor={COLOR.alphaWhiteColor50}
-                                onChangeText={text => setLocation(text)}
-                                value={location}
-                                editable={false}
-                              /> */}
-                              {/* <CustomText style={{...GlobalStyle.auth_input, lineHeight: 45}}>{location}</CustomText> */}
-                              <View style={{marginLeft: -10, width: viewportWidth - 38, height: showKeyboard == false ? 45 : (Platform.OS == 'ios' ? 300 : 200)}}>
-                                <GooglePlacesAutocomplete
-                                  ref={ref => {
-                                    googleAddressRef = ref; 
-                                  }}
-                                  placeholder='Location'
-                                  onPress={(data, details = null) => {
-                                    selectAddress(data, details);
-                                  }}
-                                  textInputProps={{
-                                    placeholder: 'Location',
-                                    placeholderTextColor: COLOR.alphaWhiteColor50,
-                                  }}
-                                  styles={{
-                                    textInputContainer: {
-                                      backgroundColor: COLOR.clearColor,
-                                      
-                                    },
-                                    textInput: {
-                                      height: 38,
-                                      color: COLOR.systemWhiteColor,
-                                      fontSize: 16,
-                                      backgroundColor: COLOR.clearColor,
-                                    },
-                                    predefinedPlacesDescription: {
-                                      color: COLOR.alphaWhiteColor50,
-                                    },
-                                  }}
-                                  query={{
-                                    key: GOOGLE_MAP_KEY,
-                                    language: 'en',
-                                    components: 'country:us',
-                                  }}
-                                />
-                              </View>
-                              <View style={GlobalStyle.auth_line} />
-                            </View>
-                          {/* </TouchableWithoutFeedback> */}
+                      <View style={{width:'100%', marginTop: 22, zIndex: 10}}>
+                        <CustomText style={styles.info_title}>Location</CustomText>
+                        <View style={{marginLeft: -10, width: viewportWidth - 38, height: showKeyboard == false ? 45 : (Platform.OS == 'ios' ? 300 : 200)}}>
+                          <GooglePlacesAutocomplete
+                            ref={ref => {
+                              googleAddressRef = ref; 
+                            }}
+                            placeholder='Location'
+                            onPress={(data, details = null) => {
+                              selectAddress(data, details);
+                            }}
+                            textInputProps={{
+                              placeholder: 'Location',
+                              placeholderTextColor: COLOR.alphaWhiteColor50,
+                            }}
+                            styles={{
+                              textInputContainer: {
+                                backgroundColor: COLOR.clearColor,
+                                
+                              },
+                              textInput: {
+                                height: 38,
+                                color: COLOR.systemWhiteColor,
+                                fontSize: 16,
+                                backgroundColor: COLOR.clearColor,
+                              },
+                              predefinedPlacesDescription: {
+                                color: COLOR.alphaWhiteColor50,
+                              },
+                            }}
+                            query={{
+                              key: GOOGLE_MAP_KEY,
+                              language: 'en',
+                              components: 'country:us',
+                            }}
+                          />
                         </View>
-                      }
-
-                      { LOGIN_STATE == EMAIL_LOGIN &&
-                        <TouchableWithoutFeedback onPress={() => navigate('ChangePassword') }>
-                          <View style={{width:'100%', marginTop: 44}}>
-                            <CustomText style={styles.info_title}>Security</CustomText>
-                            <View style={{width:'100%', marginTop: 22}}>
-                              <TitleArrowButton title={''} name={'Change Password'} showArrow={true} white_color={true} />
-                            </View>
-                          </View>
-                        </TouchableWithoutFeedback>
-                      }
+                        <View style={GlobalStyle.auth_line} />
+                      </View>
                     </View>
-                  </View>
-                </TouchableWithoutFeedback>
+                  }
+
+                  { LOGIN_STATE == EMAIL_LOGIN &&
+                    <TouchableWithoutFeedback onPress={() => navigate('ChangePassword') }>
+                      <View style={{width:'100%', marginTop: 44}}>
+                        <CustomText style={styles.info_title}>Security</CustomText>
+                        <View style={{width:'100%', marginTop: 22}}>
+                          <TitleArrowButton title={''} name={'Change Password'} showArrow={true} white_color={true} />
+                        </View>
+                      </View>
+                    </TouchableWithoutFeedback>
+                  }
+                </View>
 
                 <TouchableWithoutFeedback onPress={() => onSave() }>
                   <View style={styles.bottom_button}>
                     <ColorButton title={'Save'} backgroundColor={COLOR.whiteColor} color={COLOR.blackColor} />
                   </View>
                 </TouchableWithoutFeedback>
-              </ScrollView>
-            </KeyboardAvoidingView>
-          </View>
-        </View>        
+              </View>
+            </TouchableWithoutFeedback>
+          </KeyboardAwareScrollView>
+        </View>
       </SafeAreaView>
 
       { showDatePicker && (
@@ -370,10 +355,6 @@ export const EditProfileScreen: React.FC = () => {
           </View>
         </View>
       )}
-
-      <Modal animationType = {"slide"} transparent = {true} visible = {showAddressPicker} onRequestClose = {() => { } }>
-        <GoogleAddressSelectView onCloseView={setShowAddressPicker} onSelectAddress={selectAddress} />
-      </Modal>
 
       <Spinner
         visible={uploading}
@@ -523,7 +504,7 @@ export const EditProfileScreen: React.FC = () => {
   }
 
   function onDismiss() {
-    Keyboard.dismiss;
+    Keyboard.dismiss();
     setShowDatePicker(false);
   }
 };
@@ -573,9 +554,6 @@ const styles = StyleSheet.create({
     fontFamily: FONT.AN_Regular,
     fontSize: 14,
     color: COLOR.systemWhiteColor,
-  },
-  container: {
-    width: '100%', 
   },
   profile_container: {
     width: '100%',

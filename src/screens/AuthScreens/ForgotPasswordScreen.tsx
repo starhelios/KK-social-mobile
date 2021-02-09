@@ -70,6 +70,7 @@ export const ForgotPasswordScreen: React.FC = () => {
                   placeholderTextColor={COLOR.alphaWhiteColor50}
                   onChangeText={text => setEmailAddress(text)}
                   value={emailAddress}
+                  returnKeyType='done'
                 />
                 <View style={GlobalStyle.auth_line} />
               </View>

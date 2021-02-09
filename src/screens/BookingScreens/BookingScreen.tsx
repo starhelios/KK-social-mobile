@@ -64,7 +64,11 @@ export const BookingScreen: React.FC = () => {
       type: ActionType.SET_NEED_RELOAD_RESERVERD_BOOKINGS,
       payload: false,
     })
-  }, [needReloadReservedBookings, userInfo]);
+  }, [needReloadReservedBookings]);
+
+  useEffect(() => {
+    getUpcomingBookingList();
+  }, [userInfo]);
 
   return (
     <Container style={{width: viewportWidth, flex: 1, backgroundColor: COLOR.blackColor}}>

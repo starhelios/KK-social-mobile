@@ -30,7 +30,6 @@ import {
   IS_FIRST_LOGIN, 
   LOGIN_TYPE, 
   MARGIN_TOP, 
-  PASSWORD, 
   USER_EMAIL,
   viewportHeight,
   viewportWidth, 
@@ -69,7 +68,7 @@ export const LogInScreen: React.FC = () => {
         
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
           <View style={styles.container}>
-            <KeyboardAvoidingView behavior={Platform.OS == "ios" ? "padding" : "height"} keyboardVerticalOffset={150} >
+            <KeyboardAvoidingView behavior={Platform.OS == "ios" ? "padding" : "height"} >
               <ScrollView>
                 <View style={styles.input_container}>
                   <View style={{width:'100%', marginTop: 22}}>

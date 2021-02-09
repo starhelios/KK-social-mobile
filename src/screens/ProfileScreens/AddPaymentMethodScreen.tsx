@@ -176,7 +176,7 @@ export const AddPaymentMethodScreen: React.FC = () => {
         </View>
 
         <View style={{flex: 1}}>
-          <KeyboardAvoidingView behavior={Platform.OS == "ios" ? "padding" : "height"} keyboardVerticalOffset={150} >
+          <KeyboardAvoidingView behavior={Platform.OS == "ios" ? "padding" : "height"} >
             <ScrollView bounces={false}>
               <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
                 <View>
