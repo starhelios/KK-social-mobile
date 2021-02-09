@@ -19,33 +19,37 @@ interface props {
 }
 
 export const TitleArrowButton: React.FC<props> = (props: props) => {
+  const title: string = props.title;
+  const name: string = props.name;
+  const showArrow: boolean = props.showArrow;
+  const white_color: boolean = props.white_color;
+
   return (
     <View style={styles.container}>
-      {
-        props.title != ''
+      { title != ''
         ? <CustomText style={{
             ...styles.title, 
-            color: props.white_color == true ? COLOR.systemWhiteColor : COLOR.alphaBlackColor75,
-            height: props.white_color == true ? 23 : 18,
-            lineHeight: props.white_color == true ? 23 : 18,
-            marginBottom: props.white_color == true ? 22 : 16,
+            color: white_color == true ? COLOR.systemWhiteColor : COLOR.alphaBlackColor75,
+            height: white_color == true ? 23 : 18,
+            lineHeight: white_color == true ? 23 : 18,
+            marginBottom: white_color == true ? 22 : 16,
             fontFamily: FONT.AN_Regular,
-            fontSize: props.white_color == true ? 14 : 12}} numberOfLines={1}>
-            {props.title}
+            fontSize: white_color == true ? 14 : 12}} numberOfLines={1}>
+            {title}
           </CustomText>
         : null
       }
       <View style={styles.info}>
         <CustomText 
-          style={{...styles.name, color: props.white_color == true ? COLOR.systemWhiteColor : COLOR.blackColor}} 
+          style={{...styles.name, color: white_color == true ? COLOR.systemWhiteColor : COLOR.blackColor}} 
           numberOfLines={1}>
-          {props.name}
+          {name}
         </CustomText>
         <View style={styles.arrow}>
-            <SvgXml width='100%' height='100%' xml={props.white_color == true ? Icon_Detail_Right_Arrow_White : Icon_Detail_Right_Arrow_Black} />
+            <SvgXml width='100%' height='100%' xml={white_color == true ? Icon_Detail_Right_Arrow_White : Icon_Detail_Right_Arrow_Black} />
         </View>
       </View>
-      <View style={{...styles.info_line, backgroundColor: props.white_color ? COLOR.alphaWhiteColor20 : COLOR.alphaBlackColor20}} />
+      <View style={{...styles.info_line, backgroundColor: white_color ? COLOR.alphaWhiteColor20 : COLOR.alphaBlackColor20}} />
     </View>
   );
 }

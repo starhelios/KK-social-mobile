@@ -357,12 +357,12 @@ PODS:
     - React-jsi (= 0.63.4)
   - RNAppleAuthentication (2.1.0):
     - React-Core
+  - RNCAsyncStorage (1.13.4):
+    - React-Core
   - RNCMaskedView (0.1.10):
     - React
   - RNDateTimePicker (3.0.9):
     - React-Core
-  - RNDefaultPreference (1.4.3):
-    - React
   - RNFBApp (10.6.4):
     - Firebase/CoreOnly (~> 7.5.0)
     - React-Core
@@ -459,9 +459,9 @@ DEPENDENCIES:
   - React-RCTVibration (from `../node_modules/react-native/Libraries/Vibration`)
   - ReactCommon/turbomodule/core (from `../node_modules/react-native/ReactCommon`)
   - "RNAppleAuthentication (from `../node_modules/@invertase/react-native-apple-authentication`)"
+  - "RNCAsyncStorage (from `../node_modules/@react-native-async-storage/async-storage`)"
   - "RNCMaskedView (from `../node_modules/@react-native-community/masked-view`)"
   - "RNDateTimePicker (from `../node_modules/@react-native-community/datetimepicker`)"
-  - RNDefaultPreference (from `../node_modules/react-native-default-preference`)
   - "RNFBApp (from `../node_modules/@react-native-firebase/app`)"
   - "RNFBStorage (from `../node_modules/@react-native-firebase/storage`)"
   - RNGestureHandler (from `../node_modules/react-native-gesture-handler`)
@@ -571,12 +571,12 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon"
   RNAppleAuthentication:
     :path: "../node_modules/@invertase/react-native-apple-authentication"
+  RNCAsyncStorage:
+    :path: "../node_modules/@react-native-async-storage/async-storage"
   RNCMaskedView:
     :path: "../node_modules/@react-native-community/masked-view"
   RNDateTimePicker:
     :path: "../node_modules/@react-native-community/datetimepicker"
-  RNDefaultPreference:
-    :path: "../node_modules/react-native-default-preference"
   RNFBApp:
     :path: "../node_modules/@react-native-firebase/app"
   RNFBStorage:
@@ -657,9 +657,9 @@ SPEC CHECKSUMS:
   React-RCTVibration: ae4f914cfe8de7d4de95ae1ea6cc8f6315d73d9d
   ReactCommon: 73d79c7039f473b76db6ff7c6b159c478acbbb3b
   RNAppleAuthentication: 46cbc67739bae83ca229497f9b0038f3f5431443
+  RNCAsyncStorage: 44539979e1f234262d64d3ce86ec21cceb1b2c5e
   RNCMaskedView: 5a8ec07677aa885546a0d98da336457e2bea557f
   RNDateTimePicker: 8a51a2216c307769e69ef827293d59549ab1ca23
-  RNDefaultPreference: 2f8d6d54230edbd78708ada8d63bb275e5a8415b
   RNFBApp: 6664dfccd0c93a194767e1c64af14a08074a087d
   RNFBStorage: 71e9120f5ea2aac82072ef25b3605d4b2111597c
   RNGestureHandler: 9b7e605a741412e20e13c512738a31bd1611759b
@@ -676,6 +676,6 @@ SPEC CHECKSUMS:
   Yoga: 4bd86afe9883422a7c4028c00e34790f560923d6
   YogaKit: f782866e155069a2cca2517aafea43200b01fd5a
 
-PODFILE CHECKSUM: 356dcc23caf1d8b69489d056d3ea53eba50b51d9
+PODFILE CHECKSUM: b5f26e529010824854c0c94021bede64c0bbe5f2
 
-COCOAPODS: 1.10.1
+COCOAPODS: 1.10.0

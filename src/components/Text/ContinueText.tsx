@@ -10,10 +10,13 @@ interface props {
 }
 
 export const ContinueText: React.FC<props> = (props: props) => {
+
+  const colorTexts: IColorText[] = props.colorTexts;
+
   return (
     <View style={styles.container}>
       {
-        props.colorTexts.map(colorText =>
+        colorTexts.map(colorText =>
           <CustomText 
             key={colorText.title}
             style={{

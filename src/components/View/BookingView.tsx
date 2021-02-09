@@ -26,8 +26,8 @@ interface props {
 
 export const BookingView: React.FC<props> = (props: props) => {
 
-  const userInfo = useGlobalState('userInfo');
   const booking: IUserBooking = props.booking;
+  const completed_booking: boolean = props.completed_booking;
   
   const { joinBooking } = useExperiences();
 
@@ -43,9 +43,9 @@ export const BookingView: React.FC<props> = (props: props) => {
   return (
     <View style={styles.container}>
       <Image style={styles.image} source={{uri: booking.imageUrl}} />
-      { props.completed_booking == false
+      { completed_booking == false
         ? <View style={{...styles.content_container, height: 190}}>
-            <BookingMainInfoView booking={props.booking} completed_booking={props.completed_booking} />
+            <BookingMainInfoView booking={booking} completed_booking={completed_booking} />
 
             <View style={styles.join_container}>
               <TouchableWithoutFeedback onPress={onJoinExperience}>
@@ -56,8 +56,8 @@ export const BookingView: React.FC<props> = (props: props) => {
             </View>
           </View>
         : <View style={{...styles.content_container, height: 209}}>
-            <BookingMainInfoView booking={props.booking} completed_booking={props.completed_booking} />
-            <BookingRatingInfoView booking={props.booking} />
+            <BookingMainInfoView booking={booking} completed_booking={completed_booking} />
+            <BookingRatingInfoView booking={booking} />
           </View>
       }
     </View>

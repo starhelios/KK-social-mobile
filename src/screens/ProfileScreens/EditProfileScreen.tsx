@@ -12,12 +12,14 @@ import {
   KeyboardAvoidingView,
   TouchableOpacity,
   Modal,
+  EmitterSubscription,
+  ViewPagerAndroidComponent,
 } from 'react-native';
 import { Container } from 'native-base';
 import { useEffect, useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { SvgXml } from 'react-native-svg';
-import { GooglePlaceData, GooglePlaceDetail } from 'react-native-google-places-autocomplete';
+import { GooglePlaceData, GooglePlaceDetail, GooglePlacesAutocomplete, GooglePlacesAutocompleteRef } from 'react-native-google-places-autocomplete';
 import firebase from 'firebase';
 import Autocomplete from 'react-native-autocomplete-input';
 import ImagePicker from 'react-native-image-crop-picker';
@@ -35,6 +37,7 @@ import {
   EMAIL_LOGIN, 
   ERROR_MESSAGE, 
   FONT, 
+  GOOGLE_MAP_KEY, 
   Icon_Back,
   Icon_Camera,
   Icon_Normal_Profile,
@@ -42,7 +45,6 @@ import {
   LOGIN_STATE,
   MARGIN_TOP,
   SUCCESS_MESSAGE,
-  UploadImageToFirebase,
   viewportWidth,
 } from '../../constants';
 import { ColorButton, TitleArrowButton } from '../../components/Button';
@@ -83,11 +85,15 @@ export const EditProfileScreen: React.FC = () => {
   const [pickerDate, setPickerDate] = useState<Date>(birthday != undefined && birthday != '' ? new Date(birthday) : new Date());
   const [categoryList, setCategoryList] = useState<ICategory[]>([]);
   const [aboutMe, setAboutMe] = useState<string>(profile.aboutMe);
-  const [location, setLocation] = useState<string>(profile.location);
   const [category, setCategory] = useState<string>(profile.categoryName);
   const [showAddressPicker, setShowAddressPicker] = useState<boolean>(false);
+  const [showKeyboard, setShowKeyboard] = useState<boolean>(false);
 
   let fetchingData = false;
+  var isInit = true;
+  var keyboardDidShowListener: EmitterSubscription;
+  var keyboardDidHideListener: EmitterSubscription;
+  var googleAddressRef: GooglePlacesAutocompleteRef | null;
 
   useEffect(() => {
     setImage(profile.avatarUrl);
@@ -95,6 +101,26 @@ export const EditProfileScreen: React.FC = () => {
     setEmailAddress(profile.email);
     setBirthday(convertStringToDateFormat(profile.dateOfBirth, 'YYYY-MM-DD'));
   }, [profile]);
+
+  const selectAddress = (address: GooglePlaceData, details: GooglePlaceDetail | null) => {
+    googleAddressRef?.setAddressText(address.description.replace(', USA', ''));
+    setShowAddressPicker(false);
+  };
+
+  const keyboardDidShow = () => {
+    setShowKeyboard(true);
+  }
+
+  const keyboardDidHide = () => {
+    setShowKeyboard(false);
+  }
+
+  useEffect(() => {
+    keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', keyboardDidShow);
+    keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', keyboardDidHide);
+
+    googleAddressRef?.setAddressText(profile.location);
+  }, []);
 
   const onChange = (event: any, selectedDate: any) => {
     if (Platform.OS != 'ios') {
@@ -115,11 +141,6 @@ export const EditProfileScreen: React.FC = () => {
     // showMode('time');
   };
 
-  const selectAddress = (address: GooglePlaceData, details: GooglePlaceDetail | null) => {
-    setLocation(address.structured_formatting.main_text);
-    setShowAddressPicker(false);
-  };
-
   return (
     <Container style={styles.background}>
       <SafeAreaView style={styles.safe_area}>
@@ -136,7 +157,7 @@ export const EditProfileScreen: React.FC = () => {
         <View style={{flex: 1}}>
           <View style={styles.container}>
             <KeyboardAvoidingView behavior={Platform.OS == "ios" ? "padding" : "height"} >
-              <ScrollView bounces={false}>
+              <ScrollView bounces={false} keyboardShouldPersistTaps={'always'}>
                 <TouchableWithoutFeedback onPress={() => onDismiss()} accessible={false}>
                   <View>
                     <View style={styles.profile_container}>
@@ -245,8 +266,8 @@ export const EditProfileScreen: React.FC = () => {
                             <View style={GlobalStyle.auth_line} />
                           </View>
 
-                          <TouchableWithoutFeedback onPress={() => setShowAddressPicker(true) }>
-                            <View style={{width:'100%', marginTop: 22}}>
+                          {/* <TouchableWithoutFeedback onPress={() => setShowAddressPicker(true) }> */}
+                            <View style={{width:'100%', marginTop: 22, zIndex: 10}}>
                               <CustomText style={styles.info_title}>Location</CustomText>
                               {/* <CustomTextInput
                                 style={GlobalStyle.auth_input}
@@ -256,10 +277,40 @@ export const EditProfileScreen: React.FC = () => {
                                 value={location}
                                 editable={false}
                               /> */}
-                              <CustomText style={{...GlobalStyle.auth_input, lineHeight: 45}}>{location}</CustomText>
+                              {/* <CustomText style={{...GlobalStyle.auth_input, lineHeight: 45}}>{location}</CustomText> */}
+                              <View style={{marginLeft: -10, width: viewportWidth - 38, height: showKeyboard == false ? 45 : (Platform.OS == 'ios' ? 300 : 200)}}>
+                                <GooglePlacesAutocomplete
+                                  ref={ref => {
+                                    googleAddressRef = ref; 
+                                  }}
+                                  placeholder='Location'
+                                  onPress={(data, details = null) => {
+                                    selectAddress(data, details);
+                                  }}
+                                  styles={{
+                                    textInputContainer: {
+                                      backgroundColor: COLOR.clearColor,
+                                    },
+                                    textInput: {
+                                      height: 38,
+                                      color: COLOR.systemWhiteColor,
+                                      fontSize: 16,
+                                      backgroundColor: COLOR.clearColor,
+                                    },
+                                    predefinedPlacesDescription: {
+                                      color: '#1faadb',
+                                    },
+                                  }}
+                                  query={{
+                                    key: GOOGLE_MAP_KEY,
+                                    language: 'en',
+                                    components: 'country:us',
+                                  }}
+                                />
+                              </View>
                               <View style={GlobalStyle.auth_line} />
                             </View>
-                          </TouchableWithoutFeedback>
+                          {/* </TouchableWithoutFeedback> */}
                         </View>
                       }
 
@@ -391,6 +442,37 @@ export const EditProfileScreen: React.FC = () => {
     }
     fetchingData = true;
 
+    if (fullName == '') {
+      Alert.alert('', ERROR_MESSAGE.EMPTY_FULL_NAME);
+      return;
+    } else if (emailAddress == '') {
+      Alert.alert('', ERROR_MESSAGE.EMPTY_EMAIL_ADDRESS);
+      return;
+    } else if (birthday == '') {
+      Alert.alert('', ERROR_MESSAGE.EMPTY_BIRTHDAY);
+      return;
+    }
+    
+    var location = '';
+
+    if (profile.isHost == true) {
+      let locationString = googleAddressRef?.getAddressText();
+      if (locationString == null || locationString == undefined) {
+        locationString = '';
+      }
+      location = locationString;
+      if (category == '') {
+        Alert.alert('', ERROR_MESSAGE.EMPTY_CATEGORY);
+        return;
+      } else if (aboutMe == '') {
+        Alert.alert('', ERROR_MESSAGE.EMPTY_ABOUTME);
+        return;
+      } else if (location == '') {
+        Alert.alert('', ERROR_MESSAGE.EMPTY_LOCATION);
+        return;
+      }
+    }
+
     setUploading(true);
     if (avatarFile != null) {
       const filename = profile.id;
@@ -407,7 +489,7 @@ export const EditProfileScreen: React.FC = () => {
           .child(`${filename}.jpg`)
           .getDownloadURL()
           .then((url) => {
-            saveProfile(url);
+            saveProfile(url, location);
           });
       } catch (e) {
         fetchingData = false;
@@ -416,11 +498,11 @@ export const EditProfileScreen: React.FC = () => {
         return;
       }
     } else {
-      saveProfile('');
+      saveProfile('', location);
     }
   }
 
-  function saveProfile(avatarUrl: string) {
+  function saveProfile(avatarUrl: string, location: string) {
     updateUserInformation(profile.id, emailAddress, fullName, birthday, aboutMe, location, category, avatarUrl, profile.isHost)
     .then(async (result: Promise<IUser>) => {
       setUploading(false);
