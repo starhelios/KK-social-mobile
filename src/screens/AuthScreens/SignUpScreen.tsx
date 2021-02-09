@@ -116,7 +116,7 @@ export const SignUpScreen: React.FC = () => {
         
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
           <View style={styles.container}>
-            <KeyboardAvoidingView behavior={Platform.OS == "ios" ? "padding" : "height"} >
+            <KeyboardAvoidingView behavior={Platform.OS == "ios" ? "padding" : "height"} keyboardVerticalOffset={150} >
               <ScrollView>
                 <View style={styles.input_container}>
                   <View style={{width:'100%'}}>

@@ -176,18 +176,22 @@ export const FiltersView: React.FC<props> = (props: props) => {
                   onPress={(data, details = null) => {
                     selectAddress(data, details);
                   }}
+                  textInputProps={{
+                    placeholder: 'Search Location',
+                    placeholderTextColor: COLOR.alphaBlackColor50,
+                  }}
                   styles={{
                     textInputContainer: {
                       backgroundColor: COLOR.clearColor,
                     },
                     textInput: {
                       height: 38,
-                      color: '#5d5d5d',
+                      color: COLOR.blackColor,
                       fontSize: 16,
                       backgroundColor: COLOR.clearColor,
                     },
                     predefinedPlacesDescription: {
-                      color: '#1faadb',
+                      color: COLOR.alphaBlackColor50,
                     },
                   }}
                   query={{

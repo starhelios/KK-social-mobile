@@ -241,7 +241,7 @@ export const HostAnExperienceScreen: React.FC = () => {
 
           <View style={{flex: 1}}>
             <View style={styles.container}>
-              <KeyboardAvoidingView behavior={Platform.OS == "ios" ? "padding" : "height"} >
+              <KeyboardAvoidingView behavior={Platform.OS == "ios" ? "padding" : "height"} keyboardVerticalOffset={150} >
                 <ScrollView style={{}}>
                   <View style={styles.profile_container}>
                     <View style={{width:'100%'}}>
@@ -328,7 +328,6 @@ export const HostAnExperienceScreen: React.FC = () => {
                           placeholderTextColor={COLOR.alphaBlackColor75}
                           onChangeText={text => setDuration(text)}
                           value={duration}
-                          editable={false}
                         />
                         <View style={{...GlobalStyle.auth_line, backgroundColor: COLOR.alphaBlackColor20}} />
                       </View>
@@ -351,7 +350,7 @@ export const HostAnExperienceScreen: React.FC = () => {
                     </View>
                   </TouchableWithoutFeedback>
 
-                  <TouchableWithoutFeedback onPress={() => navigate('SelectAvailabilityDates', {dateAvaibilityInfo: dateAvaibilityInfo, setDateAvaibilityInfo: setDateAvaibilityInfo, setDuration: setDuration}) }>
+                  <TouchableWithoutFeedback onPress={() => navigate('SelectAvailabilityDates', {dateAvaibilityInfo: dateAvaibilityInfo, setDateAvaibilityInfo: setDateAvaibilityInfo, duration: duration}) }>
                     <View style={{height: 44, marginLeft: 48, marginRight: 48, marginTop: 22}}>
                       <ColorButton title={'Select Dates of Availability'} backgroundColor={COLOR.alphaBlackColor20} color={COLOR.systemBlackColor} />
                     </View>

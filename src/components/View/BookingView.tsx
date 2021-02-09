@@ -48,11 +48,11 @@ export const BookingView: React.FC<props> = (props: props) => {
             <BookingMainInfoView booking={booking} completed_booking={completed_booking} />
 
             <View style={styles.join_container}>
-              <TouchableWithoutFeedback onPress={onJoinExperience}>
+              {/* <TouchableWithoutFeedback onPress={onJoinExperience}> */}
                 <View style={styles.join_button_container}>
                   <ColorButton title={'Join Experience'} backgroundColor={COLOR.redColor} color={COLOR.systemWhiteColor} />
                 </View>
-              </TouchableWithoutFeedback>
+              {/* </TouchableWithoutFeedback> */}
             </View>
           </View>
         : <View style={{...styles.content_container, height: 209}}>
