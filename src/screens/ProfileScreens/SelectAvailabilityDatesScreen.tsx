@@ -59,6 +59,14 @@ export const SelectAvailabilityDatesScreen: React.FC = ({route}) => {
     if (dateAvaibility.length == 0) {
       onEditActiveDates();
     }
+
+    if (duration != '') {
+      let durationValue = parseInt(duration);
+      var tempEndDate = new Date(startTime);
+      tempEndDate.setHours(tempEndDate.getHours(), tempEndDate.getMinutes() + durationValue , 0 , 0);
+      setEndTime(tempEndDate);
+      setEndTimeString(toLocalTimeString(tempEndDate));
+    }
   }, [])
 
   const onEditActiveDates = () => {

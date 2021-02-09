@@ -21,7 +21,7 @@ import { Container } from 'native-base';
 import { useEffect, useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { SvgXml } from 'react-native-svg';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scrollview'
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import Autocomplete from 'react-native-autocomplete-input';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import ImagePicker from 'react-native-image-crop-picker';
@@ -85,6 +85,7 @@ export const BecomeAHostScreen: React.FC = () => {
   var keyboardDidShowListener: EmitterSubscription;
   var keyboardDidHideListener: EmitterSubscription;
   var googleAddressRef: GooglePlacesAutocompleteRef | null;
+  let scrollViewRef: KeyboardAwareScrollView | null;
 
   useEffect(() => {
     setImage(profile.avatarUrl);
@@ -200,6 +201,12 @@ export const BecomeAHostScreen: React.FC = () => {
     })
     .catch((e) => {
     });
+  }
+
+  const onEditGoogleAddress = () => {
+    if (scrollViewRef != null) {
+      scrollViewRef.scrollToPosition(0, 650, false);
+    }
   }
 
   const onBecomeAHost = async () => {
@@ -421,6 +428,12 @@ export const BecomeAHostScreen: React.FC = () => {
                         placeholder='Location'
                         onPress={(data, details = null) => {
                           selectAddress(data, details);
+                        }}
+                        textInputProps={{
+                          placeholder: 'Location',
+                          placeholderTextColor: COLOR.alphaWhiteColor50,
+                          onFocus: () => onEditGoogleAddress(),
+                          onChangeText: () => onEditGoogleAddress(),
                         }}
                         styles={{
                           textInputContainer: {
