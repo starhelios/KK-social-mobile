@@ -12,12 +12,13 @@ import {
   Alert,
   TouchableOpacity,
   Modal,
+  EmitterSubscription,
 } from 'react-native';
 import { Container } from 'native-base';
 import { useEffect, useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { SvgXml } from 'react-native-svg';
-import { GooglePlaceData, GooglePlaceDetail } from 'react-native-google-places-autocomplete';
+import { GooglePlaceData, GooglePlaceDetail, GooglePlacesAutocomplete, GooglePlacesAutocompleteRef } from 'react-native-google-places-autocomplete';
 import Autocomplete from 'react-native-autocomplete-input';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import ImagePicker from 'react-native-image-crop-picker';
@@ -36,6 +37,7 @@ import {
   EMAIL_LOGIN, 
   ERROR_MESSAGE, 
   FONT, 
+  GOOGLE_MAP_KEY, 
   Icon_Back,
   Icon_Camera,
   Icon_Normal_Profile,
@@ -68,7 +70,6 @@ export const BecomeAHostScreen: React.FC = () => {
   const [emailAddress, setEmailAddress] = useState<string>(profile.email);
   const [birthday, setBirthday] = useState<string>(convertStringToDateFormat(profile.dateOfBirth, 'YYYY-MM-DD'));
   const [aboutMe, setAboutMe] = useState<string>(profile.aboutMe);
-  const [location, setLocation] = useState<string>(profile.location);
   const [category, setCategory] = useState<string>(profile.categoryName);
   const [categoryList, setCategoryList] = useState<ICategory[]>([]);
   const [avatarFile, setAvatarFile] = useState<IFile | null>(null);
@@ -76,19 +77,41 @@ export const BecomeAHostScreen: React.FC = () => {
   const [mode, setMode] = useState<"date" | "time" | undefined>('date');
   const [pickerDate, setPickerDate] = useState<Date>(birthday != undefined && birthday != '' ? new Date(birthday) : new Date());
   const [showAddressPicker, setShowAddressPicker] = useState<boolean>(false);
+  const [showKeyboard, setShowKeyboard] = useState<boolean>(false);
 
-  let isInit = true;
   let fetchingData = false;
+  var isInit = true;
+  var keyboardDidShowListener: EmitterSubscription;
+  var keyboardDidHideListener: EmitterSubscription;
+  var googleAddressRef: GooglePlacesAutocompleteRef | null;
 
   useEffect(() => {
     setImage(profile.avatarUrl);
     setFullName(profile.fullname);
     setEmailAddress(profile.email);
     setAboutMe(profile.aboutMe);
-    setLocation(profile.location);
     setCategory(profile.categoryName);
     setBirthday(convertStringToDateFormat(profile.dateOfBirth, 'YYYY-MM-DD'));
   }, [profile]);
+
+  const selectAddress = (address: GooglePlaceData, details: GooglePlaceDetail | null) => {
+    googleAddressRef?.setAddressText(address.description.replace(', USA', ''));
+    setShowAddressPicker(false);
+  };
+
+  const keyboardDidShow = () => {
+    setShowKeyboard(true);
+  }
+
+  const keyboardDidHide = () => {
+    setShowKeyboard(false);
+  }
+
+  useEffect(() => {
+    keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', keyboardDidShow);
+    keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', keyboardDidHide);
+    googleAddressRef?.setAddressText(profile.location);
+  }, []);
 
   useEffect(() => {
     if (isInit == true) {
@@ -185,6 +208,32 @@ export const BecomeAHostScreen: React.FC = () => {
     }
     fetchingData = true;
 
+    let locationString = googleAddressRef?.getAddressText();
+    if (locationString == null || locationString == undefined) {
+      locationString = '';
+    }
+    const location = locationString;
+
+    if (fullName == '') {
+      Alert.alert('', ERROR_MESSAGE.EMPTY_FULL_NAME);
+      return;
+    } else if (emailAddress == '') {
+      Alert.alert('', ERROR_MESSAGE.EMPTY_EMAIL_ADDRESS);
+      return;
+    } else if (birthday == '') {
+      Alert.alert('', ERROR_MESSAGE.EMPTY_BIRTHDAY);
+      return;
+    } else if (category == '') {
+      Alert.alert('', ERROR_MESSAGE.EMPTY_CATEGORY);
+      return;
+    } else if (aboutMe == '') {
+      Alert.alert('', ERROR_MESSAGE.EMPTY_ABOUTME);
+      return;
+    } else if (location == '') {
+      Alert.alert('', ERROR_MESSAGE.EMPTY_LOCATION);
+      return;
+    }
+
     setUploading(true);
     if (avatarFile != null) {
       const filename = profile.id;
@@ -201,7 +250,7 @@ export const BecomeAHostScreen: React.FC = () => {
           .child(`${filename}.jpg`)
           .getDownloadURL()
           .then((url) => {
-            saveProfile(url);
+            saveProfile(url, location);
           });
       } catch (e) {
         fetchingData = false;
@@ -210,11 +259,11 @@ export const BecomeAHostScreen: React.FC = () => {
         return;
       }
     } else {
-      saveProfile('');
+      saveProfile('', location);
     }
   }
 
-  const saveProfile = (avatarUrl: string) => {
+  const saveProfile = (avatarUrl: string, location: string) => {
     updateUserInformation(profile.id, emailAddress, fullName, birthday, aboutMe, location, category, avatarUrl, true)
     .then(async (result: Promise<IUser>) => {
       fetchingData = false;
@@ -234,11 +283,6 @@ export const BecomeAHostScreen: React.FC = () => {
     });
   }
 
-  const selectAddress = (address: GooglePlaceData, details: GooglePlaceDetail | null) => {
-    setLocation(address.structured_formatting.main_text);
-    setShowAddressPicker(false);
-  };
-
   return (
     <Container style={styles.background}>
       <SafeAreaView style={styles.safe_area}>
@@ -255,7 +299,7 @@ export const BecomeAHostScreen: React.FC = () => {
         <View style={{flex: 1}}>
           <View style={styles.container}>
             <KeyboardAvoidingView behavior={Platform.OS == "ios" ? "padding" : "height"} >
-              <ScrollView bounces={false}>
+              <ScrollView bounces={false} keyboardShouldPersistTaps={'always'}>
                 <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
                   <View>
                     <View style={styles.profile_container}>
@@ -364,7 +408,7 @@ export const BecomeAHostScreen: React.FC = () => {
                         <View style={GlobalStyle.auth_line} />
                       </View>
 
-                      <TouchableWithoutFeedback onPress={() => setShowAddressPicker(true) }>
+                      {/* <TouchableWithoutFeedback onPress={() => setShowAddressPicker(true) }> */}
                         <View style={{width:'100%', marginTop: 22}}>
                           <CustomText style={styles.info_title}>Location</CustomText>
                           {/* <CustomTextInput
@@ -375,10 +419,40 @@ export const BecomeAHostScreen: React.FC = () => {
                             value={location}
                             editable={false}
                           /> */}
-                          <CustomText style={{...GlobalStyle.auth_input, lineHeight: 45}}>{location}</CustomText>
+                          {/* <CustomText style={{...GlobalStyle.auth_input, lineHeight: 45}}>{location}</CustomText> */}
+                          <View style={{marginLeft: -10, width: viewportWidth - 28, height: showKeyboard == false ? 45 : (Platform.OS == 'ios' ? 300 : 200)}}>
+                            <GooglePlacesAutocomplete
+                              ref={ref => {
+                                googleAddressRef = ref; 
+                              }}
+                              placeholder='Location'
+                              onPress={(data, details = null) => {
+                                selectAddress(data, details);
+                              }}
+                              styles={{
+                                textInputContainer: {
+                                  backgroundColor: COLOR.clearColor,
+                                },
+                                textInput: {
+                                  height: 38,
+                                  color: COLOR.systemWhiteColor,
+                                  fontSize: 16,
+                                  backgroundColor: COLOR.clearColor,
+                                },
+                                predefinedPlacesDescription: {
+                                  color: '#1faadb',
+                                },
+                              }}
+                              query={{
+                                key: GOOGLE_MAP_KEY,
+                                language: 'en',
+                                components: 'country:us',
+                              }}
+                            />
+                          </View>
                           <View style={GlobalStyle.auth_line} />
                         </View>
-                      </TouchableWithoutFeedback>
+                      {/* </TouchableWithoutFeedback> */}
 
                       <TouchableWithoutFeedback onPress={() => onBecomeAHost() }>
                         <View style={styles.bottom_button}>
@@ -421,9 +495,9 @@ export const BecomeAHostScreen: React.FC = () => {
         </View>
       )}
 
-      <Modal animationType = {"slide"} transparent = {true} visible = {showAddressPicker} onRequestClose = {() => { } }>
+      {/* <Modal animationType = {"slide"} transparent = {true} visible = {showAddressPicker} onRequestClose = {() => { } }>
         <GoogleAddressSelectView onCloseView={setShowAddressPicker} onSelectAddress={selectAddress} />
-      </Modal>
+      </Modal> */}
 
       <Spinner
         visible={uploading}

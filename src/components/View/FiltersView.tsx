@@ -71,7 +71,8 @@ export const FiltersView: React.FC<props> = (props: props) => {
   }, []);
 
   const selectAddress = (address: GooglePlaceData, details: GooglePlaceDetail | null) => {
-    googleAddressRef?.setAddressText(address.structured_formatting.main_text);
+    // googleAddressRef?.setAddressText(address.structured_formatting.main_text);
+    googleAddressRef?.setAddressText(address.description.replace(', USA', ''));
   };
 
   const keyboardDidShow = () => {

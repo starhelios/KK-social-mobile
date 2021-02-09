@@ -54,6 +54,7 @@ export const SelectAvailabilityDatesScreen: React.FC = ({route}) => {
   const [startDay, setStartDay] = useState<string>(route.params.dateAvaibilityInfo.startDay);
   const [endDay, setEndDay] = useState<string>(route.params.dateAvaibilityInfo.endDay);
   const [dateAvaibility, setDateAvaibility] = useState<IAvailableDateForCreate[]>(route.params.dateAvaibilityInfo.dateAvaibility);
+  const [duration, setDuration] = useState<string>('');
 
   useEffect(() => {
     if (dateAvaibility.length == 0) {
@@ -117,6 +118,7 @@ export const SelectAvailabilityDatesScreen: React.FC = ({route}) => {
       var startDateTime = new Date(startDay).getTime();
       var endDateTime = new Date(endDay).getTime();
       var currentTime = startDateTime;
+      setDuration(`${minutes}`);
   
       var avaibilityDates: IAvailableDateForCreate[] = [];
       while (currentTime <= endDateTime) {
@@ -149,6 +151,7 @@ export const SelectAvailabilityDatesScreen: React.FC = ({route}) => {
 
   const onSave = () => {
     route.params.setDateAvaibilityInfo({startDay: startDay, endDay: endDay, dateAvaibility: dateAvaibility});
+    route.params.setDuration(duration);
     goBack();
   }
   

@@ -44,6 +44,10 @@ export const ERROR_MESSAGE = {
   CREATE_EXPERIENCE_FAIL: 'Failed to create an experience.',
   INVALID_EXPERIENCE_END_TIME: 'The end time cannot be earlier than the start time.',
   RESERVATION_EXPERIENCE_FAIL: 'This experience was not reserved. Please try again.',
+  EMPTY_BIRTHDAY: 'Please input date of birth.',
+  EMPTY_CATEGORY: 'Please input category.',
+  EMPTY_ABOUTME: 'Please input about me.',
+  EMPTY_LOCATION: 'Please input location.',
 
   PAYMENT_FAIL: 'Something went wrong while getting payment.',
 };

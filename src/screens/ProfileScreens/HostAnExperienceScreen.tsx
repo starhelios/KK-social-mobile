@@ -95,7 +95,7 @@ export const HostAnExperienceScreen: React.FC = () => {
   const onCreateExperience = () => {
     if (fetchingData == true) {
       return;
-    } if (imageCount == 0) {
+    } else if (imageCount == 0) {
       Alert.alert('', ERROR_MESSAGE.EMPTY_EXPERIENCE_IMAGE);
       return;
     } else if (title == '') {
@@ -328,6 +328,7 @@ export const HostAnExperienceScreen: React.FC = () => {
                           placeholderTextColor={COLOR.alphaBlackColor75}
                           onChangeText={text => setDuration(text)}
                           value={duration}
+                          editable={false}
                         />
                         <View style={{...GlobalStyle.auth_line, backgroundColor: COLOR.alphaBlackColor20}} />
                       </View>
@@ -350,7 +351,7 @@ export const HostAnExperienceScreen: React.FC = () => {
                     </View>
                   </TouchableWithoutFeedback>
 
-                  <TouchableWithoutFeedback onPress={() => navigate('SelectAvailabilityDates', {dateAvaibilityInfo: dateAvaibilityInfo, setDateAvaibilityInfo: setDateAvaibilityInfo}) }>
+                  <TouchableWithoutFeedback onPress={() => navigate('SelectAvailabilityDates', {dateAvaibilityInfo: dateAvaibilityInfo, setDateAvaibilityInfo: setDateAvaibilityInfo, setDuration: setDuration}) }>
                     <View style={{height: 44, marginLeft: 48, marginRight: 48, marginTop: 22}}>
                       <ColorButton title={'Select Dates of Availability'} backgroundColor={COLOR.alphaBlackColor20} color={COLOR.systemBlackColor} />
                     </View>

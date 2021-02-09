@@ -48,7 +48,7 @@ export const MyExperienceView: React.FC<props> = (props: props) => {
             <View style={styles.rating_container}>
               <SvgXml width={15} height={15} xml={Icon_Experience_Rating} />
               <CustomText style={styles.rating_text} numberOfLines={1}>
-                {experience.rating.toString() + ' (' + experience.rating_count.toString() + ')'}
+                {/* {experience.rating.toString() + ' (' + experience.rating_count.toString() + ')'} */}
               </CustomText>
             </View>
           </View>

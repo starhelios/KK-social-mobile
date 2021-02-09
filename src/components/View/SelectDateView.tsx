@@ -33,9 +33,9 @@ export const SelectDateView: React.FC<props> = (props: props) => {
   const [selectedEndDate, setSelectedEndDate] = useState<Date | null>(null);
 
   useEffect(() => {    
-    setSelectedDateList(props.selectedDateList);
-    if (props.selectedDateList.length > 0) {
-      updateMarkerDate(props.selectedDateList);
+    setSelectedDateList(selectedDateList);
+    if (selectedDateList.length > 0) {
+      updateMarkerDate(selectedDateList);
     }
   }, []);
 

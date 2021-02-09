@@ -11,10 +11,13 @@ interface props {
 }
 
 export const YourCardButton: React.FC<props> = (props: props) => {
+
+  const card: ICardInfo = props.card;
+
   return (
-    <TouchableWithoutFeedback onPress={() => props.onSelectCard(props.card)}>
+    <TouchableWithoutFeedback onPress={() => props.onSelectCard(card)}>
       <View style={styles.container}>
-        <CustomText style={styles.card_number}>{`${props.card.cardBrand} ${props.card.last4digits}`}</CustomText>
+        <CustomText style={styles.card_number}>{`${card.cardBrand} ${card.last4digits}`}</CustomText>
         <View style={styles.info_line} />
       </View>
     </TouchableWithoutFeedback>
