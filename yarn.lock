@@ -980,6 +980,14 @@
   resolved "https://registry.yarnpkg.com/@bcoe/v8-coverage/-/v8-coverage-0.2.3.tgz#75a2e8b51cb758a7553d6804a5932d7aace75c39"
   integrity sha512-0hYQ8SB4Db5zvZB4axdMHGwEaQjkZzFjQiN9LVYvIFB2nSUHW9tYpxWriPrWDASIxiaXax83REcLxuSdnGPZtw==
 
+"@callstack/react-theme-provider@^3.0.5":
+  version "3.0.5"
+  resolved "https://registry.yarnpkg.com/@callstack/react-theme-provider/-/react-theme-provider-3.0.5.tgz#a173e455e9603c9c45357a3b6ace1273086527ca"
+  integrity sha512-Iec+ybWN0FvNj87sD3oWo/49edGUP0UOSdMnzCJEFJIDYr992ECIuOV89burAAh2/ibPCxgLiK6dmgv2mO/8Tg==
+  dependencies:
+    deepmerge "^3.2.0"
+    hoist-non-react-statics "^3.3.0"
+
 "@cnakazawa/watch@^1.0.3":
   version "1.0.4"
   resolved "https://registry.yarnpkg.com/@cnakazawa/watch/-/watch-1.0.4.tgz#f864ae85004d0fcab6f50be9141c4da368d1656a"
@@ -2168,14 +2176,6 @@
   resolved "https://registry.yarnpkg.com/@react-native-picker/picker/-/picker-1.9.10.tgz#c0d445453e91077cc85a3f0a6d0074d44d21e438"
   integrity sha512-g0C0RLjXXGE4UfmGxNtAOY3LE5Epz8+ck/rB1oErJowskIIG83U6LVqH9oFrx1Hq1k/lbVQGgabURlE0QQ1MHA==
 
-"@react-navigation/bottom-tabs@^5.11.7":
-  version "5.11.7"
-  resolved "https://registry.yarnpkg.com/@react-navigation/bottom-tabs/-/bottom-tabs-5.11.7.tgz#a1d220afe02b6897c0705ddc40265e65c01fa0ba"
-  integrity sha512-O8B/5GiME589fc6ltqV3iJxCdWXhplx+9i7tPbwx4SxKm1e1N9jdL9H8bsx+SWcMBelGfGeZ2WqRwMJzjQDT3Q==
-  dependencies:
-    color "^3.1.3"
-    react-native-iphone-x-helper "^1.3.0"
-
 "@react-navigation/core@^3.7.9":
   version "3.7.9"
   resolved "https://registry.yarnpkg.com/@react-navigation/core/-/core-3.7.9.tgz#3f7ba0fcb6c8d74a77a057382af198d84c7c4e3b"
@@ -2196,6 +2196,11 @@
     nanoid "^3.1.15"
     query-string "^6.13.6"
     react-is "^16.13.0"
+
+"@react-navigation/material-bottom-tabs@^5.3.13":
+  version "5.3.13"
+  resolved "https://registry.yarnpkg.com/@react-navigation/material-bottom-tabs/-/material-bottom-tabs-5.3.13.tgz#c9657008894b2ec85ed3560731e8ea6220151e5a"
+  integrity sha512-yx/V8wnjZPq+1Gbxeb9G2xvavS52bRB9YoTkIHbSRuug6VBLSc4yK3N1tWpc5rytQZegIL0h63jOn65uo1hm/g==
 
 "@react-navigation/native@^3.8.3":
   version "3.8.3"
@@ -4206,7 +4211,7 @@ color-support@^1.1.3:
   resolved "https://registry.yarnpkg.com/color-support/-/color-support-1.1.3.tgz#93834379a1cc9a0c61f82f52f0d04322251bd5a2"
   integrity sha512-qiBjkpbMLO/HL68y+lh4q0/O1MZFj2RX6X/KmMa3+gJD3z+WwI1ZzDHysvqHGS3mP6mznPckpXmw1nI9cJjyRg==
 
-color@^3.1.3, color@~3.1.2:
+color@^3.1.2, color@^3.1.3, color@~3.1.2:
   version "3.1.3"
   resolved "https://registry.yarnpkg.com/color/-/color-3.1.3.tgz#ca67fb4e7b97d611dcde39eceed422067d91596e"
   integrity sha512-xgXAcTHa2HeFCGLE9Xs/R82hujGtu9Jd9x4NW3T34+OMs7VoPsjwzRczKHvTAHeJwWFwX5j15+MgAppE8ztObQ==
@@ -9973,15 +9978,18 @@ react-native-image-picker@^3.1.4:
   resolved "https://registry.yarnpkg.com/react-native-image-picker/-/react-native-image-picker-3.1.4.tgz#99cd18074fbfe1d70e8281040df201d31005577d"
   integrity sha512-5pRmrBx+vZcf/UH6n95gxnBq5B7tRDZWIDnhvM4JxlthOChuvEEiShN+MMs7ue+lK26RXws5BOgKGd6MtQI/LQ==
 
-react-native-iphone-x-helper@^1.0.3, react-native-iphone-x-helper@^1.3.0:
+react-native-iphone-x-helper@^1.0.3, react-native-iphone-x-helper@^1.3.0, react-native-iphone-x-helper@^1.3.1:
   version "1.3.1"
   resolved "https://registry.yarnpkg.com/react-native-iphone-x-helper/-/react-native-iphone-x-helper-1.3.1.tgz#20c603e9a0e765fd6f97396638bdeb0e5a60b010"
   integrity sha512-HOf0jzRnq2/aFUcdCJ9w9JGzN3gdEg0zFE4FyYlp4jtidqU03D5X7ZegGKfT1EWteR0gPBGp9ye5T5FvSWi9Yg==
 
-react-native-keyboard-aware-scrollview@^2.1.0:
-  version "2.1.0"
-  resolved "https://registry.yarnpkg.com/react-native-keyboard-aware-scrollview/-/react-native-keyboard-aware-scrollview-2.1.0.tgz#418a6b868f4cf2f9d28e77914f11ecbf8ae8e556"
-  integrity sha512-XfWozWFPhdecfxN+wuqERX3mCGDrAim5siC6TWg3Qw7wK/zlwIwe1UIsHDNOQCzf9oIh0SkZXvoOFsMrnyIVmQ==
+react-native-keyboard-aware-scroll-view@^0.9.3:
+  version "0.9.3"
+  resolved "https://registry.yarnpkg.com/react-native-keyboard-aware-scroll-view/-/react-native-keyboard-aware-scroll-view-0.9.3.tgz#65ab4cab1a987b486d97924602756fa88b7fbfcc"
+  integrity sha512-EDyFp8wAJoKvi1T2pzoPRn8R0Inp3G+575jPAWEFTlXq26URMmk8760rzde2XLW+v/1+QwDyBg6d/5mz63/ZRA==
+  dependencies:
+    prop-types "^15.6.2"
+    react-native-iphone-x-helper "^1.0.3"
 
 react-native-linear-gradient@^2.5.6:
   version "2.5.6"
@@ -10009,6 +10017,15 @@ react-native-page-control@^1.1.2:
   dependencies:
     create-react-class "^15.6.0"
     prop-types "^15.5.10"
+
+react-native-paper@^4.7.1:
+  version "4.7.1"
+  resolved "https://registry.yarnpkg.com/react-native-paper/-/react-native-paper-4.7.1.tgz#9f22116d39e4a129be9fd4c8d7342d0f6a20245c"
+  integrity sha512-37xJgCcTAELFBvE7+l9xcMW3wh2/dvrOs7TeRLIpnHsjfa+m4h+vvzb8q0YIUJOKtHcJ4cY77NHUr6JMGzNHFw==
+  dependencies:
+    "@callstack/react-theme-provider" "^3.0.5"
+    color "^3.1.2"
+    react-native-iphone-x-helper "^1.3.1"
 
 react-native-progress@^4.1.2:
   version "4.1.2"
@@ -10064,11 +10081,6 @@ react-native-stars@^1.2.2:
   version "1.2.2"
   resolved "https://registry.yarnpkg.com/react-native-stars/-/react-native-stars-1.2.2.tgz#33be6890264df418f0b9f321ce4351de0744c533"
   integrity sha512-ROoluqPqv93ycUV3Mwf/p1fFW2TOcb6juhGrMb5oNYYTa0aTe4WgnboipNWLe5viDlC8XYLS+g5WpZBvCzwFkw==
-
-react-native-stripe-payments@^1.0.6:
-  version "1.0.6"
-  resolved "https://registry.yarnpkg.com/react-native-stripe-payments/-/react-native-stripe-payments-1.0.6.tgz#22c46a62fd9193fb564ddb92cda923d69477ae98"
-  integrity sha512-fvHcutVkNrFPKjSh3TpD8vQztEnFDTRk9SX1Zjjec0wdBHKYgg/+nb9QWiLvOsyEI+tpgjXkfYCzF+COsqZBcw==
 
 react-native-svg@^12.1.0:
   version "12.1.0"
@@ -12546,6 +12558,11 @@ yargs@^8.0.2:
     which-module "^2.0.0"
     y18n "^3.2.1"
     yargs-parser "^7.0.0"
+
+yarn@^1.22.10:
+  version "1.22.10"
+  resolved "https://registry.yarnpkg.com/yarn/-/yarn-1.22.10.tgz#c99daa06257c80f8fa2c3f1490724e394c26b18c"
+  integrity sha512-IanQGI9RRPAN87VGTF7zs2uxkSyQSrSPsju0COgbsKQOOXr5LtcVPeyXWgwVa0ywG3d8dg6kSYKGBuYK021qeA==
 
 yocto-queue@^0.1.0:
   version "0.1.0"

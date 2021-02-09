@@ -10,6 +10,7 @@ import {
   Keyboard,
   TouchableOpacity,
   EmitterSubscription,
+  ScrollViewProps,
 } from 'react-native';
 import { 
   GooglePlaceData, 
@@ -18,10 +19,10 @@ import {
   GooglePlacesAutocompleteRef, 
 } from 'react-native-google-places-autocomplete';
 import { Container } from 'native-base';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { SvgXml } from 'react-native-svg';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scrollview'
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import firebase from 'firebase';
 import Autocomplete from 'react-native-autocomplete-input';
 import ImagePicker from 'react-native-image-crop-picker';
@@ -93,6 +94,7 @@ export const EditProfileScreen: React.FC = () => {
   var keyboardDidShowListener: EmitterSubscription;
   var keyboardDidHideListener: EmitterSubscription;
   var googleAddressRef: GooglePlacesAutocompleteRef | null;
+  let scrollViewRef: KeyboardAwareScrollView | null;
 
   useEffect(() => {
     setImage(profile.avatarUrl);
@@ -139,6 +141,12 @@ export const EditProfileScreen: React.FC = () => {
     // showMode('time');
   };
 
+  const onEditGoogleAddress = () => {
+    if (scrollViewRef != null) {
+      scrollViewRef.scrollToPosition(0, 650, false);
+    }
+  }
+
   return (
     <Container style={styles.background}>
       <SafeAreaView style={styles.safe_area}>
@@ -154,9 +162,11 @@ export const EditProfileScreen: React.FC = () => {
 
         <View style={{flex: 1}}>
           <KeyboardAwareScrollView 
+            ref={ref => { scrollViewRef = ref }}
             style={{width: '100%', height: '100%', flex: 1}} 
             keyboardDismissMode="interactive" 
             keyboardShouldPersistTaps="always"
+            extraScrollHeight={100}
           >
             <TouchableWithoutFeedback onPress={() => onDismiss()} accessible={false}>
               <View>
@@ -279,6 +289,8 @@ export const EditProfileScreen: React.FC = () => {
                             textInputProps={{
                               placeholder: 'Location',
                               placeholderTextColor: COLOR.alphaWhiteColor50,
+                              onFocus: () => onEditGoogleAddress(),
+                              onChangeText: () => onEditGoogleAddress(),
                             }}
                             styles={{
                               textInputContainer: {

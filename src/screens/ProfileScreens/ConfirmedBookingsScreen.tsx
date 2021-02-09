@@ -117,38 +117,6 @@ export const ConfirmedBookingsScreen: React.FC = () => {
     }
   }
 
-  // async function loadUpcomingBookingList() {
-  //   await confirmedUpcomingBookings()
-  //   .then(async (result: Promise<IBooking[]>) => {
-  //     var list: IBooking[] = [];
-  //     var currentDate = '';
-  //     for (let i = 0; i < (await result).length; i++) {
-  //       const booking = (await result)[i];
-  //       booking.show_date = booking.date == currentDate ? false : true;
-  //       currentDate = booking.date;
-  //       list.push(booking);
-  //     }
-  //     setUpcomingBookingList(list);
-  //   }).catch(() => {
-  //   });
-  // }
-
-  // async function loadCompletedBookingList() {
-  //   await confirmedCompletedBookings()
-  //   .then(async (result: Promise<IBooking[]>) => {
-  //     var list: IBooking[] = [];
-  //     var currentDate = '';
-  //     for (let i = 0; i < (await result).length; i++) {
-  //       const booking = (await result)[i];
-  //       booking.show_date = booking.date == currentDate ? false : true;
-  //       currentDate = booking.date;
-  //       list.push(booking);
-  //     }
-  //     setCompletedBookingList(list);
-  //   }).catch(() => {
-  //   });
-  // }
-
   return (
     <Container style={styles.background}>
 

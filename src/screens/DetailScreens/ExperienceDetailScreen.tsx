@@ -147,6 +147,7 @@ export const ExperienceDetailScreen: React.FC = ({route}) => {
             <CustomText style={styles.title}>{experienceDetail.title}</CustomText>
 
             <CustomText style={styles.location}>{experienceDetail.location == undefined || experienceDetail.location == '' ? host.location : experienceDetail.location}</CustomText>
+            <CustomText style={styles.location}>{experienceDetail.location}</CustomText>
             <View style={{...GlobalStyle.auth_line, backgroundColor: COLOR.alphaBlackColor20, marginTop: 22}} />
             
             <View style={{marginTop: 12, flexDirection: 'row'}}>

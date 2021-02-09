@@ -14,7 +14,7 @@ import { Container } from 'native-base';
 import { useEffect, useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { SvgXml } from 'react-native-svg';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scrollview'
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import ImagePicker from 'react-native-image-crop-picker';
 import Autocomplete from 'react-native-autocomplete-input';
 import Spinner from 'react-native-loading-spinner-overlay';
@@ -499,9 +499,8 @@ const styles = StyleSheet.create({
     fontFamily: FONT.AN_Regular,
     fontSize: 16, 
     width: 15, 
-    height: 20, 
-    lineHeight: 20, 
-    marginTop: 17, 
+    height: 45, 
+    lineHeight: 45, 
     color: COLOR.systemBlackColor,
   },
   autocompleteContainer: {

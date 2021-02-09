@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, StyleSheet } from 'react-native';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
+
 import { SvgXml } from 'react-native-svg';
 
 // from app
@@ -18,83 +19,76 @@ import {
 } from '../constants';
 
 
-const TabStack = createBottomTabNavigator();
+const TabStack = createMaterialBottomTabNavigator();
 
 const TabBarNavigator: React.FC = () => (
-  <TabStack.Navigator tabBar={props => <MyTabBar {...props} />}>
+  <TabStack.Navigator initialRouteName='' activeColor={COLOR.whiteColor} barStyle={{ backgroundColor: COLOR.whiteColor }}>
     <TabStack.Screen
-      name="HomeTap"
-      options={{index: 0}}
+      name="HomeTab"
       component={HomeNavigator}
+      options={{
+        tabBarLabel: '',
+        tabBarIcon: ({ focused, color }) => <BottomTabBarView isFocused={focused} tabIndex={0} />
+      }}
     />
     <TabStack.Screen
-      name="BookingTap"
-      options={{index: 1}}
+      name="BookingTab"
       component={BookingNavigator}
+      options={{
+        tabBarLabel: '',
+        tabBarIcon: ({ focused, color }) => <BottomTabBarView isFocused={focused} tabIndex={1} />
+      }}
     />
     <TabStack.Screen
-      name="ProfileTap"
-      options={{index: 2}}
+      name="ProfileTab"
       component={ProfileNavigator}
+      options={{
+        tabBarLabel: '',
+        tabBarIcon: ({ focused, color }) => <BottomTabBarView isFocused={focused} tabIndex={2} />
+      }}
     />
   </TabStack.Navigator>
 );
 
-function MyTabBar({state, descriptors, navigation}) {
+
+
+interface props {
+  isFocused: boolean;
+  tabIndex: number;
+}
+
+export const BottomTabBarView: React.FC<props> = (props: props) => {
+
+  const isFocused = props.isFocused;
+  const tabIndex = props.tabIndex;
+  
   return (
     <View style={styles.navigation_bar}>
-      {state.routes.map((route, index) => {
-        const {options} = descriptors[route.key];
-        const icon = options.index;
-        const label = route.name;
-        const isFocused = state.index === index;
-        const onPress = () => {
-          const event = navigation.emit({
-            type: 'tabPress',
-            target: route.key,
-          });
-
-          if (!isFocused && !event.defaultPrevented) {
-            navigation.navigate(route.name);
-          }
-        };
-
-        return (
-          <View
-            accessibilityRole="button"
-            accessibilityStates={isFocused ? ['selected'] : []}
-            accessibilityLabel={options.tabBarAccessibilityLabel}
-            onTouchStart={onPress}
-            key={index}
-            style={styles.navigation_bar_item}>
-            { isFocused == true 
-            ? <View style={styles.navigation_bar_item}>
-              <View style={styles.navigation_bar_select_line} />
-              <View style={styles.navigation_bar_icon} >
-                {
-                  icon == 0
-                  ? <SvgXml width='100%' height='100%' xml={Icon_Tab_Bar_Home_Select} />
-                  : (icon == 1
-                    ? <SvgXml width='100%' height='100%' xml={Icon_Tab_Bar_Booking_Select} />
-                    : <SvgXml width='100%' height='100%' xml={Icon_Tab_Bar_Profile_Select} />
-                  )
-                }
-              </View>
-            </View>
-            : <View style={styles.navigation_bar_icon} >
-              {
-                icon == 0
-                  ? <SvgXml width='100%' height='100%' xml={Icon_Tab_Bar_Home_Normal} />
-                  : (icon == 1
-                    ? <SvgXml width='100%' height='100%' xml={Icon_Tab_Bar_Booking_Normal} />
-                    : <SvgXml width='100%' height='100%' xml={Icon_Tab_Bar_Profile_Normal} />
-                  )
-              }
-              </View>
+      <View accessibilityRole="button" style={styles.navigation_bar_item}>
+        { isFocused == true 
+        ? <View style={styles.navigation_bar_item}>
+          <View style={styles.navigation_bar_select_line} />
+          <View style={styles.navigation_bar_icon} >
+            { tabIndex == 0
+              ? <SvgXml width='100%' height='100%' xml={Icon_Tab_Bar_Home_Select} />
+              : ( tabIndex == 1
+                  ? <SvgXml width='100%' height='100%' xml={Icon_Tab_Bar_Booking_Select} />
+                  : <SvgXml width='100%' height='100%' xml={Icon_Tab_Bar_Profile_Select} />
+                )
             }
           </View>
-        );
-      })}
+        </View>
+        : <View style={styles.navigation_bar_icon} >
+          { tabIndex == 0
+            ? <SvgXml width='100%' height='100%' xml={Icon_Tab_Bar_Home_Normal} />
+            : ( tabIndex == 1
+                ? <SvgXml width='100%' height='100%' xml={Icon_Tab_Bar_Booking_Normal} />
+                : <SvgXml width='100%' height='100%' xml={Icon_Tab_Bar_Profile_Normal} />
+              )
+          }
+          </View>
+        }
+      </View>
     </View>
   );
 }
@@ -120,14 +114,14 @@ const styles = StyleSheet.create({
   },
   navigation_bar_select_line: {
     position: 'absolute', 
-    top: 0, 
+    top: -10, 
     width: 32, 
     height: 4, 
     backgroundColor: COLOR.redColor,
   },
   navigation_bar_icon: {
     position: 'absolute', 
-    top: 10, 
+    top: 5, 
     width: 32, 
     height: 24, 
     justifyContent: 'space-evenly',
