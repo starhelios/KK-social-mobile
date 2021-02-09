@@ -44,6 +44,8 @@ export const SelectAvailabilityDatesScreen: React.FC = ({route}) => {
     return convertStringToMomentDateFormat(date.toLocaleDateString() + ' ' + date.toLocaleTimeString(), 'hh:mm a')
   }
 
+  const duration: string = route.params.duration;
+
   const [startTime, setStartTime] = useState<Date>(new Date());
   const [endTime, setEndTime] = useState<Date>(new Date());
   const [startTimeString, setStartTimeString] = useState<string>(toLocalTimeString(startTime));
@@ -54,7 +56,6 @@ export const SelectAvailabilityDatesScreen: React.FC = ({route}) => {
   const [startDay, setStartDay] = useState<string>(route.params.dateAvaibilityInfo.startDay);
   const [endDay, setEndDay] = useState<string>(route.params.dateAvaibilityInfo.endDay);
   const [dateAvaibility, setDateAvaibility] = useState<IAvailableDateForCreate[]>(route.params.dateAvaibilityInfo.dateAvaibility);
-  const [duration, setDuration] = useState<string>('');
 
   useEffect(() => {
     if (dateAvaibility.length == 0) {
@@ -90,6 +91,18 @@ export const SelectAvailabilityDatesScreen: React.FC = ({route}) => {
     } else {
       setStartTime(selectedDate);
       setStartTimeString(toLocalTimeString(selectedDate));
+
+      if (duration != '') {
+        let durationValue = parseInt(duration);
+        var tempEndDate = new Date(selectedDate);
+        tempEndDate.setHours(tempEndDate.getHours(), tempEndDate.getMinutes() + durationValue , 0 , 0);
+        setEndTime(tempEndDate);
+        setEndTimeString(toLocalTimeString(tempEndDate));
+        console.log(toLocalTimeString(tempEndDate))
+      } else {
+        setEndTime(selectedDate);
+        setEndTimeString(toLocalTimeString(selectedDate));
+      }
     }    
   };
 
@@ -118,7 +131,6 @@ export const SelectAvailabilityDatesScreen: React.FC = ({route}) => {
       var startDateTime = new Date(startDay).getTime();
       var endDateTime = new Date(endDay).getTime();
       var currentTime = startDateTime;
-      setDuration(`${minutes}`);
   
       var avaibilityDates: IAvailableDateForCreate[] = [];
       while (currentTime <= endDateTime) {
@@ -151,7 +163,6 @@ export const SelectAvailabilityDatesScreen: React.FC = ({route}) => {
 
   const onSave = () => {
     route.params.setDateAvaibilityInfo({startDay: startDay, endDay: endDay, dateAvaibility: dateAvaibility});
-    route.params.setDuration(duration);
     goBack();
   }
   

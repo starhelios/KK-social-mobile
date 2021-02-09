@@ -1,3 +1,5 @@
+import { IAvailableDate } from "./AvailableDate";
+
 export interface IExperienceDetail {
 	id: string,
 	images: string[],
@@ -13,6 +15,7 @@ export interface IExperienceDetail {
 	updatedAt: string,
 	hostData: IHostData,
 	location: string,
+	dateAvaibility: IAvailableDate[],
 }
 
 export interface IHostData {
@@ -27,10 +30,10 @@ export interface ISpecificExperience {
 	day: string,
 	startTime: string,
 	endTime: string,
-
-	ratings: [ ],
+	createdAt: string,
+	ratings: [],
 	usersGoing: string[],
-	reservations: [ ],
+	reservations: [],
 
 	// internal working
 	show_date: boolean,

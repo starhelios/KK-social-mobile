@@ -69,7 +69,7 @@ export const LogInScreen: React.FC = () => {
         
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
           <View style={styles.container}>
-            <KeyboardAvoidingView behavior={Platform.OS == "ios" ? "padding" : "height"} >
+            <KeyboardAvoidingView behavior={Platform.OS == "ios" ? "padding" : "height"} keyboardVerticalOffset={150} >
               <ScrollView>
                 <View style={styles.input_container}>
                   <View style={{width:'100%', marginTop: 22}}>

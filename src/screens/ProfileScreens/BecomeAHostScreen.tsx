@@ -84,6 +84,7 @@ export const BecomeAHostScreen: React.FC = () => {
   var keyboardDidShowListener: EmitterSubscription;
   var keyboardDidHideListener: EmitterSubscription;
   var googleAddressRef: GooglePlacesAutocompleteRef | null;
+  var scrollViewRef: ScrollView | null;
 
   useEffect(() => {
     setImage(profile.avatarUrl);
@@ -298,8 +299,8 @@ export const BecomeAHostScreen: React.FC = () => {
 
         <View style={{flex: 1}}>
           <View style={styles.container}>
-            <KeyboardAvoidingView behavior={Platform.OS == "ios" ? "padding" : "height"} >
-              <ScrollView bounces={false} keyboardShouldPersistTaps={'always'}>
+            <KeyboardAvoidingView behavior={Platform.OS == "ios" ? "padding" : "height"} keyboardVerticalOffset={150} >
+              <ScrollView ref={ref => { scrollViewRef = ref }} bounces={false} keyboardShouldPersistTaps={'always'}>
                 <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
                   <View>
                     <View style={styles.profile_container}>

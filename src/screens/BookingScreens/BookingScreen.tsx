@@ -9,6 +9,7 @@ import {
 import { Container } from 'native-base';
 import { useEffect, useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
+import Spinner from 'react-native-loading-spinner-overlay';
 
 // from app
 import { COLOR, CustomText, FONT, MARGIN_TOP, SortBookings, viewportWidth } from '../../constants';
@@ -31,24 +32,27 @@ export const BookingScreen: React.FC = () => {
   const [selectedTab, setSelectedTab] = useState<number>(0);
   const [upcomingBookingList, setUpcomingBookingList] = useState<IUserBooking[]>([]);
   const [completedBookingList, setCompletedBookingList] = useState<IUserBooking[]>([]);
+  const [fetched, setFetched] = useState<boolean>(false);
+
+  useEffect(() => {
+    getUpcomingBookingList();
+  }, [])
 
   const getUpcomingBookingList = async () => {
     getReservedBookingList(userInfo.id)
     .then(async (result: Promise<IUserBooking[]>) => {
       setUpcomingBookingList(await result);
+      setFetched(true);
     })
     .catch(() => {
       setUpcomingBookingList([]);
+      setFetched(true);
     })
   }
 
   const getCompletedBookingList = async () => {
     setCompletedBookingList([]);
   }
-
-  useEffect(() => {
-    getUpcomingBookingList();
-  }, [])
 
   useEffect(() => {
     if (needReloadReservedBookings == false) {
@@ -93,15 +97,23 @@ export const BookingScreen: React.FC = () => {
           </TouchableWithoutFeedback>
         </View>
 
-        <FlatList
-          style={styles.booking_list}
-          showsVerticalScrollIndicator={false}
-          horizontal={false}
-          data={selectedTab == 0 ? upcomingBookingList : completedBookingList}
-          keyExtractor={(item, index) => index.toString()}
-          renderItem={({item}) => <BookingView completed_booking={selectedTab == 0 ? false : true} booking={item} />}
-        />
+        { fetched == true &&
+          <FlatList
+            style={styles.booking_list}
+            showsVerticalScrollIndicator={false}
+            horizontal={false}
+            data={selectedTab == 0 ? upcomingBookingList : completedBookingList}
+            keyExtractor={(item, index) => index.toString()}
+            renderItem={({item}) => <BookingView completed_booking={selectedTab == 0 ? false : true} booking={item} />}
+          />
+        }
       </SafeAreaView>
+
+      <Spinner
+        visible={!fetched}
+        textContent={''}
+        textStyle={{color: COLOR.systemWhiteColor}}
+      />
     </Container>
   );
 
