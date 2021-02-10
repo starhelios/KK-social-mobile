@@ -5,4 +5,5 @@ export const SUCCESS_MESSAGE = {
   USER_BECOM_A_HOST: 'You has become a host.',
   CREATE_EXPERIENCE_SUCCESS: 'Experience was created.',
   RESERVATION_BOOKING_SUCCESS: 'This experience was reserved.',
+  ADD_BANK_ACCOUNT_SUCCESS: 'Your bank account was saved.',
 };

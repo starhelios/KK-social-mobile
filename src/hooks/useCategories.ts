@@ -10,7 +10,7 @@ export const useCategories = () => {
   const getCategoryList = async (
     q: string,
   ): Promise<any> => {
-    var url = API_ENDPOINT.CATEGORIES_SEARCH;
+    let url = API_ENDPOINT.CATEGORIES_SEARCH;
     if (q != '') {
       url += '?q=' + q;
     }

@@ -50,7 +50,7 @@ export const NotLoginProfileView: React.FC = () => {
   const [accessToken, setAccessToken] = useState<string>('');
   const [code, setCode] = useState<string>('');
 
-  var tutorialIndex = 0;
+  let tutorialIndex = 0;
 
   useEffect(() => {
     loadProfileList();

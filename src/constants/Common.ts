@@ -80,7 +80,7 @@ export const ShowShareView = async (title: string, url: string) => {
 }
 
 export const GetVisibleDateString = (defaultDate: string, selectedFromDate: string, selectedEndDate: string) => {
-  var visibleDateString = defaultDate;
+  let visibleDateString = defaultDate;
   if (selectedFromDate != '') {
     if (selectedFromDate == selectedEndDate) {
       visibleDateString = convertStringToDateFormat(selectedFromDate, 'MMMM D');

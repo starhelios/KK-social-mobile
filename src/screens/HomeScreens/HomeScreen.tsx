@@ -173,7 +173,7 @@ export const HomeScreen: React.FC = () => {
 
   function onFilterExperience(lowPrice: number, highPrice: number, location: string) {
     let minPrice = lowPrice;
-    var maxPrice = highPrice;
+    let maxPrice = highPrice;
     
     dispatch({
       type: ActionType.SET_FILTER,
@@ -207,15 +207,15 @@ export const HomeScreen: React.FC = () => {
   }
 
   function onSelectCategory(category: ICategory) {
-    var location = checkSelectedCategory(category);
-    var list = [...selectedCategoryList];
+    let location = checkSelectedCategory(category);
+    let list = [...selectedCategoryList];
     if (location == -1) {
       list.push(category);
     } else {
       list.splice(location, 1);
     }
 
-    var categoryName: string[] = [];
+    let categoryName: string[] = [];
     for (let i = 0; i < list.length; i++) {
       categoryName.push(list[i].name);
     }

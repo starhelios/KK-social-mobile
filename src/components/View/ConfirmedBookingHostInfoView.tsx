@@ -33,10 +33,10 @@ export const ConfirmedBookingHostInfoView: React.FC<props> = (props: props) => {
       <View style={styles.line} />
       <View style={styles.host_container}>
         <View style={styles.avatar}>
-          <Image style={{width: '100%', height: '100%'}} source={booking.host?.avatarUrl == '' ? Img_User_Avatar : {uri: booking.host?.avatarUrl}} />
+          <Image style={{width: '100%', height: '100%'}} source={ booking.host != null && booking.host.avatarUrl != '' ? { uri: booking.host.avatarUrl } : Img_User_Avatar } />
         </View>
         
-        <CustomText style={styles.username} numberOfLines={1}>{ booking.host?.fullname }</CustomText>
+        <CustomText style={styles.username} numberOfLines={1}>{ booking.host != null ? booking.host.fullname : '' }</CustomText>
 
         <TouchableWithoutFeedback onPress={() => onMenu()}>
             <View style={styles.dot_menu}>

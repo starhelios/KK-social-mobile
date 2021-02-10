@@ -58,7 +58,7 @@ export const HostDetailScreen: React.FC = ({route}) => {
     // }).catch(() => {
     // });
 
-    var experiences: IExperience[] = [];
+    let experiences: IExperience[] = [];
     for (let i = 0; i < experienceList.length; i++) {
       let experience = experienceList[i];
       if (experience.userId == host.id) {

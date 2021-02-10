@@ -52,8 +52,8 @@ export const ConfirmedBookingsScreen: React.FC = () => {
   function setBookingList() {
     let currentDate = new Date();
 
-    var upcomingBookings: IBooking[] = [];
-    var completedBookings: IBooking[] = [];
+    let upcomingBookings: IBooking[] = [];
+    let completedBookings: IBooking[] = [];
 
     if (userInfo.bookingInfo == undefined || userInfo.bookingInfo == null) {
       return;
@@ -70,7 +70,7 @@ export const ConfirmedBookingsScreen: React.FC = () => {
             continue;
           }
 
-          var experienceHost: IUser | null = null;
+          let experienceHost: IUser | null = null;
           for (let host of hostList) {
             if (host.id == experience.userId) {
               experienceHost = host;
@@ -78,7 +78,7 @@ export const ConfirmedBookingsScreen: React.FC = () => {
             }
           }
   
-          var newBooking: IBooking = {
+          let newBooking: IBooking = {
             id: reservationBooking._id,
             image: experience.images.length > 0 ? experience.images[0] : '',
             experience_icon: '',

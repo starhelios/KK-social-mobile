@@ -42,5 +42,5 @@ export const API_ENDPOINT = {
   GENERATE_PAYMENT_INTENT : `${API_HOST}/payments/charge-generate-intent/experience`,
   SAVE_TRANSACTION        : `${API_HOST}/payments/save-transaction`,
   ADD_CARD                : `${API_HOST}/payments/methods/card`,
-  
+  GENERATE_ACCOUNT_LINK   : `${API_HOST}/payments/generate/account_link`,
 };

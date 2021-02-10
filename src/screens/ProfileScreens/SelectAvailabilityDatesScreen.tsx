@@ -62,7 +62,7 @@ export const SelectAvailabilityDatesScreen: React.FC = ({route}) => {
 
     if (duration != '') {
       let durationValue = parseInt(duration);
-      var tempEndDate = new Date(startTime);
+      let tempEndDate = new Date(startTime);
       tempEndDate.setHours(tempEndDate.getHours(), tempEndDate.getMinutes() + durationValue , 0 , 0);
       setEndTime(tempEndDate);
       setEndTimeString(toLocalTimeString(tempEndDate));
@@ -100,7 +100,7 @@ export const SelectAvailabilityDatesScreen: React.FC = ({route}) => {
 
       if (duration != '') {
         let durationValue = parseInt(duration);
-        var tempEndDate = new Date(selectedDate);
+        let tempEndDate = new Date(selectedDate);
         tempEndDate.setHours(tempEndDate.getHours(), tempEndDate.getMinutes() + durationValue , 0 , 0);
         setEndTime(tempEndDate);
         setEndTimeString(toLocalTimeString(tempEndDate));
@@ -122,8 +122,8 @@ export const SelectAvailabilityDatesScreen: React.FC = ({route}) => {
   };
 
   const onConfirmTime = () => {
-    var msDiff = endTime.getTime() - startTime.getTime();
-    var minutes = Math.round(msDiff / (1000 * 60));
+    let msDiff = endTime.getTime() - startTime.getTime();
+    let minutes = Math.round(msDiff / (1000 * 60));
     if (minutes <= 0) {
       Alert.alert('', ERROR_MESSAGE.INVALID_EXPERIENCE_END_TIME);
       return;
@@ -133,11 +133,11 @@ export const SelectAvailabilityDatesScreen: React.FC = ({route}) => {
     setShowBottomBar(false);
 
     if (selectedIndex == -1) {
-      var startDateTime = new Date(startDay).getTime();
-      var endDateTime = new Date(endDay).getTime();
-      var currentTime = startDateTime;
+      let startDateTime = new Date(startDay).getTime();
+      let endDateTime = new Date(endDay).getTime();
+      let currentTime = startDateTime;
   
-      var avaibilityDates: IAvailableDateForCreate[] = [];
+      let avaibilityDates: IAvailableDateForCreate[] = [];
       while (currentTime <= endDateTime) {
         let avaibilityDate: IAvailableDateForCreate = {
           day: convertStringToDateFormat(new Date(currentTime).toLocaleDateString(), 'MMMM D, YYYY'), 
@@ -149,7 +149,7 @@ export const SelectAvailabilityDatesScreen: React.FC = ({route}) => {
       setDateAvaibility(avaibilityDates);
 
     } else if (selectedIndex < dateAvaibility.length) {
-      var avaibilityDates: IAvailableDateForCreate[] = dateAvaibility;
+      let avaibilityDates: IAvailableDateForCreate[] = dateAvaibility;
       avaibilityDates[selectedIndex].startTime = startTimeString;
       avaibilityDates[selectedIndex].endTime = endTimeString;
       setDateAvaibility(avaibilityDates);

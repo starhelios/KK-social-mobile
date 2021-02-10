@@ -14,7 +14,8 @@ import { Container } from 'native-base';
 import { useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { SvgXml } from 'react-native-svg';
-var creditCardType = require("credit-card-type");
+
+let creditCardType = require("credit-card-type");
 
 // from app
 import { 
@@ -40,16 +41,17 @@ import GlobalStyle from '../../styles/global';
 
 export const AddPaymentMethodScreen: React.FC = () => {
 
+  const userInfo: IUser = useGlobalState('userInfo');
+  let fetching = false;
+
   const { goBack } = useNavigation();
   const { getUserInformation } = useUsers();
   const { setLoginUser } = useAuthentication();
   const { addCard } = usePayments();
 
-  const userInfo: IUser = useGlobalState('userInfo');
-
+  const [fullName, setFullName] = useState<string>('');
   const [cardNumber, setCardNumber] = useState<string>('');
   const [cardExpiration, setCardExpiration] = useState<string>('');
-
   const [cvc, setCvc] = useState<string>('');
 
   const setCardExpirationValue = (text: string) => {
@@ -88,7 +90,12 @@ export const AddPaymentMethodScreen: React.FC = () => {
   }
 
   const onAddPaymentMethod = () => {
-    if (cardNumber.length != 19) {
+    if (fetching == true) {
+      return;
+    } else if (fullName == '') {
+      Alert.alert('', ERROR_MESSAGE.EMPTY_FULL_NAME);
+      return;
+    } else if (cardNumber.length != 19) {
       Alert.alert('', ERROR_MESSAGE.EMPTY_CARD_NUMBER);
       return;
     } else if (cardExpiration.length != 5) {
@@ -133,25 +140,21 @@ export const AddPaymentMethodScreen: React.FC = () => {
 
     if (isAdded == false) {
       if (userInfo.id != '') {
-        addCard(cardNumber, expYear, expMonth, cvc)
+        fetching = true;
+        addCard(fullName, cardNumber, expYear, expMonth, cvc)
         .then(() => {
+          fetching = false;
           loadUserInfo();
 
-          Alert.alert('',
-            SUCCESS_MESSAGE.ADD_CARD_SUCCESS,
-            [
-              { text: "OK", onPress: () => goBack() }
-            ],
+          Alert.alert('', SUCCESS_MESSAGE.ADD_CARD_SUCCESS,
+            [ { text: "OK", onPress: () => goBack() } ],
             { cancelable: false }
           );
         }).catch(() => {
+          fetching = false;
           Alert.alert('', ERROR_MESSAGE.ADD_PAYMENT_METHOD_FAIL);
         });
       }
-    }
-
-    if (userInfo.id == '') {
-      goBack();
     }
   }
 
@@ -173,6 +176,19 @@ export const AddPaymentMethodScreen: React.FC = () => {
             <ScrollView bounces={false}>
               <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
                 <View>
+                  <View style={{marginLeft: 24, marginRight: 24, width: viewportWidth - 48}}>
+                    <View style={{width:'100%', marginTop: 33}}>
+                      <CustomText style={styles.info_title}>Full Name</CustomText>
+                      <CustomTextInput
+                        style={GlobalStyle.auth_input}
+                        placeholder={'Full Name'}
+                        placeholderTextColor={COLOR.alphaWhiteColor50}
+                        onChangeText={text => setFullName(text)}
+                        value={fullName}
+                      />
+                      <View style={GlobalStyle.auth_line} />
+                    </View>
+                  </View>
 
                   <View style={{marginLeft: 24, marginRight: 24, width: viewportWidth - 48}}>
                     <View style={{width:'100%', marginTop: 33}}>
