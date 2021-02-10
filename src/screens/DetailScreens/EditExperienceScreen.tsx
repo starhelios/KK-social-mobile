@@ -50,7 +50,7 @@ export const EditExperienceScreen: React.FC = ({route}) => {
   const [category, setCategory] = useState<string>('');
 
   useEffect(() => {
-    var imageList: IFile[] = [];
+    let imageList: IFile[] = [];
     imageList.push({name: '', type: '', uri: ''});
     imageList.push({name: '', type: '', uri: ''});
     imageList.push({name: '', type: '', uri: ''});

@@ -53,14 +53,14 @@ export const ExperienceDetailBookScreen: React.FC = ({route}) => {
   const [availableDates, setAvailableDates] = useState<ISpecificExperience[]>([]);
 
   useEffect(() => {
-    var availableDates: ISpecificExperience[] = [];
-    var beforeDate = '';
+    let availableDates: ISpecificExperience[] = [];
+    let beforeDate = '';
 
     const today = convertStringToDate(new Date().toLocaleDateString());
 
     if (experienceDetail.specificExperience != null && experienceDetail.specificExperience != undefined && experienceDetail.specificExperience.length > 0) {
       for (let i = 0; i < experienceDetail.specificExperience.length; i++) {
-        var availableDate = experienceDetail.specificExperience[i];
+        let availableDate = experienceDetail.specificExperience[i];
   
         const startTime = convertStringToDate(availableDate.day + ' ' + availableDate.startTime);
         if (startTime == null || today == null || startTime < today) {
@@ -96,7 +96,7 @@ export const ExperienceDetailBookScreen: React.FC = ({route}) => {
       const end = convertStringToDate(endDate);
 
       if (from != null && end != null) {
-        var availableDates: ISpecificExperience[] = [];
+        let availableDates: ISpecificExperience[] = [];
         for (let availableDate of allAvailableDates) {
           const startTime = convertStringToDate(availableDate.day + ' ' + availableDate.startTime);
           const startDate = convertStringToDate(availableDate.day);

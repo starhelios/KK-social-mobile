@@ -36,7 +36,7 @@ export const ConfirmedBookingView: React.FC<props> = (props: props) => {
         }
         <View style={{...styles.info_container, marginTop: (booking.show_date != null && booking.show_date == true) ? 16 : 22}}>
           <View style={{height: 40}}>
-            <CustomText style={styles.name}>{booking.hour + ' / ' + booking.host?.fullname}</CustomText>
+            <CustomText style={styles.name}>{booking.host != null ? `${booking.hour} / ${booking.host.fullname}` : booking.hour}</CustomText>
             <CustomText style={styles.experience}>{booking.experience + ' • ' + GetDurationString(booking.duration)}</CustomText>
           </View>
           

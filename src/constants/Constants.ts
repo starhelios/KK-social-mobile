@@ -68,7 +68,7 @@ export const { width: viewportWidth, height: viewportHeight } = Dimensions.get('
 export const GOOGLE_MAP_KEY = 'AIzaSyAcHUaRR1URQlQR54ebNGeByyDR7Y6pJn4';
 
 // Global Values
-export var API_CONFIG: AxiosRequestConfig;
+export let API_CONFIG: AxiosRequestConfig;
 export const SetApiConfig = (token: string) => {
   console.log('access_token: ' + token);
   API_CONFIG = {
@@ -83,7 +83,7 @@ export const SetApiConfig = (token: string) => {
   }
 }
 
-export var LOGIN_STATE: string;
+export let LOGIN_STATE: string;
 export const SetLoginState = (state: string) => {
   LOGIN_STATE = state
 }

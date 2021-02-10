@@ -7,6 +7,23 @@ import { handleError } from '../utils';
 
 export const usePayments = () => {
 
+  const generateAccountLink = async (
+  ): Promise<any> => {
+    const url = API_ENDPOINT.GENERATE_ACCOUNT_LINK;
+    
+    try {
+      const { data } = await axios.get<IApiSuccess>(url, API_CONFIG);
+      return Promise.resolve(data.payload);
+    } catch (err) {
+      const apiError = handleError(err);
+      if (apiError) {
+        return Promise.reject(apiError.error.message);
+      } else {
+        return Promise.reject(null);
+      }
+    }
+  };
+
   const generatePaymentIntent = async (
     experienceID: string,
     amount: number,
@@ -33,6 +50,7 @@ export const usePayments = () => {
   };
 
   const addCard = async (
+    cardFullName: string,
     cardNumber: string,
     expiryYear: number,
     expiryMonth: number,
@@ -41,6 +59,7 @@ export const usePayments = () => {
     const url = API_ENDPOINT.ADD_CARD;
     const body = { 
       data: {
+        cardFullName,
         cardNumber,
         cardExpiryDate: `${expiryMonth} ${expiryYear}`,
         cardCVV,
@@ -85,5 +104,5 @@ export const usePayments = () => {
     }
   };
 
-  return { generatePaymentIntent, addCard, saveTransation };
+  return { generateAccountLink, generatePaymentIntent, addCard, saveTransation };
 };

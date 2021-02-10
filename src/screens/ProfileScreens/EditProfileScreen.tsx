@@ -10,7 +10,6 @@ import {
   Keyboard,
   TouchableOpacity,
   EmitterSubscription,
-  ScrollViewProps,
 } from 'react-native';
 import { 
   GooglePlaceData, 
@@ -91,9 +90,9 @@ export const EditProfileScreen: React.FC = () => {
   const [showKeyboard, setShowKeyboard] = useState<boolean>(false);
 
   let fetchingData = false;
-  var keyboardDidShowListener: EmitterSubscription;
-  var keyboardDidHideListener: EmitterSubscription;
-  var googleAddressRef: GooglePlacesAutocompleteRef | null;
+  let keyboardDidShowListener: EmitterSubscription;
+  let keyboardDidHideListener: EmitterSubscription;
+  let googleAddressRef: GooglePlacesAutocompleteRef | null;
   let scrollViewRef: KeyboardAwareScrollView | null;
 
   useEffect(() => {
@@ -104,7 +103,9 @@ export const EditProfileScreen: React.FC = () => {
   }, [profile]);
 
   const selectAddress = (address: GooglePlaceData, details: GooglePlaceDetail | null) => {
-    googleAddressRef?.setAddressText(address.description.replace(', USA', ''));
+    if (googleAddressRef != null) {
+      googleAddressRef.setAddressText(address.description.replace(', USA', ''));
+    }
   };
 
   const keyboardDidShow = () => {
@@ -118,9 +119,17 @@ export const EditProfileScreen: React.FC = () => {
   useEffect(() => {
     keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', keyboardDidShow);
     keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', keyboardDidHide);
-
-    googleAddressRef?.setAddressText(profile.location);
+    if (googleAddressRef != null && profile.location != undefined) {
+      googleAddressRef.setAddressText(profile.location);
+    }
   }, []);
+
+  useEffect(() => {
+    return () => {
+      keyboardDidShowListener.remove();
+      keyboardDidHideListener.remove();
+    }
+  }, []);  
 
   const onChange = (event: any, selectedDate: any) => {
     if (Platform.OS != 'ios') {
@@ -222,7 +231,9 @@ export const EditProfileScreen: React.FC = () => {
                   <View style={{width:'100%', marginTop: 22}}>
                     <CustomText style={styles.info_title}>Date of Birth</CustomText>
                     <TouchableWithoutFeedback onPress={() => onSelectBirthday()}>
-                      <CustomText style={{...GlobalStyle.auth_input, lineHeight: 45}}>{birthday}</CustomText>
+                      <CustomText style={{...GlobalStyle.auth_input, color: birthday != '' ? COLOR.systemWhiteColor : COLOR.alphaWhiteColor50, lineHeight: 45}}>
+                        {birthday != '' ? birthday : 'Date of Birth'}
+                      </CustomText>
                     </TouchableWithoutFeedback>
                     <View style={GlobalStyle.auth_line} />
                   </View>
@@ -277,7 +288,7 @@ export const EditProfileScreen: React.FC = () => {
 
                       <View style={{width:'100%', marginTop: 22, zIndex: 10}}>
                         <CustomText style={styles.info_title}>Location</CustomText>
-                        <View style={{marginLeft: -10, width: viewportWidth - 38, height: showKeyboard == false ? 45 : (Platform.OS == 'ios' ? 300 : 200)}}>
+                        <View style={{marginLeft: -10, width: viewportWidth - 38, height: showKeyboard == false ? 45 : 230}}>
                           <GooglePlacesAutocomplete
                             ref={ref => {
                               googleAddressRef = ref; 
@@ -295,7 +306,6 @@ export const EditProfileScreen: React.FC = () => {
                             styles={{
                               textInputContainer: {
                                 backgroundColor: COLOR.clearColor,
-                                
                               },
                               textInput: {
                                 height: 38,
@@ -452,10 +462,13 @@ export const EditProfileScreen: React.FC = () => {
       return;
     }
     
-    var location = '';
+    let location = '';
 
     if (profile.isHost == true) {
-      let locationString = googleAddressRef?.getAddressText();
+      let locationString = '';
+      if (googleAddressRef != null) {
+        locationString = googleAddressRef.getAddressText();
+      }
       if (locationString == null || locationString == undefined) {
         locationString = '';
       }

@@ -75,14 +75,14 @@ export const PaymentOptionsScreen: React.FC = () => {
               <CustomText style={styles.info_title}>Your Cards</CustomText>
           
               <FlatList
-                  style={{width: '100%', marginTop: 5, height: cardList.length * 60 <= viewportHeight - 350 ? cardList.length * 60 : viewportHeight - 350 }}
-                  contentContainerStyle={{paddingVertical: 0}}
-                  showsHorizontalScrollIndicator={false}
-                  horizontal={false}
-                  data={cardList}
-                  bounces={false}
-                  keyExtractor={(item, index) => index.toString()}
-                  renderItem={({item}) => <YourCardButton card={item} onSelectCard={onSelectCard} />}
+                style={{width: '100%', marginTop: 5, height: cardList.length * 60 <= viewportHeight - 350 ? cardList.length * 60 : viewportHeight - 350 }}
+                contentContainerStyle={{paddingVertical: 0}}
+                showsHorizontalScrollIndicator={false}
+                horizontal={false}
+                data={cardList}
+                bounces={false}
+                keyExtractor={(item, index) => index.toString()}
+                renderItem={({item}) => <YourCardButton card={item} onSelectCard={onSelectCard} />}
               />
             </View>
           }

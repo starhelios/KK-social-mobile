@@ -41,7 +41,7 @@ export const SplashScreen: React.FC = () => {
 
   const [fetchingData, setFetchingData] = useState<boolean>(false);
 
-  var fetching = false;
+  let fetching = false;
 
   useEffect(() => {
     initUserInfo();

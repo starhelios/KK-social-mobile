@@ -8,7 +8,6 @@ import {
   Platform,
   Keyboard,
   Alert,
-  TouchableOpacity,
   EmitterSubscription,
 } from 'react-native';
 import { 
@@ -22,7 +21,6 @@ import { useEffect, useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { SvgXml } from 'react-native-svg';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
-import Autocomplete from 'react-native-autocomplete-input';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import ImagePicker from 'react-native-image-crop-picker';
 import LinearGradient from 'react-native-linear-gradient';
@@ -44,7 +42,6 @@ import {
   Icon_Back,
   Icon_Camera,
   Icon_Normal_Profile,
-  Icon_Search_White,
   LOGIN_STATE,
   MARGIN_TOP,
   SUCCESS_MESSAGE,
@@ -52,19 +49,23 @@ import {
 } from '../../constants';
 import { ColorButton } from '../../components/Button';
 import { useGlobalState } from '../../redux/Store';
-import { ICategory, IFile, IUser } from '../../interfaces/app';
+import { IFile, IUser } from '../../interfaces/app';
 import { useAuthentication, useUsers } from '../../hooks';
 import GlobalStyle from '../../styles/global';
 
 
 export const BecomeAHostScreen: React.FC = () => {
 
+  let fetchingData = false;
+  let keyboardDidShowListener: EmitterSubscription;
+  let keyboardDidHideListener: EmitterSubscription;
+  let googleAddressRef: GooglePlacesAutocompleteRef | null;
+  let scrollViewRef: KeyboardAwareScrollView | null;
+  const profile: IUser = useGlobalState('userInfo');
+
   const { goBack } = useNavigation();
   const { updateUserInformation } = useUsers();
   const { setLoginUser } = useAuthentication();
-
-  const profile: IUser = useGlobalState('userInfo');
-  const allCategoryList: ICategory[] = useGlobalState('categoryList'); 
 
   const [uploading, setUploading] = useState(false);
   const [image, setImage] = useState<string>(profile.avatarUrl);
@@ -72,32 +73,25 @@ export const BecomeAHostScreen: React.FC = () => {
   const [emailAddress, setEmailAddress] = useState<string>(profile.email);
   const [birthday, setBirthday] = useState<string>(convertStringToDateFormat(profile.dateOfBirth, 'YYYY-MM-DD'));
   const [aboutMe, setAboutMe] = useState<string>(profile.aboutMe);
-  const [category, setCategory] = useState<string>(profile.categoryName);
-  const [categoryList, setCategoryList] = useState<ICategory[]>([]);
   const [avatarFile, setAvatarFile] = useState<IFile | null>(null);
   const [showDatePicker, setShowDatePicker] = useState<boolean>(false);
   const [mode, setMode] = useState<"date" | "time" | undefined>('date');
   const [pickerDate, setPickerDate] = useState<Date>(birthday != undefined && birthday != '' ? new Date(birthday) : new Date());
   const [showKeyboard, setShowKeyboard] = useState<boolean>(false);
 
-  let fetchingData = false;
-  var isInit = true;
-  var keyboardDidShowListener: EmitterSubscription;
-  var keyboardDidHideListener: EmitterSubscription;
-  var googleAddressRef: GooglePlacesAutocompleteRef | null;
-  let scrollViewRef: KeyboardAwareScrollView | null;
-
+  
   useEffect(() => {
     setImage(profile.avatarUrl);
     setFullName(profile.fullname);
     setEmailAddress(profile.email);
     setAboutMe(profile.aboutMe);
-    setCategory(profile.categoryName);
     setBirthday(convertStringToDateFormat(profile.dateOfBirth, 'YYYY-MM-DD'));
   }, [profile]);
 
   const selectAddress = (address: GooglePlaceData, details: GooglePlaceDetail | null) => {
-    googleAddressRef?.setAddressText(address.description.replace(', USA', ''));
+    if (googleAddressRef != null) {
+      googleAddressRef.setAddressText(address.description.replace(', USA', ''));
+    }
   };
 
   const keyboardDidShow = () => {
@@ -111,26 +105,17 @@ export const BecomeAHostScreen: React.FC = () => {
   useEffect(() => {
     keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', keyboardDidShow);
     keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', keyboardDidHide);
-    googleAddressRef?.setAddressText(profile.location);
+    if (googleAddressRef != null && profile.location != undefined) {
+      googleAddressRef.setAddressText(profile.location);
+    }
   }, []);
 
   useEffect(() => {
-    if (isInit == true) {
-      isInit = false;
-      return;
+    return () => {
+      keyboardDidShowListener.remove();
+      keyboardDidHideListener.remove();
     }
-    
-    setCategoryList(findCategory(category));
-  }, [category]);
-
-  const comp = (a: string, b: string) => a.toLowerCase().trim() === b.toLowerCase().trim();
-  const findCategory = (query: string) => {
-    if (query === '') {
-      return [];
-    }
-    const regex = new RegExp(`${query}`, 'i');
-    return allCategoryList.filter(category => category.name.search(regex) >= 0);
-  }
+  }, []);  
 
   const onChange = (event: any, selectedDate: any) => {
     if (Platform.OS != 'ios') {
@@ -215,7 +200,10 @@ export const BecomeAHostScreen: React.FC = () => {
     }
     fetchingData = true;
 
-    let locationString = googleAddressRef?.getAddressText();
+    let locationString = '';
+    if (googleAddressRef != null) {
+      locationString = googleAddressRef.getAddressText();
+    }
     if (locationString == null || locationString == undefined) {
       locationString = '';
     }
@@ -229,9 +217,6 @@ export const BecomeAHostScreen: React.FC = () => {
       return;
     } else if (birthday == '') {
       Alert.alert('', ERROR_MESSAGE.EMPTY_BIRTHDAY);
-      return;
-    } else if (category == '') {
-      Alert.alert('', ERROR_MESSAGE.EMPTY_CATEGORY);
       return;
     } else if (aboutMe == '') {
       Alert.alert('', ERROR_MESSAGE.EMPTY_ABOUTME);
@@ -271,7 +256,7 @@ export const BecomeAHostScreen: React.FC = () => {
   }
 
   const saveProfile = (avatarUrl: string, location: string) => {
-    updateUserInformation(profile.id, emailAddress, fullName, birthday, aboutMe, location, category, avatarUrl, true)
+    updateUserInformation(profile.id, emailAddress, fullName, birthday, aboutMe, location, '', avatarUrl, true)
     .then(async (result: Promise<IUser>) => {
       fetchingData = false;
       setUploading(false);
@@ -305,6 +290,7 @@ export const BecomeAHostScreen: React.FC = () => {
 
         <View style={{flex: 1}}>
           <KeyboardAwareScrollView 
+            ref={ref => { scrollViewRef = ref; }}
             style={{width: '100%', height: '100%', flex: 1}} 
             keyboardDismissMode="interactive" 
             keyboardShouldPersistTaps="always"
@@ -314,8 +300,7 @@ export const BecomeAHostScreen: React.FC = () => {
                 <View style={styles.profile_container}>
                   <TouchableWithoutFeedback onPress={() => onSelectPhoto()}>
                     <View style={styles.profile}>
-                      {
-                        image != ''
+                      { image != ''
                         ? <Image style={{width: '100%', height: '100%'}} source={{uri: image}} />
                         : <View style={styles.profile_no_image}>
                             <SvgXml width={46} height={58} xml={Icon_Normal_Profile} />
@@ -372,40 +357,6 @@ export const BecomeAHostScreen: React.FC = () => {
                     <View style={GlobalStyle.auth_line} />
                   </View>
 
-                  <View style={{width:'100%', marginTop: 22, zIndex: 100}}>
-                    <CustomText style={styles.info_title}>Category</CustomText>
-                    <Autocomplete
-                      autoCapitalize="none"
-                      autoCorrect={false}
-                      containerStyle={styles.autocompleteContainer}
-                      inputContainerStyle={styles.autocompleteInput}
-                      style={styles.autocomplete}
-                      data={categoryList.length > 0 && comp(category, categoryList[0].name) ? [] : categoryList}
-                      defaultValue={category}
-                      onChangeText={text => {
-                        setCategory(text);
-                        setCategoryList(findCategory(text));
-                      }}
-                      placeholder="Search Categories"
-                      placeholderTextColor={COLOR.alphaWhiteColor50}
-                      renderItem={({item}) => (
-                        <TouchableOpacity onPress={() => {
-                          setCategory(item.name);
-                          setCategoryList([]);
-                        }}>
-                          <CustomText style={styles.autocompleteContent}>
-                            {item.name}
-                          </CustomText>
-                        </TouchableOpacity>
-                      )}
-                    />
-                    <View style={GlobalStyle.auth_line} />
-
-                    <View style={{position: 'absolute', top: 40, left: 0, width: 14, height: 14}}>
-                      <SvgXml width='100%' height='100%' xml={Icon_Search_White} />
-                    </View>
-                  </View>
-
                   <View style={{width:'100%', marginTop: 22}}>
                     <CustomText style={styles.info_title}>About Me</CustomText>
                     <CustomTextInput
@@ -420,15 +371,13 @@ export const BecomeAHostScreen: React.FC = () => {
 
                   <View style={{width:'100%', marginTop: 22}}>
                     <CustomText style={styles.info_title}>Location</CustomText>
-                    <View style={{marginLeft: -10, width: viewportWidth - 28, height: showKeyboard == false ? 45 : (Platform.OS == 'ios' ? 300 : 200)}}>
+                    <View style={{marginLeft: -10, width: viewportWidth - 28, height: showKeyboard == false ? 45 : 230}}>
                       <GooglePlacesAutocomplete
-                        ref={ref => {
-                          googleAddressRef = ref; 
-                        }}
                         placeholder='Location'
                         onPress={(data, details = null) => {
                           selectAddress(data, details);
                         }}
+                        ref={ref => googleAddressRef = ref}
                         textInputProps={{
                           placeholder: 'Location',
                           placeholderTextColor: COLOR.alphaWhiteColor50,

@@ -41,10 +41,10 @@ interface props {
 
 export const FiltersView: React.FC<props> = (props: props) => {
 
-  var isInit = true;
-  var keyboardDidShowListener: EmitterSubscription;
-  var keyboardDidHideListener: EmitterSubscription;
-  var googleAddressRef: GooglePlacesAutocompleteRef | null;
+  let isInit = true;
+  let keyboardDidShowListener: EmitterSubscription;
+  let keyboardDidHideListener: EmitterSubscription;
+  let googleAddressRef: GooglePlacesAutocompleteRef | null;
 
   const filter = useGlobalState('filter');
 
@@ -72,14 +72,18 @@ export const FiltersView: React.FC<props> = (props: props) => {
   }, []);
 
   const selectAddress = (address: GooglePlaceData, details: GooglePlaceDetail | null) => {
-    googleAddressRef?.setAddressText(address.description.replace(', USA', ''));
+    if (googleAddressRef != null) {
+      googleAddressRef.setAddressText(address.description.replace(', USA', ''));
+    }
   };
 
   useEffect(() => {
     // console.log('mounted');
     keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', keyboardDidShow);
     keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', keyboardDidHide);
-    googleAddressRef?.setAddressText(filter.location);
+    if (googleAddressRef != null) {
+      googleAddressRef.setAddressText(filter.location);
+    }
   }, []);
 
   useEffect(() => {
@@ -87,7 +91,10 @@ export const FiltersView: React.FC<props> = (props: props) => {
   });
 
   const onFilterAction = () => {
-    let searchAddress = googleAddressRef?.getAddressText();
+    let searchAddress = '';
+    if (googleAddressRef != null) {
+      searchAddress = googleAddressRef.getAddressText();
+    }
     if (searchAddress == null || searchAddress == undefined) {
       searchAddress = '';
     }

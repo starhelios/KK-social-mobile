@@ -82,7 +82,7 @@ export const useUsers = () => {
       };
     }
 
-    // var body = new FormData();
+    // let body = new FormData();
     // body.append('email', email);
     // body.append('fullname', fullname);
     // body.append('categoryName', categoryName);

@@ -19,7 +19,7 @@ export const useStripePaymentIntents = () => {
   const createPaymentIntent = async (amount: number, currency: string = 'usd', payment_method_type: string = 'card'): Promise<any> => {
     const url = `${paymentIntentUrl}`;
     
-    var body = new URLSearchParams();
+    let body = new URLSearchParams();
     body.append('amount', amount.toString());
     body.append('currency', currency);
     body.append('payment_method_types[]', payment_method_type);
@@ -46,7 +46,7 @@ export const useStripePaymentIntents = () => {
   const confirmPaymentIntent = async (id: string, receipt_email: string, payment_method: string = 'pm_card_visa'): Promise<any> => {
     const url = `${paymentIntentUrl}/${id}/confirm`;
     
-    var body = new URLSearchParams();
+    let body = new URLSearchParams();
     body.append('payment_method', payment_method);
     body.append('receipt_email', receipt_email);
 
@@ -66,7 +66,7 @@ export const useStripePaymentIntents = () => {
   const cancelPaymentIntent = async (id: string, payment_method: string = 'pm_card_visa'): Promise<any> => {
     const url = `${paymentIntentUrl}/${id}/cancel`;
     
-    var body = new FormData();
+    let body = new FormData();
     body.append('payment_method', payment_method);
 
     try {

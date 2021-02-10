@@ -72,10 +72,10 @@ export const HostAnExperienceScreen: React.FC = () => {
     const regex = new RegExp(`${query}`, 'i');
     return allCategoryList.filter(category => category.name.search(regex) >= 0);
   }
-  var fetchingData = false;
+  let fetchingData = false;
 
   useEffect(() => {
-    var images: string[] = [];
+    let images: string[] = [];
     images.push('');
     images.push('');
     images.push('');

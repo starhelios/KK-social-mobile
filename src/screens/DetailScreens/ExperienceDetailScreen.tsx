@@ -60,7 +60,7 @@ export const ExperienceDetailScreen: React.FC = ({route}) => {
   const experienceDetail: IExperienceDetail = route.params.experienceDetail;
   const hostDetail: IHostDetail = route.params.hostDetail;
   const host: IUser = hostDetail.user;
-  var scrollViewRef: ScrollView | null;
+  let scrollViewRef: ScrollView | null;
 
   useEffect(() => {
     loadExperienceList();
@@ -73,7 +73,7 @@ export const ExperienceDetailScreen: React.FC = ({route}) => {
     // }).catch(() => {
     // });
 
-    var experiences: IExperience[] = [];
+    let experiences: IExperience[] = [];
     for (let i = 0; i < experienceList.length; i++) {
       let experience = experienceList[i];
       if (experience.userId == host.id) {
@@ -145,9 +145,7 @@ export const ExperienceDetailScreen: React.FC = ({route}) => {
 
           <View style={styles.content_container}>
             <CustomText style={styles.title}>{experienceDetail.title}</CustomText>
-
             <CustomText style={styles.location}>{experienceDetail.location == undefined || experienceDetail.location == '' ? host.location : experienceDetail.location}</CustomText>
-            <CustomText style={styles.location}>{experienceDetail.location}</CustomText>
             <View style={{...GlobalStyle.auth_line, backgroundColor: COLOR.alphaBlackColor20, marginTop: 22}} />
             
             <View style={{marginTop: 12, flexDirection: 'row'}}>

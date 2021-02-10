@@ -41,7 +41,7 @@ export const ExperienceDetailHostScreen: React.FC = ({route}) => {
   const [currentPage, setCurrentPage] = useState<number>(0);
 
   const experience: IExperience = route.params.experience;
-  var scrollViewRef: FlatList<string> | null;
+  let scrollViewRef: FlatList<string> | null;
 
   useEffect(() => {
   }, [])

@@ -19,6 +19,7 @@ import { ResetPasswordScreen } from './src/screens/AuthScreens/ResetPasswordScre
 import { PaymentOptionsScreen } from './src/screens/ProfileScreens/PaymentOptionsScreen';
 import { AddPaymentMethodScreen } from './src/screens/ProfileScreens/AddPaymentMethodScreen';
 import { WithdrawalScreen } from './src/screens/ProfileScreens/WithdrawalScreen';
+import { AddBankAccountScreen } from './src/screens/ProfileScreens/AddBankAccountScreen';
 import { ExperiencesScreen } from './src/screens/ProfileScreens/ExperiencesScreen';
 import { EditProfileScreen } from './src/screens/ProfileScreens/EditProfileScreen';
 import { BecomeAHostScreen } from './src/screens/ProfileScreens/BecomeAHostScreen';
@@ -59,6 +60,7 @@ const App = () => {
           <Stack.Screen name="PaymentOptions" component={PaymentOptionsScreen} />
           <Stack.Screen name="AddPaymentMethod" component={AddPaymentMethodScreen} />
           <Stack.Screen name="Withdrawal" component={WithdrawalScreen} />
+          <Stack.Screen name="AddBankAccount" component={AddBankAccountScreen} />
           <Stack.Screen name="Experiences" component={ExperiencesScreen} />
           <Stack.Screen name="EditProfile" component={EditProfileScreen} />
           <Stack.Screen name="BecomeAHost" component={BecomeAHostScreen} />

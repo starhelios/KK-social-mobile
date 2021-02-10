@@ -87,7 +87,7 @@ export const ConfirmedBookingDetailScreen: React.FC = ({route}) => {
           </View>
 
           <View style={styles.bottom_container}>
-            <CustomText style={styles.bottom_content_title}>{booking.host?.fullname + ' Paid'}</CustomText>
+            <CustomText style={styles.bottom_content_title}>{booking.host != null ? `${booking.host.fullname} Paid` : ''}</CustomText>
             <CustomText style={styles.bottom_content_info}>{'$ ' + booking.paid}</CustomText>
             <View style={{...GlobalStyle.auth_line, marginTop: 22}} />
             <CustomText style={styles.bottom_content_title}>You Received</CustomText>
