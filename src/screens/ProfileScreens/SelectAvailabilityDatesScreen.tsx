@@ -139,11 +139,22 @@ export const SelectAvailabilityDatesScreen: React.FC = ({route}) => {
   
       let avaibilityDates: IAvailableDateForCreate[] = [];
       while (currentTime <= endDateTime) {
-        let avaibilityDate: IAvailableDateForCreate = {
-          day: convertStringToDateFormat(new Date(currentTime).toLocaleDateString(), 'MMMM D, YYYY'), 
-          startTime: startTimeString, 
-          endTime: endTimeString};
-        avaibilityDates.push(avaibilityDate);
+        let bookingCurrentTime = new Date(startTime);
+        
+        while (bookingCurrentTime < endTime) {
+          let bookingStartTime = toLocalTimeString(bookingCurrentTime);
+          bookingCurrentTime.setHours(bookingCurrentTime.getHours(), bookingCurrentTime.getMinutes() + parseInt(duration) , 0 , 0);
+          if (bookingCurrentTime > endTime) {
+            break;
+          }
+          let bookingEndTime = toLocalTimeString(bookingCurrentTime);
+          let avaibilityDate: IAvailableDateForCreate = {
+            day: convertStringToDateFormat(new Date(currentTime).toLocaleDateString(), 'MMMM D, YYYY'), 
+            startTime: bookingStartTime, 
+            endTime: bookingEndTime};
+          avaibilityDates.push(avaibilityDate);
+        }
+
         currentTime += 1000 * 60 * 60 * 24;
       }
       setDateAvaibility(avaibilityDates);

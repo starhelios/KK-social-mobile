@@ -65,9 +65,6 @@ export const useExperiences = () => {
       specificExperiences,
       location,
     }
-    console.log(url);
-    console.log(images);
-    console.log(body);
     try {
       const { data } = await axios.post<IApiSuccess>(url, body, API_CONFIG);
       const result: IExperience = data.payload;
@@ -75,7 +72,6 @@ export const useExperiences = () => {
     } catch (err) {
       const apiError = handleError(err);
       if (apiError) {
-        console.log(apiError)
         return Promise.reject(apiError);
       } else {
         return Promise.reject(null);

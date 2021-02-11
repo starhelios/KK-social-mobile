@@ -241,6 +241,14 @@ export const HostAnExperienceScreen: React.FC = () => {
     });
   }
 
+  const onSelectDuration = () => {
+    if (duration == '' || parseInt(duration) == 0) {
+      Alert.alert('', ERROR_MESSAGE.EMPTY_EXPERIENCE_DURRATION);
+      return;
+    }
+    navigate('SelectAvailabilityDates', {dateAvaibilityInfo: dateAvaibilityInfo, setDateAvaibilityInfo: setDateAvaibilityInfo, duration: duration});
+  }
+
   return (
     <Container style={{...styles.background, backgroundColor: COLOR.whiteColor}}>
       <SafeAreaView style={styles.safe_area}>
@@ -369,7 +377,7 @@ export const HostAnExperienceScreen: React.FC = () => {
                   </View>
                 </TouchableWithoutFeedback>
 
-                <TouchableWithoutFeedback onPress={() => navigate('SelectAvailabilityDates', {dateAvaibilityInfo: dateAvaibilityInfo, setDateAvaibilityInfo: setDateAvaibilityInfo, duration: duration}) }>
+                <TouchableWithoutFeedback onPress={onSelectDuration}>
                   <View style={{height: 44, marginLeft: 48, marginRight: 48, marginTop: 22}}>
                     <ColorButton title={'Select Dates of Availability'} backgroundColor={COLOR.alphaBlackColor20} color={COLOR.systemBlackColor} />
                   </View>
