@@ -60,13 +60,13 @@ export const SelectAvailabilityDatesScreen: React.FC = ({route}) => {
       onEditActiveDates();
     }
 
-    if (duration != '') {
-      let durationValue = parseInt(duration);
-      let tempEndDate = new Date(startTime);
-      tempEndDate.setHours(tempEndDate.getHours(), tempEndDate.getMinutes() + durationValue , 0 , 0);
-      setEndTime(tempEndDate);
-      setEndTimeString(toLocalTimeString(tempEndDate));
-    }
+    // if (duration != '') {
+    //   let durationValue = parseInt(duration);
+    //   let tempEndDate = new Date(startTime);
+    //   tempEndDate.setHours(tempEndDate.getHours(), tempEndDate.getMinutes() + durationValue , 0 , 0);
+    //   setEndTime(tempEndDate);
+    //   setEndTimeString(toLocalTimeString(tempEndDate));
+    // }
   }, [])
 
   const onEditActiveDates = () => {
@@ -98,16 +98,16 @@ export const SelectAvailabilityDatesScreen: React.FC = ({route}) => {
       setStartTime(selectedDate);
       setStartTimeString(toLocalTimeString(selectedDate));
 
-      if (duration != '') {
-        let durationValue = parseInt(duration);
-        let tempEndDate = new Date(selectedDate);
-        tempEndDate.setHours(tempEndDate.getHours(), tempEndDate.getMinutes() + durationValue , 0 , 0);
-        setEndTime(tempEndDate);
-        setEndTimeString(toLocalTimeString(tempEndDate));
-      } else {
-        setEndTime(selectedDate);
-        setEndTimeString(toLocalTimeString(selectedDate));
-      }
+      // if (duration != '') {
+      //   let durationValue = parseInt(duration);
+      //   let tempEndDate = new Date(selectedDate);
+      //   tempEndDate.setHours(tempEndDate.getHours(), tempEndDate.getMinutes() + durationValue , 0 , 0);
+      //   setEndTime(tempEndDate);
+      //   setEndTimeString(toLocalTimeString(tempEndDate));
+      // } else {
+      //   setEndTime(selectedDate);
+      //   setEndTimeString(toLocalTimeString(selectedDate));
+      // }
     }    
   };
 
@@ -124,7 +124,7 @@ export const SelectAvailabilityDatesScreen: React.FC = ({route}) => {
   const onConfirmTime = () => {
     let msDiff = endTime.getTime() - startTime.getTime();
     let minutes = Math.round(msDiff / (1000 * 60));
-    if (minutes <= 0) {
+    if (minutes < parseInt(duration)) {
       Alert.alert('', ERROR_MESSAGE.INVALID_EXPERIENCE_END_TIME);
       return;
     }
