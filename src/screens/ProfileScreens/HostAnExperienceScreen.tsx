@@ -38,7 +38,7 @@ import { ColorButton } from '../../components/Button';
 import { useDispatch, useGlobalState } from '../../redux/Store';
 import { ICategory, IDateAvailabilityInfo, IExperience, IUser } from '../../interfaces/app';
 import { ExperienceImageView } from '../../components/View';
-import { useExperiences } from '../../hooks';
+import { useCategories, useExperiences } from '../../hooks';
 import { ActionType } from '../../redux/Reducer';
 import GlobalStyle from '../../styles/global';
 
@@ -47,7 +47,8 @@ export const HostAnExperienceScreen: React.FC = () => {
 
   const dispatch = useDispatch();
   const { navigate, goBack } = useNavigation();
-  const { createExperience } = useExperiences();
+  const { createExperience, getExperienceList } = useExperiences();
+  const { getCategoryList } = useCategories();
 
   const [imageList, setImageList] = useState<string[]>([]);
   const [title, setTitle] = useState<string>('');
@@ -130,15 +131,10 @@ export const HostAnExperienceScreen: React.FC = () => {
       .then(async (result: IExperience) => {
         fetchingData = false;
         setUploading(false);
-        dispatch({
-          type: ActionType.SET_NEED_RELOAD_DATA,
-          payload: true,
-        })
-        Alert.alert('',
-          SUCCESS_MESSAGE.CREATE_EXPERIENCE_SUCCESS,
-          [
-            { text: "OK", onPress: () => goBack() }
-          ],
+        loadCategoryList();
+        loadExperienceList();
+        Alert.alert('', SUCCESS_MESSAGE.CREATE_EXPERIENCE_SUCCESS,
+          [ { text: "OK", onPress: () => goBack() } ],
           { cancelable: false }
         );
       }).catch(() => {
@@ -221,6 +217,27 @@ export const HostAnExperienceScreen: React.FC = () => {
         : image.path.replace('file://', ''));
     })
     .catch((e) => {
+    });
+  }
+
+  async function loadCategoryList() {
+    await getCategoryList('')
+    .then(async (result: Promise<ICategory[]>) => {
+      dispatch({
+        type: ActionType.SET_CATEGORY_LIST,
+        payload: (await result),
+      })
+    }).catch(() => {
+    });
+  }
+
+  async function loadExperienceList() {
+    await getExperienceList()
+    .then(async (result: Promise<IExperience[]>) => {
+      dispatch({
+        type: ActionType.SET_EXPERIENCE_LIST,
+        payload: await result,
+      });
     });
   }
 

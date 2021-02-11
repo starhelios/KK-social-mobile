@@ -17,7 +17,6 @@ export enum ActionType {
   SET_HOST_LIST = 'SET_HOST_LIST',
   SET_CATEGORY_LIST = 'SET_CATEGORY_LIST',
   SET_SELECT_CARD = 'SET_SELECT_CARD',
-  SET_NEED_RELOAD_DATA = 'SET_NEED_RELOAD_DATA',
   SET_NEED_RELOAD_RESERVERD_BOOKINGS = 'SET_NEED_RELOAD_RESERVERD_BOOKINGS',
 }
 
@@ -68,9 +67,6 @@ const Reducer = (state: State, action: Action): any => {
 
     case ActionType.SET_SELECT_CARD:
       return {...state, selectedCard: payload};
-
-    case ActionType.SET_NEED_RELOAD_DATA:
-      return {...state, needReloadData: payload};
 
     case ActionType.SET_NEED_RELOAD_RESERVERD_BOOKINGS:
       return {...state, needReloadReservedBookings: payload};

@@ -39,6 +39,8 @@ export const HomeScreen: React.FC = () => {
   const dispatch = useDispatch();
   const filter = useGlobalState('filter');
   const needReloadData = useGlobalState('needReloadData');
+  const popularExperienceList = useGlobalState('experienceList');
+  const categoryList = useGlobalState('categoryList');
 
   const { getCategoryList } = useCategories();
   const { getExperienceList } = useExperiences();
@@ -46,8 +48,6 @@ export const HomeScreen: React.FC = () => {
   const { searchHome } = useSearch();
 
   const [searchText, setSearchText] = useState<string>('');
-  const [categoryList, setCategoryList] = useState<ICategory[]>([]);
-  const [popularExperienceList, setPopularExperienceList] = useState<IExperience[]>([]);
   const [experienceList, setExperienceList] = useState<IExperience[]>([]);
   const [popularHostList, setPopularHostList] = useState<IUser[]>([]);
   const [hostList, setHostList] = useState<IUser[]>([]);
@@ -62,26 +62,12 @@ export const HomeScreen: React.FC = () => {
   const [searching, setSearching] = useState<boolean>(false);
   const [filtering, setFiltering] = useState<boolean>(false);
 
-
+  
   useEffect(() => {
     loadCategoryList();
     loadExperienceList();
     loadHostList();
   }, [API_CONFIG])
-
-  useEffect(() => {
-    if (needReloadData == false) {
-      return;
-    }
-    dispatch({
-      type: ActionType.SET_NEED_RELOAD_DATA,
-      payload: false,
-    });
-
-    loadCategoryList();
-    loadExperienceList();
-    loadHostList();
-  }, [needReloadData])
 
   useEffect(() => {
     onSearch();
@@ -90,7 +76,6 @@ export const HomeScreen: React.FC = () => {
   async function loadCategoryList() {
     await getCategoryList('')
     .then(async (result: Promise<ICategory[]>) => {
-      setCategoryList(await result);
       dispatch({
         type: ActionType.SET_CATEGORY_LIST,
         payload: (await result),
@@ -103,7 +88,6 @@ export const HomeScreen: React.FC = () => {
     setFetchingExperienceList(true);
     await getExperienceList()
     .then(async (result: Promise<IExperience[]>) => {
-      setPopularExperienceList(await result);
       dispatch({
         type: ActionType.SET_EXPERIENCE_LIST,
         payload: await result,
@@ -317,7 +301,7 @@ export const HomeScreen: React.FC = () => {
             horizontal={true}
             data={filtering == false ? popularExperienceList : experienceList}
             keyExtractor={(item, index) => index.toString()}
-            renderItem={({item}) => <ExperienceView experience={item} white_color={true} onFetchingData={setFetchingData} />}
+            renderItem={({item}) => <ExperienceView experience={item} white_color={true} onFetchingData={setFetchingData} viewWidth={154} />}
           />
 
           <CustomText style={styles.list_title}>

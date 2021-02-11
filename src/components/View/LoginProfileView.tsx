@@ -144,11 +144,20 @@ export const LoginProfileView: React.FC = () => {
                   <TitleArrowButton title={''} name={'Become a Host'} showArrow={true} white_color={true} />
                 </View>
               </TouchableWithoutFeedback>
-            : <TouchableWithoutFeedback onPress={() => navigate('HostAnExperience') }>
-                <View style={{width:'100%', marginTop: 22}}>
-                  <TitleArrowButton title={''} name={'Host An Experience'} showArrow={true} white_color={true} />
-                </View>
-              </TouchableWithoutFeedback>
+              
+            : <View>
+                <TouchableWithoutFeedback onPress={() => navigate('HostAnExperience') }>
+                  <View style={{width:'100%', marginTop: 22}}>
+                    <TitleArrowButton title={''} name={'Host An Experience'} showArrow={true} white_color={true} />
+                  </View>
+                </TouchableWithoutFeedback>
+
+                <TouchableWithoutFeedback onPress={() => navigate('ExperiencesHostedByMe') }>
+                  <View style={{width:'100%', marginTop: 22}}>
+                    <TitleArrowButton title={''} name={'Experiences Hosted by Me'} showArrow={true} white_color={true} />
+                  </View>
+                </TouchableWithoutFeedback>
+              </View> 
           }
 
           <TouchableWithoutFeedback onPress={() => navigate('ConfirmedBookings')}>

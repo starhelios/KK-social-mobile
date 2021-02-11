@@ -26,6 +26,7 @@ import { useExperiences, useHosts } from '../../hooks';
 interface props {
   experience: IExperience;
   white_color: boolean;
+  viewWidth: number;
   onFetchingData: (fetching: boolean) => void;
 }
 
@@ -33,6 +34,7 @@ export const ExperienceView: React.FC<props> = (props: props) => {
 
   const experience: IExperience = props.experience;
   const white_color: boolean = props.white_color;
+  const viewWidth: number = props.viewWidth;
 
   const { navigate } = useNavigation();
   const { getExperienceDetail } = useExperiences();
@@ -62,7 +64,7 @@ export const ExperienceView: React.FC<props> = (props: props) => {
   
   return (
     <TouchableWithoutFeedback onPress={ goExperienceDetailScreen }>
-      <View style={styles.container}>
+      <View style={{...styles.container, width: viewWidth}}>
         <Image
           style={styles.image}
           source={experience.images.length > 0 ? {uri: experience.images[0]} : Img_Experience} />

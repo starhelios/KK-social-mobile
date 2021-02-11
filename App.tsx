@@ -24,6 +24,7 @@ import { ExperiencesScreen } from './src/screens/ProfileScreens/ExperiencesScree
 import { EditProfileScreen } from './src/screens/ProfileScreens/EditProfileScreen';
 import { BecomeAHostScreen } from './src/screens/ProfileScreens/BecomeAHostScreen';
 import { HostAnExperienceScreen } from './src/screens/ProfileScreens/HostAnExperienceScreen';
+import { ExperiencesHostedByMeScreen } from './src/screens/ProfileScreens/ExperiencesHostedByMeScreen';
 import { SelectAvailabilityDatesScreen } from './src/screens/ProfileScreens/SelectAvailabilityDatesScreen';
 import { ConfirmedBookingsScreen } from './src/screens/ProfileScreens/ConfirmedBookingsScreen';
 import { ConfirmedBookingDetailScreen } from './src/screens/DetailScreens/ConfirmedBookingDetailScreen';
@@ -65,6 +66,7 @@ const App = () => {
           <Stack.Screen name="EditProfile" component={EditProfileScreen} />
           <Stack.Screen name="BecomeAHost" component={BecomeAHostScreen} />
           <Stack.Screen name="HostAnExperience" component={HostAnExperienceScreen} />
+          <Stack.Screen name="ExperiencesHostedByMe" component={ExperiencesHostedByMeScreen} />
           <Stack.Screen name="SelectAvailabilityDates" component={SelectAvailabilityDatesScreen} />
           <Stack.Screen name="ConfirmedBookings" component={ConfirmedBookingsScreen} />
           <Stack.Screen name="ConfirmedBookingDetail" component={ConfirmedBookingDetailScreen} />
