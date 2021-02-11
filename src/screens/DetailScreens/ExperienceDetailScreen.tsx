@@ -198,7 +198,7 @@ export const ExperienceDetailScreen: React.FC = ({route}) => {
             horizontal={true}
             data={hostExperienceList}
             keyExtractor={(item, index) => index.toString()}
-            renderItem={({item}) => <ExperienceView experience={item} white_color={false} onFetchingData={setFetchingData} />}
+            renderItem={({item}) => <ExperienceView experience={item} white_color={false} onFetchingData={setFetchingData} viewWidth={154} />}
           />
         </ScrollView>
 
