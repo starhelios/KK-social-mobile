@@ -124,7 +124,7 @@ export const SelectAvailabilityDatesScreen: React.FC = ({route}) => {
   const onConfirmTime = () => {
     let msDiff = endTime.getTime() - startTime.getTime();
     let minutes = Math.round(msDiff / (1000 * 60));
-    if (minutes <= parseInt(duration)) {
+    if (minutes < parseInt(duration)) {
       Alert.alert('', ERROR_MESSAGE.INVALID_EXPERIENCE_END_TIME);
       return;
     }
