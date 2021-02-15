@@ -240,7 +240,7 @@ export const EditProfileScreen: React.FC = () => {
 
                   { profile.isHost == true &&
                     <View>
-                      <View style={{width:'100%', marginTop: 22, zIndex: 100}}>
+                      {/* <View style={{width:'100%', marginTop: 22, zIndex: 100}}>
                         <CustomText style={styles.info_title}>Category</CustomText>
                         <Autocomplete
                           autoCapitalize="none"
@@ -272,7 +272,7 @@ export const EditProfileScreen: React.FC = () => {
                         <View style={{position: 'absolute', top: 40, left: 0, width: 14, height: 14}}>
                           <SvgXml width='100%' height='100%' xml={Icon_Search_White} />
                         </View>
-                      </View>
+                      </View> */}
 
                       <View style={{width:'100%', marginTop: 22}}>
                         <CustomText style={styles.info_title}>About Me</CustomText>
@@ -473,10 +473,11 @@ export const EditProfileScreen: React.FC = () => {
         locationString = '';
       }
       location = locationString;
-      if (category == '') {
-        Alert.alert('', ERROR_MESSAGE.EMPTY_CATEGORY);
-        return;
-      } else if (aboutMe == '') {
+      // if (category == '') {
+      //   Alert.alert('', ERROR_MESSAGE.EMPTY_CATEGORY);
+      //   return;
+      // } else 
+      if (aboutMe == '') {
         Alert.alert('', ERROR_MESSAGE.EMPTY_ABOUTME);
         return;
       } else if (location == '') {
@@ -515,7 +516,7 @@ export const EditProfileScreen: React.FC = () => {
   }
 
   function saveProfile(avatarUrl: string, location: string) {
-    updateUserInformation(profile.id, emailAddress, fullName, birthday, aboutMe, location, category, avatarUrl, profile.isHost)
+    updateUserInformation(profile.id, emailAddress, fullName, birthday, aboutMe, location, category, avatarUrl, profile.isHost, profile.zoomAccessToken)
     .then(async (result: Promise<IUser>) => {
       setUploading(false);
       fetchingData = false;

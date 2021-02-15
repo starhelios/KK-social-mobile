@@ -45,16 +45,13 @@ export const BookingView: React.FC<props> = (props: props) => {
     const userRole = getUserZoomRole(booking.usersGoing);
     await buildBooking(userInfo.id, booking.id, userRole)
     .then(async (result: Promise<string>) => {
-      console.log(result)
       const base64Url = await result;
       // const base64Url = Buffer.from(await result, 'utf-8').toString('base64');
-      console.log(base64Url)
       const buildUrl = `https://kloutkast-zoom.herokuapp.com/${base64Url}`;
-      console.log(buildUrl)
       navigate('JoinBooking', {zoomUrl: buildUrl});
     })
-    .catch(() => {
-
+    .catch(async (error: Promise<string>) => {
+      Alert.alert('', await error);
     })
   }
 

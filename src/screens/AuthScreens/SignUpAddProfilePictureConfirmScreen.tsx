@@ -58,7 +58,7 @@ export const SignUpAddProfilePictureConfirmScreen: React.FC = ({route}) => {
         .child(`${filename}.jpg`)
         .getDownloadURL()
         .then((url) => {
-          updateUserInformation(userInfo.id, userInfo.email, userInfo.fullname, '', '', '', '', url, false)
+          updateUserInformation(userInfo.id, userInfo.email, userInfo.fullname, '', '', '', '', url, false, '')
           .then(async (result: Promise<IUser>) => {
             setUploading(false);
             setLoginUser(await result);

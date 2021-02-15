@@ -54,6 +54,7 @@ export const useUsers = () => {
     categoryName: string,
     avatarUrl: string,
     isHost: boolean,
+    zoomAccessToken: string,
   ): Promise<any> => {
     const url = API_ENDPOINT.USERS + '/' + userId;
     let body = null;
@@ -67,6 +68,7 @@ export const useUsers = () => {
         location,
         categoryName,
         isHost,
+        zoomAccessToken,
       };
     } else {
       body = {
@@ -79,32 +81,28 @@ export const useUsers = () => {
         categoryName,
         avatarUrl,
         isHost,
+        zoomAccessToken,
       };
     }
 
-    // let body = new FormData();
-    // body.append('email', email);
-    // body.append('fullname', fullname);
-    // body.append('categoryName', categoryName);
-    // body.append('aboutMe', aboutMe);
-    // body.append('location', location);
-    // body.append('dateOfBirth', dateOfBirth);
-    // body.append('isHost', isHost);
-    // body.append('avatarUrl', avatarUrl);
-
+    console.log(url);
+    console.log(body);
     try {
       const { data } = await axios.patch<IApiSuccess>(url, body, API_CONFIG);
       const result: IUser = data.payload;
+      console.log(data);
       return Promise.resolve(result);
     } catch (err) {
       const apiError = handleError(err);
       if (apiError) {
+        console.log(apiError);
         return Promise.reject(apiError);
       } else {
         return Promise.reject(null);
       }
     }
   };
+
 
   return { getUserList, getUserInformation, deleteUser, updateUserInformation };
 };

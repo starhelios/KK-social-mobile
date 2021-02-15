@@ -24,32 +24,44 @@ import {
   MARGIN_TOP,
   SUCCESS_MESSAGE,
   viewportWidth,
-  ZOOM_INTEGRATION_LINK,
+  ZOOM_INTEGRATION_REDIRECT_URL,
+  ZOOM_INTEGRATION_URL,
 } from '../../constants';
 import { ColorButton } from '../../components/Button';
 import { IBank } from '../../interfaces/app';
+import { useUsers } from '../../hooks';
+import { useGlobalState } from '../../redux/Store';
 
 
 export const ZoomIntegrationScreen: React.FC = () => {
 
+  const profile = useGlobalState('userInfo');
+
   const { goBack } = useNavigation();
+  const { updateUserInformation } = useUsers();
 
   const [bankList, setBankList] = useState<IBank[]>([]);
   const [zoomIntegrationUrl, setZoomIntegrationUrl] = useState<string>('');
 
   useEffect(() => {
     let list: IBank[] = [];
-      setBankList(list);
+    setBankList(list);
   }, [])
 
   const onConnectZoom = async () => {
-    setZoomIntegrationUrl(ZOOM_INTEGRATION_LINK);
+    setZoomIntegrationUrl(ZOOM_INTEGRATION_URL);
   }
 
   const handleWebViewNavigationStateChange = (newNavState: WebViewNavigation) => {
-    if (newNavState.url.includes('https://kloutkast.herokuapp.com') == true) {
+    console.log(newNavState.url);
+    if (newNavState.url.length > ZOOM_INTEGRATION_REDIRECT_URL.length && newNavState.url.substring(0, ZOOM_INTEGRATION_REDIRECT_URL.length) == ZOOM_INTEGRATION_REDIRECT_URL) {
+      const tokenInfo = newNavState.url.split('?code=');
+      if (tokenInfo.length > 1) {
+        const token = tokenInfo[1];
+        updateUserInformation(profile.id, profile.email, profile.fullname, profile.dateOfBirth, profile.aboutMe, profile.location, profile.categoryName, profile.avatarUrl, profile.isHost, token)
+      }
       setZoomIntegrationUrl('');
-      Alert.alert('', SUCCESS_MESSAGE.ADD_BANK_ACCOUNT_SUCCESS);
+      Alert.alert('', SUCCESS_MESSAGE.ZOOM_INTEGRATION_SUCCESS);
     }
   }
 
@@ -86,7 +98,7 @@ export const ZoomIntegrationScreen: React.FC = () => {
             </TouchableWithoutFeedback>
           : <WebView
               source={{ uri: zoomIntegrationUrl }}
-              style={{width: '100%', height: '100%', flex: 1, backgroundColor: COLOR.redColor}}
+              style={{width: '100%', height: '100%', flex: 1}}
               onNavigationStateChange={handleWebViewNavigationStateChange}
             />
         }
