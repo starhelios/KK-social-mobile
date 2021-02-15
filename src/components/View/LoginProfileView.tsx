@@ -1,5 +1,6 @@
 import * as React from 'react';
 import {
+  Alert,
   Image,
   Platform,
   ScrollView,
@@ -20,6 +21,7 @@ import {
   COLOR, 
   CustomText, 
   EMAIL_LOGIN, 
+  ERROR_MESSAGE, 
   FACEBOOK_LOGIN, 
   FONT, 
   GOOGLE_LOGIN, 
@@ -149,7 +151,11 @@ export const LoginProfileView: React.FC = () => {
               </TouchableWithoutFeedback>
               
             : <View>
-                <TouchableWithoutFeedback onPress={() => navigate('HostAnExperience') }>
+                <TouchableWithoutFeedback onPress={() => {
+                  userInfo.zoomAccessToken == undefined || userInfo.zoomAccessToken == ''
+                    ? Alert.alert('', ERROR_MESSAGE.NONE_CONNECT_ZOOM_ACCOUNT)
+                    : navigate('HostAnExperience')
+                } }>
                   <View style={{width:'100%', marginTop: 22}}>
                     <TitleArrowButton title={''} name={'Host An Experience'} showArrow={true} white_color={true} />
                   </View>

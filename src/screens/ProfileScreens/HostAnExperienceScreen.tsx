@@ -137,6 +137,10 @@ export const HostAnExperienceScreen: React.FC = () => {
           [ { text: "OK", onPress: () => goBack() } ],
           { cancelable: false }
         );
+      }).catch(async (error: Promise<string>) => {
+        fetchingData = false;
+        setUploading(false);
+        Alert.alert('', await error);
       }).catch(() => {
         fetchingData = false;
         setUploading(false);
@@ -168,11 +172,13 @@ export const HostAnExperienceScreen: React.FC = () => {
           .child(`${filename}.jpg`)
           .getDownloadURL()
           .then((url) => {
+            console.log(url)
             let images = experienceImageList;
             images.push(url);
             uploadExperienceImage(images, imageIndex + 1);
           });
       } catch (e) {
+        console.log(e)
         uploadExperienceImage(experienceImageList, imageIndex + 1);
       }
     }
