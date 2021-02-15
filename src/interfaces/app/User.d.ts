@@ -14,6 +14,9 @@ export interface IUser {
 	createdAt: string,
 	stripeCustomerID: string,
 	stripeConnectID: string,
+	zoomAccessToken: string,
+	zoomRefreshToken: string,
+	zoomId: string,
 
 	experiences: [],
 	ratingsGiven: [],

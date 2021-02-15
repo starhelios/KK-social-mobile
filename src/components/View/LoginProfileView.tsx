@@ -67,6 +67,9 @@ export const LoginProfileView: React.FC = () => {
         createdAt: '',
         stripeCustomerID: '',
 	      stripeConnectID: '',
+        zoomAccessToken: '',
+        zoomRefreshToken: '',
+        zoomId: '',
 	      experiences: [],
 	      ratingsGiven: [],
 	      availableMethods: [],
@@ -169,6 +172,12 @@ export const LoginProfileView: React.FC = () => {
           <TouchableWithoutFeedback onPress={() => navigate('Withdrawal')}>
             <View style={{width:'100%', marginTop: 22}}>
               <TitleArrowButton title={''} name={'Withdrawal Options'} showArrow={true} white_color={true} />
+            </View>
+          </TouchableWithoutFeedback>
+
+          <TouchableWithoutFeedback onPress={() => navigate('ZoomIntegration')}>
+            <View style={{width:'100%', marginTop: 22}}>
+              <TitleArrowButton title={''} name={'Zoom'} showArrow={true} white_color={true} />
             </View>
           </TouchableWithoutFeedback>
 

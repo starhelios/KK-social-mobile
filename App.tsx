@@ -20,6 +20,8 @@ import { PaymentOptionsScreen } from './src/screens/ProfileScreens/PaymentOption
 import { AddPaymentMethodScreen } from './src/screens/ProfileScreens/AddPaymentMethodScreen';
 import { WithdrawalScreen } from './src/screens/ProfileScreens/WithdrawalScreen';
 import { AddBankAccountScreen } from './src/screens/ProfileScreens/AddBankAccountScreen';
+import { ZoomIntegrationScreen } from './src/screens/ProfileScreens/ZoomIntegrationScreen';
+import { JoinBookingScreen } from './src/screens/ProfileScreens/JoinBookingScreen';
 import { ExperiencesScreen } from './src/screens/ProfileScreens/ExperiencesScreen';
 import { EditProfileScreen } from './src/screens/ProfileScreens/EditProfileScreen';
 import { BecomeAHostScreen } from './src/screens/ProfileScreens/BecomeAHostScreen';
@@ -62,6 +64,8 @@ const App = () => {
           <Stack.Screen name="AddPaymentMethod" component={AddPaymentMethodScreen} />
           <Stack.Screen name="Withdrawal" component={WithdrawalScreen} />
           <Stack.Screen name="AddBankAccount" component={AddBankAccountScreen} />
+          <Stack.Screen name="ZoomIntegration" component={ZoomIntegrationScreen} />
+          <Stack.Screen name="JoinBooking" component={JoinBookingScreen} />
           <Stack.Screen name="Experiences" component={ExperiencesScreen} />
           <Stack.Screen name="EditProfile" component={EditProfileScreen} />
           <Stack.Screen name="BecomeAHost" component={BecomeAHostScreen} />

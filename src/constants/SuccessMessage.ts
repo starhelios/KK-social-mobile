@@ -6,4 +6,5 @@ export const SUCCESS_MESSAGE = {
   CREATE_EXPERIENCE_SUCCESS: 'Experience was created.',
   RESERVATION_BOOKING_SUCCESS: 'This experience was reserved.',
   ADD_BANK_ACCOUNT_SUCCESS: 'Your bank account was saved.',
+  ZOOM_INTEGRATION_SUCCESS: 'Thank you for connecting your Zoom account.',
 };
