@@ -38,7 +38,7 @@ export const ZoomIntegrationScreen: React.FC = () => {
   const profile = useGlobalState('userInfo');
 
   const { goBack } = useNavigation();
-  const { updateUserInformation } = useUsers();
+  const { updateZoomInformation } = useUsers();
 
   const [bankList, setBankList] = useState<IBank[]>([]);
   const [zoomIntegrationUrl, setZoomIntegrationUrl] = useState<string>('');
@@ -58,7 +58,7 @@ export const ZoomIntegrationScreen: React.FC = () => {
       const tokenInfo = newNavState.url.split('?code=');
       if (tokenInfo.length > 1) {
         const token = tokenInfo[1];
-        updateUserInformation(profile.id, profile.email, profile.fullname, profile.dateOfBirth, profile.aboutMe, profile.location, profile.categoryName, profile.avatarUrl, profile.isHost, token)
+        updateZoomInformation(profile.id, profile.email, token)
       }
       setZoomIntegrationUrl('');
       Alert.alert('', SUCCESS_MESSAGE.ZOOM_INTEGRATION_SUCCESS);

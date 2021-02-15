@@ -72,7 +72,7 @@ export const useExperiences = () => {
     } catch (err) {
       const apiError = handleError(err);
       if (apiError) {
-        return Promise.reject(apiError);
+        return Promise.reject(apiError.error.message);
       } else {
         return Promise.reject(null);
       }

@@ -50,4 +50,5 @@ export const ERROR_MESSAGE = {
   EMPTY_LOCATION: 'Please input location.',
 
   PAYMENT_FAIL: 'Something went wrong while getting payment.',
+  NONE_CONNECT_ZOOM_ACCOUNT: 'Please connect your zoom account.',
 };

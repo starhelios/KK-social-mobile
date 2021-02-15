@@ -256,7 +256,7 @@ export const BecomeAHostScreen: React.FC = () => {
   }
 
   const saveProfile = (avatarUrl: string, location: string) => {
-    updateUserInformation(profile.id, emailAddress, fullName, birthday, aboutMe, location, '', avatarUrl, true, profile.zoomAccessToken)
+    updateUserInformation(profile.id, emailAddress, fullName, birthday, aboutMe, location, '', avatarUrl, true)
     .then(async (result: Promise<IUser>) => {
       fetchingData = false;
       setUploading(false);

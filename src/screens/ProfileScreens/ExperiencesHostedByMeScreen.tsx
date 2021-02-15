@@ -6,6 +6,7 @@ import {
   Image,
   TouchableWithoutFeedback,
   FlatList,
+  Alert,
 } from 'react-native';
 import { Container } from 'native-base';
 import { useEffect, useState } from 'react';
@@ -16,6 +17,7 @@ import { SvgXml } from 'react-native-svg';
 import { 
   COLOR, 
   CustomText, 
+  ERROR_MESSAGE, 
   FONT, 
   Icon_Back, 
   Img_Auth_Background,
@@ -77,7 +79,11 @@ export const ExperiencesHostedByMeScreen: React.FC = () => {
             renderItem={({item}) => <ExperienceView experience={item} white_color={true} onFetchingData={setFetchingData} viewWidth={(viewportWidth - 64) / 2} />}
           />
 
-          <TouchableWithoutFeedback onPress={() => navigate('HostAnExperience')}>
+          <TouchableWithoutFeedback onPress={() => {
+            userInfo.zoomAccessToken == undefined || userInfo.zoomAccessToken == ''
+              ? Alert.alert('', ERROR_MESSAGE.NONE_CONNECT_ZOOM_ACCOUNT)
+              : navigate('HostAnExperience')
+          }}>
             <View style={styles.saveButton}>
               <ColorButton title={'Host an Experience'} backgroundColor={COLOR.whiteColor} color={COLOR.blackColor} />
             </View>

@@ -516,7 +516,7 @@ export const EditProfileScreen: React.FC = () => {
   }
 
   function saveProfile(avatarUrl: string, location: string) {
-    updateUserInformation(profile.id, emailAddress, fullName, birthday, aboutMe, location, category, avatarUrl, profile.isHost, profile.zoomAccessToken)
+    updateUserInformation(profile.id, emailAddress, fullName, birthday, aboutMe, location, category, avatarUrl, profile.isHost)
     .then(async (result: Promise<IUser>) => {
       setUploading(false);
       fetchingData = false;
