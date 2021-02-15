@@ -6,6 +6,7 @@ import {
   TouchableWithoutFeedback,
   View,
 } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 
 // from app
 import { 
@@ -29,18 +30,32 @@ interface props {
 
 export const BookingView: React.FC<props> = (props: props) => {
 
+  const userInfo = useGlobalState('userInfo');
   const booking: IUserBooking = props.booking;
   const completed_booking: boolean = props.completed_booking;
   
-  const { joinBooking } = useExperiences();
+  const { navigate } = useNavigation();
+  const { buildBooking } = useExperiences();
+
+  const getUserZoomRole = (itemIds: string[]) => {
+    return itemIds.indexOf(userInfo.id) > -1 ? '0': '1'
+  }
 
   const onJoinExperience = async () => {
-    // await joinBooking(userInfo.id, booking.id)
-    // .then(() => {
-    //   Alert.alert('', 'You joined this booking.');
-    // })
-    // .catch(() => {
-    // })
+    const userRole = getUserZoomRole(booking.usersGoing);
+    await buildBooking(userInfo.id, booking.id, userRole)
+    .then(async (result: Promise<string>) => {
+      console.log(result)
+      const base64Url = await result;
+      // const base64Url = Buffer.from(await result, 'utf-8').toString('base64');
+      console.log(base64Url)
+      const buildUrl = `https://kloutkast-zoom.herokuapp.com/${base64Url}`;
+      console.log(buildUrl)
+      navigate('JoinBooking', {zoomUrl: buildUrl});
+    })
+    .catch(() => {
+
+    })
   }
 
   return (

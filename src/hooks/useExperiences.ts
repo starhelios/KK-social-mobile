@@ -153,27 +153,31 @@ export const useExperiences = () => {
     }
   };
 
-  const joinBooking = async (
+  const buildBooking = async (
     userId: string,
-    id: string,
+    specificExperienceId: string,
+    userRole: string,
   ): Promise<any> => {
-    const url = API_ENDPOINT.BOOKING_JOIN + '/' + userId + '/' + id + '/';
+    const url = API_ENDPOINT.BOOKING_BUILD;
     let body = {
+      userId,
+      specificExperienceId,
+      userRole,
     };
-    // try {
-    //   const { data } = await axios.post<any>(url, body, API_CONFIG);
-    //   const result: IUser = data.payload;
-    //   setLoginUser(result);
-    //   return Promise.resolve(result);
-    // } catch (err) {
-    //   const apiError = handleError(err);
-    //   if (apiError) {
-    //     return Promise.reject(apiError);
-    //   } else {
-    //     return Promise.reject(null);
-    //   }
-    // }
+    try {
+      const { data } = await axios.post<IApiSuccess>(url, body, API_CONFIG);
+      const result: string = data.payload.experienceBuilt;
+      return Promise.resolve(result);
+    } catch (err) {
+      const apiError = handleError(err);
+      if (apiError) {
+        console.log(apiError);
+        return Promise.reject(apiError);
+      } else {
+        return Promise.reject(null);
+      }
+    }
   };
 
-  return { getExperienceList, getExperienceDetail, createExperience, filterExperiences, reserveBooking, getReservedBookingList, joinBooking };
+  return { getExperienceList, getExperienceDetail, createExperience, filterExperiences, reserveBooking, getReservedBookingList, buildBooking };
 };

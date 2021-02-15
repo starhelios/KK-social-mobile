@@ -15,7 +15,7 @@ export const googleConfigure = () => {
     loginHint: '',
     forceCodeForRefreshToken: true,
     accountName: '',
-    offlineAccess: false, 
+    offlineAccess: true, 
     webClientId: '670577491944-sf4h58m22gt1716gjl916j51uces495t.apps.googleusercontent.com',
   });
 }
@@ -65,6 +65,7 @@ export const LOADING_TIME = 1500;
 export const { width: viewportWidth, height: viewportHeight } = Dimensions.get('window');
 
 export const GOOGLE_MAP_KEY = 'AIzaSyAcHUaRR1URQlQR54ebNGeByyDR7Y6pJn4';
+export const ZOOM_INTEGRATION_LINK = 'https://zoom.us/oauth/authorize?client_id=neNtJG1EQAG2YieBwjwTg&response_type=code&redirect_uri=https%3A%2F%2Fkloutkast.herokuapp.com%2Fprofile%2Fzoom-confirmation';
 
 // Global Values
 export let API_CONFIG: AxiosRequestConfig;
