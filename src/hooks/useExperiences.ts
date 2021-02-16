@@ -187,7 +187,6 @@ export const useExperiences = () => {
     };
     try {
       const { data } = await axios.post<IApiSuccess>(url, body, API_CONFIG);
-      console.log(data);
       const result: string = data.payload;
       return Promise.resolve(result);
     } catch (err) {

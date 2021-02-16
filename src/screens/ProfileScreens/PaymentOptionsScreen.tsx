@@ -6,6 +6,7 @@ import {
   Image,
   TouchableWithoutFeedback,
   FlatList,
+  Alert,
 } from 'react-native';
 import { Container } from 'native-base';
 import { useEffect, useState } from 'react';
@@ -26,6 +27,7 @@ import { TitleArrowButton, YourCardButton } from '../../components/Button';
 import { ICardInfo, IUser } from '../../interfaces/app';
 import { useDispatch, useGlobalState } from '../../redux/Store';
 import { ActionType } from '../../redux/Reducer';
+import { usePayments } from '../../hooks';
 
 
 export const PaymentOptionsScreen: React.FC = () => {
@@ -34,6 +36,7 @@ export const PaymentOptionsScreen: React.FC = () => {
 
   const dispatch = useDispatch();
   const { navigate, goBack } = useNavigation();
+  const { deleteCard } = usePayments();
 
   const [cardList, setCardList] = useState<ICardInfo[]>(userInfo.availableMethods);
 
@@ -47,6 +50,25 @@ export const PaymentOptionsScreen: React.FC = () => {
       payload: card,
     });
     goBack();
+  }
+
+  const onDeleteCard = async (card: ICardInfo) => {
+    deleteCard(card.id)
+    .then(async (result: Promise<string>) => {
+      Alert.alert('', await result);
+      const newCardList = userInfo.availableMethods.filter((item) => {
+        return item.id !== card.id
+      })
+      setCardList(newCardList);
+      userInfo.availableMethods = newCardList;
+      dispatch({
+        type: ActionType.SET_USER_INFO,
+        payload: userInfo,
+      })
+    })
+    .catch(async (error: Promise<string>) => {
+      Alert.alert('', await error);
+    })
   }
 
   const onAddPaymentMethod = async () => {
@@ -82,7 +104,7 @@ export const PaymentOptionsScreen: React.FC = () => {
                 data={cardList}
                 bounces={false}
                 keyExtractor={(item, index) => index.toString()}
-                renderItem={({item}) => <YourCardButton card={item} onSelectCard={onSelectCard} />}
+                renderItem={({item}) => <YourCardButton card={item} onSelectCard={onSelectCard} onDeleteCard={onDeleteCard} />}
               />
             </View>
           }

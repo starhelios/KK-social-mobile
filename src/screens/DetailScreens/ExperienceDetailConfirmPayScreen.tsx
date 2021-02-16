@@ -30,7 +30,7 @@ import {
   viewportWidth,
 } from '../../constants';
 import { ColorButton, TitleArrowButton } from '../../components/Button';
-import { ISpecificExperience, IHostDetail, IUser, ICardInfo, IExperienceDetail } from '../../interfaces/app';
+import { ISpecificExperience, IHostDetail, IUser, ICardInfo, IExperienceDetail, IUserBooking } from '../../interfaces/app';
 import { useDispatch, useGlobalState } from '../../redux/Store';
 import { useExperiences, usePayments } from '../../hooks';
 import { ActionType } from '../../redux/Reducer';
@@ -46,7 +46,7 @@ export const ExperienceDetailConfirmPayScreen: React.FC = ({route}) => {
   const dispatch = useDispatch();
   const { goBack, navigate } = useNavigation();
   const { generatePaymentIntent, saveTransation } = usePayments();
-  const { reserveBooking } = useExperiences();
+  const { reserveBooking, getReservedBookingList } = useExperiences();
   const { confirmPaymentIntent } = useStripePaymentIntents();
 
   const [showSpinner, setShowSpinner] = useState<boolean>(false);
@@ -128,10 +128,15 @@ export const ExperienceDetailConfirmPayScreen: React.FC = ({route}) => {
     .then(() => {
       fetching = false;
       setShowSpinner(false);
-      dispatch({
-        type: ActionType.SET_NEED_RELOAD_RESERVERD_BOOKINGS,
-        payload: true,
-      });
+      
+      getReservedBookingList(userInfo.id)
+      .then(async (result: Promise<IUserBooking[]>) => {
+        dispatch({
+          type: ActionType.SET_RESERVED_BOOKING_LIST,
+          payload: await result,
+        })
+      })
+
       Alert.alert('', SUCCESS_MESSAGE.RESERVATION_BOOKING_SUCCESS,
         [ { text: "OK", onPress: () => goBack() } ],
         { cancelable: false }
