@@ -109,13 +109,11 @@ export const useUsers = () => {
 
     try {
       const { data } = await axios.patch<IApiSuccess>(url, body, API_CONFIG);
-      console.log(data);
       const result: IUser = data.payload;
       return Promise.resolve(result);
     } catch (err) {
       const apiError = handleError(err);
       if (apiError) {
-        console.log(apiError);
         return Promise.reject(apiError);
       } else {
         return Promise.reject(null);

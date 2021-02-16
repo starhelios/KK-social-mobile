@@ -172,13 +172,11 @@ export const HostAnExperienceScreen: React.FC = () => {
           .child(`${filename}.jpg`)
           .getDownloadURL()
           .then((url) => {
-            console.log(url)
             let images = experienceImageList;
             images.push(url);
             uploadExperienceImage(images, imageIndex + 1);
           });
       } catch (e) {
-        console.log(e)
         uploadExperienceImage(experienceImageList, imageIndex + 1);
       }
     }

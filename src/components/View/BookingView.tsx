@@ -7,7 +7,7 @@ import {
   View,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import StarRating from 'react-native-star-rating';
 
 // from app
@@ -30,6 +30,7 @@ interface props {
   completed_booking: boolean;
   isHostRating: boolean;
   booking: IUserBooking;
+  getReservedBookings: () => void;
 }
 
 export const BookingView: React.FC<props> = (props: props) => {
@@ -39,23 +40,15 @@ export const BookingView: React.FC<props> = (props: props) => {
   const isHostRating: boolean = props.isHostRating;
   const completed_booking: boolean = props.completed_booking;
   
-  const getUserRating = () => {
-    const ratingList = booking.ratings.filter((element) => {
-      return userInfo.id == element.userId;
-    })  
-    return ratingList.length > 0 ? ratingList[0].rating : 0
-  }
-
   const { navigate } = useNavigation();
   const { buildBooking, rateBooking } = useExperiences();
 
-  const [rating, setRating] = useState<number>(getUserRating());
+  const [rating, setRating] = useState<number>(0);
 
   const getUserZoomRole = (itemIds: string[]) => {
     return itemIds.indexOf(userInfo.id) > -1 ? '0': '1'
   }
 
-  
   const onJoinExperience = async () => {
     const userRole = getUserZoomRole(booking.usersGoing);
     await buildBooking(userInfo.id, booking.id, userRole)
@@ -70,11 +63,24 @@ export const BookingView: React.FC<props> = (props: props) => {
     })
   }
 
+  const getUserRating = () => {
+    if (rating != 0) {
+      return rating;
+    }
+
+    const ratingList = booking.ratings.filter((element) => {
+      return userInfo.id === element.userId;
+    })
+    const ratingValue = ratingList.length > 0 ? ratingList[0].rating : 0;
+    return ratingValue;
+  }
+
   const onRatingBook = async (rate: number) => {
     setRating(rate);
 
     await rateBooking(userInfo.id, booking.id, rate)
     .then((res) => {
+      props.getReservedBookings();
     });
   }
 
@@ -117,7 +123,7 @@ export const BookingView: React.FC<props> = (props: props) => {
                 fullStar={Img_Rating_Full}
                 starSize={35}
                 maxStars={5}
-                rating={rating}
+                rating={getUserRating()}
                 selectedStar={(rating) => onRatingBook(rating)}
               />
             </View>

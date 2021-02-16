@@ -78,6 +78,26 @@ export const usePayments = () => {
     }
   };
 
+  const deleteCard = async (
+    payment_method_id: string,
+  ): Promise<any> => {
+    const url = API_ENDPOINT.DELETE_CARD;
+    const body = { 
+      payment_method_id
+    }
+    try {
+      const { data } = await axios.post<IApiSuccess>(url, body, API_CONFIG);
+      return Promise.resolve(data.payload);
+    } catch (err) {
+      const apiError = handleError(err);
+      if (apiError) {
+        return Promise.reject(apiError.error.message);
+      } else {
+        return Promise.reject(null);
+      }
+    }
+  };
+
   const saveTransation = async (
     client_secret: string,
     id: string,
@@ -104,5 +124,5 @@ export const usePayments = () => {
     }
   };
 
-  return { generateAccountLink, generatePaymentIntent, addCard, saveTransation };
+  return { generateAccountLink, generatePaymentIntent, addCard, saveTransation, deleteCard };
 };

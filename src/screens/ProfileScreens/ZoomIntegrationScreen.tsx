@@ -53,7 +53,6 @@ export const ZoomIntegrationScreen: React.FC = () => {
   }
 
   const handleWebViewNavigationStateChange = (newNavState: WebViewNavigation) => {
-    console.log(newNavState.url);
     if (newNavState.url.length > ZOOM_INTEGRATION_REDIRECT_URL.length && newNavState.url.substring(0, ZOOM_INTEGRATION_REDIRECT_URL.length) == ZOOM_INTEGRATION_REDIRECT_URL) {
       const tokenInfo = newNavState.url.split('?code=');
       if (tokenInfo.length > 1) {

@@ -73,7 +73,7 @@ export const BookingScreen: React.FC = () => {
   }, [reservedBookingList]);
 
   const getReservedBookings = async () => {
-    getReservedBookingList(userInfo.id)
+    await getReservedBookingList(userInfo.id)
     .then(async (result: Promise<IUserBooking[]>) => {
       dispatch({
         type: ActionType.SET_RESERVED_BOOKING_LIST,
@@ -132,7 +132,7 @@ export const BookingScreen: React.FC = () => {
             horizontal={false}
             data={selectedTab == 0 ? upcomingBookingList : completedBookingList}
             keyExtractor={(item, index) => index.toString()}
-            renderItem={({item}) => <BookingView completed_booking={selectedTab == 0 ? false : true} booking={item} isHostRating={false} />}
+            renderItem={({item}) => <BookingView completed_booking={selectedTab == 0 ? false : true} booking={item} isHostRating={false} getReservedBookings={getReservedBookings} />}
           />
         }
       </SafeAreaView>
