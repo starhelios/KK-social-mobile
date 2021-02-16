@@ -166,7 +166,7 @@ export const SignUpScreen: React.FC = () => {
           </View>
         </TouchableWithoutFeedback>
         
-        <TouchableWithoutFeedback onPress={() => onCreateAccount() }>
+        <TouchableWithoutFeedback onPress={ onCreateAccount }>
           <View style={styles.bottom_button}>
             <ColorButton title={'Create Account'} backgroundColor={COLOR.whiteColor} color={COLOR.blackColor} />
           </View>

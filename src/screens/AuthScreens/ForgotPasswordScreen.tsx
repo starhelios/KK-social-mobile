@@ -41,6 +41,32 @@ export const ForgotPasswordScreen: React.FC = () => {
   const [emailAddress, setEmailAddress] = useState('');
   const [fetchingData, setFetchingData] = useState<boolean>(false);
 
+  const onForgotPassword = () => {
+    if (fetchingData == true) {
+      return;
+    } else if (emailAddress == '') {
+      Alert.alert('', ERROR_MESSAGE.EMPTY_EMAIL_ADDRESS);
+      return;
+    }
+    setFetchingData(true);
+
+    forgotPassword(emailAddress)
+    .then(async (result: Promise<IApiSuccessMessage>) => {
+      setFetchingData(false);
+      if ((await result).error == false) {
+        Alert.alert('', (await result).message);
+      } else {
+        Alert.alert('', (await result).message);
+      }
+    }).catch(async (error: Promise<IApiError>) => {
+      setFetchingData(false);
+      Alert.alert('', (await error).error.message);
+    }).catch(() => {
+      setFetchingData(false);
+      Alert.alert('', ERROR_MESSAGE.FORGOT_PASSWORD_FAIL);
+    });
+  }
+
   return (
     <Container style={styles.background}>
       
@@ -82,7 +108,7 @@ export const ForgotPasswordScreen: React.FC = () => {
           <CustomText style={styles.bottom_description}>We will send a password reset email</CustomText>
           <CustomText style={styles.bottom_description}>to the address above.</CustomText>
 
-          <TouchableWithoutFeedback onPress={() => onForgotPassword() }>
+          <TouchableWithoutFeedback onPress={ onForgotPassword }>
             <View style={styles.bottom_button}>
               <ColorButton title={'Confirm'} backgroundColor={COLOR.whiteColor} color={COLOR.blackColor} />
             </View>
@@ -97,32 +123,6 @@ export const ForgotPasswordScreen: React.FC = () => {
       />
     </Container>
   );
-
-  function onForgotPassword() {
-    if (fetchingData == true) {
-      return;
-    } else if (emailAddress == '') {
-      Alert.alert('', ERROR_MESSAGE.EMPTY_EMAIL_ADDRESS);
-      return;
-    }
-    setFetchingData(true);
-
-    forgotPassword(emailAddress)
-    .then(async (result: Promise<IApiSuccessMessage>) => {
-      setFetchingData(false);
-      if ((await result).error == false) {
-        Alert.alert('', (await result).message);
-      } else {
-        Alert.alert('', (await result).message);
-      }
-    }).catch(async (error: Promise<IApiError>) => {
-      setFetchingData(false);
-      Alert.alert('', (await error).error.message);
-    }).catch(() => {
-      setFetchingData(false);
-      Alert.alert('', ERROR_MESSAGE.FORGOT_PASSWORD_FAIL);
-    });
-  }
 };
 
 const styles = StyleSheet.create({

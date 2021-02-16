@@ -50,9 +50,50 @@ export const LogInScreen: React.FC = () => {
   const [password, setPassword] = useState('');
   const [fetchingData, setFetchingData] = useState<boolean>(false);
 
+  const onLogIn = () => {
+    if (fetchingData == true) {
+      return;
+    } else if (emailAddress == '') {
+      Alert.alert('', ERROR_MESSAGE.EMPTY_EMAIL_ADDRESS);
+      return;
+    } else if (password == '') {
+      Alert.alert('', ERROR_MESSAGE.EMPTY_PASSWORD);
+      return;
+    }
+    setFetchingData(true);
+
+    loginUser(emailAddress, password)
+    .then(async (result: Promise<boolean>) => {
+      setFetchingData(false);
+      if ((await result) == true) {
+        saveUserInfo();
+        goBack();
+      } else {
+        Alert.alert('', ERROR_MESSAGE.LOGIN_FAIL);
+      }
+    }).catch(async (error: Promise<IApiError>) => {
+      setFetchingData(false);
+      Alert.alert('', (await error).error.message);
+    }).catch(() => {
+      setFetchingData(false);
+      Alert.alert('', ERROR_MESSAGE.LOGIN_FAIL);
+    });
+  }
+
+  const saveUserInfo = async () => {
+    await AsyncStorage.setItem(LOGIN_TYPE, EMAIL_LOGIN);
+    await AsyncStorage.setItem(USER_EMAIL, emailAddress);
+    await AsyncStorage.setItem(USER_EMAIL, password);
+    AsyncStorage.getItem(IS_FIRST_LOGIN).then(async (is_first_login) => {
+      if (is_first_login != null && is_first_login == 'false') {
+      } else {
+        await AsyncStorage.setItem(IS_FIRST_LOGIN, 'false');
+      }
+    });
+  }
+
   return (
     <Container style={styles.background}>
-      
       <Image style={styles.background_image} source={Img_Auth_Background} />
 
       <SafeAreaView style={styles.safe_area}>
@@ -110,7 +151,7 @@ export const LogInScreen: React.FC = () => {
           </View>
         </TouchableWithoutFeedback>
 
-        <TouchableWithoutFeedback onPress={() => onLogIn() }>
+        <TouchableWithoutFeedback onPress={ onLogIn }>
           <View style={styles.bottom_button}>
             <ColorButton title={'Log In'} backgroundColor={COLOR.whiteColor} color={COLOR.blackColor} />
           </View>
@@ -124,48 +165,6 @@ export const LogInScreen: React.FC = () => {
       />
     </Container>
   );
-
-  function onLogIn() {
-    if (fetchingData == true) {
-      return;
-    } else if (emailAddress == '') {
-      Alert.alert('', ERROR_MESSAGE.EMPTY_EMAIL_ADDRESS);
-      return;
-    } else if (password == '') {
-      Alert.alert('', ERROR_MESSAGE.EMPTY_PASSWORD);
-      return;
-    }
-    setFetchingData(true);
-
-    loginUser(emailAddress, password)
-    .then(async (result: Promise<boolean>) => {
-      setFetchingData(false);
-      if ((await result) == true) {
-        saveUserInfo();
-        goBack();
-      } else {
-        Alert.alert('', ERROR_MESSAGE.LOGIN_FAIL);
-      }
-    }).catch(async (error: Promise<IApiError>) => {
-      setFetchingData(false);
-      Alert.alert('', (await error).error.message);
-    }).catch(() => {
-      setFetchingData(false);
-      Alert.alert('', ERROR_MESSAGE.LOGIN_FAIL);
-    });
-  }
-
-  async function saveUserInfo() {
-    await AsyncStorage.setItem(LOGIN_TYPE, EMAIL_LOGIN);
-    await AsyncStorage.setItem(USER_EMAIL, emailAddress);
-    await AsyncStorage.setItem(USER_EMAIL, password);
-    AsyncStorage.getItem(IS_FIRST_LOGIN).then(async (is_first_login) => {
-      if (is_first_login != null && is_first_login == 'false') {
-      } else {
-        await AsyncStorage.setItem(IS_FIRST_LOGIN, 'false');
-      }
-    });
-  }
 };
 
 const styles = StyleSheet.create({

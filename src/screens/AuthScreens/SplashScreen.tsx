@@ -1,9 +1,5 @@
 import * as React from 'react';
-import {
-  Image,
-  StyleSheet,
-  View,
-} from 'react-native';
+import { Image, StyleSheet, View } from 'react-native';
 import { Container } from 'native-base';
 import { useCallback, useEffect, useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
@@ -20,7 +16,6 @@ import {
   LOGIN_TYPE,
   EMAIL_LOGIN,
   USER_EMAIL,
-  PASSWORD,
   FACEBOOK_LOGIN,
   GOOGLE_LOGIN,
   APPLE_LOGIN,

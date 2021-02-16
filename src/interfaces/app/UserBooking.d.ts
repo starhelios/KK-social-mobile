@@ -1,9 +1,9 @@
-import { IExperienceDetail } from ".";
+import { IBookingRate, IExperienceDetail } from ".";
 
 export interface IUserBooking {
 	id: string;
 	experience: IExperienceDetail;
-	ratings: [];
+	ratings: IBookingRate[];
 	reservations: [];
 	usersGoing: string[];
 	day: string;
@@ -11,4 +11,5 @@ export interface IUserBooking {
 	endTime: string;
 	imageUrl: string;
 	createdAt: string;
+	completed: boolean;
 }

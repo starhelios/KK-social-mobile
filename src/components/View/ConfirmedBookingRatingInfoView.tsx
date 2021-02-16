@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { StyleSheet, View } from 'react-native';
-import Stars from 'react-native-stars';
 
 // from app
 import { 

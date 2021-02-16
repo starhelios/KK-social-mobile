@@ -46,6 +46,44 @@ export const ChangePasswordScreen: React.FC = () => {
   const [confirmPassword, setConfirmPassword] = useState<string>('');
   const [fetchingData, setFetchingData] = useState<boolean>(false);
 
+  const onChangePassword = () => {
+    if (fetchingData == true) {
+      return;
+    } else if (currentPassword == '') {
+      Alert.alert('', ERROR_MESSAGE.EMPTY_CURRENT_PASSWORD);
+      return;
+    } else if (newPassword == '') {
+      Alert.alert('', ERROR_MESSAGE.EMPTY_NEW_PASSWORD);
+      return;
+    } else if (confirmPassword == '') {
+      Alert.alert('', ERROR_MESSAGE.EMPTY_CONFIRM_PASSWORD);
+      return;
+    } else if (newPassword != confirmPassword) {
+      Alert.alert('', ERROR_MESSAGE.MISMATCH_PASSWORD);
+      return;
+    }
+    setFetchingData(true);
+
+    changePassword(userInfo.id, currentPassword, newPassword, true)
+    .then(async (result: Promise<IApiSuccess>) => {
+      setFetchingData(false);
+      if ((await result).error.status == false) {
+        setCurrentPassword('');
+        setNewPassword('');
+        setConfirmPassword('');
+        Alert.alert('', (await result).error.message);
+      } else {
+        Alert.alert('', (await result).error.message);
+      }
+    }).catch(async (error: Promise<IApiError>) => {
+      setFetchingData(false);
+      Alert.alert('', (await error).error.message);
+    }).catch(() => {
+      setFetchingData(false);
+      Alert.alert('', ERROR_MESSAGE.CHANGE_PASSWORD_FAIL);
+    });
+  }
+
   return (
     <Container style={styles.background}>
       <Image style={{width: viewportWidth, height: viewportHeight, resizeMode: 'cover'}} source={Img_Auth_Background} />
@@ -110,7 +148,7 @@ export const ChangePasswordScreen: React.FC = () => {
         </TouchableWithoutFeedback>
 
         <View style={styles.bottom_container}>
-          <TouchableWithoutFeedback onPress={() => onChangePassword() }>
+          <TouchableWithoutFeedback onPress={ onChangePassword }>
             <View style={styles.bottom_button}>
               <ColorButton title={'Confirm'} backgroundColor={COLOR.whiteColor} color={COLOR.blackColor} />
             </View>
@@ -125,44 +163,6 @@ export const ChangePasswordScreen: React.FC = () => {
       />
     </Container>
   );
-
-  function onChangePassword() {
-    if (fetchingData == true) {
-      return;
-    } else if (currentPassword == '') {
-      Alert.alert('', ERROR_MESSAGE.EMPTY_CURRENT_PASSWORD);
-      return;
-    } else if (newPassword == '') {
-      Alert.alert('', ERROR_MESSAGE.EMPTY_NEW_PASSWORD);
-      return;
-    } else if (confirmPassword == '') {
-      Alert.alert('', ERROR_MESSAGE.EMPTY_CONFIRM_PASSWORD);
-      return;
-    } else if (newPassword != confirmPassword) {
-      Alert.alert('', ERROR_MESSAGE.MISMATCH_PASSWORD);
-      return;
-    }
-    setFetchingData(true);
-
-    changePassword(userInfo.id, currentPassword, newPassword, true)
-    .then(async (result: Promise<IApiSuccess>) => {
-      setFetchingData(false);
-      if ((await result).error.status == false) {
-        setCurrentPassword('');
-        setNewPassword('');
-        setConfirmPassword('');
-        Alert.alert('', (await result).error.message);
-      } else {
-        Alert.alert('', (await result).error.message);
-      }
-    }).catch(async (error: Promise<IApiError>) => {
-      setFetchingData(false);
-      Alert.alert('', (await error).error.message);
-    }).catch(() => {
-      setFetchingData(false);
-      Alert.alert('', ERROR_MESSAGE.CHANGE_PASSWORD_FAIL);
-    });
-  }
 };
 
 const styles = StyleSheet.create({

@@ -7,6 +7,8 @@ import {
   View,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import { useState } from 'react';
+import StarRating from 'react-native-star-rating';
 
 // from app
 import { 
@@ -14,17 +16,19 @@ import {
   CustomText, 
   FONT, 
   GetDurationString, 
-  Img_Experience,
+  Img_Rating_Empty, 
+  Img_Rating_Full, 
   viewportWidth, 
 } from '../../constants';
 import { IUserBooking } from '../../interfaces/app';
 import { ColorButton } from '../Button';
-import { BookingMainInfoView, BookingRatingInfoView } from '.';
-import { useExperiences, useUsers } from '../../hooks';
+import { useExperiences } from '../../hooks';
 import { useGlobalState } from '../../redux/Store';
+
 
 interface props {
   completed_booking: boolean;
+  isHostRating: boolean;
   booking: IUserBooking;
 }
 
@@ -32,15 +36,26 @@ export const BookingView: React.FC<props> = (props: props) => {
 
   const userInfo = useGlobalState('userInfo');
   const booking: IUserBooking = props.booking;
+  const isHostRating: boolean = props.isHostRating;
   const completed_booking: boolean = props.completed_booking;
   
+  const getUserRating = () => {
+    const ratingList = booking.ratings.filter((element) => {
+      return userInfo.id == element.userId;
+    })  
+    return ratingList.length > 0 ? ratingList[0].rating : 0
+  }
+
   const { navigate } = useNavigation();
-  const { buildBooking } = useExperiences();
+  const { buildBooking, rateBooking } = useExperiences();
+
+  const [rating, setRating] = useState<number>(getUserRating());
 
   const getUserZoomRole = (itemIds: string[]) => {
     return itemIds.indexOf(userInfo.id) > -1 ? '0': '1'
   }
 
+  
   const onJoinExperience = async () => {
     const userRole = getUserZoomRole(booking.usersGoing);
     await buildBooking(userInfo.id, booking.id, userRole)
@@ -55,6 +70,14 @@ export const BookingView: React.FC<props> = (props: props) => {
     })
   }
 
+  const onRatingBook = async (rate: number) => {
+    setRating(rate);
+
+    await rateBooking(userInfo.id, booking.id, rate)
+    .then((res) => {
+    });
+  }
+
   return (
     <View style={styles.container}>
       <Image style={styles.image} source={{uri: booking.imageUrl}} />
@@ -67,7 +90,7 @@ export const BookingView: React.FC<props> = (props: props) => {
             </View>
 
             <View style={styles.join_container}>
-              <TouchableWithoutFeedback onPress={onJoinExperience}>
+              <TouchableWithoutFeedback onPress={ onJoinExperience }>
                 <View style={styles.join_button_container}>
                   <ColorButton title={'Join Experience'} backgroundColor={COLOR.redColor} color={COLOR.systemWhiteColor} />
                 </View>
@@ -79,7 +102,27 @@ export const BookingView: React.FC<props> = (props: props) => {
             <View style={styles.date_container}>
               <CustomText style={styles.date}>{booking.day + ' • ' + booking.startTime}</CustomText>
             </View>
-            <BookingRatingInfoView booking={booking} />
+            
+            <View style={styles.line} />
+            <CustomText style={styles.rating_title}>
+              { isHostRating == true 
+                ? (`Rate your host, ${booking.experience.hostData.fullname}`)
+                : 'Rate this experience:'}
+            </CustomText>
+            <View style={styles.rating}>
+              <StarRating
+                starStyle={{width: 45}}
+                disabled={false}
+                emptyStar={Img_Rating_Empty}
+                fullStar={Img_Rating_Full}
+                starSize={35}
+                maxStars={5}
+                rating={rating}
+                selectedStar={(rating) => onRatingBook(rating)}
+              />
+            </View>
+
+
           </View>
       }
     </View>
@@ -158,5 +201,31 @@ const styles = StyleSheet.create({
     fontFamily: FONT.AN_Regular,
     fontSize: 14,
     flexWrap: 'wrap'
+  },
+  line: {
+    marginTop: 24,
+    marginLeft: 24,
+    marginRight: 24,
+    height: 1,
+    borderRadius: 0.5,
+    backgroundColor: COLOR.alphaWhiteColor50,
+  },
+  rating_title: {
+    marginTop: 24,
+    marginLeft: 24,
+    marginRight: 24,
+    height: 16,
+    lineHeight: 16,
+    color: COLOR.systemWhiteColor,
+    fontFamily: FONT.AN_Regular,
+    fontSize: 16,
+    flexWrap: 'wrap'
+  },
+  rating: {
+    marginTop: 16,
+    marginLeft: 24,
+    marginRight: 24,
+    height: 29,
+    alignItems: 'flex-start',
   },
 });

@@ -394,9 +394,6 @@ PODS:
     - React
   - RNVectorIcons (8.0.0):
     - React-Core
-  - RNZoomUs (5.3.4):
-    - React
-    - ZoomSDK (= 5.0.24433.0616)
   - Sentry (6.1.4):
     - Sentry/Core (= 6.1.4)
   - Sentry/Core (6.1.4)
@@ -404,7 +401,6 @@ PODS:
   - Yoga (1.14.0)
   - YogaKit (1.18.1):
     - Yoga (~> 1.14)
-  - ZoomSDK (5.0.24433.0616)
 
 DEPENDENCIES:
   - BVLinearGradient (from `../node_modules/react-native-linear-gradient`)
@@ -474,7 +470,6 @@ DEPENDENCIES:
   - "RNSentry (from `../node_modules/@sentry/react-native`)"
   - RNSVG (from `../node_modules/react-native-svg`)
   - RNVectorIcons (from `../node_modules/react-native-vector-icons`)
-  - RNZoomUs (from `../node_modules/react-native-zoom-us`)
   - Yoga (from `../node_modules/react-native/ReactCommon/yoga`)
 
 SPEC REPOS:
@@ -505,7 +500,6 @@ SPEC REPOS:
     - Sentry
     - TOCropViewController
     - YogaKit
-    - ZoomSDK
 
 EXTERNAL SOURCES:
   BVLinearGradient:
@@ -600,8 +594,6 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-svg"
   RNVectorIcons:
     :path: "../node_modules/react-native-vector-icons"
-  RNZoomUs:
-    :path: "../node_modules/react-native-zoom-us"
   Yoga:
     :path: "../node_modules/react-native/ReactCommon/yoga"
 
@@ -675,12 +667,10 @@ SPEC CHECKSUMS:
   RNSentry: 6aeba1adc242fd22a6826acae92f430697b47a9c
   RNSVG: ce9d996113475209013317e48b05c21ee988d42e
   RNVectorIcons: f67a1abce2ec73e62fe4606e8110e95a832bc859
-  RNZoomUs: f9e553ba36ad54f63c0e9b4d56559baac081e893
   Sentry: 9d055e2de30a77685e86b219acf02e59b82091fc
   TOCropViewController: 3105367e808b7d3d886a74ff59bf4804e7d3ab38
   Yoga: 4bd86afe9883422a7c4028c00e34790f560923d6
   YogaKit: f782866e155069a2cca2517aafea43200b01fd5a
-  ZoomSDK: 5bfb1ad56cb5514010b818d8bd340b44f1e0338c
 
 PODFILE CHECKSUM: b5f26e529010824854c0c94021bede64c0bbe5f2
 

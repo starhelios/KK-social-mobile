@@ -38,7 +38,6 @@ import GlobalStyle from '../../styles/global';
 export const ResetPasswordScreen: React.FC = () => {
 
   const accessToken: IToken = useGlobalState('accessToken');
-  const refreshToken: IToken = useGlobalState('refreshToken');
   
   const { goBack } = useNavigation();
   const { resetPassword } = useAuthentication();
@@ -46,6 +45,40 @@ export const ResetPasswordScreen: React.FC = () => {
   const [newPassword, setNewPassword] = useState<string>('');
   const [confirmPassword, setConfirmPassword] = useState<string>('');
   const [fetchingData, setFetchingData] = useState<boolean>(false);
+
+  const onResetPassword = () => {
+    if (fetchingData == true) {
+      return;
+    } else if (newPassword == '') {
+      Alert.alert('', ERROR_MESSAGE.EMPTY_NEW_PASSWORD);
+      return;
+    } else if (confirmPassword == '') {
+      Alert.alert('', ERROR_MESSAGE.EMPTY_CONFIRM_PASSWORD);
+      return;
+    } else if (newPassword != confirmPassword) {
+      Alert.alert('', ERROR_MESSAGE.MISMATCH_PASSWORD);
+      return;
+    }
+    setFetchingData(true);
+
+    resetPassword(accessToken.token, newPassword)
+    .then(async (result: Promise<IApiSuccessMessage>) => {
+      setFetchingData(false);
+      if ((await result).error == false) {
+        setNewPassword('');
+        setConfirmPassword('');
+        Alert.alert('', (await result).message);
+      } else {
+        Alert.alert('', (await result).message);
+      }
+    }).catch(async (error: Promise<IApiError>) => {
+      setFetchingData(false);
+      Alert.alert('', (await error).error.message);
+    }).catch(() => {
+      setFetchingData(false);
+      Alert.alert('', ERROR_MESSAGE.RESET_PASSWORD_FAIL);
+    });
+  }
 
   return (
     <Container style={styles.background}>
@@ -97,7 +130,7 @@ export const ResetPasswordScreen: React.FC = () => {
         </TouchableWithoutFeedback>
 
         <View style={styles.bottom_container}>
-          <TouchableWithoutFeedback onPress={() => onResetPassword() }>
+          <TouchableWithoutFeedback onPress={ onResetPassword }>
             <View style={styles.bottom_button}>
               <ColorButton title={'Confirm'} backgroundColor={COLOR.whiteColor} color={COLOR.blackColor} />
             </View>
@@ -112,40 +145,6 @@ export const ResetPasswordScreen: React.FC = () => {
       />
     </Container>
   );
-
-  function onResetPassword() {
-    if (fetchingData == true) {
-      return;
-    } else if (newPassword == '') {
-      Alert.alert('', ERROR_MESSAGE.EMPTY_NEW_PASSWORD);
-      return;
-    } else if (confirmPassword == '') {
-      Alert.alert('', ERROR_MESSAGE.EMPTY_CONFIRM_PASSWORD);
-      return;
-    } else if (newPassword != confirmPassword) {
-      Alert.alert('', ERROR_MESSAGE.MISMATCH_PASSWORD);
-      return;
-    }
-    setFetchingData(true);
-
-    resetPassword(accessToken.token, newPassword)
-    .then(async (result: Promise<IApiSuccessMessage>) => {
-      setFetchingData(false);
-      if ((await result).error == false) {
-        setNewPassword('');
-        setConfirmPassword('');
-        Alert.alert('', (await result).message);
-      } else {
-        Alert.alert('', (await result).message);
-      }
-    }).catch(async (error: Promise<IApiError>) => {
-      setFetchingData(false);
-      Alert.alert('', (await error).error.message);
-    }).catch(() => {
-      setFetchingData(false);
-      Alert.alert('', ERROR_MESSAGE.RESET_PASSWORD_FAIL);
-    });
-  }
 };
 
 const styles = StyleSheet.create({

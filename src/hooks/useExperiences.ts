@@ -178,5 +178,51 @@ export const useExperiences = () => {
     }
   };
 
-  return { getExperienceList, getExperienceDetail, createExperience, filterExperiences, reserveBooking, getReservedBookingList, buildBooking };
+  const completeBooking = async (
+    itemsNeedUpdatedArray: string[],
+  ): Promise<any> => {
+    const url = API_ENDPOINT.BOOKING_COMPLETE;
+    let body = {
+      itemsNeedUpdatedArray,
+    };
+    try {
+      const { data } = await axios.post<IApiSuccess>(url, body, API_CONFIG);
+      console.log(data);
+      const result: string = data.payload;
+      return Promise.resolve(result);
+    } catch (err) {
+      const apiError = handleError(err);
+      if (apiError) {
+        return Promise.reject(apiError.error.message);
+      } else {
+        return Promise.reject(null);
+      }
+    }
+  };
+
+  const rateBooking = async (
+    userId: string,
+    experienceId: string,
+    rating: number,
+  ): Promise<any> => {
+    const url = API_ENDPOINT.BOOKING_RATE;
+    let body = {
+      userId,
+      experienceId,
+      rating,
+    };
+    try {
+      const { data } = await axios.post<IApiSuccess>(url, body, API_CONFIG);
+      return Promise.resolve(data);
+    } catch (err) {
+      const apiError = handleError(err);
+      if (apiError) {
+        return Promise.reject(apiError.error.message);
+      } else {
+        return Promise.reject(null);
+      }
+    }
+  };
+
+  return { getExperienceList, getExperienceDetail, createExperience, filterExperiences, reserveBooking, getReservedBookingList, buildBooking, completeBooking, rateBooking };
 };

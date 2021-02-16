@@ -47,6 +47,7 @@ const initialState: State = {
   experienceList: [],
   hostList: [],
   categoryList: [],
+  reservedBookingList: [],
   selectedCard: {
     id: '',
     cardBrand: '',
@@ -54,8 +55,6 @@ const initialState: State = {
     expiryYear: 0,
     last4digits: '',
   },
-  needReloadData: false,
-  needReloadReservedBookings: false,
 };
 
 const StoreContext = createContext<State>(initialState);
