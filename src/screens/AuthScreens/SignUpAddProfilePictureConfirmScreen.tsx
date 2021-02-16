@@ -23,7 +23,6 @@ import {
   Icon_Back, 
   Img_Edit_Profile_Background, 
   MARGIN_TOP,
-  UploadImageToFirebase,
   viewportWidth, 
 } from '../../constants';
 import { ColorButton } from '../../components/Button';
@@ -34,12 +33,12 @@ import { useGlobalState } from '../../redux/Store';
 
 export const SignUpAddProfilePictureConfirmScreen: React.FC = ({route}) => {
 
+  const profile_icon: IFile = route.params.profile_icon;
+  const userInfo: IUser = useGlobalState('userInfo');
+
   const { reset, goBack } = useNavigation();
   const { updateUserInformation } = useUsers();
   const { setLoginUser } = useAuthentication();
-
-  const profile_icon: IFile = route.params.profile_icon;
-  const userInfo: IUser = useGlobalState('userInfo');
 
   const [uploading, setUploading] = useState(false);
 
@@ -105,7 +104,7 @@ export const SignUpAddProfilePictureConfirmScreen: React.FC = ({route}) => {
         </View>
 
         <View style={styles.bottom_container}>
-          <TouchableWithoutFeedback onPress={() => onContinue() }>
+          <TouchableWithoutFeedback onPress={ onContinue }>
             <View style={{ ...styles.bottom_button, marginTop: 0 }}>
               <ColorButton title={'Continue'} backgroundColor={COLOR.whiteColor} color={COLOR.blackColor} />
             </View>

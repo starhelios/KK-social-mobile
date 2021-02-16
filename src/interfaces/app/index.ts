@@ -15,6 +15,7 @@ export * from './ExperienceDetail';
 export * from './AvailableDate';
 export * from './Filter';
 export * from './UserBooking';
+export * from './BookingRate';
 
 // Hosts
 export * from './HostDetail';
@@ -29,7 +30,6 @@ export * from './Tutorial';
 
 // Home
 export * from './SearchHome';
-
 
 export * from './Booking';
 export * from './ReservationBooking';

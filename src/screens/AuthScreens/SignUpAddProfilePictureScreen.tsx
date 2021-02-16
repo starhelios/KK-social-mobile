@@ -107,13 +107,13 @@ export const SignUpAddProfilePictureScreen: React.FC = () => {
         </View>
 
         <View style={styles.bottom_container}>
-          <TouchableWithoutFeedback onPress={() => onChoosePhoto() }>
+          <TouchableWithoutFeedback onPress={ onChoosePhoto }>
             <View style={styles.bottom_button}>
               <ColorButton title={'Choose Photo'} backgroundColor={COLOR.whiteColor} color={COLOR.blackColor} />
             </View>
           </TouchableWithoutFeedback>
 
-          <TouchableWithoutFeedback onPress={() => onTakePicture() }>
+          <TouchableWithoutFeedback onPress={ onTakePicture }>
             <View style={{ ...styles.bottom_button, marginTop: 0 }}>
               <ColorButton title={'Take a Picture'} backgroundColor={COLOR.whiteColor} color={COLOR.blackColor} />
             </View>

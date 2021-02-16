@@ -38,7 +38,6 @@ export const HomeScreen: React.FC = () => {
   
   const dispatch = useDispatch();
   const filter = useGlobalState('filter');
-  const needReloadData = useGlobalState('needReloadData');
   const popularExperienceList = useGlobalState('experienceList');
   const categoryList = useGlobalState('categoryList');
 

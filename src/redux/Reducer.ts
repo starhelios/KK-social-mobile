@@ -4,8 +4,8 @@ import {
   IFilter,
   IUser,
   IToken,
-  ICard,
   ICardInfo,
+  IUserBooking,
 } from "../interfaces/app";
 
 export enum ActionType {
@@ -16,8 +16,8 @@ export enum ActionType {
   SET_EXPERIENCE_LIST = 'SET_EXPERIENCE_LIST',
   SET_HOST_LIST = 'SET_HOST_LIST',
   SET_CATEGORY_LIST = 'SET_CATEGORY_LIST',
+  SET_RESERVED_BOOKING_LIST = 'SET_RESERVED_BOOKING_LIST',
   SET_SELECT_CARD = 'SET_SELECT_CARD',
-  SET_NEED_RELOAD_RESERVERD_BOOKINGS = 'SET_NEED_RELOAD_RESERVERD_BOOKINGS',
 }
 
 export interface Action {
@@ -34,9 +34,8 @@ export interface State {
   experienceList: IExperience[];
   hostList: IUser[];
   categoryList: ICategory[];
+  reservedBookingList: IUserBooking[],
   selectedCard: ICardInfo,
-  needReloadData: boolean,
-  needReloadReservedBookings: boolean,
 }
 
 /** Reducer */
@@ -65,11 +64,11 @@ const Reducer = (state: State, action: Action): any => {
     case ActionType.SET_CATEGORY_LIST:
       return {...state, categoryList: payload};
 
+    case ActionType.SET_RESERVED_BOOKING_LIST:
+      return {...state, reservedBookingList: payload};
+
     case ActionType.SET_SELECT_CARD:
       return {...state, selectedCard: payload};
-
-    case ActionType.SET_NEED_RELOAD_RESERVERD_BOOKINGS:
-      return {...state, needReloadReservedBookings: payload};
 
     default:
       break;

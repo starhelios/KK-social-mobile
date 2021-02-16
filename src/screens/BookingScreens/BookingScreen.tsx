@@ -8,13 +8,12 @@ import {
 } from 'react-native';
 import { Container } from 'native-base';
 import { useEffect, useState } from 'react';
-import { useNavigation } from '@react-navigation/native';
 import Spinner from 'react-native-loading-spinner-overlay';
 
 // from app
-import { COLOR, CustomText, FONT, MARGIN_TOP, SortBookings, viewportWidth } from '../../constants';
+import { COLOR, CustomText, FONT, MARGIN_TOP, viewportWidth } from '../../constants';
 import { useExperiences } from '../../hooks';
-import { IBooking, IUser, IUserBooking } from '../../interfaces/app';
+import { IUserBooking } from '../../interfaces/app';
 import { BookingView } from '../../components/View';
 import { useDispatch, useGlobalState } from '../../redux/Store';
 import { ActionType } from '../../redux/Reducer';
@@ -22,53 +21,78 @@ import { ActionType } from '../../redux/Reducer';
 
 export const BookingScreen: React.FC = () => {
   
-  const dispatch = useDispatch();
   const userInfo = useGlobalState('userInfo');
-  const hostList = useGlobalState('hostList');
-  const experienceList = useGlobalState('experienceList');
-  const needReloadReservedBookings = useGlobalState('needReloadReservedBookings');
-  const { getReservedBookingList } = useExperiences();
+  const reservedBookingList = useGlobalState('reservedBookingList');
+
+  const dispatch = useDispatch();
+  const { getReservedBookingList, completeBooking } = useExperiences();
 
   const [selectedTab, setSelectedTab] = useState<number>(0);
   const [upcomingBookingList, setUpcomingBookingList] = useState<IUserBooking[]>([]);
   const [completedBookingList, setCompletedBookingList] = useState<IUserBooking[]>([]);
   const [fetched, setFetched] = useState<boolean>(false);
 
+
   useEffect(() => {
-    getUpcomingBookingList();
+    getReservedBookings();
   }, [])
 
-  const getUpcomingBookingList = async () => {
+  useEffect(() => {
+    getReservedBookings();
+  }, [userInfo]);
+
+  useEffect(() => {
+    const upcomingBookings = reservedBookingList.filter((element) => {
+      return !element.completed;
+    })
+    setUpcomingBookingList(upcomingBookings)
+
+    const completedBookings = reservedBookingList.filter((element) => {
+      return element.completed;
+    })
+    setCompletedBookingList(completedBookings)
+
+    const timeRightNow = new Date().toISOString();
+    const itemsNeedUpdatedArray = upcomingBookings.map((item, idx) => {
+      const itemTimeStamp = new Date(item.day + " " + item.endTime).toISOString();
+      if (timeRightNow > itemTimeStamp){
+        return item.id
+      } else {
+        return ''
+      }
+    }).filter((element) => {
+      return element !== ''
+    })
+
+    if (itemsNeedUpdatedArray.length > 0) {
+      completeBooking(itemsNeedUpdatedArray)
+      .then((res) => {
+        getReservedBookings();
+      })
+    }
+  }, [reservedBookingList]);
+
+  const getReservedBookings = async () => {
     getReservedBookingList(userInfo.id)
     .then(async (result: Promise<IUserBooking[]>) => {
-      setUpcomingBookingList(await result);
+      dispatch({
+        type: ActionType.SET_RESERVED_BOOKING_LIST,
+        payload: await result,
+      })
       setFetched(true);
     })
     .catch(() => {
-      setUpcomingBookingList([]);
       setFetched(true);
     })
   }
 
-  const getCompletedBookingList = async () => {
-    setCompletedBookingList([]);
+  const onShowUpcomingBookings = () => {
+    setSelectedTab(0);
   }
 
-  useEffect(() => {
-    if (needReloadReservedBookings == false) {
-      return;
-    }
-    getUpcomingBookingList();
-
-    dispatch({
-      type: ActionType.SET_NEED_RELOAD_RESERVERD_BOOKINGS,
-      payload: false,
-    })
-  }, [needReloadReservedBookings]);
-
-  useEffect(() => {
-    getUpcomingBookingList();
-  }, [userInfo]);
+  const onShowCompletedBookings = () => {
+    setSelectedTab(1);
+  }
 
   return (
     <Container style={{width: viewportWidth, flex: 1, backgroundColor: COLOR.blackColor}}>
@@ -76,7 +100,7 @@ export const BookingScreen: React.FC = () => {
         <CustomText style={styles.title}>Booking</CustomText>
 
         <View style={styles.tab_bar}>
-          <TouchableWithoutFeedback onPress={() => onShowUpcomingBookings()}>
+          <TouchableWithoutFeedback onPress={ onShowUpcomingBookings }>
             <View style={{
               ...styles.tab_upcoming,
               backgroundColor: selectedTab == 0 ? COLOR.blackColor : COLOR.clearColor}}>
@@ -88,7 +112,7 @@ export const BookingScreen: React.FC = () => {
             </View>
           </TouchableWithoutFeedback>
 
-          <TouchableWithoutFeedback onPress={() => onShowCompletedBookings()}>
+          <TouchableWithoutFeedback onPress={ onShowCompletedBookings }>
             <View style={{
               ...styles.tab_completed,
               backgroundColor: selectedTab == 0 ? COLOR.clearColor : COLOR.blackColor }}>
@@ -108,7 +132,7 @@ export const BookingScreen: React.FC = () => {
             horizontal={false}
             data={selectedTab == 0 ? upcomingBookingList : completedBookingList}
             keyExtractor={(item, index) => index.toString()}
-            renderItem={({item}) => <BookingView completed_booking={selectedTab == 0 ? false : true} booking={item} />}
+            renderItem={({item}) => <BookingView completed_booking={selectedTab == 0 ? false : true} booking={item} isHostRating={false} />}
           />
         }
       </SafeAreaView>
@@ -120,16 +144,6 @@ export const BookingScreen: React.FC = () => {
       />
     </Container>
   );
-
-  function onShowUpcomingBookings() {
-    setSelectedTab(0);
-    getUpcomingBookingList();
-  }
-
-  function onShowCompletedBookings() {
-    setSelectedTab(1);
-    getCompletedBookingList();
-  }
 };
 
 const styles = StyleSheet.create({
