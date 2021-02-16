@@ -188,7 +188,7 @@ export const LoginProfileView: React.FC = () => {
           </TouchableWithoutFeedback>
 
           <CustomText style={{...styles.content_title, marginTop: 44}}>Legal</CustomText>
-          <TouchableWithoutFeedback onPress={() => onTermsOfService() }>
+          <TouchableWithoutFeedback onPress={() => navigate('TermsOfService') }>
             <View style={{width:'100%', marginTop: 22}}>
               <TitleArrowButton title={''} name={'Terms of Service'} showArrow={true} white_color={true} />
             </View>
@@ -203,9 +203,6 @@ export const LoginProfileView: React.FC = () => {
       </ScrollView>
     </View>
   );
-  
-  function onTermsOfService() {
-  }
 
   function onLogOut() {
     AsyncStorage.getItem(LOGIN_TYPE).then((loginType) => {
