@@ -199,6 +199,8 @@ export const HostAnExperienceScreen: React.FC = () => {
       multiple: false,
       cropping: false,
       mediaType: "photo",
+      width: 300,
+      height: 300,
     })
     .then((image) => {
       onSelectedPhoto(index, Platform.OS === 'android'
@@ -214,6 +216,8 @@ export const HostAnExperienceScreen: React.FC = () => {
       multiple: false,
       cropping: true,
       mediaType: "photo",
+      width: 300,
+      height: 300,
     })
     .then((image) => {
       onSelectedPhoto(index, Platform.OS === 'android'

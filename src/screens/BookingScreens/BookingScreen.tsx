@@ -11,7 +11,7 @@ import { useEffect, useState } from 'react';
 import Spinner from 'react-native-loading-spinner-overlay';
 
 // from app
-import { COLOR, CustomText, FONT, MARGIN_TOP, viewportWidth } from '../../constants';
+import { API_CONFIG, COLOR, CustomText, FONT, MARGIN_TOP, viewportWidth } from '../../constants';
 import { useExperiences } from '../../hooks';
 import { IUserBooking } from '../../interfaces/app';
 import { BookingView } from '../../components/View';
@@ -39,7 +39,7 @@ export const BookingScreen: React.FC = () => {
 
   useEffect(() => {
     getReservedBookings();
-  }, [userInfo]);
+  }, [API_CONFIG]);
 
   useEffect(() => {
     const upcomingBookings = reservedBookingList.filter((element) => {
@@ -82,6 +82,10 @@ export const BookingScreen: React.FC = () => {
       setFetched(true);
     })
     .catch(() => {
+      dispatch({
+        type: ActionType.SET_RESERVED_BOOKING_LIST,
+        payload: [],
+      })
       setFetched(true);
     })
   }
