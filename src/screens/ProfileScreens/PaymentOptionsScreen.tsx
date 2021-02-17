@@ -18,12 +18,11 @@ import {
   COLOR, 
   CustomText, 
   FONT, 
-  Icon_Back, 
-  Img_Auth_Background,
+  Icon_Back_Black, 
+  Img_Lock,
   MARGIN_TOP,
-  viewportHeight,
 } from '../../constants';
-import { TitleArrowButton, YourCardButton } from '../../components/Button';
+import { YourCardButton } from '../../components/Button';
 import { ICardInfo, IUser } from '../../interfaces/app';
 import { useDispatch, useGlobalState } from '../../redux/Store';
 import { ActionType } from '../../redux/Reducer';
@@ -33,23 +32,33 @@ import { usePayments } from '../../hooks';
 export const PaymentOptionsScreen: React.FC = () => {
 
   const userInfo: IUser = useGlobalState('userInfo');
+  const selectedCard: ICardInfo = useGlobalState('selectedCard');
 
   const dispatch = useDispatch();
   const { navigate, goBack } = useNavigation();
   const { deleteCard } = usePayments();
 
   const [cardList, setCardList] = useState<ICardInfo[]>(userInfo.availableMethods);
+  const [isEditing, setIsEditing] = useState<boolean>(false);
 
   useEffect(() => {
-    setCardList(userInfo.availableMethods);
+    let cards = userInfo.availableMethods.filter((item) => {
+      return item.id != ''
+    });
+    cards.push({id: '', cardBrand: 'Add New Payment', expiryMonth: 0, expiryYear: 0, last4digits: ''});
+    setCardList(cards);
   }, [userInfo]);
 
   const onSelectCard = (card: ICardInfo) => {
-    dispatch({
-      type: ActionType.SET_SELECT_CARD,
-      payload: card,
-    });
-    goBack();
+    if (card.id == '') {
+      navigate('AddPaymentMethod');
+    } else {
+      dispatch({
+        type: ActionType.SET_SELECT_CARD,
+        payload: card,
+      });
+      goBack();
+    }
   }
 
   const onDeleteCard = async (card: ICardInfo) => {
@@ -71,51 +80,43 @@ export const PaymentOptionsScreen: React.FC = () => {
     })
   }
 
-  const onAddPaymentMethod = async () => {
-    navigate('AddPaymentMethod');
-  }
-
   return (
     <Container style={styles.background}>
-      
-      <Image style={{width: '100%', height: '100%', resizeMode: 'cover'}} source={Img_Auth_Background} />
 
       <SafeAreaView style={styles.safe_area}>
         <View style={styles.navigation_bar}>
-          <CustomText style={styles.title}>Payment</CustomText>
+          <CustomText style={{...styles.title, fontWeight: '600'}}>Payment Options</CustomText>
 
-          <TouchableWithoutFeedback onPress={() => goBack() }>
+          <TouchableWithoutFeedback onPress={() => goBack()}>
             <View style={styles.back_icon}>
-              <SvgXml width='100%' height='100%' xml={Icon_Back} />
+              <SvgXml width='100%' height='100%' xml={Icon_Back_Black} />
+            </View>
+          </TouchableWithoutFeedback>
+
+          <TouchableWithoutFeedback onPress={() => setIsEditing(!isEditing)}>
+            <View style={{...styles.back_icon, right: 24, width: 60}}>
+              <CustomText style={{...styles.title, textAlign: 'right'}}>{isEditing == false ? 'Edit' : 'Done'}</CustomText>
             </View>
           </TouchableWithoutFeedback>
         </View>
 
         <View style={styles.input_container}>
-          { cardList.length > 0 &&
-            <View>
-              <CustomText style={styles.info_title}>Your Cards</CustomText>
-          
-              <FlatList
-                style={{width: '100%', marginTop: 5, height: cardList.length * 60 <= viewportHeight - 350 ? cardList.length * 60 : viewportHeight - 350 }}
-                contentContainerStyle={{paddingVertical: 0}}
-                showsHorizontalScrollIndicator={false}
-                horizontal={false}
-                data={cardList}
-                bounces={false}
-                keyExtractor={(item, index) => index.toString()}
-                renderItem={({item}) => <YourCardButton card={item} onSelectCard={onSelectCard} onDeleteCard={onDeleteCard} />}
-              />
-            </View>
-          }
+          <FlatList
+            style={{width: '100%', marginTop: 5}}
+            contentContainerStyle={{paddingVertical: 0}}
+            showsHorizontalScrollIndicator={false}
+            horizontal={false}
+            data={cardList}
+            keyExtractor={(item, index) => index.toString()}
+            renderItem={({item}) => <YourCardButton card={item} onSelectCard={onSelectCard} onDeleteCard={onDeleteCard} selectedCard={selectedCard} isEdit={isEditing} />}
+          />
+        </View>
 
-          <CustomText style={{...styles.info_title, marginTop: 44}}>Add Card</CustomText>
-
-          <TouchableWithoutFeedback onPress={onAddPaymentMethod}>
-            <View style={{width:'100%', marginTop: 22}}>
-              <TitleArrowButton title={''} name={'Add Payment Method'} showArrow={true} white_color={true} />
-            </View>
-          </TouchableWithoutFeedback>
+        <View style={styles.bottomContainer}>
+         <View style={{flexDirection: 'row'}}>
+          <Image style={styles.lockIcon} source={Img_Lock} />
+          <CustomText style={styles.bottomDescription}>{'Your information is stored securely.'}</CustomText>
+          </View>
         </View>
       </SafeAreaView>
     </Container>
@@ -126,7 +127,7 @@ const styles = StyleSheet.create({
   background: {
     width: '100%', 
     flex: 1, 
-    backgroundColor: COLOR.blackColor, 
+    backgroundColor: COLOR.whiteColor, 
     alignItems: 'center',
   },
   safe_area: {
@@ -145,11 +146,10 @@ const styles = StyleSheet.create({
     width: '100%',
     height: 33, 
     lineHeight: 33,
-    fontWeight: '600',
     fontFamily: FONT.AN_Regular, 
-    fontSize: 24, 
+    fontSize: 14, 
     textAlign: 'center',
-    color: COLOR.systemWhiteColor,
+    color: COLOR.blackColor,
   },
   back_icon: {
     position: 'absolute',
@@ -166,6 +166,7 @@ const styles = StyleSheet.create({
     marginLeft: 24, 
     marginRight: 24, 
     marginTop: 35, 
+    marginBottom: 30,
     flexDirection: 'column',
     flex: 1,
   },
@@ -191,5 +192,25 @@ const styles = StyleSheet.create({
     height: 1,
     borderRadius: 0.5,
     backgroundColor: COLOR.alphaWhiteColor20,
+  },
+  bottomContainer: {
+    bottom: 20,
+    width: '100%',
+    height: 20,
+    alignItems: 'center',
+    alignContent: 'center',
+  },
+  lockIcon: {
+    width: 12,
+    height: '100%',
+    resizeMode: 'contain',
+  },
+  bottomDescription: {
+    marginLeft: 10,
+    height: 20,
+    lineHeight: 20,
+    fontFamily: FONT.AN_Regular,
+    fontSize: 12,
+    color: COLOR.alphaBlackColor75,
   },
 });

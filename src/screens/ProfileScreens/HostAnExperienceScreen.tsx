@@ -212,7 +212,7 @@ export const HostAnExperienceScreen: React.FC = () => {
     ImagePicker.openCamera({
       includeBase64: true,
       multiple: false,
-      cropping: false,
+      cropping: true,
       mediaType: "photo",
     })
     .then((image) => {
