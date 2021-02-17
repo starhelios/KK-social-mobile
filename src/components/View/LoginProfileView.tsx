@@ -194,6 +194,16 @@ export const LoginProfileView: React.FC = () => {
               <TitleArrowButton title={''} name={'Terms of Service'} showArrow={true} white_color={true} />
             </View>
           </TouchableWithoutFeedback>
+          <TouchableWithoutFeedback onPress={() => navigate('PrivacyPolicy') }>
+            <View style={{width:'100%', marginTop: 22}}>
+              <TitleArrowButton title={''} name={'Privacy Policy'} showArrow={true} white_color={true} />
+            </View>
+          </TouchableWithoutFeedback>
+          <TouchableWithoutFeedback onPress={() => navigate('Support') }>
+            <View style={{width:'100%', marginTop: 22}}>
+              <TitleArrowButton title={''} name={'Support'} showArrow={true} white_color={true} />
+            </View>
+          </TouchableWithoutFeedback>
 
           <TouchableWithoutFeedback onPress={() => onLogOut() }>
             <View style={{width:'100%', marginTop: 22, marginBottom: 20}}>

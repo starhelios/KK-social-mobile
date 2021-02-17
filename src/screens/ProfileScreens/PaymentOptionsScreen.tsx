@@ -57,7 +57,7 @@ export const PaymentOptionsScreen: React.FC = () => {
         type: ActionType.SET_SELECT_CARD,
         payload: card,
       });
-      goBack();
+      // goBack();
     }
   }
 
@@ -68,12 +68,17 @@ export const PaymentOptionsScreen: React.FC = () => {
       const newCardList = userInfo.availableMethods.filter((item) => {
         return item.id !== card.id
       })
-      setCardList(newCardList);
       userInfo.availableMethods = newCardList;
       dispatch({
         type: ActionType.SET_USER_INFO,
         payload: userInfo,
       })
+
+      let cards = userInfo.availableMethods.filter((item) => {
+        return item.id != ''
+      });
+      cards.push({id: '', cardBrand: 'Add New Payment', expiryMonth: 0, expiryYear: 0, last4digits: ''});
+      setCardList(cards);
     })
     .catch(async (error: Promise<string>) => {
       Alert.alert('', await error);
