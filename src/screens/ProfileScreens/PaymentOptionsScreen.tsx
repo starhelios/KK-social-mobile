@@ -18,7 +18,7 @@ import {
   COLOR, 
   CustomText, 
   FONT, 
-  Icon_Back_Black, 
+  Icon_Back, 
   Img_Lock,
   MARGIN_TOP,
 } from '../../constants';
@@ -89,13 +89,13 @@ export const PaymentOptionsScreen: React.FC = () => {
 
           <TouchableWithoutFeedback onPress={() => goBack()}>
             <View style={styles.back_icon}>
-              <SvgXml width='100%' height='100%' xml={Icon_Back_Black} />
+              <SvgXml width='100%' height='100%' xml={Icon_Back} />
             </View>
           </TouchableWithoutFeedback>
 
           <TouchableWithoutFeedback onPress={() => setIsEditing(!isEditing)}>
             <View style={{...styles.back_icon, right: 24, width: 60}}>
-              <CustomText style={{...styles.title, textAlign: 'right'}}>{isEditing == false ? 'Edit' : 'Done'}</CustomText>
+              <CustomText style={{...styles.title, textAlign: 'right', fontSize: 14}}>{isEditing == false ? 'Edit' : 'Done'}</CustomText>
             </View>
           </TouchableWithoutFeedback>
         </View>
@@ -127,7 +127,7 @@ const styles = StyleSheet.create({
   background: {
     width: '100%', 
     flex: 1, 
-    backgroundColor: COLOR.whiteColor, 
+    backgroundColor: COLOR.blackColor, 
     alignItems: 'center',
   },
   safe_area: {
@@ -147,9 +147,9 @@ const styles = StyleSheet.create({
     height: 33, 
     lineHeight: 33,
     fontFamily: FONT.AN_Regular, 
-    fontSize: 14, 
+    fontSize: 24, 
     textAlign: 'center',
-    color: COLOR.blackColor,
+    color: COLOR.systemWhiteColor,
   },
   back_icon: {
     position: 'absolute',
@@ -211,6 +211,6 @@ const styles = StyleSheet.create({
     lineHeight: 20,
     fontFamily: FONT.AN_Regular,
     fontSize: 12,
-    color: COLOR.alphaBlackColor75,
+    color: COLOR.alphaWhiteColor75,
   },
 });

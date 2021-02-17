@@ -59,7 +59,7 @@ export const YourCardButton: React.FC<props> = (props: props) => {
         { card.id != '' 
           ? <View style={styles.cardInfoContainer}>
               <Image style={styles.cardIcon} source={getCardImage(card.cardBrand)} />
-              <CustomText style={styles.card_number}>{`${card.cardBrand} ${card.last4digits}`}</CustomText>
+              <CustomText style={styles.card_number}>{`${card.cardBrand} ${card.last4digits}`.toUpperCase()}</CustomText>
                   
                 { isEdit == true
                   ? <TouchableWithoutFeedback onPress={() => props.onDeleteCard(card)}>
@@ -94,7 +94,7 @@ const styles = StyleSheet.create({
     width: 48,
     height: '100%',
     resizeMode: 'contain',
-    borderColor: COLOR.alphaBlackColor20,
+    borderColor: COLOR.alphaWhiteColor20,
     borderWidth: 1,
     borderRadius: 5,
   },
@@ -105,14 +105,14 @@ const styles = StyleSheet.create({
     lineHeight: 30,
     fontFamily: FONT.AN_Regular,
     fontSize: 14,
-    color: COLOR.blackColor,
+    color: COLOR.systemWhiteColor,
   },
   info_line: {
     marginTop: 10,
     width: '100%',
     height: 1,
     borderRadius: 0.5,
-    backgroundColor: COLOR.alphaBlackColor20,
+    backgroundColor: COLOR.alphaWhiteColor20,
   },
   option: {
     position: 'absolute',
