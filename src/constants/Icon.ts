@@ -47,6 +47,24 @@ const Img_Rating_Empty = require('../assets/images/rating_empty.png')
 const Img_Edit_Profile_Background = require('../assets/images/bg_edit_profile.png')
 const Img_User_Avatar = require('../assets/images/user_avatar.png')
 const Img_Experience = require('../assets/images/ic_experience.png')
+const Img_Lock = require('../assets/images/ic_lock.png')
+const Img_Plus_Card = require('../assets/images/ic_plus_card.png')
+const Img_Option_On = require('../assets/images/ic_option_on.png')
+const Img_Option_Off = require('../assets/images/ic_option_off.png')
+const Img_Checkbox_On = require('../assets/images/ic_checkbox_on.png')
+const Img_Checkbox_Off = require('../assets/images/ic_checkbox_off.png')
+const Img_Card_Applepay = require('../assets/images/ic_card_applepay.png')
+const Img_Card_Default = require('../assets/images/ic_card_default.png')
+const Img_Card_Discover = require('../assets/images/ic_card_discover.png')
+const Img_Card_Elo = require('../assets/images/ic_card_elo.png')
+const Img_Card_Express = require('../assets/images/ic_card_express.png')
+const Img_Card_Google = require('../assets/images/ic_card_google.png')
+const Img_Card_Hipercard = require('../assets/images/ic_card_hipercard.png')
+const Img_Card_Mastercard = require('../assets/images/ic_card_mastercard.png')
+const Img_Card_Paypal = require('../assets/images/ic_card_paypal.png')
+const Img_Card_Unionpay = require('../assets/images/ic_card_unionpay.png')
+const Img_Card_Verve = require('../assets/images/ic_card_verve.png')
+const Img_Card_Visa = require('../assets/images/ic_card_visa.png')
 
 export {
   // SVG
@@ -98,4 +116,22 @@ export {
   Img_Edit_Profile_Background,
   Img_User_Avatar,
   Img_Experience,
+  Img_Lock,
+  Img_Plus_Card,
+  Img_Option_On,
+  Img_Option_Off,
+  Img_Checkbox_On,
+  Img_Checkbox_Off,
+  Img_Card_Applepay,
+  Img_Card_Default,
+  Img_Card_Discover,
+  Img_Card_Elo,
+  Img_Card_Express,
+  Img_Card_Google,
+  Img_Card_Hipercard,
+  Img_Card_Mastercard,
+  Img_Card_Paypal,
+  Img_Card_Unionpay,
+  Img_Card_Verve,
+  Img_Card_Visa,
 }

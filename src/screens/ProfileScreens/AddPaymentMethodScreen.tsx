@@ -9,12 +9,19 @@ import {
   Keyboard,
   KeyboardAvoidingView,
   Alert,
+  EmitterSubscription,
 } from 'react-native';
 import { Container } from 'native-base';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { SvgXml } from 'react-native-svg';
-
+import { 
+  GooglePlaceData, 
+  GooglePlaceDetail, 
+  GooglePlacesAutocomplete, 
+  GooglePlacesAutocompleteRef, 
+} from 'react-native-google-places-autocomplete';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 let creditCardType = require("credit-card-type");
 
 // from app
@@ -27,7 +34,8 @@ import {
   FONT, 
   GetCardExpirationMonth, 
   GetCardExpirationYear, 
-  Icon_Back,
+  GOOGLE_MAP_KEY, 
+  Icon_Back_Black,
   MARGIN_TOP,
   SUCCESS_MESSAGE,
   viewportWidth,
@@ -42,17 +50,41 @@ import GlobalStyle from '../../styles/global';
 export const AddPaymentMethodScreen: React.FC = () => {
 
   const userInfo: IUser = useGlobalState('userInfo');
+  
   let fetching = false;
+  let keyboardDidShowListener: EmitterSubscription;
+  let keyboardDidHideListener: EmitterSubscription;
+  let googleAddressRef: GooglePlacesAutocompleteRef | null;
+  let scrollViewRef: KeyboardAwareScrollView | null;
 
   const { goBack } = useNavigation();
   const { getUserInformation } = useUsers();
   const { setLoginUser } = useAuthentication();
   const { addCard } = usePayments();
+  const keyboardDidShow = () => { setShowKeyboard(true); }
+  const keyboardDidHide = () => { setShowKeyboard(false); }
 
   const [fullName, setFullName] = useState<string>('');
   const [cardNumber, setCardNumber] = useState<string>('');
   const [cardExpiration, setCardExpiration] = useState<string>('');
   const [cvc, setCvc] = useState<string>('');
+  const [showKeyboard, setShowKeyboard] = useState<boolean>(false);
+  const [city, setCity] = useState<string>('');
+  const [state, setState] = useState<string>('');
+  const [zipCode, setZipCode] = useState<string>('');
+  const [country, setCountry] = useState<string>('');
+
+  useEffect(() => {
+    keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', keyboardDidShow);
+    keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', keyboardDidHide);
+  }, []);
+
+  useEffect(() => {
+    return () => {
+      keyboardDidShowListener.remove();
+      keyboardDidHideListener.remove();
+    }
+  }, []); 
 
   const setCardExpirationValue = (text: string) => {
     let value = text;
@@ -158,91 +190,249 @@ export const AddPaymentMethodScreen: React.FC = () => {
     }
   }
 
+  const selectAddress = (address: GooglePlaceData, details: GooglePlaceDetail | null) => {
+    const street_number = details?.address_components.find((addressComponent) =>
+      addressComponent.types.includes('street_number'),
+    )?.long_name;    
+    const route = details?.address_components.find((addressComponent) =>
+      addressComponent.types.includes('route'),
+    )?.long_name;
+    let streetAddress = street_number != undefined ? street_number : '';
+    if (route != undefined) {
+      streetAddress.length > 0 ? streetAddress += ` ${route}` : streetAddress = route;
+    }
+    if (googleAddressRef != null) {
+      googleAddressRef.setAddressText(streetAddress);
+    }
+
+    const neighborhood = details?.address_components.find((addressComponent) =>
+      addressComponent.types.includes('neighborhood'),
+    )?.long_name;
+    const city = details?.address_components.find((addressComponent) =>
+      addressComponent.types.includes('locality'),
+    )?.long_name;
+    if (neighborhood != undefined) {
+      setCity(neighborhood);
+    } else if (city != undefined) {
+      setCity(city);
+    } else {
+      setCity('');
+    }
+
+    const state = details?.address_components.find((addressComponent) =>
+      addressComponent.types.includes('administrative_area_level_1'),
+    )?.long_name;
+    setState(state != undefined ? state : '');
+
+    const zipCode = details?.address_components.find((addressComponent) =>
+      addressComponent.types.includes('postal_code'),
+    )?.short_name;
+    setZipCode(zipCode != undefined ? zipCode : '');
+
+    const country = details?.address_components.find((addressComponent) =>
+      addressComponent.types.includes('country'),
+    )?.long_name;
+    setCountry(country != undefined ? country : '');
+  };
+
+  const onEditGoogleAddress = () => {
+    if (scrollViewRef != null) {
+      scrollViewRef.scrollToPosition(0, 250, false);
+    }
+  }
+
   return (
     <Container style={styles.background}>
       <SafeAreaView style={styles.safe_area}>
         <View style={styles.navigation_bar}>
-          <CustomText style={styles.title}>Add Payment Method</CustomText>
+          <CustomText style={styles.title}>{ 'Add New Payment' }</CustomText>
 
           <TouchableWithoutFeedback onPress={() => goBack()}>
             <View style={styles.back_icon}>
-              <SvgXml width='100%' height='100%' xml={Icon_Back} />
+              <SvgXml width='100%' height='100%' xml={Icon_Back_Black} />
             </View>
           </TouchableWithoutFeedback>
         </View>
 
         <View style={{flex: 1}}>
-          <KeyboardAvoidingView behavior={Platform.OS == "ios" ? "padding" : "height"} >
-            <ScrollView bounces={false}>
-              <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
-                <View>
-                  <View style={{marginLeft: 24, marginRight: 24, width: viewportWidth - 48}}>
-                    <View style={{width:'100%', marginTop: 33}}>
-                      <CustomText style={styles.info_title}>Full Name</CustomText>
-                      <CustomTextInput
-                        style={GlobalStyle.auth_input}
-                        placeholder={'Full Name'}
-                        placeholderTextColor={COLOR.alphaWhiteColor50}
-                        onChangeText={text => setFullName(text)}
-                        value={fullName}
-                      />
-                      <View style={GlobalStyle.auth_line} />
-                    </View>
+          <KeyboardAwareScrollView 
+            ref={ref => { scrollViewRef = ref; }}
+            style={{width: '100%', height: '100%', flex: 1}} 
+            keyboardDismissMode="interactive" 
+            keyboardShouldPersistTaps="always"
+          >
+            <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+              <View style={{marginLeft: 24, marginRight: 24, width: viewportWidth - 48}}>
+                <View style={{width:'100%', marginTop: 33}}>
+                  <CustomText style={{...styles.info_title, fontSize: 16, fontWeight: '600'}}>Card Information</CustomText>
+                </View>
+
+                <View style={{width:'100%', marginTop: 10}}>
+                  <CustomText style={styles.info_title}>Name On Card</CustomText>
+                  <CustomTextInput
+                    style={{...GlobalStyle.auth_input, color: COLOR.blackColor}}
+                    placeholder={'Name On Card'}
+                    placeholderTextColor={COLOR.alphaBlackColor50}
+                    onChangeText={text => setFullName(text)}
+                    value={fullName}
+                  />
+                  <View style={{...GlobalStyle.auth_line, backgroundColor: COLOR.alphaBlackColor20}} />
+                </View>
+
+                <View style={{width:'100%', marginTop: 33}}>
+                  <CustomText style={styles.info_title}>Card Number</CustomText>
+                  <CustomTextInput
+                    style={{...GlobalStyle.auth_input, color: COLOR.blackColor}}
+                    placeholder={'1234 1234 1234 1234'}
+                    keyboardType={'number-pad'}
+                    maxLength={19}
+                    placeholderTextColor={COLOR.alphaBlackColor50}
+                    onChangeText={text => setCardNumberValue(text)}
+                    value={cardNumber}
+                  />
+                  <View style={{...GlobalStyle.auth_line, backgroundColor: COLOR.alphaBlackColor20}} />
+                </View>
+
+                <View style={{width:'100%', marginTop: 22, flexDirection: 'row'}}>
+                  <View style={{width: (viewportWidth - 72) / 2}}>
+                    <CustomText style={styles.info_title}>Experiation Date</CustomText>
+                    <CustomTextInput
+                      style={{...GlobalStyle.auth_input, color: COLOR.blackColor}}
+                      placeholder={'MM/YY'}
+                      keyboardType={'number-pad'}
+                      maxLength={5}
+                      placeholderTextColor={COLOR.alphaBlackColor50}
+                      onChangeText={text => setCardExpirationValue(text)}
+                      value={cardExpiration}
+                    />
+                    <View style={{...GlobalStyle.auth_line, backgroundColor: COLOR.alphaBlackColor20}} />
                   </View>
 
-                  <View style={{marginLeft: 24, marginRight: 24, width: viewportWidth - 48}}>
-                    <View style={{width:'100%', marginTop: 33}}>
-                      <CustomText style={styles.info_title}>Card Number</CustomText>
-                      <CustomTextInput
-                        style={GlobalStyle.auth_input}
-                        placeholder={'1234 1234 1234 1234'}
-                        keyboardType={'number-pad'}
-                        maxLength={19}
-                        placeholderTextColor={COLOR.alphaWhiteColor50}
-                        onChangeText={text => setCardNumberValue(text)}
-                        value={cardNumber}
-                      />
-                      <View style={GlobalStyle.auth_line} />
-                    </View>
-
-                    <View style={{width:'100%', marginTop: 22}}>
-                      <CustomText style={styles.info_title}>Card Expiration</CustomText>
-                      <CustomTextInput
-                        style={GlobalStyle.auth_input}
-                        placeholder={'MM/YY'}
-                        keyboardType={'number-pad'}
-                        maxLength={5}
-                        placeholderTextColor={COLOR.alphaWhiteColor50}
-                        onChangeText={text => setCardExpirationValue(text)}
-                        value={cardExpiration}
-                      />
-                      <View style={GlobalStyle.auth_line} />
-                    </View>
-
-                    <View style={{width:'100%', marginTop: 22}}>
-                      <CustomText style={styles.info_title}>CVC</CustomText>
-                      <CustomTextInput
-                        style={GlobalStyle.auth_input}
-                        placeholder={'CVC'}
-                        keyboardType={'number-pad'}
-                        placeholderTextColor={COLOR.alphaWhiteColor50}
-                        onChangeText={text => setCvc(text)}
-                        maxLength={3}
-                        value={cvc}
-                      />
-                      <View style={GlobalStyle.auth_line} />
-                    </View>
-
-                    <TouchableWithoutFeedback onPress={onAddPaymentMethod}>
-                      <View style={styles.bottom_button}>
-                        <ColorButton title={'Add Card'} backgroundColor={COLOR.whiteColor} color={COLOR.blackColor} />
-                      </View>
-                    </TouchableWithoutFeedback>
+                  <View style={{width: (viewportWidth - 72) / 2, marginLeft: 24}}>
+                    <CustomText style={styles.info_title}>Security Code</CustomText>
+                    <CustomTextInput
+                      style={{...GlobalStyle.auth_input, color: COLOR.blackColor}}
+                      placeholder={'CVC'}
+                      keyboardType={'number-pad'}
+                      placeholderTextColor={COLOR.alphaBlackColor50}
+                      onChangeText={text => setCvc(text)}
+                      maxLength={3}
+                      value={cvc}
+                    />
+                    <View style={{...GlobalStyle.auth_line, backgroundColor: COLOR.alphaBlackColor20}} />
                   </View>
                 </View>
-              </TouchableWithoutFeedback>
-            </ScrollView>
-          </KeyboardAvoidingView>
+
+                <View style={{width:'100%', marginTop: 33}}>
+                  <CustomText style={{...styles.info_title, fontSize: 16, fontWeight: '600'}}>Billing Information</CustomText>
+                </View>
+
+                <View style={{width:'100%', marginTop: 33, zIndex: 10}}>
+                  <CustomText style={styles.info_title}>Street Address</CustomText>
+                    <GooglePlacesAutocomplete
+                      ref={ref => {
+                        googleAddressRef = ref; 
+                      }}
+                      placeholder='Search Location'
+                      onPress={(data, details = null) => {
+                        selectAddress(data, details);
+                      }}
+                      textInputProps={{
+                        placeholder: 'Search Location',
+                        placeholderTextColor: COLOR.alphaBlackColor50,
+                        onFocus: () => onEditGoogleAddress(),
+                        onChangeText: () => onEditGoogleAddress(),
+                      }}
+                      fetchDetails={true}
+                      styles={{
+                        textInputContainer: {
+                          backgroundColor: COLOR.clearColor,
+                        },
+                        textInput: {
+                          height: 38,
+                          color: COLOR.blackColor,
+                          fontSize: 16,
+                          paddingLeft: 0,
+                          backgroundColor: COLOR.clearColor,
+                        },
+                        predefinedPlacesDescription: {
+                          color: COLOR.alphaBlackColor50,
+                        },
+                      }}
+                      query={{
+                        key: GOOGLE_MAP_KEY,
+                        language: 'en',
+                        components: 'country:us',
+                        types: 'address',
+                      }}
+                    />
+                  <View style={{...GlobalStyle.auth_line, backgroundColor: COLOR.alphaBlackColor20}} />
+                </View>
+
+                <View style={{width:'100%', marginTop: 22, flexDirection: 'row'}}>
+                  <View style={{width: (viewportWidth - 72) / 2}}>
+                    <CustomText style={styles.info_title}>City</CustomText>
+                    <CustomTextInput
+                      style={{...GlobalStyle.auth_input, color: COLOR.blackColor}}
+                      placeholder={'City'}
+                      placeholderTextColor={COLOR.alphaBlackColor50}
+                      onChangeText={text => setCity(text)}
+                      value={city}
+                      editable={false}
+                    />
+                    <View style={{...GlobalStyle.auth_line, backgroundColor: COLOR.alphaBlackColor20}} />
+                  </View>
+
+                  <View style={{width: (viewportWidth - 72) / 2, marginLeft: 24}}>
+                    <CustomText style={styles.info_title}>State</CustomText>
+                    <CustomTextInput
+                      style={{...GlobalStyle.auth_input, color: COLOR.blackColor}}
+                      placeholder={'State'}
+                      placeholderTextColor={COLOR.alphaBlackColor50}
+                      onChangeText={text => setState(text)}
+                      value={state}
+                      editable={false}
+                    />
+                    <View style={{...GlobalStyle.auth_line, backgroundColor: COLOR.alphaBlackColor20}} />
+                  </View>
+                </View>
+
+                <View style={{width:'100%', marginTop: 22, flexDirection: 'row'}}>
+                  <View style={{width: (viewportWidth - 72) / 2}}>
+                    <CustomText style={styles.info_title}>Zip Code</CustomText>
+                    <CustomTextInput
+                      style={{...GlobalStyle.auth_input, color: COLOR.blackColor}}
+                      placeholder={'Zip Code'}
+                      placeholderTextColor={COLOR.alphaBlackColor50}
+                      onChangeText={text => setZipCode(text)}
+                      value={zipCode}
+                      editable={false}
+                    />
+                    <View style={{...GlobalStyle.auth_line, backgroundColor: COLOR.alphaBlackColor20}} />
+                  </View>
+
+                  <View style={{width: (viewportWidth - 72) / 2, marginLeft: 24}}>
+                    <CustomText style={styles.info_title}>Country</CustomText>
+                    <CustomTextInput
+                      style={{...GlobalStyle.auth_input, color: COLOR.blackColor}}
+                      placeholder={'Country'}
+                      placeholderTextColor={COLOR.alphaBlackColor50}
+                      onChangeText={text => setCountry(text)}
+                      value={country}
+                      editable={false}
+                    />
+                    <View style={{...GlobalStyle.auth_line, backgroundColor: COLOR.alphaBlackColor20}} />
+                  </View>
+                </View>
+
+                <TouchableWithoutFeedback onPress={onAddPaymentMethod}>
+                  <View style={styles.bottom_button}>
+                    <ColorButton title={'Save Card'} backgroundColor={COLOR.redColor} color={COLOR.systemWhiteColor} />
+                  </View>
+                </TouchableWithoutFeedback>
+              </View>
+            </TouchableWithoutFeedback>
+          </KeyboardAwareScrollView>
         </View>
       </SafeAreaView>
     </Container>
@@ -253,7 +443,7 @@ const styles = StyleSheet.create({
   background: {
     width: '100%', 
     flex: 1, 
-    backgroundColor: COLOR.blackColor, 
+    backgroundColor: COLOR.whiteColor, 
     alignItems: 'center',
   },
   safe_area: {
@@ -274,9 +464,9 @@ const styles = StyleSheet.create({
     lineHeight: 33,
     fontFamily: FONT.AN_Regular,
     fontWeight: '600' ,
-    fontSize: 24, 
+    fontSize: 14, 
     textAlign: 'center',
-    color: COLOR.systemWhiteColor,
+    color: COLOR.blackColor,
   },
   back_icon: {
     position: 'absolute',
@@ -299,7 +489,6 @@ const styles = StyleSheet.create({
     lineHeight: 23,
     fontFamily: FONT.AN_Regular,
     fontSize: 12,
-    fontWeight: '600',
-    color: COLOR.alphaWhiteColor75,
+    color: COLOR.blackColor,
   },
 });
