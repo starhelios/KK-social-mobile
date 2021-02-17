@@ -149,6 +149,8 @@ export const BecomeAHostScreen: React.FC = () => {
       multiple: false,
       cropping: true,
       mediaType: "photo",
+      width: 200,
+      height: 200,
     })
     .then((image) => {
       const file = {
@@ -171,6 +173,8 @@ export const BecomeAHostScreen: React.FC = () => {
       multiple: false,
       cropping: true,
       mediaType: "photo",
+      width: 200,
+      height: 200,
     })
     .then((image) => {
       const file: IFile = {

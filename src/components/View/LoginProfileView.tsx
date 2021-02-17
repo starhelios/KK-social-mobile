@@ -53,6 +53,7 @@ export const LoginProfileView: React.FC = () => {
   }, [userInfo]);
 
   const initUserInfo = () => {
+    SetApiConfig('');
     dispatch({
       type: ActionType.SET_USER_INFO,
       payload: {
