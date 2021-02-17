@@ -202,7 +202,7 @@ export const EditExperienceScreen: React.FC = ({route}) => {
       cropping: true,
       mediaType: "photo",
       width: 300,
-      height: 300,
+      height: 400,
     })
     .then((image) => {
       let fileName = generateName();
@@ -226,7 +226,7 @@ export const EditExperienceScreen: React.FC = ({route}) => {
       cropping: true,
       mediaType: "photo",
       width: 300,
-      height: 300,
+      height: 400,
     })
     .then((image) => {
       let fileName = generateName();

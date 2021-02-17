@@ -172,6 +172,7 @@ export const HostAnExperienceScreen: React.FC = () => {
           .child(`${filename}.jpg`)
           .getDownloadURL()
           .then((url) => {
+            console.log(url);
             let images = experienceImageList;
             images.push(url);
             uploadExperienceImage(images, imageIndex + 1);
@@ -197,10 +198,10 @@ export const HostAnExperienceScreen: React.FC = () => {
     ImagePicker.openPicker({
       includeBase64: true,
       multiple: false,
-      cropping: false,
+      cropping: true,
       mediaType: "photo",
       width: 300,
-      height: 300,
+      height: 400,
     })
     .then((image) => {
       onSelectedPhoto(index, Platform.OS === 'android'
@@ -217,7 +218,7 @@ export const HostAnExperienceScreen: React.FC = () => {
       cropping: true,
       mediaType: "photo",
       width: 300,
-      height: 300,
+      height: 400,
     })
     .then((image) => {
       onSelectedPhoto(index, Platform.OS === 'android'
