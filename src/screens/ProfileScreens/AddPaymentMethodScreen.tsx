@@ -4,10 +4,7 @@ import {
   StyleSheet,
   View,
   TouchableWithoutFeedback,
-  Platform,
-  ScrollView,
   Keyboard,
-  KeyboardAvoidingView,
   Alert,
   EmitterSubscription,
 } from 'react-native';
@@ -35,7 +32,7 @@ import {
   GetCardExpirationMonth, 
   GetCardExpirationYear, 
   GOOGLE_MAP_KEY, 
-  Icon_Back_Black,
+  Icon_Back, 
   MARGIN_TOP,
   SUCCESS_MESSAGE,
   viewportWidth,
@@ -249,12 +246,12 @@ export const AddPaymentMethodScreen: React.FC = () => {
 
           <TouchableWithoutFeedback onPress={() => goBack()}>
             <View style={styles.back_icon}>
-              <SvgXml width='100%' height='100%' xml={Icon_Back_Black} />
+              <SvgXml width='100%' height='100%' xml={Icon_Back} />
             </View>
           </TouchableWithoutFeedback>
         </View>
 
-        <View style={{flex: 1}}>
+        <View style={{flex: 1, marginTop: 33}}>
           <KeyboardAwareScrollView 
             ref={ref => { scrollViewRef = ref; }}
             style={{width: '100%', height: '100%', flex: 1}} 
@@ -263,63 +260,63 @@ export const AddPaymentMethodScreen: React.FC = () => {
           >
             <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
               <View style={{marginLeft: 24, marginRight: 24, width: viewportWidth - 48}}>
-                <View style={{width:'100%', marginTop: 33}}>
+                <View style={{width:'100%'}}>
                   <CustomText style={{...styles.info_title, fontSize: 16, fontWeight: '600'}}>Card Information</CustomText>
                 </View>
 
                 <View style={{width:'100%', marginTop: 10}}>
                   <CustomText style={styles.info_title}>Name On Card</CustomText>
                   <CustomTextInput
-                    style={{...GlobalStyle.auth_input, color: COLOR.blackColor}}
+                    style={{...GlobalStyle.auth_input}}
                     placeholder={'Name On Card'}
-                    placeholderTextColor={COLOR.alphaBlackColor50}
+                    placeholderTextColor={COLOR.alphaWhiteColor50}
                     onChangeText={text => setFullName(text)}
                     value={fullName}
                   />
-                  <View style={{...GlobalStyle.auth_line, backgroundColor: COLOR.alphaBlackColor20}} />
+                  <View style={{...GlobalStyle.auth_line}} />
                 </View>
 
                 <View style={{width:'100%', marginTop: 33}}>
                   <CustomText style={styles.info_title}>Card Number</CustomText>
                   <CustomTextInput
-                    style={{...GlobalStyle.auth_input, color: COLOR.blackColor}}
+                    style={{...GlobalStyle.auth_input}}
                     placeholder={'1234 1234 1234 1234'}
                     keyboardType={'number-pad'}
                     maxLength={19}
-                    placeholderTextColor={COLOR.alphaBlackColor50}
+                    placeholderTextColor={COLOR.alphaWhiteColor50}
                     onChangeText={text => setCardNumberValue(text)}
                     value={cardNumber}
                   />
-                  <View style={{...GlobalStyle.auth_line, backgroundColor: COLOR.alphaBlackColor20}} />
+                  <View style={{...GlobalStyle.auth_line}} />
                 </View>
 
                 <View style={{width:'100%', marginTop: 22, flexDirection: 'row'}}>
                   <View style={{width: (viewportWidth - 72) / 2}}>
                     <CustomText style={styles.info_title}>Experiation Date</CustomText>
                     <CustomTextInput
-                      style={{...GlobalStyle.auth_input, color: COLOR.blackColor}}
+                      style={{...GlobalStyle.auth_input}}
                       placeholder={'MM/YY'}
                       keyboardType={'number-pad'}
                       maxLength={5}
-                      placeholderTextColor={COLOR.alphaBlackColor50}
+                      placeholderTextColor={COLOR.alphaWhiteColor50}
                       onChangeText={text => setCardExpirationValue(text)}
                       value={cardExpiration}
                     />
-                    <View style={{...GlobalStyle.auth_line, backgroundColor: COLOR.alphaBlackColor20}} />
+                    <View style={{...GlobalStyle.auth_line}} />
                   </View>
 
                   <View style={{width: (viewportWidth - 72) / 2, marginLeft: 24}}>
                     <CustomText style={styles.info_title}>Security Code</CustomText>
                     <CustomTextInput
-                      style={{...GlobalStyle.auth_input, color: COLOR.blackColor}}
+                      style={{...GlobalStyle.auth_input}}
                       placeholder={'CVC'}
                       keyboardType={'number-pad'}
-                      placeholderTextColor={COLOR.alphaBlackColor50}
+                      placeholderTextColor={COLOR.alphaWhiteColor50}
                       onChangeText={text => setCvc(text)}
                       maxLength={3}
                       value={cvc}
                     />
-                    <View style={{...GlobalStyle.auth_line, backgroundColor: COLOR.alphaBlackColor20}} />
+                    <View style={{...GlobalStyle.auth_line}} />
                   </View>
                 </View>
 
@@ -339,7 +336,7 @@ export const AddPaymentMethodScreen: React.FC = () => {
                       }}
                       textInputProps={{
                         placeholder: 'Search Location',
-                        placeholderTextColor: COLOR.alphaBlackColor50,
+                        placeholderTextColor: COLOR.alphaWhiteColor50,
                         onFocus: () => onEditGoogleAddress(),
                         onChangeText: () => onEditGoogleAddress(),
                       }}
@@ -350,13 +347,13 @@ export const AddPaymentMethodScreen: React.FC = () => {
                         },
                         textInput: {
                           height: 38,
-                          color: COLOR.blackColor,
+                          color: COLOR.systemWhiteColor,
                           fontSize: 16,
                           paddingLeft: 0,
                           backgroundColor: COLOR.clearColor,
                         },
                         predefinedPlacesDescription: {
-                          color: COLOR.alphaBlackColor50,
+                          color: COLOR.alphaWhiteColor50,
                         },
                       }}
                       query={{
@@ -366,34 +363,34 @@ export const AddPaymentMethodScreen: React.FC = () => {
                         types: 'address',
                       }}
                     />
-                  <View style={{...GlobalStyle.auth_line, backgroundColor: COLOR.alphaBlackColor20}} />
+                  <View style={{...GlobalStyle.auth_line}} />
                 </View>
 
                 <View style={{width:'100%', marginTop: 22, flexDirection: 'row'}}>
                   <View style={{width: (viewportWidth - 72) / 2}}>
                     <CustomText style={styles.info_title}>City</CustomText>
                     <CustomTextInput
-                      style={{...GlobalStyle.auth_input, color: COLOR.blackColor}}
+                      style={{...GlobalStyle.auth_input}}
                       placeholder={'City'}
-                      placeholderTextColor={COLOR.alphaBlackColor50}
+                      placeholderTextColor={COLOR.alphaWhiteColor50}
                       onChangeText={text => setCity(text)}
                       value={city}
                       editable={false}
                     />
-                    <View style={{...GlobalStyle.auth_line, backgroundColor: COLOR.alphaBlackColor20}} />
+                    <View style={{...GlobalStyle.auth_line}} />
                   </View>
 
                   <View style={{width: (viewportWidth - 72) / 2, marginLeft: 24}}>
                     <CustomText style={styles.info_title}>State</CustomText>
                     <CustomTextInput
-                      style={{...GlobalStyle.auth_input, color: COLOR.blackColor}}
+                      style={{...GlobalStyle.auth_input}}
                       placeholder={'State'}
-                      placeholderTextColor={COLOR.alphaBlackColor50}
+                      placeholderTextColor={COLOR.alphaWhiteColor50}
                       onChangeText={text => setState(text)}
                       value={state}
                       editable={false}
                     />
-                    <View style={{...GlobalStyle.auth_line, backgroundColor: COLOR.alphaBlackColor20}} />
+                    <View style={{...GlobalStyle.auth_line}} />
                   </View>
                 </View>
 
@@ -401,27 +398,27 @@ export const AddPaymentMethodScreen: React.FC = () => {
                   <View style={{width: (viewportWidth - 72) / 2}}>
                     <CustomText style={styles.info_title}>Zip Code</CustomText>
                     <CustomTextInput
-                      style={{...GlobalStyle.auth_input, color: COLOR.blackColor}}
+                      style={{...GlobalStyle.auth_input}}
                       placeholder={'Zip Code'}
-                      placeholderTextColor={COLOR.alphaBlackColor50}
+                      placeholderTextColor={COLOR.alphaWhiteColor50}
                       onChangeText={text => setZipCode(text)}
                       value={zipCode}
                       editable={false}
                     />
-                    <View style={{...GlobalStyle.auth_line, backgroundColor: COLOR.alphaBlackColor20}} />
+                    <View style={{...GlobalStyle.auth_line}} />
                   </View>
 
                   <View style={{width: (viewportWidth - 72) / 2, marginLeft: 24}}>
                     <CustomText style={styles.info_title}>Country</CustomText>
                     <CustomTextInput
-                      style={{...GlobalStyle.auth_input, color: COLOR.blackColor}}
+                      style={{...GlobalStyle.auth_input}}
                       placeholder={'Country'}
-                      placeholderTextColor={COLOR.alphaBlackColor50}
+                      placeholderTextColor={COLOR.alphaWhiteColor50}
                       onChangeText={text => setCountry(text)}
                       value={country}
                       editable={false}
                     />
-                    <View style={{...GlobalStyle.auth_line, backgroundColor: COLOR.alphaBlackColor20}} />
+                    <View style={{...GlobalStyle.auth_line}} />
                   </View>
                 </View>
 
@@ -443,7 +440,7 @@ const styles = StyleSheet.create({
   background: {
     width: '100%', 
     flex: 1, 
-    backgroundColor: COLOR.whiteColor, 
+    backgroundColor: COLOR.blackColor, 
     alignItems: 'center',
   },
   safe_area: {
@@ -464,9 +461,9 @@ const styles = StyleSheet.create({
     lineHeight: 33,
     fontFamily: FONT.AN_Regular,
     fontWeight: '600' ,
-    fontSize: 14, 
+    fontSize: 24, 
     textAlign: 'center',
-    color: COLOR.blackColor,
+    color: COLOR.systemWhiteColor,
   },
   back_icon: {
     position: 'absolute',
@@ -489,6 +486,6 @@ const styles = StyleSheet.create({
     lineHeight: 23,
     fontFamily: FONT.AN_Regular,
     fontSize: 12,
-    color: COLOR.blackColor,
+    color: COLOR.systemWhiteColor,
   },
 });
