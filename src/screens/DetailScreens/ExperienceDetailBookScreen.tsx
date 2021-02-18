@@ -123,7 +123,9 @@ export const ExperienceDetailBookScreen: React.FC = ({route}) => {
       Alert.alert('',
         ERROR_MESSAGE.NEED_LOGIN_CONTINUE,
         [
-          { text: "OK", onPress: () => navigate('ProfileTap') }
+          { text: "OK", onPress: () => {
+            navigate('TabBar', { screen: 'ProfileTab' });
+          }}
         ],
         { cancelable: false }
       );
