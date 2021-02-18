@@ -25,7 +25,7 @@ import {
   GetVisibleDateString, 
   Icon_Filter, 
   Icon_Search, 
-  MARGIN_TOP, 
+  MARGIN_TOP,
 } from '../../constants';
 import { useCategories, useExperiences, useHosts, useSearch } from '../../hooks';
 import { ICategory, IExperience, IUser, IHostList, ISearchHome } from '../../interfaces/app';
@@ -35,7 +35,7 @@ import { ActionType } from '../../redux/Reducer';
 
 
 export const HomeScreen: React.FC = () => {
-  
+
   const dispatch = useDispatch();
   const filter = useGlobalState('filter');
   const popularExperienceList = useGlobalState('experienceList');

@@ -151,8 +151,3 @@ export const GetCardNumber = (number: string) => {
   const cardNumber = `${strCardNumber.substring(0, 4)} ${strCardNumber.substring(4, 8)} ${strCardNumber.substring(8, 12)} ${strCardNumber.substring(12, 16)}`;
   return cardNumber;
 }
-
-export var NAVIGATION: any;
-export const setNavigation = (navigation: any) => {
-  NAVIGATION = navigation;
-};

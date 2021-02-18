@@ -22,7 +22,11 @@ import {
 const TabStack = createMaterialBottomTabNavigator();
 
 const TabBarNavigator: React.FC = () => (
-  <TabStack.Navigator initialRouteName='' activeColor={COLOR.whiteColor} barStyle={{ backgroundColor: COLOR.whiteColor }}>
+  <TabStack.Navigator 
+    initialRouteName='' 
+    activeColor={COLOR.whiteColor} 
+    barStyle={{ backgroundColor: COLOR.whiteColor }}
+  >
     <TabStack.Screen
       name="HomeTab"
       component={HomeNavigator}
