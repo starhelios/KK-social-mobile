@@ -122,14 +122,9 @@ export const ExperienceDetailBookScreen: React.FC = ({route}) => {
     if (userInfo.id == '') {
       Alert.alert('',
         ERROR_MESSAGE.NEED_LOGIN_CONTINUE,
-        [
-          { text: "OK", onPress: () => {
-            navigate('TabBar', { screen: 'ProfileTab' });
-          }}
-        ],
+        [{ text: "OK", onPress: () => navigate('TabBar', { screen: 'ProfileTab' }) }],
         { cancelable: false }
       );
-
       return;
     } else if (guestCount == 0) {
       Alert.alert('', ERROR_MESSAGE.EMPTY_GUEST_COUNT);

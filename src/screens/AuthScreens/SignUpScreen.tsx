@@ -15,6 +15,7 @@ import { Container } from 'native-base';
 import { useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { SvgXml } from 'react-native-svg';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 // from app
@@ -114,57 +115,59 @@ export const SignUpScreen: React.FC = () => {
           </TouchableWithoutFeedback>
         </View>
         
-        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-          <View style={styles.container}>
-            <KeyboardAvoidingView behavior={Platform.OS == "ios" ? "padding" : "height"} >
-              <ScrollView>
-                <View style={styles.input_container}>
-                  <View style={{width:'100%'}}>
-                    <CustomText style={styles.info_title}>Full Name</CustomText>
-                    <CustomTextInput
-                      style={GlobalStyle.auth_input}
-                      numberOfLines={1}
-                      scrollEnabled={false}
-                      placeholder={'Full Name'}
-                      placeholderTextColor={COLOR.alphaWhiteColor50}
-                      onChangeText={text => setFullName(text)}
-                      value={fullName}
-                    />
-                    <View style={GlobalStyle.auth_line} />
-                  </View>
-
-                  <View style={{width:'100%', marginTop: 22}}>
-                    <CustomText style={styles.info_title}>Email Address</CustomText>
-                    <CustomTextInput
-                      style={GlobalStyle.auth_input}
-                      keyboardType={'email-address'}
-                      placeholder={'Email Address'}
-                      autoCapitalize='none'
-                      placeholderTextColor={COLOR.alphaWhiteColor50}
-                      onChangeText={text => setEmailAddress(text)}
-                      value={emailAddress}
-                    />
-                    <View style={GlobalStyle.auth_line} />
-                  </View>
-
-                  <View style={{width:'100%', marginTop: 22}}>
-                    <CustomText style={styles.info_title}>Password</CustomText>
-                    <CustomTextInput
-                      style={GlobalStyle.auth_input}
-                      placeholder={'Password'}
-                      autoCapitalize='none'
-                      secureTextEntry={true}
-                      placeholderTextColor={COLOR.alphaWhiteColor50}
-                      onChangeText={text => setPassword(text)}
-                      value={password}
-                    />
-                    <View style={GlobalStyle.auth_line} />
-                  </View>
+        <KeyboardAwareScrollView 
+          style={{width: '100%', height: '100%', flex: 1}} 
+          keyboardDismissMode="interactive" 
+          keyboardShouldPersistTaps="always"
+        >
+          <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+            <View style={styles.container}>
+              <View style={styles.input_container}>
+                <View style={{width:'100%'}}>
+                  <CustomText style={styles.info_title}>Full Name</CustomText>
+                  <CustomTextInput
+                    style={GlobalStyle.auth_input}
+                    numberOfLines={1}
+                    scrollEnabled={false}
+                    placeholder={'Full Name'}
+                    placeholderTextColor={COLOR.alphaWhiteColor50}
+                    onChangeText={text => setFullName(text)}
+                    value={fullName}
+                  />
+                  <View style={GlobalStyle.auth_line} />
                 </View>
-              </ScrollView>
-            </KeyboardAvoidingView>
-          </View>
-        </TouchableWithoutFeedback>
+
+                <View style={{width:'100%', marginTop: 22}}>
+                  <CustomText style={styles.info_title}>Email Address</CustomText>
+                  <CustomTextInput
+                    style={GlobalStyle.auth_input}
+                    keyboardType={'email-address'}
+                    placeholder={'Email Address'}
+                    autoCapitalize='none'
+                    placeholderTextColor={COLOR.alphaWhiteColor50}
+                    onChangeText={text => setEmailAddress(text)}
+                    value={emailAddress}
+                  />
+                  <View style={GlobalStyle.auth_line} />
+                </View>
+
+                <View style={{width:'100%', marginTop: 22}}>
+                  <CustomText style={styles.info_title}>Password</CustomText>
+                  <CustomTextInput
+                    style={GlobalStyle.auth_input}
+                    placeholder={'Password'}
+                    autoCapitalize='none'
+                    secureTextEntry={true}
+                    placeholderTextColor={COLOR.alphaWhiteColor50}
+                    onChangeText={text => setPassword(text)}
+                    value={password}
+                  />
+                  <View style={GlobalStyle.auth_line} />
+                </View>
+              </View>
+            </View>
+          </TouchableWithoutFeedback>
+        </KeyboardAwareScrollView>
         
         <TouchableWithoutFeedback onPress={ onCreateAccount }>
           <View style={styles.bottom_button}>
