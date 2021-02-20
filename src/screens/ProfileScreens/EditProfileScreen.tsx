@@ -80,7 +80,7 @@ export const EditProfileScreen: React.FC = () => {
   const [avatarFile, setAvatarFile] = useState<IFile | null>(null);
   const [fullName, setFullName] = useState<string>(profile.fullname);
   const [emailAddress, setEmailAddress] = useState<string>(profile.email);
-  const [birthday, setBirthday] = useState<string>(convertStringToDateFormat(profile.dateOfBirth, 'YYYY-MM-DD'));
+  const [birthday, setBirthday] = useState<string>(convertStringToDateFormat(profile.dateOfBirth, 'MM-DD-YYYY'));
   const [mode, setMode] = useState<"date" | "time" | undefined>('date');
   const [showDatePicker, setShowDatePicker] = useState<boolean>(false);
   const [pickerDate, setPickerDate] = useState<Date>(birthday != undefined && birthday != '' ? new Date(birthday) : new Date());
@@ -99,7 +99,7 @@ export const EditProfileScreen: React.FC = () => {
     setImage(profile.avatarUrl);
     setFullName(profile.fullname);
     setEmailAddress(profile.email);
-    setBirthday(convertStringToDateFormat(profile.dateOfBirth, 'YYYY-MM-DD'));
+    setBirthday(convertStringToDateFormat(profile.dateOfBirth, 'MM-DD-YYYY'));
   }, [profile]);
 
   const selectAddress = (address: GooglePlaceData, details: GooglePlaceDetail | null) => {
@@ -139,7 +139,7 @@ export const EditProfileScreen: React.FC = () => {
     if (selectedDate === undefined) {
     } else {
       setPickerDate(selectedDate);
-      setBirthday(convertDateToMomentDateFormat(selectedDate, 'YYYY-MM-DD'));
+      setBirthday(convertDateToMomentDateFormat(selectedDate, 'MM-DD-YYYY'));
     }
   };
 
@@ -445,7 +445,7 @@ export const EditProfileScreen: React.FC = () => {
   }
   
   function onConfirmBirthday() {
-    setBirthday(convertDateToMomentDateFormat(pickerDate, 'YYYY-MM-DD'));
+    setBirthday(convertDateToMomentDateFormat(pickerDate, 'MM-DD-YYYY'));
     setShowDatePicker(false);
   }
 

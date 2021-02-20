@@ -71,7 +71,7 @@ export const BecomeAHostScreen: React.FC = () => {
   const [image, setImage] = useState<string>(profile.avatarUrl);
   const [fullName, setFullName] = useState<string>(profile.fullname);
   const [emailAddress, setEmailAddress] = useState<string>(profile.email);
-  const [birthday, setBirthday] = useState<string>(convertStringToDateFormat(profile.dateOfBirth, 'YYYY-MM-DD'));
+  const [birthday, setBirthday] = useState<string>(convertStringToDateFormat(profile.dateOfBirth, 'MM-DD-YYYY'));
   const [aboutMe, setAboutMe] = useState<string>(profile.aboutMe);
   const [avatarFile, setAvatarFile] = useState<IFile | null>(null);
   const [showDatePicker, setShowDatePicker] = useState<boolean>(false);
@@ -85,7 +85,7 @@ export const BecomeAHostScreen: React.FC = () => {
     setFullName(profile.fullname);
     setEmailAddress(profile.email);
     setAboutMe(profile.aboutMe);
-    setBirthday(convertStringToDateFormat(profile.dateOfBirth, 'YYYY-MM-DD'));
+    setBirthday(convertStringToDateFormat(profile.dateOfBirth, 'MM-DD-YYYY'));
   }, [profile]);
 
   const selectAddress = (address: GooglePlaceData, details: GooglePlaceDetail | null) => {
@@ -125,7 +125,7 @@ export const BecomeAHostScreen: React.FC = () => {
     if (selectedDate === undefined) {
     } else {
       setPickerDate(selectedDate);
-      setBirthday(convertDateToMomentDateFormat(selectedDate, 'YYYY-MM-DD'));
+      setBirthday(convertDateToMomentDateFormat(selectedDate, 'MM-DD-YYYY'));
     }
   };
 
@@ -135,7 +135,7 @@ export const BecomeAHostScreen: React.FC = () => {
   };
 
   const onConfirmBirthday = () => {
-    setBirthday(convertDateToMomentDateFormat(pickerDate, 'YYYY-MM-DD'));
+    setBirthday(convertDateToMomentDateFormat(pickerDate, 'MM-DD-YYYY'));
     setShowDatePicker(false);
   }
 
