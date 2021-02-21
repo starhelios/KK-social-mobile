@@ -440,8 +440,13 @@ export const EditProfileScreen: React.FC = () => {
   }
 
   function onSelectBirthday() {
-    setPickerDate(birthday != undefined && birthday != '' ? new Date(birthday) : new Date());
-    setShowDatePicker(true);
+    if (birthday != undefined && birthday != '') {
+      setPickerDate(new Date(birthday.split("-")[2] + '-' + birthday.split("-")[0] + '-' + birthday.split("-")[1]));
+      setShowDatePicker(true);
+    } else {
+      setPickerDate(new Date());
+      setShowDatePicker(true);
+    }
   }
   
   function onConfirmBirthday() {
