@@ -243,7 +243,8 @@ const styles = StyleSheet.create({
   },
   bottom_button: {
     position: 'absolute',
-    bottom: 33,
+    top: viewportHeight - 77,
+    // bottom: 33,
     marginLeft: 48,
     marginRight: 48,
     width: viewportWidth - 96,
