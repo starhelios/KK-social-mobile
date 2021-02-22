@@ -8,6 +8,7 @@ import {
 import { Container } from 'native-base';
 import { useNavigation } from '@react-navigation/native';
 import { SvgXml } from 'react-native-svg';
+import { WebView } from 'react-native-webview';
 
 // from app
 import { 
@@ -36,6 +37,15 @@ export const PrivacyPolicyScreen: React.FC = () => {
               <SvgXml width='100%' height='100%' xml={Icon_Back} />
             </View>
           </TouchableWithoutFeedback>
+        </View>
+
+        <View style={{width: '100%', height: '100%', flex: 1, marginTop: 0, backgroundColor: COLOR.systemWhiteColor}}>
+          <WebView
+            source={require('../../assets/html/privacy_policy.html')}
+            showsHorizontalScrollIndicator={false}
+            showsVerticalScrollIndicator={false}
+            style={{marginLeft: 15, marginRight: 15, height: '100%', backgroundColor: COLOR.systemWhiteColor}}
+          />
         </View>
       </SafeAreaView>
     </Container>

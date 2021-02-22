@@ -16,7 +16,6 @@ import { SvgXml } from 'react-native-svg';
 // from app
 import { 
   COLOR, 
-  convertDateToMomentDateFormat, 
   convertStringToDate, 
   convertStringToDateFormat, 
   CustomText, 

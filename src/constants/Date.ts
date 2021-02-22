@@ -39,6 +39,7 @@ export const convertDateToMomentDateFormat = (date: Date, format: string) => {
   if (date == undefined) {
     return '';
   } else {
-    return Moment.utc(date).format(format);
+    // return Moment.utc(date).format(format);
+    return Moment(date).format(format);
   }
 }
