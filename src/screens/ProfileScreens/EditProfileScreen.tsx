@@ -220,7 +220,7 @@ export const EditProfileScreen: React.FC = () => {
 
                   <View style={{width:'100%', marginTop: 22}}>
                     <CustomText style={styles.info_title}>Date of Birth</CustomText>
-                    <TouchableWithoutFeedback onPress={() => onSelectBirthday()}>
+                    <TouchableWithoutFeedback onPress={() => setShowDatePicker(true)}>
                       <CustomText style={{...GlobalStyle.auth_input, color: COLOR.systemWhiteColor, lineHeight: 45}}>
                         {convertDateToMomentDateFormat(pickerDate, 'MM-DD-YYYY')}
                       </CustomText>
@@ -412,10 +412,6 @@ export const EditProfileScreen: React.FC = () => {
     })
     .catch((e) => {
     });
-  }
-
-  function onSelectBirthday() {
-    setShowDatePicker(true);
   }
   
   async function onSave() {
