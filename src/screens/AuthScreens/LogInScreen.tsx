@@ -31,6 +31,7 @@ import {
   IS_FIRST_LOGIN, 
   LOGIN_TYPE, 
   MARGIN_TOP, 
+  PASSWORD, 
   USER_EMAIL,
   viewportHeight,
   viewportWidth, 
@@ -84,7 +85,8 @@ export const LogInScreen: React.FC = () => {
   const saveUserInfo = async () => {
     await AsyncStorage.setItem(LOGIN_TYPE, EMAIL_LOGIN);
     await AsyncStorage.setItem(USER_EMAIL, emailAddress);
-    await AsyncStorage.setItem(USER_EMAIL, password);
+    await AsyncStorage.setItem(PASSWORD, password);
+
     AsyncStorage.getItem(IS_FIRST_LOGIN).then(async (is_first_login) => {
       if (is_first_login != null && is_first_login == 'false') {
       } else {

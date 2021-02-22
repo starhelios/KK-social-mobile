@@ -21,7 +21,7 @@ import { useEffect, useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { SvgXml } from 'react-native-svg';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
-import DateTimePicker from '@react-native-community/datetimepicker';
+import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import ImagePicker from 'react-native-image-crop-picker';
 import LinearGradient from 'react-native-linear-gradient';
 import Spinner from 'react-native-loading-spinner-overlay';
@@ -71,12 +71,11 @@ export const BecomeAHostScreen: React.FC = () => {
   const [image, setImage] = useState<string>(profile.avatarUrl);
   const [fullName, setFullName] = useState<string>(profile.fullname);
   const [emailAddress, setEmailAddress] = useState<string>(profile.email);
-  const [birthday, setBirthday] = useState<string>(convertStringToDateFormat(profile.dateOfBirth, 'MM-DD-YYYY'));
   const [aboutMe, setAboutMe] = useState<string>(profile.aboutMe);
   const [avatarFile, setAvatarFile] = useState<IFile | null>(null);
   const [showDatePicker, setShowDatePicker] = useState<boolean>(false);
   const [mode, setMode] = useState<"date" | "time" | undefined>('date');
-  const [pickerDate, setPickerDate] = useState<Date>(birthday != undefined && birthday != '' ? new Date(birthday) : new Date());
+  const [pickerDate, setPickerDate] = useState<Date>(profile.dateOfBirth == undefined || profile.dateOfBirth == '' ? new Date() : new Date(profile.dateOfBirth));
   const [showKeyboard, setShowKeyboard] = useState<boolean>(false);
 
   
@@ -85,7 +84,7 @@ export const BecomeAHostScreen: React.FC = () => {
     setFullName(profile.fullname);
     setEmailAddress(profile.email);
     setAboutMe(profile.aboutMe);
-    setBirthday(convertStringToDateFormat(profile.dateOfBirth, 'MM-DD-YYYY'));
+    setPickerDate(profile.dateOfBirth == undefined || profile.dateOfBirth == '' ? new Date() : new Date(profile.dateOfBirth));
   }, [profile]);
 
   const selectAddress = (address: GooglePlaceData, details: GooglePlaceDetail | null) => {
@@ -116,28 +115,6 @@ export const BecomeAHostScreen: React.FC = () => {
       keyboardDidHideListener.remove();
     }
   }, []);  
-
-  const onChange = (event: any, selectedDate: any) => {
-    if (Platform.OS != 'ios') {
-      setShowDatePicker(false);
-    }
-    
-    if (selectedDate === undefined) {
-    } else {
-      setPickerDate(selectedDate);
-      setBirthday(convertDateToMomentDateFormat(selectedDate, 'MM-DD-YYYY'));
-    }
-  };
-
-  const showMode = (currentMode: "date" | "time" | undefined) => {
-    setShowDatePicker(true);
-    setMode(currentMode);
-  };
-
-  const onConfirmBirthday = () => {
-    setBirthday(convertDateToMomentDateFormat(pickerDate, 'MM-DD-YYYY'));
-    setShowDatePicker(false);
-  }
 
   const onSelectPhoto = () => {
     onChoosePhoto();
@@ -198,6 +175,15 @@ export const BecomeAHostScreen: React.FC = () => {
     }
   }
 
+  const handleConfirm = (date: Date) => {
+    hideDatePicker();
+    setPickerDate(date);
+  };
+
+  const hideDatePicker = () => {
+    setShowDatePicker(false);
+  };
+
   const onBecomeAHost = async () => {
     if (fetchingData == true) {
       return;
@@ -218,9 +204,6 @@ export const BecomeAHostScreen: React.FC = () => {
       return;
     } else if (emailAddress == '') {
       Alert.alert('', ERROR_MESSAGE.EMPTY_EMAIL_ADDRESS);
-      return;
-    } else if (birthday == '') {
-      Alert.alert('', ERROR_MESSAGE.EMPTY_BIRTHDAY);
       return;
     } else if (aboutMe == '') {
       Alert.alert('', ERROR_MESSAGE.EMPTY_ABOUTME);
@@ -260,7 +243,7 @@ export const BecomeAHostScreen: React.FC = () => {
   }
 
   const saveProfile = (avatarUrl: string, location: string) => {
-    updateUserInformation(profile.id, emailAddress, fullName, birthday, aboutMe, location, '', avatarUrl, true)
+    updateUserInformation(profile.id, emailAddress, fullName, convertDateToMomentDateFormat(pickerDate, 'MM-DD-YYYY'), aboutMe, location, '', avatarUrl, true)
     .then(async (result: Promise<IUser>) => {
       fetchingData = false;
       setUploading(false);
@@ -354,8 +337,8 @@ export const BecomeAHostScreen: React.FC = () => {
                   <View style={{width:'100%', marginTop: 22}}>
                     <CustomText style={styles.info_title}>Date of Birth</CustomText>
                     <TouchableWithoutFeedback onPress={() => setShowDatePicker(true) }>
-                      <CustomText style={{...GlobalStyle.auth_input, color: birthday != '' ? COLOR.systemWhiteColor : COLOR.alphaWhiteColor50, lineHeight: 45}}>
-                        {birthday != '' ? birthday : 'Date of Birth'}
+                      <CustomText style={{...GlobalStyle.auth_input, color: COLOR.systemWhiteColor, lineHeight: 45}}>
+                        { convertDateToMomentDateFormat(pickerDate, 'MM-DD-YYYY') }
                       </CustomText>
                     </TouchableWithoutFeedback>
                     <View style={GlobalStyle.auth_line} />
@@ -424,32 +407,14 @@ export const BecomeAHostScreen: React.FC = () => {
         </View>
       </SafeAreaView>
 
-      { showDatePicker && (
-        <View style={{...styles.datePickerBackground, backgroundColor: Platform.OS == 'ios' ? COLOR.whiteColor : COLOR.clearColor }} >
-          <View style={styles.datePickerContainer}>
-
-            <DateTimePicker
-              value={pickerDate}
-              onChange={onChange}
-              style={styles.datePicker}
-              firstDayOfWeek={2}
-              maximumDate={new Date()}
-              minimumDate={new Date('1960')}
-              dateFormat={'shortdate'}
-              dayOfWeekFormat={'{dayofweek.abbreviated(2)}'}
-              placeholderText="Select Date"
-            />
-
-            { Platform.OS == 'ios' && 
-              <TouchableWithoutFeedback onPress={() => onConfirmBirthday() }>
-                <View style={styles.datePickerConfirm}>
-                  <CustomText style={styles.confirm_text}>Confirm</CustomText>
-                </View>
-              </TouchableWithoutFeedback>
-            }
-          </View>
-        </View>
-      )}
+      <DateTimePickerModal
+        headerTextIOS='Select Birthday'
+        date={pickerDate}
+        isVisible={showDatePicker}
+        mode="date"
+        onConfirm={handleConfirm}
+        onCancel={hideDatePicker}
+      />
 
       <Spinner
         visible={uploading}

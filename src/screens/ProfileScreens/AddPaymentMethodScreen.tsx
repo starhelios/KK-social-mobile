@@ -124,7 +124,7 @@ export const AddPaymentMethodScreen: React.FC = () => {
     } else if (fullName == '') {
       Alert.alert('', ERROR_MESSAGE.EMPTY_FULL_NAME);
       return;
-    } else if (cardNumber.length != 19) {
+    } else if (cardNumber.length < 10) {
       Alert.alert('', ERROR_MESSAGE.EMPTY_CARD_NUMBER);
       return;
     } else if (cardExpiration.length != 5) {
