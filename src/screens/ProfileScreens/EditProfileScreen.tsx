@@ -26,13 +26,14 @@ import firebase from 'firebase';
 import Autocomplete from 'react-native-autocomplete-input';
 import ImagePicker from 'react-native-image-crop-picker';
 import LinearGradient from 'react-native-linear-gradient';
-import DateTimePicker from '@react-native-community/datetimepicker';
+import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import Spinner from 'react-native-loading-spinner-overlay';
 
 // from app
 import { 
   COLOR, 
   convertDateToMomentDateFormat, 
+  convertStringToDate, 
   convertStringToDateFormat, 
   CustomText, 
   CustomTextInput, 
@@ -80,10 +81,9 @@ export const EditProfileScreen: React.FC = () => {
   const [avatarFile, setAvatarFile] = useState<IFile | null>(null);
   const [fullName, setFullName] = useState<string>(profile.fullname);
   const [emailAddress, setEmailAddress] = useState<string>(profile.email);
-  const [birthday, setBirthday] = useState<string>(convertStringToDateFormat(profile.dateOfBirth, 'MM-DD-YYYY'));
   const [mode, setMode] = useState<"date" | "time" | undefined>('date');
   const [showDatePicker, setShowDatePicker] = useState<boolean>(false);
-  const [pickerDate, setPickerDate] = useState<Date>(birthday != undefined && birthday != '' ? new Date(birthday) : new Date());
+  const [pickerDate, setPickerDate] = useState<Date>(profile.dateOfBirth == undefined || profile.dateOfBirth == '' ? new Date() : new Date(profile.dateOfBirth));
   const [categoryList, setCategoryList] = useState<ICategory[]>([]);
   const [aboutMe, setAboutMe] = useState<string>(profile.aboutMe);
   const [category, setCategory] = useState<string>(profile.categoryName);
@@ -99,7 +99,7 @@ export const EditProfileScreen: React.FC = () => {
     setImage(profile.avatarUrl);
     setFullName(profile.fullname);
     setEmailAddress(profile.email);
-    setBirthday(convertStringToDateFormat(profile.dateOfBirth, 'MM-DD-YYYY'));
+    setPickerDate(profile.dateOfBirth == undefined || profile.dateOfBirth == '' ? new Date() : new Date(profile.dateOfBirth));
   }, [profile]);
 
   const selectAddress = (address: GooglePlaceData, details: GooglePlaceDetail | null) => {
@@ -116,6 +116,15 @@ export const EditProfileScreen: React.FC = () => {
     setShowKeyboard(false);
   }
 
+  const handleConfirm = (date: Date) => {
+    hideDatePicker();
+    setPickerDate(date);
+  };
+
+  const hideDatePicker = () => {
+    setShowDatePicker(false);
+  };
+
   useEffect(() => {
     keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', keyboardDidShow);
     keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', keyboardDidHide);
@@ -130,25 +139,6 @@ export const EditProfileScreen: React.FC = () => {
       keyboardDidHideListener.remove();
     }
   }, []);  
-
-  const onChange = (event: any, selectedDate: any) => {
-    if (Platform.OS != 'ios') {
-      setShowDatePicker(false);
-    }
-    
-    if (selectedDate === undefined) {
-    } else {
-      setPickerDate(selectedDate);
-      setBirthday(convertDateToMomentDateFormat(selectedDate, 'MM-DD-YYYY'));
-    }
-  };
-
-  const showMode = (currentMode: "date" | "time" | undefined) => {
-    setShowDatePicker(true);
-    setMode(currentMode);
-    // showMode('date');
-    // showMode('time');
-  };
 
   const onEditGoogleAddress = () => {
     if (scrollViewRef != null) {
@@ -231,8 +221,8 @@ export const EditProfileScreen: React.FC = () => {
                   <View style={{width:'100%', marginTop: 22}}>
                     <CustomText style={styles.info_title}>Date of Birth</CustomText>
                     <TouchableWithoutFeedback onPress={() => onSelectBirthday()}>
-                      <CustomText style={{...GlobalStyle.auth_input, color: birthday != '' ? COLOR.systemWhiteColor : COLOR.alphaWhiteColor50, lineHeight: 45}}>
-                        {birthday != '' ? birthday : 'Date of Birth'}
+                      <CustomText style={{...GlobalStyle.auth_input, color: COLOR.systemWhiteColor, lineHeight: 45}}>
+                        {convertDateToMomentDateFormat(pickerDate, 'MM-DD-YYYY')}
                       </CustomText>
                     </TouchableWithoutFeedback>
                     <View style={GlobalStyle.auth_line} />
@@ -352,31 +342,14 @@ export const EditProfileScreen: React.FC = () => {
         </View>
       </SafeAreaView>
 
-      { showDatePicker && (
-        <View style={{...styles.datePickerBackground, backgroundColor: Platform.OS == 'ios' ? COLOR.whiteColor : COLOR.clearColor }} >
-          <View style={styles.datePickerContainer}>
-            <DateTimePicker
-              value={pickerDate}
-              onChange={onChange}
-              style={styles.datePicker}
-              firstDayOfWeek={2}
-              maximumDate={new Date()}
-              minimumDate={new Date('1960')}
-              dateFormat={'shortdate'}
-              dayOfWeekFormat={'{dayofweek.abbreviated(2)}'}
-              placeholderText="Select Date"
-            />
-
-            { Platform.OS == 'ios' && 
-              <TouchableWithoutFeedback onPress={() => onConfirmBirthday() }>
-                <View style={styles.datePickerConfirm}>
-                  <CustomText style={styles.confirm_text}>Confirm</CustomText>
-                </View>
-              </TouchableWithoutFeedback>
-            }
-          </View>
-        </View>
-      )}
+      <DateTimePickerModal
+        headerTextIOS='Select Birthday'
+        date={pickerDate}
+        isVisible={showDatePicker}
+        mode="date"
+        onConfirm={handleConfirm}
+        onCancel={hideDatePicker}
+      />
 
       <Spinner
         visible={uploading}
@@ -385,6 +358,8 @@ export const EditProfileScreen: React.FC = () => {
       />
     </Container>
   );
+
+  
 
   function onSelectPhoto() {
     onChoosePhoto();
@@ -440,15 +415,9 @@ export const EditProfileScreen: React.FC = () => {
   }
 
   function onSelectBirthday() {
-    setPickerDate(birthday != undefined && birthday != '' ? new Date(birthday) : new Date());
     setShowDatePicker(true);
   }
   
-  function onConfirmBirthday() {
-    setBirthday(convertDateToMomentDateFormat(pickerDate, 'MM-DD-YYYY'));
-    setShowDatePicker(false);
-  }
-
   async function onSave() {
     if (fetchingData == true) {
       return;
@@ -460,9 +429,6 @@ export const EditProfileScreen: React.FC = () => {
       return;
     } else if (emailAddress == '') {
       Alert.alert('', ERROR_MESSAGE.EMPTY_EMAIL_ADDRESS);
-      return;
-    } else if (birthday == '') {
-      Alert.alert('', ERROR_MESSAGE.EMPTY_BIRTHDAY);
       return;
     }
     
@@ -520,7 +486,7 @@ export const EditProfileScreen: React.FC = () => {
   }
 
   function saveProfile(avatarUrl: string, location: string) {
-    updateUserInformation(profile.id, emailAddress, fullName, birthday, aboutMe, location, category, avatarUrl, profile.isHost)
+    updateUserInformation(profile.id, emailAddress, fullName, convertDateToMomentDateFormat(pickerDate, 'MM-DD-YYYY'), aboutMe, location, category, avatarUrl, profile.isHost)
     .then(async (result: Promise<IUser>) => {
       setUploading(false);
       fetchingData = false;

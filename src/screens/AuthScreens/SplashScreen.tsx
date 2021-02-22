@@ -21,6 +21,7 @@ import {
   APPLE_LOGIN,
   intialization,
   SetApiConfig,
+  PASSWORD,
 } from '../../constants';
 import { useAuthentication } from '../../hooks';
 import { ILoginUser } from '../../interfaces/app';
@@ -108,7 +109,7 @@ export const SplashScreen: React.FC = () => {
       if (loginType == EMAIL_LOGIN) {
         AsyncStorage.getItem(USER_EMAIL).then((emailAddress) => {
           if (emailAddress != null && emailAddress != '') {
-            AsyncStorage.getItem(USER_EMAIL).then((passwordString) => {
+            AsyncStorage.getItem(PASSWORD).then((passwordString) => {
               if (passwordString != null && passwordString != '') {
                 onAutoLoginByEmail(emailAddress, passwordString);
               }
