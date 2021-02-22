@@ -32,7 +32,6 @@ import firebase from 'firebase';
 import { 
   COLOR, 
   convertDateToMomentDateFormat, 
-  convertStringToDateFormat, 
   CustomText, 
   CustomTextInput, 
   EMAIL_LOGIN, 
