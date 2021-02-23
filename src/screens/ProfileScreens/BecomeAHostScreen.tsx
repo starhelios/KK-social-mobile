@@ -183,6 +183,12 @@ export const BecomeAHostScreen: React.FC = () => {
     setShowDatePicker(false);
   };
 
+  const getPickerDate = (): Date => {
+    var date = new Date(pickerDate);
+    date.setHours(date.getHours() + 7, 0, 0, 0);
+    return date;
+  }
+
   const onBecomeAHost = async () => {
     if (fetchingData == true) {
       return;
@@ -408,7 +414,7 @@ export const BecomeAHostScreen: React.FC = () => {
 
       <DateTimePickerModal
         headerTextIOS='Select Birthday'
-        date={pickerDate}
+        date={getPickerDate()}
         isVisible={showDatePicker}
         mode="date"
         onConfirm={handleConfirm}

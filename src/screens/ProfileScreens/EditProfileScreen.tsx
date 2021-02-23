@@ -125,6 +125,12 @@ export const EditProfileScreen: React.FC = () => {
     setShowDatePicker(false);
   };
 
+  const getPickerDate = (): Date => {
+    var date = new Date(pickerDate);
+    date.setHours(date.getHours() + 7, 0, 0, 0);
+    return date;
+  }
+
   useEffect(() => {
     keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', keyboardDidShow);
     keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', keyboardDidHide);
@@ -222,7 +228,7 @@ export const EditProfileScreen: React.FC = () => {
                     <CustomText style={styles.info_title}>Date of Birth</CustomText>
                     <TouchableWithoutFeedback onPress={() => setShowDatePicker(true)}>
                       <CustomText style={{...GlobalStyle.auth_input, color: COLOR.systemWhiteColor, lineHeight: 45}}>
-                        {convertDateToMomentDateFormat(pickerDate, 'MM-DD-YYYY')}
+                        { convertDateToMomentDateFormat(pickerDate, 'MM-DD-YYYY') }
                       </CustomText>
                     </TouchableWithoutFeedback>
                     <View style={GlobalStyle.auth_line} />
@@ -344,7 +350,7 @@ export const EditProfileScreen: React.FC = () => {
 
       <DateTimePickerModal
         headerTextIOS='Select Birthday'
-        date={pickerDate}
+        date={getPickerDate()}
         isVisible={showDatePicker}
         mode="date"
         onConfirm={handleConfirm}
