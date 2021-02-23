@@ -10,6 +10,7 @@ import { Container } from 'native-base';
 import { useNavigation } from '@react-navigation/native';
 import { SvgXml } from 'react-native-svg';
 import { WebView } from 'react-native-webview';
+import WebViewFile from '../../assets/html/terms_of_service.html';
 
 // from app
 import { 
@@ -43,7 +44,7 @@ export const TermsOfServiceScreen: React.FC = () => {
         <View style={{width: '100%', height: '100%', flex: 1, marginTop: 0, backgroundColor: COLOR.systemWhiteColor}}>
           <WebView
             source={
-              Platform.OS === 'android' ? { html: require('../../assets/html/terms_of_service.js')() } : require('../../assets/html/terms_of_service.html')
+              Platform.OS === 'android' ? { html: require('../../assets/html/terms_of_service.js')() } : WebViewFile
             }
             domStorageEnabled={true}
             allowUniversalAccessFromFileURLs={true}

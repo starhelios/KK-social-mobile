@@ -20,7 +20,7 @@ import {
   MARGIN_TOP,
 } from '../../constants';
 import { useGlobalState } from '../../redux/Store';
-
+import WebViewFile from '../../assets/html/privacy_policy.html';
 
 export const PrivacyPolicyScreen: React.FC = () => {
 
@@ -43,7 +43,7 @@ export const PrivacyPolicyScreen: React.FC = () => {
         <View style={{width: '100%', height: '100%', flex: 1, marginTop: 0, backgroundColor: COLOR.systemWhiteColor}}>
           <WebView
             source={
-              Platform.OS === 'android' ? { html: require('../../assets/html/privacy_policy.js')() } : require('../../assets/html/privacy_policy.html')
+              Platform.OS === 'android' ? { html: require('../../assets/html/privacy_policy.js')() } : WebViewFile
             }
             domStorageEnabled={true}
             allowUniversalAccessFromFileURLs={true}
