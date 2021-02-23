@@ -3,12 +3,14 @@ import {
   SafeAreaView,
   StyleSheet,
   View,
+  Platform,
   TouchableWithoutFeedback,
 } from 'react-native';
 import { Container } from 'native-base';
 import { useNavigation } from '@react-navigation/native';
 import { SvgXml } from 'react-native-svg';
 import { WebView } from 'react-native-webview';
+import WebViewFile from '../../assets/html/privacy_policy.html';
 
 // from app
 import { 
@@ -41,7 +43,13 @@ export const PrivacyPolicyScreen: React.FC = () => {
 
         <View style={{width: '100%', height: '100%', flex: 1, marginTop: 0, backgroundColor: COLOR.systemWhiteColor}}>
           <WebView
-            source={require('../../assets/html/privacy_policy.html')}
+            source={
+              Platform.OS === 'android' ? { html: require("../../assets/html/privacy_policy.js")() } : WebViewFile
+            }
+            domStorageEnabled={true}
+            allowUniversalAccessFromFileURLs={true}
+            allowFileAccessFromFileURLs={true}
+            mixedContentMode="always"
             showsHorizontalScrollIndicator={false}
             showsVerticalScrollIndicator={false}
             style={{marginLeft: 15, marginRight: 15, height: '100%', backgroundColor: COLOR.systemWhiteColor}}

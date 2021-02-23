@@ -1,4 +1,6 @@
-<!DOCTYPE html>
+module.exports = function() {
+    return `
+    <!DOCTYPE html>
     <html xmlns="https://www.w3.org/1999/xhtml">
     <style type="text/css">
         p.p1 {
@@ -213,4 +215,5 @@
     <p class="p3"><strong>Privacy Notice for California Residents</strong></p>
     <p class="p8">If you are a California resident, you can learn more about your consumer privacy rights by reviewing the <span class="s1"><strong>California Privacy Notice</strong></span>.</p>
     <p class="p8"><br>Date of Last Revision: February 17, 2021</p>
-    <p class="p13"><br></p>
+    <p class="p13"><br></p>`;
+};
