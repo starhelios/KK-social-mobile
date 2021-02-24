@@ -12,6 +12,7 @@ import { Container } from 'native-base';
 import { useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { SvgXml } from 'react-native-svg';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import Spinner from 'react-native-loading-spinner-overlay';
 
 // from app
@@ -185,7 +186,8 @@ const styles = StyleSheet.create({
     position: 'absolute',
     flexDirection: 'column',
     width: '100%',
-    bottom: 33,
+    // bottom: 33,
+    top: viewportHeight - 130,
   },
   bottom_description: {
     height: 17,

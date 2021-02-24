@@ -58,7 +58,9 @@ export const YourCardButton: React.FC<props> = (props: props) => {
       <View style={styles.container}>
         { card.id != '' 
           ? <View style={styles.cardInfoContainer}>
-              <Image style={styles.cardIcon} source={getCardImage(card.cardBrand)} />
+              <View style={styles.cardIconContainer}>
+                <Image style={styles.cardIcon} source={getCardImage(card.cardBrand)} />
+              </View>
               <CustomText style={styles.card_number}>{`${card.cardBrand} ${card.last4digits}`.toUpperCase()}</CustomText>
                   
                 { isEdit == true
@@ -69,7 +71,7 @@ export const YourCardButton: React.FC<props> = (props: props) => {
                 }
             </View>
           : <View style={styles.cardInfoContainer}>
-              <Image style={styles.cardIcon} source={Img_Plus_Card} />
+              <Image style={styles.cardIconContainer} source={Img_Plus_Card} />
               <CustomText style={styles.card_number}>{`${card.cardBrand} ${card.last4digits}`}</CustomText>
             </View>
           }
@@ -90,13 +92,20 @@ const styles = StyleSheet.create({
     height: 30,
     flexDirection: 'row',
   },
-  cardIcon: {
+  cardIconContainer: {
     width: 48,
     height: '100%',
     resizeMode: 'contain',
     borderColor: COLOR.alphaWhiteColor20,
     borderWidth: 1,
     borderRadius: 5,
+    overflow: 'hidden',
+  },
+  cardIcon: {
+    width: '100%',
+    height: '100%',
+    resizeMode: 'contain',
+    overflow: 'hidden',
   },
   card_number: {
     marginLeft: 10,
@@ -131,6 +140,7 @@ const styles = StyleSheet.create({
     backgroundColor: COLOR.redColor,
     color: COLOR.systemWhiteColor,
     fontFamily: FONT.AN_Regular,
+    borderRadius: 5,
     fontSize: 14,
   },
 });

@@ -19,6 +19,7 @@ import {
   GooglePlacesAutocompleteRef, 
 } from 'react-native-google-places-autocomplete';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
+import Spinner from 'react-native-loading-spinner-overlay';
 let creditCardType = require("credit-card-type");
 
 // from app
@@ -70,6 +71,7 @@ export const AddPaymentMethodScreen: React.FC = () => {
   const [state, setState] = useState<string>('');
   const [zipCode, setZipCode] = useState<string>('');
   const [country, setCountry] = useState<string>('');
+  const [fetchingData, setFetchingData] = useState<boolean>(false);
 
   useEffect(() => {
     keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', keyboardDidShow);
@@ -168,22 +170,28 @@ export const AddPaymentMethodScreen: React.FC = () => {
     }
 
     if (isAdded == false) {
-      if (userInfo.id != '') {
-        fetching = true;
-        addCard(fullName, cardNumber, expYear, expMonth, cvc)
-        .then(() => {
-          fetching = false;
-          loadUserInfo();
+      fetching = true;
+      setFetchingData(true);
+      addCard(fullName, cardNumber, expYear, expMonth, cvc)
+      .then(() => {
+        fetching = false;
+        setFetchingData(false);
+        loadUserInfo();
 
-          Alert.alert('', SUCCESS_MESSAGE.ADD_CARD_SUCCESS,
-            [ { text: "OK", onPress: () => goBack() } ],
-            { cancelable: false }
-          );
-        }).catch(() => {
-          fetching = false;
-          Alert.alert('', ERROR_MESSAGE.ADD_PAYMENT_METHOD_FAIL);
-        });
-      }
+        Alert.alert('', SUCCESS_MESSAGE.ADD_CARD_SUCCESS,
+          [ { text: "OK", onPress: () => goBack() } ],
+          { cancelable: false }
+        );
+      }).catch(() => {
+        fetching = false;
+        setFetchingData(false);
+        Alert.alert('', ERROR_MESSAGE.ADD_PAYMENT_METHOD_FAIL);
+      });
+    } else {
+      Alert.alert('', SUCCESS_MESSAGE.ADD_CARD_SUCCESS,
+        [ { text: "OK", onPress: () => goBack() } ],
+        { cancelable: false }
+      );
     }
   }
 
@@ -432,6 +440,12 @@ export const AddPaymentMethodScreen: React.FC = () => {
           </KeyboardAwareScrollView>
         </View>
       </SafeAreaView>
+
+      <Spinner
+        visible={fetchingData}
+        textContent={''}
+        textStyle={{color: COLOR.systemWhiteColor}}
+      />
     </Container>
   );
 };
