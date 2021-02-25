@@ -92,7 +92,7 @@ export const ZoomIntegrationScreen: React.FC = () => {
         { zoomIntegrationUrl == '' 
           ? <TouchableWithoutFeedback onPress={onConnectZoom}>
               <View style={styles.saveButton}>
-                <ColorButton title={'Connect Your Zoom Account'} backgroundColor={COLOR.redColor} color={COLOR.systemWhiteColor} />
+                <ColorButton title={'Connect Your Zoom Account'} backgroundColor={COLOR.systemWhiteColor} color={COLOR.blackColor} />
               </View>
             </TouchableWithoutFeedback>
           : <WebView
