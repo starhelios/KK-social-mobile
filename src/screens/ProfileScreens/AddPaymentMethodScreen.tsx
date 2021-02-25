@@ -432,7 +432,7 @@ export const AddPaymentMethodScreen: React.FC = () => {
 
                 <TouchableWithoutFeedback onPress={onAddPaymentMethod}>
                   <View style={styles.bottom_button}>
-                    <ColorButton title={'Save Card'} backgroundColor={COLOR.redColor} color={COLOR.systemWhiteColor} />
+                    <ColorButton title={'Save Card'} backgroundColor={COLOR.systemWhiteColor} color={COLOR.blackColor} />
                   </View>
                 </TouchableWithoutFeedback>
               </View>

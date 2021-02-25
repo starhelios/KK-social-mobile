@@ -167,18 +167,18 @@ export const LoginProfileView: React.FC = () => {
                     <TitleArrowButton title={''} name={'Experiences Hosted by Me'} showArrow={true} white_color={true} />
                   </View>
                 </TouchableWithoutFeedback>
+
+                <TouchableWithoutFeedback onPress={() => navigate('Withdrawal')}>
+                  <View style={{width:'100%', marginTop: 22}}>
+                    <TitleArrowButton title={''} name={'Withdrawal Options'} showArrow={true} white_color={true} />
+                  </View>
+                </TouchableWithoutFeedback>
               </View> 
           }
 
           <TouchableWithoutFeedback onPress={() => navigate('ConfirmedBookings')}>
             <View style={{width:'100%', marginTop: 22}}>
               <TitleArrowButton title={''} name={'Confirmed Bookings'} showArrow={true} white_color={true} />
-            </View>
-          </TouchableWithoutFeedback>
-
-          <TouchableWithoutFeedback onPress={() => navigate('Withdrawal')}>
-            <View style={{width:'100%', marginTop: 22}}>
-              <TitleArrowButton title={''} name={'Withdrawal Options'} showArrow={true} white_color={true} />
             </View>
           </TouchableWithoutFeedback>
 
@@ -207,7 +207,7 @@ export const LoginProfileView: React.FC = () => {
 
           <TouchableWithoutFeedback onPress={() => onLogOut() }>
             <View style={{width:'100%', marginTop: 22, marginBottom: 20}}>
-              <ColorButton title={'Log Out'} backgroundColor={COLOR.redColor} color={COLOR.systemWhiteColor} />
+              <ColorButton title={'Log Out'} backgroundColor={COLOR.systemWhiteColor} color={COLOR.blackColor} />
             </View>
           </TouchableWithoutFeedback>
         </View>

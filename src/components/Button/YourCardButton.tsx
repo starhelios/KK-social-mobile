@@ -65,7 +65,9 @@ export const YourCardButton: React.FC<props> = (props: props) => {
                   
                 { isEdit == true
                   ? <TouchableWithoutFeedback onPress={() => props.onDeleteCard(card)}>
-                      <CustomText style={styles.delete}>{'Delete'}</CustomText>
+                      <View style={styles.deleteContainer}>
+                        <CustomText style={styles.delete}>{'Delete'}</CustomText>
+                      </View>
                     </TouchableWithoutFeedback>
                   : <Image style={styles.option} source={selectedCard.id == card.id ? Img_Option_On : Img_Option_Off} />
                 }
@@ -130,17 +132,21 @@ const styles = StyleSheet.create({
     height: 30,
     resizeMode: 'contain',
   },
-  delete: {
+  deleteContainer: {
     position: 'absolute',
     right: 0,
     width: 80,
     height: 30,
+    backgroundColor: COLOR.redColor,
+    borderRadius: 5,
+  },
+  delete: {
+    width: '100%',
+    height: '100%',
     lineHeight: 30,
     textAlign: 'center',
-    backgroundColor: COLOR.redColor,
     color: COLOR.systemWhiteColor,
     fontFamily: FONT.AN_Regular,
-    borderRadius: 5,
     fontSize: 14,
   },
 });

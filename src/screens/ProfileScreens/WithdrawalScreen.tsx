@@ -31,17 +31,19 @@ import {
 import { BankButton, ColorButton, TitleArrowButton } from '../../components/Button';
 import { IBank } from '../../interfaces/app';
 import { usePayments } from '../../hooks';
+import { useGlobalState } from '../../redux/Store';
 
 
 export const WithdrawalScreen: React.FC = () => {
 
   let fetching = false;
-
+  const userInfo = useGlobalState('userInfo');
   const { navigate, goBack } = useNavigation();
   const { generateAccountLink } = usePayments();
 
   const [bankList, setBankList] = useState<IBank[]>([]);
   const [stripeUrl, setStripeUrl] = useState<string>('');
+  const [isSettedWithdraw, setIsSettedWithdraw] = useState<boolean>(userInfo.stripeCustomerID == undefined || userInfo.stripeCustomerID == '' ? false : true);
 
   useEffect(() => {
     let list: IBank[] = [];
@@ -74,6 +76,7 @@ export const WithdrawalScreen: React.FC = () => {
   const handleWebViewNavigationStateChange = (newNavState: WebViewNavigation) => {
     if (newNavState.url.includes('https://kloutkast.herokuapp.com') == true) {
       setStripeUrl('');
+      setIsSettedWithdraw(true);
       Alert.alert('', SUCCESS_MESSAGE.ADD_BANK_ACCOUNT_SUCCESS);
     }
   }
@@ -136,7 +139,10 @@ export const WithdrawalScreen: React.FC = () => {
               </View> */}
               <TouchableWithoutFeedback onPress={onSaveAccount}>
                   <View style={styles.saveButton}>
-                    <ColorButton title={'Finish Account Setup For Withdrawal'} backgroundColor={COLOR.redColor} color={COLOR.systemWhiteColor} />
+                    <ColorButton 
+                      title={isSettedWithdraw == false ? 'Finish Account Setup For Withdrawal' : 'Change Stripe Account'} 
+                      backgroundColor={COLOR.systemWhiteColor} color={COLOR.blackColor} 
+                    />
                   </View>
                 </TouchableWithoutFeedback>
             </SafeAreaView>
