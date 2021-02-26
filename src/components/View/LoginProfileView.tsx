@@ -35,22 +35,40 @@ import {
   viewportWidth, 
 } from '../../constants';
 import { ColorButton, TitleArrowButton } from '../Button';
-import { IUser } from '../../interfaces/app';
+import { IExperience, IUser } from '../../interfaces/app';
 import { useDispatch, useGlobalState } from '../../redux/Store';
 import { ActionType } from '../../redux/Reducer';
 
 export const LoginProfileView: React.FC = () => {
   
   const userInfo: IUser = useGlobalState('userInfo');
+  const experienceList = useGlobalState('experienceList');
 
   const { navigate, goBack } = useNavigation();
   const dispatch = useDispatch();
 
   const [profile, setProfile] = useState<IUser>(userInfo);
+  const [myExperienceList, setMyExperienceList] = useState<IExperience[]>([]);
 
   useEffect(() => {
     setProfile(userInfo);
+    getMyExperienceList();
   }, [userInfo]);
+
+  useEffect(() => {
+    getMyExperienceList();
+  }, [experienceList])
+
+  const getMyExperienceList = () => {
+    console.log('-----------')
+    var myExperiences = [];
+    for (let experience of experienceList) {
+      if (experience.userId == userInfo.id) {
+        myExperiences.push(experience);
+      }
+    }
+    setMyExperienceList(myExperiences);
+  }
 
   const initUserInfo = () => {
     SetApiConfig('');
@@ -162,11 +180,13 @@ export const LoginProfileView: React.FC = () => {
                   </View>
                 </TouchableWithoutFeedback>
 
-                <TouchableWithoutFeedback onPress={() => navigate('ExperiencesHostedByMe') }>
-                  <View style={{width:'100%', marginTop: 22}}>
-                    <TitleArrowButton title={''} name={'Experiences Hosted by Me'} showArrow={true} white_color={true} />
-                  </View>
-                </TouchableWithoutFeedback>
+                { myExperienceList.length > 0 &&
+                  <TouchableWithoutFeedback onPress={() => navigate('ExperiencesHostedByMe') }>
+                    <View style={{width:'100%', marginTop: 22}}>
+                      <TitleArrowButton title={''} name={'Experiences Hosted by Me'} showArrow={true} white_color={true} />
+                    </View>
+                  </TouchableWithoutFeedback>
+                }
 
                 <TouchableWithoutFeedback onPress={() => navigate('Withdrawal')}>
                   <View style={{width:'100%', marginTop: 22}}>
