@@ -60,7 +60,6 @@ export const LoginProfileView: React.FC = () => {
   }, [experienceList])
 
   const getMyExperienceList = () => {
-    console.log('-----------')
     var myExperiences = [];
     for (let experience of experienceList) {
       if (experience.userId == userInfo.id) {
