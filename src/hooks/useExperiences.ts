@@ -223,5 +223,35 @@ export const useExperiences = () => {
     }
   };
 
-  return { getExperienceList, getExperienceDetail, createExperience, filterExperiences, reserveBooking, getReservedBookingList, buildBooking, completeBooking, rateBooking };
+  const getHostExperienceListByUserId = async (
+    user_id: string,
+  ): Promise<any> => {
+    const url = `${API_ENDPOINT.HOST_EXPERIENCE_LIST}/${user_id}`;
+    try {
+      const { data } = await axios.get<IApiSuccess>(url, API_CONFIG);
+      const result: IExperienceDetail[] = data.payload.experiences;
+      return Promise.resolve(result);
+    } catch (err) {
+      const apiError = handleError(err);
+      if (apiError) {
+        return Promise.reject(apiError);
+      } else {
+        return Promise.reject(null);
+      }
+    }
+  };
+
+
+  return { 
+    getExperienceList, 
+    getExperienceDetail, 
+    createExperience, 
+    filterExperiences, 
+    reserveBooking, 
+    getReservedBookingList, 
+    buildBooking, 
+    completeBooking, 
+    rateBooking, 
+    getHostExperienceListByUserId,
+  };
 };
