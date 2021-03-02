@@ -7,8 +7,6 @@ import {
   View,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { useState } from 'react';
-import StarRating from 'react-native-star-rating';
 import Moment from 'moment';
 
 // from app
@@ -16,9 +14,6 @@ import {
   COLOR, 
   CustomText, 
   FONT, 
-  GetDurationString, 
-  Img_Rating_Empty, 
-  Img_Rating_Full, 
   viewportWidth, 
 } from '../../constants';
 import { ISpecificExperience } from '../../interfaces/app';

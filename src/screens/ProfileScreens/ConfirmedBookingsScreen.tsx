@@ -14,19 +14,16 @@ import Moment from 'moment';
 // from app
 import { API_CONFIG, COLOR, CustomText, FONT, MARGIN_TOP, viewportWidth } from '../../constants';
 import { useExperiences } from '../../hooks';
-import { IExperience, IExperienceDetail, ISpecificExperience, IUserBooking } from '../../interfaces/app';
+import { IExperienceDetail, ISpecificExperience } from '../../interfaces/app';
 import { ConfirmedBookingView } from '../../components/View';
-import { useDispatch, useGlobalState } from '../../redux/Store';
-import { ActionType } from '../../redux/Reducer';
+import { useGlobalState } from '../../redux/Store';
 
 
 export const ConfirmedBookingsScreen: React.FC = () => {
   
   const userInfo = useGlobalState('userInfo');
-  const reservedBookingList = useGlobalState('reservedBookingList');
 
-  const dispatch = useDispatch();
-  const { getHostExperienceListByUserId, completeBooking } = useExperiences();
+  const { getHostExperienceListByUserId } = useExperiences();
 
   const [selectedTab, setSelectedTab] = useState<number>(0);
   const [upcomingBookingList, setUpcomingBookingList] = useState<ISpecificExperience[]>([]);
