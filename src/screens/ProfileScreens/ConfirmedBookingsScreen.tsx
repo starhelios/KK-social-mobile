@@ -1,185 +1,131 @@
 import * as React from 'react';
 import {
-  SafeAreaView,
   StyleSheet,
   View,
+  SafeAreaView,
   TouchableWithoutFeedback,
   FlatList,
 } from 'react-native';
 import { Container } from 'native-base';
 import { useEffect, useState } from 'react';
-import { useNavigation } from '@react-navigation/native';
-import { SvgXml } from 'react-native-svg';
+import Spinner from 'react-native-loading-spinner-overlay';
+import Moment from 'moment';
 
 // from app
-import { 
-  COLOR, 
-  CustomText, 
-  FONT, 
-  Icon_Back,
-  MARGIN_TOP,
-  SortBookings,
-} from '../../constants';
-import { IBooking, IUser } from '../../interfaces/app';
-// import { useConfirmedUpcomingBookings, useConfirmedCompletedBookings } from '../../hooks';
+import { API_CONFIG, COLOR, CustomText, FONT, MARGIN_TOP, viewportWidth } from '../../constants';
+import { useExperiences } from '../../hooks';
+import { IExperienceDetail, ISpecificExperience } from '../../interfaces/app';
 import { ConfirmedBookingView } from '../../components/View';
 import { useGlobalState } from '../../redux/Store';
 
 
 export const ConfirmedBookingsScreen: React.FC = () => {
-
-  const userInfo = useGlobalState('userInfo');
-  const hostList = useGlobalState('hostList');
-  const experienceList = useGlobalState('experienceList');
   
-  const { navigate, goBack } = useNavigation();
-  // const { confirmedUpcomingBookings } = useConfirmedUpcomingBookings();
-  // const { confirmedCompletedBookings } = useConfirmedCompletedBookings();
+  const userInfo = useGlobalState('userInfo');
+
+  const { getHostExperienceListByUserId } = useExperiences();
 
   const [selectedTab, setSelectedTab] = useState<number>(0);
-  const [upcomingBookingList, setUpcomingBookingList] = useState<IBooking[]>([]);
-  const [completedBookingList, setCompletedBookingList] = useState<IBooking[]>([]);
+  const [upcomingBookingList, setUpcomingBookingList] = useState<ISpecificExperience[]>([]);
+  const [completedBookingList, setCompletedBookingList] = useState<ISpecificExperience[]>([]);
+  const [fetched, setFetched] = useState<boolean>(false);
+
 
   useEffect(() => {
-    // loadUpcomingBookingList();
-    setBookingList();
+    getHostExperienceList();
   }, [])
 
   useEffect(() => {
-    setBookingList();
-  }, [experienceList, userInfo]);
+    getHostExperienceList();
+  }, [API_CONFIG]);
 
-  function setBookingList() {
-    let currentDate = new Date();
-
-    let upcomingBookings: IBooking[] = [];
-    let completedBookings: IBooking[] = [];
-
-    if (userInfo.bookingInfo == undefined || userInfo.bookingInfo == null) {
-      return;
-    }
-    
-    for (let reservationBooking of userInfo.bookingInfo) {
-      for (let experience of experienceList) {
-        if (reservationBooking.experienceID != experience.id) {
-          continue;
-        }
-
-        for (let booking of experience.specificExperience) {
-          if (reservationBooking.dateAvaibilityID != booking._id) {
-            continue;
-          }
-
-          let experienceHost: IUser | null = null;
-          for (let host of hostList) {
-            if (host.id == experience.userId) {
-              experienceHost = host;
-              break;
+  const getHostExperienceList = async () => {
+    await getHostExperienceListByUserId(userInfo.id)
+    .then(async (result: Promise<IExperienceDetail[]>) => {
+      setFetched(true);
+      let upcomingExperiences: ISpecificExperience[] = [];
+      let completedExperiences: ISpecificExperience[] = [];
+      (await result).map((item: IExperienceDetail, idx: number) => {
+        return Moment(item.endDay).format() >= Moment(new Date()).format() 
+          ? item.specificExperience.map((subItem: ISpecificExperience, subIndex: number) => {
+              if (subItem.usersGoing && subItem.usersGoing.length > 0) {  
+                return upcomingExperiences.push(subItem)
+              }
+            })
+          : item.specificExperience.map((subItem: ISpecificExperience, subIndex: number) => {
+            if (subItem.usersGoing && subItem.usersGoing.length > 0) {  
+              return completedExperiences.push(subItem)
             }
-          }
-  
-          let newBooking: IBooking = {
-            id: reservationBooking._id,
-            image: experience.images.length > 0 ? experience.images[0] : '',
-            experience_icon: '',
-            experience: experience.title,
-            date: booking.day,
-            hour: booking.startTime,
-            duration: experience.duration,
-            rating: 0,
-            is_host: false,
-            is_joined: false,
-            host: experienceHost,
-            paid: null,
-            receive: null,
-            completed: null,
-            show_date: null,
-          };
-          if (reservationBooking.completed == false) {
-            upcomingBookings.push(newBooking);
-          } else {
-            completedBookings.push(newBooking);
-          }
-        }
-      }
-    }
-
-    if (upcomingBookings.length > 0) {
-      setUpcomingBookingList(SortBookings(upcomingBookings, true));
-    } else {
+          })
+      });
+      setUpcomingBookingList(upcomingExperiences);
+      setCompletedBookingList(completedExperiences);
+    })
+    .catch(() => {
       setUpcomingBookingList([]);
-    }
-
-    if (completedBookings.length > 0) {
-      setCompletedBookingList(SortBookings(completedBookings, false));
-    } else {
       setCompletedBookingList([]);
-    }
+      setFetched(true);
+    })
+  }
+
+  const onShowUpcomingBookings = () => {
+    setSelectedTab(0);
+  }
+
+  const onShowCompletedBookings = () => {
+    setSelectedTab(1);
   }
 
   return (
-    <Container style={styles.background}>
-
+    <Container style={{width: viewportWidth, flex: 1, backgroundColor: COLOR.blackColor}}>
       <SafeAreaView style={styles.safe_area}>
-        <View style={styles.navigation_bar}>
-          <CustomText style={styles.title}>Bookings</CustomText>
+        <CustomText style={styles.title}>Confirmed Bookings</CustomText>
 
-          <TouchableWithoutFeedback onPress={() => goBack()}>
-            <View style={styles.back_icon}>
-              <SvgXml width='100%' height='100%' xml={Icon_Back} />
+        <View style={styles.tab_bar}>
+          <TouchableWithoutFeedback onPress={ onShowUpcomingBookings }>
+            <View style={{
+              ...styles.tab_upcoming,
+              backgroundColor: selectedTab == 0 ? COLOR.blackColor : COLOR.clearColor}}>
+              <CustomText style={{
+                ...styles.tab_title, 
+                color: selectedTab == 0 ? COLOR.whiteColor : COLOR.blackColor}}>
+                Upcoming
+              </CustomText>
+            </View>
+          </TouchableWithoutFeedback>
+
+          <TouchableWithoutFeedback onPress={ onShowCompletedBookings }>
+            <View style={{
+              ...styles.tab_completed,
+              backgroundColor: selectedTab == 0 ? COLOR.clearColor : COLOR.blackColor }}>
+              <CustomText style={{
+                ...styles.tab_title, 
+                color: selectedTab == 0 ? COLOR.blackColor : COLOR.whiteColor}}>
+                Completed
+              </CustomText>
             </View>
           </TouchableWithoutFeedback>
         </View>
 
-        <View style={{alignItems: 'center'}}>
-          <View style={styles.tab_bar}>
-            <TouchableWithoutFeedback onPress={() => onShowUpcomingBookings()}>
-              <View style={{
-                ...styles.tab_upcoming,
-                backgroundColor: selectedTab == 0 ? COLOR.blackColor : COLOR.clearColor}}>
-                <CustomText style={{
-                  ...styles.tab_title, 
-                  color: selectedTab == 0 ? COLOR.whiteColor : COLOR.blackColor}}>
-                  Upcoming
-                </CustomText>
-              </View>
-            </TouchableWithoutFeedback>
-
-            <TouchableWithoutFeedback onPress={() => onShowCompletedBookings()}>
-              <View style={{
-                ...styles.tab_completed,
-                backgroundColor: selectedTab == 0 ? COLOR.clearColor : COLOR.blackColor }}>
-                <CustomText style={{
-                  ...styles.tab_title, 
-                  color: selectedTab == 0 ? COLOR.blackColor : COLOR.whiteColor}}>
-                  Completed
-                </CustomText>
-              </View>
-            </TouchableWithoutFeedback>
-          </View>
-        </View>
-        
-        <FlatList
-          style={styles.booking_list}
-          showsVerticalScrollIndicator={false}
-          horizontal={false}
-          data={selectedTab == 0 ? upcomingBookingList : completedBookingList}
-          keyExtractor={(item, index) => index.toString()}
-          renderItem={({item}) => <ConfirmedBookingView booking={item} isCompleted={selectedTab == 0 ? false : true} />}
-        />
+        { fetched == true &&
+          <FlatList
+            style={styles.booking_list}
+            showsVerticalScrollIndicator={false}
+            horizontal={false}
+            data={selectedTab == 0 ? upcomingBookingList : completedBookingList}
+            keyExtractor={(item, index) => index.toString()}
+            renderItem={({item}) => <ConfirmedBookingView is_completed={selectedTab == 0 ? false : true} specificExperience={item} />}
+          />
+        }
       </SafeAreaView>
+
+      <Spinner
+        visible={!fetched}
+        textContent={''}
+        textStyle={{color: COLOR.systemWhiteColor}}
+      />
     </Container>
   );
-
-  function onShowUpcomingBookings() {
-    setSelectedTab(0);
-    // loadUpcomingBookingList();
-  }
-
-  function onShowCompletedBookings() {
-    setSelectedTab(1);
-    // loadCompletedBookingList();
-  }
 };
 
 const styles = StyleSheet.create({
@@ -190,34 +136,24 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   safe_area: {
-    position: 'absolute',
     width: '100%',
-    height: '100%',
     flex: 1,
   },
-  navigation_bar: {
-    marginTop: MARGIN_TOP,
-    width: '100%',
-    height: 33,
-    flexDirection: 'row',
-  },
   title: {
-    width: '100%',
+    marginTop: MARGIN_TOP, 
+    marginLeft: 24, 
+    marginRight: 24, 
+    backgroundColor: COLOR.clearColor, 
     height: 33, 
     lineHeight: 33,
-    fontFamily: FONT.AN_Bold, 
+    fontFamily: FONT.AN_Regular, 
+    fontWeight: '600',
     fontSize: 24, 
-    textAlign: 'center',
     color: COLOR.systemWhiteColor,
   },
-  back_icon: {
-    position: 'absolute',
-    marginLeft: 24,
-    width: 20,
-    height: '100%',
-  },
   tab_bar: {
-    marginTop: 33,
+    marginTop: 22,
+    marginLeft: 24,
     width: 236,
     height: 48,
     backgroundColor: COLOR.whiteColor,
@@ -247,12 +183,15 @@ const styles = StyleSheet.create({
   },
   tab_title: {
     backgroundColor: COLOR.clearColor,
-    fontFamily: FONT.AN_Bold,
+    fontFamily: FONT.AN_Regular,
+    fontWeight: '600',
     fontSize: 14,
     textAlign: 'center',
   },
   booking_list: {
-    marginTop: 22,
-    width: '100%',
+    marginTop: 22, 
+    marginLeft: 24, 
+    marginRight: 24, 
+    width: viewportWidth - 48,
   }
 });

@@ -1,3 +1,4 @@
+import { IExperience } from ".";
 import { IAvailableDate } from "./AvailableDate";
 
 export interface IExperienceDetail {
@@ -26,7 +27,7 @@ export interface IHostData {
 export interface ISpecificExperience {
 	id: string,
 	imageUrl: string,
-	experience: string,
+	experience: IExperience,
 	day: string,
 	startTime: string,
 	endTime: string,
@@ -34,6 +35,9 @@ export interface ISpecificExperience {
 	ratings: [],
 	usersGoing: string[],
 	reservations: [],
+	completed: boolean,
+	zoomMeetingId: string,
+	zoomMeetingPassword: string,
 
 	// internal working
 	show_date: boolean,
