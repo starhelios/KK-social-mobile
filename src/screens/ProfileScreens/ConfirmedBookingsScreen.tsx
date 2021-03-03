@@ -55,24 +55,12 @@ export const ConfirmedBookingsScreen: React.FC = () => {
         return Moment(item.endDay).format() >= Moment(new Date()).format() 
           ? item.specificExperience.map((subItem: ISpecificExperience, subIndex: number) => {
               if (subItem.usersGoing && subItem.usersGoing.length > 0) { 
-                for (let i = 0; i < subItem.usersGoing.length; i++) {
-                  let item = jsonCopy(subItem);
-                  item.user_id = subItem.usersGoing[i];
-                  item.show_date = (i === 0 ? true : false);
-                  upcomingExperiences.push(item);
-                }
-                return;
+                return upcomingExperiences.push(subItem);
               }
             })
           : item.specificExperience.map((subItem: ISpecificExperience, subIndex: number) => {
               if (subItem.usersGoing && subItem.usersGoing.length > 0) {  
-                for (let i = 0; i < subItem.usersGoing.length; i++) {
-                  let item = jsonCopy(subItem);
-                  item.user_id = subItem.usersGoing[i];
-                  item.show_date = (i === 0 ? true : false);
-                  completedExperiences.push(item);
-                }
-                return ;
+                return completedExperiences.push(subItem);
               }
             })
       });
@@ -229,6 +217,8 @@ const styles = StyleSheet.create({
   },
   booking_list: {
     marginTop: 22, 
-    width: '100%',
+    marginLeft: 24,
+    marginRight: 24,
+    width: viewportWidth - 48,
   }
 });
