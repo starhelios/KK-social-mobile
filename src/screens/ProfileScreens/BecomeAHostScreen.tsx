@@ -63,7 +63,7 @@ export const BecomeAHostScreen: React.FC = () => {
   let scrollViewRef: KeyboardAwareScrollView | null;
   const profile: IUser = useGlobalState('userInfo');
 
-  const { goBack } = useNavigation();
+  const { goBack, navigate } = useNavigation();
   const { updateUserInformation } = useUsers();
   const { setLoginUser } = useAuthentication();
 
@@ -260,7 +260,10 @@ export const BecomeAHostScreen: React.FC = () => {
       Alert.alert('',
         SUCCESS_MESSAGE.USER_BECOM_A_HOST,
         [
-          { text: "OK", onPress: () => goBack() }
+          { text: "OK", onPress: () => {
+            goBack();
+            navigate('Withdrawal');
+          }}
         ],
         { cancelable: false }
       );
