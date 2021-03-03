@@ -32,6 +32,7 @@ import {
   MARGIN_TOP, 
   PASSWORD, 
   USER_EMAIL,
+  ValidateEmail,
   viewportHeight,
   viewportWidth, 
 } from '../../constants';
@@ -60,6 +61,9 @@ export const SignUpScreen: React.FC = () => {
       return;
     } else if (emailAddress == '') {
       Alert.alert('', ERROR_MESSAGE.EMPTY_EMAIL_ADDRESS);
+      return;
+    } else if (ValidateEmail(emailAddress) == false) {
+      Alert.alert('', ERROR_MESSAGE.INVALID_EMAIL_ADDRESS);
       return;
     } else if (password == '') {
       Alert.alert('', ERROR_MESSAGE.EMPTY_PASSWORD);

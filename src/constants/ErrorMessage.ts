@@ -8,6 +8,7 @@ export const ERROR_MESSAGE = {
   MISMATCH_PASSWORD: 'New Password and Confirm Password don\'t match.',
   EMPTY_END_DATE: 'Please select end date.',
   UPDATE_SEARCH_CONDITION: 'There is no filter result. Please update filter option.',
+  INVALID_EMAIL_ADDRESS: 'Email format is invalid.',
 
   REGISTER_FAIL: 'Failed to register user.\nPlease try again.',
   LOGIN_FAIL: 'Failed to login user.\nPlease try again.',

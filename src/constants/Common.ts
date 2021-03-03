@@ -151,3 +151,15 @@ export const GetCardNumber = (number: string) => {
   const cardNumber = `${strCardNumber.substring(0, 4)} ${strCardNumber.substring(4, 8)} ${strCardNumber.substring(8, 12)} ${strCardNumber.substring(12, 16)}`;
   return cardNumber;
 }
+
+export const ValidateEmail = (text: string) => {
+  console.log(text);
+  let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+  if (reg.test(text) === false) {
+    return false;
+  }
+  else {
+    return true;
+  }
+}
+
