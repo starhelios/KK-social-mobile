@@ -44,6 +44,7 @@ import {
   LOGIN_STATE,
   MARGIN_TOP,
   SUCCESS_MESSAGE,
+  ValidateEmail,
   viewportWidth,
 } from '../../constants';
 import { ColorButton } from '../../components/Button';
@@ -62,7 +63,7 @@ export const BecomeAHostScreen: React.FC = () => {
   let scrollViewRef: KeyboardAwareScrollView | null;
   const profile: IUser = useGlobalState('userInfo');
 
-  const { goBack } = useNavigation();
+  const { goBack, navigate } = useNavigation();
   const { updateUserInformation } = useUsers();
   const { setLoginUser } = useAuthentication();
 
@@ -210,6 +211,9 @@ export const BecomeAHostScreen: React.FC = () => {
     } else if (emailAddress == '') {
       Alert.alert('', ERROR_MESSAGE.EMPTY_EMAIL_ADDRESS);
       return;
+    } else if (ValidateEmail(emailAddress) == false) {
+      Alert.alert('', ERROR_MESSAGE.INVALID_EMAIL_ADDRESS);
+      return;
     } else if (aboutMe == '') {
       Alert.alert('', ERROR_MESSAGE.EMPTY_ABOUTME);
       return;
@@ -256,7 +260,10 @@ export const BecomeAHostScreen: React.FC = () => {
       Alert.alert('',
         SUCCESS_MESSAGE.USER_BECOM_A_HOST,
         [
-          { text: "OK", onPress: () => goBack() }
+          { text: "OK", onPress: () => {
+            goBack();
+            navigate('Withdrawal');
+          }}
         ],
         { cancelable: false }
       );

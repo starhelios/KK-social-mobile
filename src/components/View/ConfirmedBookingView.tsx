@@ -23,7 +23,7 @@ import { useGlobalState } from '../../redux/Store';
 
 
 interface props {
-  is_completed: boolean;
+  isCompleted: boolean;
   specificExperience: ISpecificExperience;
 }
 
@@ -31,7 +31,7 @@ export const ConfirmedBookingView: React.FC<props> = (props: props) => {
 
   const userInfo = useGlobalState('userInfo');
   const specificExperience: ISpecificExperience = props.specificExperience;
-  const is_completed: boolean = props.is_completed;
+  const isCompleted: boolean = props.isCompleted;
   
   const { navigate } = useNavigation();
   const { buildBooking } = useExperiences();
@@ -57,7 +57,7 @@ export const ConfirmedBookingView: React.FC<props> = (props: props) => {
   return (
     <View style={styles.container}>
       <Image style={styles.image} source={{uri: specificExperience.imageUrl}} />
-      { is_completed == false
+      { isCompleted == false
         ? <View style={{...styles.content_container, height: 190}}>
             <CustomText style={styles.experience} numberOfLines={1}>{ specificExperience.experience.title }</CustomText>
             <CustomText style={styles.date} numberOfLines={1}>{ `Users Going: ${specificExperience.usersGoing.length}` }</CustomText>

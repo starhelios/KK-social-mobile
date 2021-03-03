@@ -48,6 +48,7 @@ import {
   LOGIN_STATE,
   MARGIN_TOP,
   SUCCESS_MESSAGE,
+  ValidateEmail,
   viewportWidth,
 } from '../../constants';
 import { ColorButton, TitleArrowButton } from '../../components/Button';
@@ -431,6 +432,9 @@ export const EditProfileScreen: React.FC = () => {
       return;
     } else if (emailAddress == '') {
       Alert.alert('', ERROR_MESSAGE.EMPTY_EMAIL_ADDRESS);
+      return;
+    } else if (ValidateEmail(emailAddress) == false) {
+      Alert.alert('', ERROR_MESSAGE.INVALID_EMAIL_ADDRESS);
       return;
     }
     

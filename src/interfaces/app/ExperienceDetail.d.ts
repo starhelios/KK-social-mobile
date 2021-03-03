@@ -41,4 +41,5 @@ export interface ISpecificExperience {
 
 	// internal working
 	show_date: boolean,
+	user_id: string,
 }

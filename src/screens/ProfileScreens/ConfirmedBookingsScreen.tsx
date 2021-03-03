@@ -8,28 +8,30 @@ import {
 } from 'react-native';
 import { Container } from 'native-base';
 import { useEffect, useState } from 'react';
+import { SvgXml } from 'react-native-svg';
 import Spinner from 'react-native-loading-spinner-overlay';
 import Moment from 'moment';
 
 // from app
-import { API_CONFIG, COLOR, CustomText, FONT, MARGIN_TOP, viewportWidth } from '../../constants';
+import { API_CONFIG, COLOR, CustomText, FONT, Icon_Back, MARGIN_TOP, viewportWidth } from '../../constants';
 import { useExperiences } from '../../hooks';
 import { IExperienceDetail, ISpecificExperience } from '../../interfaces/app';
 import { ConfirmedBookingView } from '../../components/View';
 import { useGlobalState } from '../../redux/Store';
+import { useNavigation } from '@react-navigation/native';
 
 
 export const ConfirmedBookingsScreen: React.FC = () => {
   
   const userInfo = useGlobalState('userInfo');
 
+  const { goBack } = useNavigation();
   const { getHostExperienceListByUserId } = useExperiences();
 
   const [selectedTab, setSelectedTab] = useState<number>(0);
   const [upcomingBookingList, setUpcomingBookingList] = useState<ISpecificExperience[]>([]);
   const [completedBookingList, setCompletedBookingList] = useState<ISpecificExperience[]>([]);
   const [fetched, setFetched] = useState<boolean>(false);
-
 
   useEffect(() => {
     getHostExperienceList();
@@ -38,6 +40,10 @@ export const ConfirmedBookingsScreen: React.FC = () => {
   useEffect(() => {
     getHostExperienceList();
   }, [API_CONFIG]);
+
+  const jsonCopy = (src: any) => {
+    return JSON.parse(JSON.stringify(src));
+  }
 
   const getHostExperienceList = async () => {
     await getHostExperienceListByUserId(userInfo.id)
@@ -48,16 +54,17 @@ export const ConfirmedBookingsScreen: React.FC = () => {
       (await result).map((item: IExperienceDetail, idx: number) => {
         return Moment(item.endDay).format() >= Moment(new Date()).format() 
           ? item.specificExperience.map((subItem: ISpecificExperience, subIndex: number) => {
-              if (subItem.usersGoing && subItem.usersGoing.length > 0) {  
-                return upcomingExperiences.push(subItem)
+              if (subItem.usersGoing && subItem.usersGoing.length > 0) { 
+                return upcomingExperiences.push(subItem);
               }
             })
           : item.specificExperience.map((subItem: ISpecificExperience, subIndex: number) => {
-            if (subItem.usersGoing && subItem.usersGoing.length > 0) {  
-              return completedExperiences.push(subItem)
-            }
-          })
+              if (subItem.usersGoing && subItem.usersGoing.length > 0) {  
+                return completedExperiences.push(subItem);
+              }
+            })
       });
+
       setUpcomingBookingList(upcomingExperiences);
       setCompletedBookingList(completedExperiences);
     })
@@ -79,7 +86,16 @@ export const ConfirmedBookingsScreen: React.FC = () => {
   return (
     <Container style={{width: viewportWidth, flex: 1, backgroundColor: COLOR.blackColor}}>
       <SafeAreaView style={styles.safe_area}>
-        <CustomText style={styles.title}>Confirmed Bookings</CustomText>
+        <View style={styles.navigation_bar}>
+          <View style={{width: '100%', height: '100%'}}>
+            <CustomText style={styles.title}>Confirmed Bookings</CustomText>
+            <TouchableWithoutFeedback onPress={() => goBack() }>
+              <View style={styles.back_icon}>
+                <SvgXml width='100%' height='100%' xml={Icon_Back} />
+              </View>
+            </TouchableWithoutFeedback>
+          </View>
+        </View>
 
         <View style={styles.tab_bar}>
           <TouchableWithoutFeedback onPress={ onShowUpcomingBookings }>
@@ -114,7 +130,7 @@ export const ConfirmedBookingsScreen: React.FC = () => {
             horizontal={false}
             data={selectedTab == 0 ? upcomingBookingList : completedBookingList}
             keyExtractor={(item, index) => index.toString()}
-            renderItem={({item}) => <ConfirmedBookingView is_completed={selectedTab == 0 ? false : true} specificExperience={item} />}
+            renderItem={({item}) => <ConfirmedBookingView isCompleted={selectedTab == 0 ? false : true} specificExperience={item}  />}
           />
         }
       </SafeAreaView>
@@ -139,21 +155,32 @@ const styles = StyleSheet.create({
     width: '100%',
     flex: 1,
   },
+  navigation_bar: {
+    marginTop: MARGIN_TOP,
+    width: '100%',
+    height: 33,
+    flexDirection: 'row',
+    zIndex: 10,
+  },
+  back_icon: {
+    position: 'absolute',
+    marginLeft: 24,
+    width: 20,
+    height: '100%',
+  },
   title: {
-    marginTop: MARGIN_TOP, 
-    marginLeft: 24, 
-    marginRight: 24, 
-    backgroundColor: COLOR.clearColor, 
+    width: '100%',
     height: 33, 
     lineHeight: 33,
-    fontFamily: FONT.AN_Regular, 
+    fontFamily: FONT.AN_Regular,
     fontWeight: '600',
     fontSize: 24, 
+    textAlign: 'center',
     color: COLOR.systemWhiteColor,
   },
   tab_bar: {
     marginTop: 22,
-    marginLeft: 24,
+    marginLeft: (viewportWidth - 236) / 2,
     width: 236,
     height: 48,
     backgroundColor: COLOR.whiteColor,
@@ -190,8 +217,8 @@ const styles = StyleSheet.create({
   },
   booking_list: {
     marginTop: 22, 
-    marginLeft: 24, 
-    marginRight: 24, 
+    marginLeft: 24,
+    marginRight: 24,
     width: viewportWidth - 48,
   }
 });
