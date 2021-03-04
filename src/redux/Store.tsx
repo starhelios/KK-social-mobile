@@ -20,10 +20,7 @@ const initialState: State = {
     zoomRefreshToken: '',
     zoomId: '',
     experiences: [],
-    ratingsGiven: [],
     availableMethods: [],
-    bankInfo: [],
-    bookingInfo: [],
   },
 
   accessToken: {

@@ -65,8 +65,12 @@ export const LOADING_TIME = 1500;
 export const { width: viewportWidth, height: viewportHeight } = Dimensions.get('window');
 
 export const GOOGLE_MAP_KEY = 'AIzaSyAcHUaRR1URQlQR54ebNGeByyDR7Y6pJn4';
+
+
 export const ZOOM_INTEGRATION_URL = 'https://zoom.us/oauth/authorize?client_id=neNtJG1EQAG2YieBwjwTg&response_type=code&redirect_uri=http%3A%2F%2Flocalhost%3A3000%2Fprofile'
-export const ZOOM_INTEGRATION_REDIRECT_URL = 'https://kloutkast.herokuapp.com/profile';
+// export const ZOOM_INTEGRATION_URL = 'https://zoom.us/oauth/authorize?response_type=code&client_id=cZBMH5Q_T3OP5C2Ih0Bzcw&redirect_uri=https://kloutkast.herokuapp.com/profile/zoom-confirmation'
+export const ZOOM_INTEGRATION_REDIRECT_URL = 'https://kloutkast.herokuapp.com/profiles';
+
 
 // Global Values
 export let API_CONFIG: AxiosRequestConfig;

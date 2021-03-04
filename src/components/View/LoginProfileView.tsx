@@ -91,10 +91,7 @@ export const LoginProfileView: React.FC = () => {
         zoomRefreshToken: '',
         zoomId: '',
 	      experiences: [],
-	      ratingsGiven: [],
 	      availableMethods: [],
-        bankInfo: [],
-        bookingInfo: [],
       },
     });
   

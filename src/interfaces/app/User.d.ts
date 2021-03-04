@@ -19,8 +19,5 @@ export interface IUser {
 	zoomId: string,
 
 	experiences: [],
-	ratingsGiven: [],
-	bankInfo: IBank[],
 	availableMethods: ICardInfo[],
-	bookingInfo: IReservationBooking[],
 }

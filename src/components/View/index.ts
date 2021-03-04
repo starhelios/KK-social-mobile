@@ -3,7 +3,6 @@ export * from './HostView';
 export * from './BookingView';
 export * from './NotLoginProfileView';
 export * from './LoginProfileView';
-export * from './MyExperienceView';
 export * from './ExperienceImageView';
 export * from './ConfirmedBookingView';
 export * from './ConfirmedBookingMainInfoView';

@@ -79,10 +79,7 @@ export const SplashScreen: React.FC = () => {
         zoomRefreshToken: '',
         zoomId: '',
         experiences: [],
-        ratingsGiven: [],
         availableMethods: [],
-        bankInfo: [],
-        bookingInfo: [],
       },
     });
   
