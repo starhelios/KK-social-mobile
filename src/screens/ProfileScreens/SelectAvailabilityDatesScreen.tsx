@@ -178,6 +178,7 @@ export const SelectAvailabilityDatesScreen: React.FC = ({route}) => {
   }
 
   const onSave = () => {
+    console.log(dateAvaibility);
     route.params.setDateAvaibilityInfo({startDay: startDay, endDay: endDay, dateAvaibility: dateAvaibility});
     goBack();
   }

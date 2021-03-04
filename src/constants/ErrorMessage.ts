@@ -49,6 +49,7 @@ export const ERROR_MESSAGE = {
   EMPTY_CATEGORY: 'Please input category.',
   EMPTY_ABOUTME: 'Please input about me.',
   EMPTY_LOCATION: 'Please input location.',
+  EXPERIENCE_ALREADY_BOOKINGED: 'This experience is already reserved.',
 
   PAYMENT_FAIL: 'Something went wrong while getting payment.',
   NONE_CONNECT_ZOOM_ACCOUNT: 'Please connect your zoom account.',

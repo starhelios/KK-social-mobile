@@ -163,3 +163,6 @@ export const ValidateEmail = (text: string) => {
   }
 }
 
+export const JsonCopy = (src: any) => {
+  return JSON.parse(JSON.stringify(src));
+}

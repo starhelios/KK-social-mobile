@@ -41,10 +41,6 @@ export const ConfirmedBookingsScreen: React.FC = () => {
     getHostExperienceList();
   }, [API_CONFIG]);
 
-  const jsonCopy = (src: any) => {
-    return JSON.parse(JSON.stringify(src));
-  }
-
   const getHostExperienceList = async () => {
     await getHostExperienceListByUserId(userInfo.id)
     .then(async (result: Promise<IExperienceDetail[]>) => {

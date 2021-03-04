@@ -76,7 +76,7 @@ export const ExperiencesHostedByMeScreen: React.FC = () => {
             numColumns={2}
             data={myExperienceList}
             keyExtractor={(item, index) => index.toString()}
-            renderItem={({item}) => <ExperienceView experience={item} white_color={true} onFetchingData={setFetchingData} viewWidth={(viewportWidth - 64) / 2} />}
+            renderItem={({item}) => <ExperienceView experience={item} white_color={true} onFetchingData={setFetchingData} viewWidth={(viewportWidth - 64) / 2} is_edit={true} />}
           />
 
           <TouchableWithoutFeedback onPress={() => {

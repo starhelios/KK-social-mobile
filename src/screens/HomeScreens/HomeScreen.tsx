@@ -300,7 +300,7 @@ export const HomeScreen: React.FC = () => {
             horizontal={true}
             data={filtering == false ? popularExperienceList : experienceList}
             keyExtractor={(item, index) => index.toString()}
-            renderItem={({item}) => <ExperienceView experience={item} white_color={true} onFetchingData={setFetchingData} viewWidth={154} />}
+            renderItem={({item}) => <ExperienceView experience={item} white_color={true} onFetchingData={setFetchingData} viewWidth={154} is_edit={false} />}
           />
 
           <CustomText style={styles.list_title}>

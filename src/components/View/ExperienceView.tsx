@@ -27,6 +27,7 @@ interface props {
   experience: IExperience;
   white_color: boolean;
   viewWidth: number;
+  is_edit: boolean;
   onFetchingData: (fetching: boolean) => void;
 }
 
@@ -35,6 +36,7 @@ export const ExperienceView: React.FC<props> = (props: props) => {
   const experience: IExperience = props.experience;
   const white_color: boolean = props.white_color;
   const viewWidth: number = props.viewWidth;
+  const is_edit: boolean = props.is_edit;
 
   const { navigate } = useNavigation();
   const { getExperienceDetail } = useExperiences();
@@ -44,7 +46,12 @@ export const ExperienceView: React.FC<props> = (props: props) => {
     props.onFetchingData(true);
     await getExperienceDetail(experience.id)
     .then(async (experienceDetail: Promise<IExperienceDetail>) => {
-      getHostDetailInformation(await experienceDetail);
+      if (is_edit == true) {
+        props.onFetchingData(false);
+        navigate('EditExperience', {experienceDetail: await experienceDetail});
+      } else {
+        getHostDetailInformation(await experienceDetail);
+      }
     }).catch(() => {
       props.onFetchingData(false);
       Alert.alert('', ERROR_MESSAGE.GET_EXPERIENCE_DETAIL_FAIL);
