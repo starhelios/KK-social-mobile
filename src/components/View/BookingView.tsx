@@ -39,11 +39,17 @@ export const BookingView: React.FC<props> = (props: props) => {
   const booking: IUserBooking = props.booking;
   const isHostRating: boolean = props.isHostRating;
   const completed_booking: boolean = props.completed_booking;
-  
+  const getMyRating = () => {
+    const ratingList = booking.ratings.filter((element) => {
+      return userInfo.id === element.userId;
+    })
+    const ratingValue = ratingList.length > 0 ? ratingList[0].rating : 0;
+    return ratingValue;
+  }
+
   const { navigate } = useNavigation();
   const { buildBooking, rateBooking } = useExperiences();
-
-  const [rating, setRating] = useState<number>(0);
+  const [rating, setRating] = useState<number>(getMyRating());
 
   const getUserZoomRole = (itemIds: string[]) => {
     return itemIds.indexOf(userInfo.id) > -1 ? '0': '1'
@@ -61,18 +67,6 @@ export const BookingView: React.FC<props> = (props: props) => {
     .catch(async (error: Promise<string>) => {
       Alert.alert('', await error);
     })
-  }
-
-  const getUserRating = () => {
-    if (rating != 0) {
-      return rating;
-    }
-
-    const ratingList = booking.ratings.filter((element) => {
-      return userInfo.id === element.userId;
-    })
-    const ratingValue = ratingList.length > 0 ? ratingList[0].rating : 0;
-    return ratingValue;
   }
 
   const onRatingBook = async (rate: number) => {
@@ -118,17 +112,15 @@ export const BookingView: React.FC<props> = (props: props) => {
             <View style={styles.rating}>
               <StarRating
                 starStyle={{width: 45}}
-                disabled={false}
+                disabled={rating > 0 ? true : false}
                 emptyStar={Img_Rating_Empty}
                 fullStar={Img_Rating_Full}
                 starSize={35}
                 maxStars={5}
-                rating={getUserRating()}
+                rating={rating}
                 selectedStar={(rating) => onRatingBook(rating)}
               />
             </View>
-
-
           </View>
       }
     </View>
