@@ -189,20 +189,21 @@ export const LoginProfileView: React.FC = () => {
                     <TitleArrowButton title={''} name={'Withdrawal Options'} showArrow={true} white_color={true} />
                   </View>
                 </TouchableWithoutFeedback>
+
+                <TouchableWithoutFeedback onPress={() => navigate('ConfirmedBookings')}>
+                  <View style={{width:'100%', marginTop: 22}}>
+                    <TitleArrowButton title={''} name={'Confirmed Bookings'} showArrow={true} white_color={true} />
+                  </View>
+                </TouchableWithoutFeedback>
+
+                <TouchableWithoutFeedback onPress={() => navigate('ZoomIntegration')}>
+                  <View style={{width:'100%', marginTop: 22}}>
+                    <TitleArrowButton title={''} name={'Zoom'} showArrow={true} white_color={true} />
+                  </View>
+                </TouchableWithoutFeedback>
               </View> 
           }
-
-          <TouchableWithoutFeedback onPress={() => navigate('ConfirmedBookings')}>
-            <View style={{width:'100%', marginTop: 22}}>
-              <TitleArrowButton title={''} name={'Confirmed Bookings'} showArrow={true} white_color={true} />
-            </View>
-          </TouchableWithoutFeedback>
-
-          <TouchableWithoutFeedback onPress={() => navigate('ZoomIntegration')}>
-            <View style={{width:'100%', marginTop: 22}}>
-              <TitleArrowButton title={''} name={'Zoom'} showArrow={true} white_color={true} />
-            </View>
-          </TouchableWithoutFeedback>
+          
 
           <CustomText style={{...styles.content_title, marginTop: 44}}>Legal</CustomText>
           <TouchableWithoutFeedback onPress={() => navigate('TermsOfService') }>
