@@ -58,8 +58,16 @@ export const ExperienceDetailBookScreen: React.FC = ({route}) => {
     const today = convertStringToDate(new Date().toLocaleDateString());
 
     if (experienceDetail.specificExperience != null && experienceDetail.specificExperience != undefined && experienceDetail.specificExperience.length > 0) {
-      for (let i = 0; i < experienceDetail.specificExperience.length; i++) {
-        let availableDate = experienceDetail.specificExperience[i];
+      let sortSpecificExperiences = experienceDetail.specificExperience.sort((a: ISpecificExperience, b: ISpecificExperience) => {
+        let aTime = convertStringToDate(`${a.day} ${a.startTime}`) ?? '';
+        let bTime = convertStringToDate(`${b.day} ${b.startTime}`) ?? '';
+        if (aTime < bTime) {
+          return -1;
+        }
+        return 0;
+      })
+      for (let i = 0; i < sortSpecificExperiences.length; i++) {
+        let availableDate = sortSpecificExperiences[i];
   
         const startTime = convertStringToDate(availableDate.day + ' ' + availableDate.startTime);
         if (startTime == null || today == null || startTime < today) {

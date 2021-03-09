@@ -203,7 +203,6 @@ export const LoginProfileView: React.FC = () => {
                 </TouchableWithoutFeedback>
               </View> 
           }
-          
 
           <CustomText style={{...styles.content_title, marginTop: 44}}>Legal</CustomText>
           <TouchableWithoutFeedback onPress={() => navigate('TermsOfService') }>
