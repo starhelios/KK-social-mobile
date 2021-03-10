@@ -13,7 +13,7 @@ import Spinner from 'react-native-loading-spinner-overlay';
 import Moment from 'moment';
 
 // from app
-import { API_CONFIG, COLOR, CustomText, FONT, Icon_Back, MARGIN_TOP, viewportWidth } from '../../constants';
+import { API_CONFIG, COLOR, convertStringToDate, CustomText, FONT, Icon_Back, MARGIN_TOP, viewportWidth } from '../../constants';
 import { useExperiences } from '../../hooks';
 import { IExperienceDetail, ISpecificExperience } from '../../interfaces/app';
 import { ConfirmedBookingView } from '../../components/View';
@@ -35,11 +35,12 @@ export const ConfirmedBookingsScreen: React.FC = () => {
 
   useEffect(() => {
     getHostExperienceList();
+    
   }, [])
 
-  useEffect(() => {
-    getHostExperienceList();
-  }, [API_CONFIG]);
+  // useEffect(() => {
+  //   getHostExperienceList();
+  // }, [API_CONFIG]);
 
   const getHostExperienceList = async () => {
     await getHostExperienceListByUserId(userInfo.id)
@@ -48,21 +49,47 @@ export const ConfirmedBookingsScreen: React.FC = () => {
       let upcomingExperiences: ISpecificExperience[] = [];
       let completedExperiences: ISpecificExperience[] = [];
       (await result).map((item: IExperienceDetail, idx: number) => {
-        return Moment(item.endDay).format() >= Moment(new Date()).format() 
-          ? item.specificExperience.map((subItem: ISpecificExperience, subIndex: number) => {
-              if (subItem.usersGoing && subItem.usersGoing.length > 0) { 
-                return upcomingExperiences.push(subItem);
+        item.specificExperience.map((subItem: ISpecificExperience, idx: number) => {
+          if (subItem.usersGoing.length > 0) {
+            console.log(convertStringToDate(subItem.day + ' ' + subItem.endTime), subItem.day,  subItem.endTime, new Date())
+            if (convertStringToDate(subItem.day + ' ' + subItem.endTime) > new Date()) {
+              let added = false;
+              upcomingExperiences.map((uItem: ISpecificExperience, uidx: number) => {
+                if (uItem.id == subItem.id) {
+                  added = true;
+                }
+              });
+              if (added == false) {
+                upcomingExperiences.push(subItem);
               }
-            })
-          : item.specificExperience.map((subItem: ISpecificExperience, subIndex: number) => {
-              if (subItem.usersGoing && subItem.usersGoing.length > 0) {  
-                return completedExperiences.push(subItem);
+            } else {
+              let added = false;
+              completedExperiences.map((cItem: ISpecificExperience, cidx: number) => {
+                if (cItem.id == subItem.id) {
+                  added = true;
+                }
+              });
+              if (added == false) {
+                completedExperiences.push(subItem);
               }
-            })
+            }
+          }
+        });
       });
 
-      setUpcomingBookingList(upcomingExperiences);
-      setCompletedBookingList(completedExperiences);
+      setUpcomingBookingList(upcomingExperiences.sort(function(a: ISpecificExperience, b: ISpecificExperience) {
+        if (convertStringToDate(a.day + ' ' + a.startTime) < convertStringToDate(b.day + ' ' + b.startTime)) {
+          return -1;
+        }
+        return 0;
+      }));
+
+      setCompletedBookingList(completedExperiences.sort(function(a: ISpecificExperience, b: ISpecificExperience) {
+        if (convertStringToDate(a.day + ' ' + a.startTime) < convertStringToDate(b.day + ' ' + b.startTime)) {
+          return -1;
+        }
+        return 0;
+      }));
     })
     .catch(() => {
       setUpcomingBookingList([]);

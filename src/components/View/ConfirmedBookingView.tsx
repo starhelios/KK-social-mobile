@@ -61,7 +61,7 @@ export const ConfirmedBookingView: React.FC<props> = (props: props) => {
         ? <View style={{...styles.content_container, height: 190}}>
             <CustomText style={styles.experience} numberOfLines={1}>{ specificExperience.experience.title }</CustomText>
             <CustomText style={styles.date} numberOfLines={1}>{ `Users Going: ${specificExperience.usersGoing.length}` }</CustomText>
-            <CustomText style={styles.date} numberOfLines={1}>{ `${Moment(specificExperience.experience.startDay).format('MMMM Do YYYY')} • ${specificExperience.startTime}` }</CustomText>
+            <CustomText style={styles.date} numberOfLines={1}>{ `${Moment(specificExperience.day).format('MMMM Do YYYY')} • ${specificExperience.startTime}` }</CustomText>
             <View style={styles.join_container}>
               <TouchableWithoutFeedback onPress={ onJoinExperience }>
                 <View style={styles.join_button_container}>
@@ -73,7 +73,7 @@ export const ConfirmedBookingView: React.FC<props> = (props: props) => {
         : <View style={{...styles.content_container, height: 190}}>
             <CustomText style={styles.experience} numberOfLines={1}>{ specificExperience.experience.title }</CustomText>
             <CustomText style={styles.date} numberOfLines={1}>{ `Users Going: ${specificExperience.usersGoing.length}` }</CustomText>
-            <CustomText style={styles.date} numberOfLines={1}>{ `${Moment(specificExperience.experience.startDay).format('MMMM Do YYYY')} • ${specificExperience.startTime}` }</CustomText>
+            <CustomText style={styles.date} numberOfLines={1}>{ `${Moment(specificExperience.day).format('MMMM Do YYYY')} • ${specificExperience.startTime}` }</CustomText>
 
             <View style={styles.line} />
 

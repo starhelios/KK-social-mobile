@@ -9,13 +9,7 @@ export const convertStringToDateFormat = (date: string, format: string) => {
 }
 
 export const convertStringToDate = (date: string) => {
-  if (date == '' || date == undefined) {
-    return null;
-  } else {
-    // return new Date(date);
-    // return Moment(date).format("YYYY-MM-DD HH:mm:ss");
-    return Moment.utc(date).format("YYYY-MM-DD HH:mm:ss");
-  }
+  return new Date(Date.parse(date));
 }
 
 export const convertStringToMomentDateFormat = (date: string, format: string) => {

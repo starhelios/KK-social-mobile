@@ -55,12 +55,14 @@ export const ExperienceDetailBookScreen: React.FC = ({route}) => {
     let availableDates: ISpecificExperience[] = [];
     let beforeDate = '';
 
-    const today = convertStringToDate(new Date().toLocaleDateString());
+    const today = new Date();
+
+    console.log(experienceDetail.specificExperience);
 
     if (experienceDetail.specificExperience != null && experienceDetail.specificExperience != undefined && experienceDetail.specificExperience.length > 0) {
       let sortSpecificExperiences = experienceDetail.specificExperience.sort((a: ISpecificExperience, b: ISpecificExperience) => {
-        let aTime = convertStringToDate(`${a.day} ${a.startTime}`) ?? '';
-        let bTime = convertStringToDate(`${b.day} ${b.startTime}`) ?? '';
+        let aTime = convertStringToDate(`${a.day} ${a.startTime}`);
+        let bTime = convertStringToDate(`${b.day} ${b.startTime}`);
         if (aTime < bTime) {
           return -1;
         }
