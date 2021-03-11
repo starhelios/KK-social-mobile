@@ -47,6 +47,16 @@ export const ExperienceView: React.FC<props> = (props: props) => {
     await getExperienceDetail(experience.id)
     .then(async (experienceDetail: Promise<IExperienceDetail>) => {
       if (is_edit == true) {
+        let isBookinged = false;
+        for (let item of (await experienceDetail).specificExperience) {
+          if (item.usersGoing.length > 0) {
+            isBookinged = true;
+          }
+        }
+        if (isBookinged == true) {
+          Alert.alert('', ERROR_MESSAGE.EXPERIENCE_ALREADY_BOOKINGED);
+          return;
+        }
         props.onFetchingData(false);
         navigate('EditExperience', {experienceDetail: await experienceDetail});
       } else {

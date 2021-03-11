@@ -19,6 +19,7 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 // from app
 import { 
   COLOR, 
+  convertStringToDate, 
   convertStringToDateFormat, 
   convertStringToMomentDateFormat, 
   CustomText, 
@@ -42,6 +43,7 @@ export const SelectAvailabilityDatesScreen: React.FC = ({route}) => {
     return convertStringToMomentDateFormat(date.toLocaleDateString() + ' ' + date.toLocaleTimeString(), 'hh:mm a')
   }
 
+  const id: string = route.params.id;
   const duration: string = route.params.duration;
 
   const [startTime, setStartTime] = useState<Date>(new Date());
@@ -53,7 +55,10 @@ export const SelectAvailabilityDatesScreen: React.FC = ({route}) => {
   const [selectedIndex, setSelectedIndex] = useState<number>(-1);
   const [startDay, setStartDay] = useState<string>(route.params.dateAvaibilityInfo.startDay);
   const [endDay, setEndDay] = useState<string>(route.params.dateAvaibilityInfo.endDay);
-  const [dateAvaibility, setDateAvaibility] = useState<IAvailableDateForCreate[]>(route.params.dateAvaibilityInfo.dateAvaibility);
+  const [dateAvaibility, setDateAvaibility] = useState<IAvailableDateForCreate[]>(route.params.dateAvaibilityInfo.dateAvaibility.sort((a: IAvailableDateForCreate, b: IAvailableDateForCreate) => {
+    if (convertStringToDate(a.day + ' ' + a.startTime)  < convertStringToDate(b.day + ' ' + b.startTime)) { return -1; }
+    return 0;
+  }));
 
   useEffect(() => {
     if (dateAvaibility.length == 0) {
@@ -178,7 +183,6 @@ export const SelectAvailabilityDatesScreen: React.FC = ({route}) => {
   }
 
   const onSave = () => {
-    console.log(dateAvaibility);
     route.params.setDateAvaibilityInfo({startDay: startDay, endDay: endDay, dateAvaibility: dateAvaibility});
     goBack();
   }
@@ -195,11 +199,13 @@ export const SelectAvailabilityDatesScreen: React.FC = ({route}) => {
             </View>
           </TouchableWithoutFeedback>
 
-          <TouchableWithoutFeedback onPress={onEditActiveDates}>
-            <View style={styles.edit_button}>
-              <CustomText style={styles.edit_text}>Edit All</CustomText>
-            </View>
-          </TouchableWithoutFeedback>
+          { id == '' && 
+              <TouchableWithoutFeedback onPress={onEditActiveDates}>
+                <View style={styles.edit_button}>
+                  <CustomText style={styles.edit_text}>Edit All</CustomText>
+                </View>
+              </TouchableWithoutFeedback>
+          }
         </View>
 
         <FlatList
@@ -208,7 +214,7 @@ export const SelectAvailabilityDatesScreen: React.FC = ({route}) => {
           horizontal={false}
           data={dateAvaibility}
           keyExtractor={(item, index) => index.toString()}
-          renderItem={({item, index}) => <AvailabilityDateView availableDate={item} index={index} onChooseDate={onEditActiveDate} />}
+          renderItem={({item, index}) => <AvailabilityDateView experience_id={id} availableDate={item} index={index} onChooseDate={onEditActiveDate} />}
         />
 
         <TouchableWithoutFeedback onPress={onSave}>

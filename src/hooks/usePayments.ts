@@ -71,7 +71,6 @@ export const usePayments = () => {
     } catch (err) {
       const apiError = handleError(err);
       if (apiError) {
-        console.log(apiError);
         return Promise.reject(apiError);
       } else {
         return Promise.reject(null);

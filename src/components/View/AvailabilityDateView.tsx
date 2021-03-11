@@ -9,6 +9,7 @@ import GlobalStyle from '../../styles/global';
 
 
 interface props {
+  experience_id: string;
   index: number;
   availableDate: IAvailableDateForCreate;
   onChooseDate: (index: number, availableDate: IAvailableDateForCreate) => void;
@@ -16,6 +17,7 @@ interface props {
 
 export const AvailabilityDateView: React.FC<props> = (props: props) => {
 
+  const experience_id: string = props.experience_id;
   const index: number = props.index;
   const availableDate: IAvailableDateForCreate = props.availableDate;
 
@@ -26,11 +28,13 @@ export const AvailabilityDateView: React.FC<props> = (props: props) => {
       <View style={styles.container}>
         <CustomText style={styles.time}>{availableDate.startTime + ' - ' + availableDate.endTime + ' (EDT)'}</CustomText>
 
-        <TouchableWithoutFeedback onPress={() => props.onChooseDate(index, availableDate) }>
-          <View style={styles.button_container}>
-            <ColorButton title='Edit' color={COLOR.systemWhiteColor} backgroundColor={COLOR.redColor} />
-          </View>
-        </TouchableWithoutFeedback>
+        { experience_id == '' &&
+          <TouchableWithoutFeedback onPress={() => props.onChooseDate(index, availableDate) }>
+            <View style={styles.button_container}>
+              <ColorButton title='Edit' color={COLOR.systemWhiteColor} backgroundColor={COLOR.redColor} />
+            </View>
+          </TouchableWithoutFeedback>
+        }
       </View>
 
       <View style={{...GlobalStyle.auth_line, marginLeft: 24, width: viewportWidth - 48, marginTop: 15, backgroundColor: COLOR.alphaBlackColor20}} />

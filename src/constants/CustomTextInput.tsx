@@ -6,5 +6,5 @@ const defaultProps: TextInputProps = {
 }
 
 export const CustomTextInput: React.FC<TextInputProps> = ({ children, ...props }) => {
-    return <TextInput {...{ ...defaultProps, ...props }}>{children}</TextInput>
+    return <TextInput {...{ ...defaultProps, ...props }} autoCorrect={false}>{children}</TextInput>
 }

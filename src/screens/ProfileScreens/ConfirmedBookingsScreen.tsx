@@ -51,7 +51,6 @@ export const ConfirmedBookingsScreen: React.FC = () => {
       (await result).map((item: IExperienceDetail, idx: number) => {
         item.specificExperience.map((subItem: ISpecificExperience, idx: number) => {
           if (subItem.usersGoing.length > 0) {
-            console.log(convertStringToDate(subItem.day + ' ' + subItem.endTime), subItem.day,  subItem.endTime, new Date())
             if (convertStringToDate(subItem.day + ' ' + subItem.endTime) > new Date()) {
               let added = false;
               upcomingExperiences.map((uItem: ISpecificExperience, uidx: number) => {

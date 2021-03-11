@@ -83,9 +83,6 @@ export const EditExperienceScreen: React.FC = ({route}) => {
       images.push('');  
     }
     setImageList(images);
-
-    console.log(experienceDetail);
-    console.log(experienceDetail.specificExperience);
   }, []);
 
   const onSelectPhoto = (index: number) => {
@@ -96,17 +93,6 @@ export const EditExperienceScreen: React.FC = ({route}) => {
   }
 
   const onUpdateExperience = () => {
-    let isBookinged = false;
-    for (let item of experienceDetail.specificExperience) {
-      if (item.usersGoing.length > 0) {
-        isBookinged = true;
-      }
-    }
-    if (isBookinged == true) {
-      Alert.alert('', ERROR_MESSAGE.EXPERIENCE_ALREADY_BOOKINGED);
-      return;
-    }
-
     if (fetchingData == true) {
       return;
     } else if (imageCount == 0) {
@@ -268,17 +254,8 @@ export const EditExperienceScreen: React.FC = ({route}) => {
       Alert.alert('', ERROR_MESSAGE.EMPTY_EXPERIENCE_DURRATION);
       return;
     }
-    let isBookinged = false;
-    for (let item of experienceDetail.specificExperience) {
-      if (item.usersGoing.length > 0) {
-        isBookinged = true;
-      }
-    }
-    if (isBookinged == true) {
-      Alert.alert('', ERROR_MESSAGE.EXPERIENCE_ALREADY_BOOKINGED);
-      return;
-    }
-    navigate('SelectAvailabilityDates', {dateAvaibilityInfo: dateAvaibilityInfo, setDateAvaibilityInfo: setDateAvaibilityInfo, duration: duration});
+    
+    navigate('SelectAvailabilityDates', {id: experienceDetail.id, dateAvaibilityInfo: dateAvaibilityInfo, setDateAvaibilityInfo: setDateAvaibilityInfo, duration: duration});
   }
 
   return (

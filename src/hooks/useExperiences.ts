@@ -110,13 +110,11 @@ export const useExperiences = () => {
     }
     try {
       const { data } = await axios.post<IApiSuccess>(url, body, API_CONFIG);
-      console.log(data);
       const result: IExperience = data.payload;
       return Promise.resolve(result);
     } catch (err) {
       const apiError = handleError(err);
       if (apiError) {
-        console.log(apiError);
         return Promise.reject(apiError.error.message);
       } else {
         return Promise.reject(null);

@@ -56,9 +56,6 @@ export const ExperienceDetailBookScreen: React.FC = ({route}) => {
     let beforeDate = '';
 
     const today = new Date();
-
-    console.log(experienceDetail.specificExperience);
-
     if (experienceDetail.specificExperience != null && experienceDetail.specificExperience != undefined && experienceDetail.specificExperience.length > 0) {
       let sortSpecificExperiences = experienceDetail.specificExperience.sort((a: ISpecificExperience, b: ISpecificExperience) => {
         let aTime = convertStringToDate(`${a.day} ${a.startTime}`);
@@ -100,9 +97,8 @@ export const ExperienceDetailBookScreen: React.FC = ({route}) => {
     if (fromDate == '') {
       setAvailableDates(allAvailableDates);
     } else {
-      
-      const from = convertStringToDate(fromDate);
-      const end = convertStringToDate(endDate);
+      const from = convertStringToDate(fromDate + 'T00:00:00');
+      const end = convertStringToDate(endDate + 'T00:00:00');
 
       if (from != null && end != null) {
         let availableDates: ISpecificExperience[] = [];
@@ -111,7 +107,7 @@ export const ExperienceDetailBookScreen: React.FC = ({route}) => {
           const startDate = convertStringToDate(availableDate.day);
 
           if (startTime != null && startDate != null) {
-            if (startTime >= from && startDate <= end) {
+            if (startTime >= from && startDate <= end && startTime > new Date()) {
               availableDates.push(availableDate);
             }
           }
