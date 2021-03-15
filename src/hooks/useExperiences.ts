@@ -12,7 +12,7 @@ export const useExperiences = () => {
   ): Promise<any> => {
     const url = API_ENDPOINT.EXPERIENCES;
     try {
-      const { data } = await axios.get<IApiSuccess>(url);
+      const { data } = await axios.get<IApiSuccess>(url, API_CONFIG);
       const result: IExperience[] = data.payload;
       return Promise.resolve(result);
     } catch (err) {
@@ -30,7 +30,7 @@ export const useExperiences = () => {
   ): Promise<any> => {
     const url = API_ENDPOINT.EXPERIENCES + '/' + id;
     try {
-      const { data } = await axios.get<IApiSuccess>(url);
+      const { data } = await axios.get<IApiSuccess>(url, API_CONFIG);
       const result: IExperienceDetail = data.payload.experience;
       return Promise.resolve(result);
     } catch (err) {

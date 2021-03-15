@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 // from app
-import { API_ENDPOINT } from '../constants';
+import { API_CONFIG, API_ENDPOINT } from '../constants';
 import { IApiSuccess } from '../interfaces/api';
 import { ITutorial } from '../interfaces/app';
 
@@ -11,7 +11,7 @@ export const useTutorials = () => {
   ): Promise<any> => {
     const url = API_ENDPOINT.TUTORIALS;
     try {
-      const { data } = await axios.get<IApiSuccess>(url);
+      const { data } = await axios.get<IApiSuccess>(url, API_CONFIG);
       const result: ITutorial[] = data.payload;
       return Promise.resolve(result);
     } catch (err) {
