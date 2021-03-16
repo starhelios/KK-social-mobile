@@ -12,20 +12,11 @@ export interface IExperience {
 	categoryName: string,
 	images: string[],
 	specificExperience: string[],
-	dateAvaibility: IAvailableDate[],
-	createdAt: string,
-	usersGoing: IUsersGoing[],
-
-	// test
-	icon: string,
 	location: string,
-}
+	createdAt: string,
 
-export interface IUsersGoing {
-	_id: string,
-	userID: string,
-	timeSlot: ITimeSlot,
-	totalGuests: number,
+	// for create
+	dateAvaibility: IAvailableDate[],
 }
 
 export interface ITimeSlot {

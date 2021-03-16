@@ -13,8 +13,7 @@ import { useGlobalState } from '../../redux/Store';
 export const ProfileScreen: React.FC = () => {
 
   const profile: IUser = useGlobalState('userInfo');
-
-  const [userID, setUserID] = useState<string>(profile.id);
+  const [ userID, setUserID ] = useState<string>(profile.id);
 
   useEffect(() => {
     setUserID(profile.id);
@@ -23,8 +22,7 @@ export const ProfileScreen: React.FC = () => {
   return (
     <Container style={{width: viewportWidth, flex: 1, backgroundColor: COLOR.blackColor}}>
       <SafeAreaView style={styles.safe_area}>
-        {
-          userID == ''
+        { userID == ''
           ? <NotLoginProfileView />
           : <LoginProfileView />
         }

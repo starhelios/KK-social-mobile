@@ -5,12 +5,11 @@ import {
   View,
   Image,
   TouchableWithoutFeedback,
-  FlatList,
   Linking,
   Alert,
 } from 'react-native';
 import { Container } from 'native-base';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { SvgXml } from 'react-native-svg';
 import { WebView, WebViewNavigation } from 'react-native-webview';
@@ -25,11 +24,9 @@ import {
   Img_Auth_Background,
   MARGIN_TOP,
   SUCCESS_MESSAGE,
-  viewportHeight,
   viewportWidth,
 } from '../../constants';
-import { BankButton, ColorButton, TitleArrowButton } from '../../components/Button';
-import { IBank } from '../../interfaces/app';
+import { ColorButton } from '../../components/Button';
 import { usePayments } from '../../hooks';
 import { useGlobalState } from '../../redux/Store';
 
@@ -38,21 +35,10 @@ export const WithdrawalScreen: React.FC = () => {
 
   let fetching = false;
   const userInfo = useGlobalState('userInfo');
-  const { navigate, goBack } = useNavigation();
+  const { goBack } = useNavigation();
   const { generateAccountLink } = usePayments();
-
-  const [bankList, setBankList] = useState<IBank[]>([]);
-  const [stripeUrl, setStripeUrl] = useState<string>('');
-  const [isSettedWithdraw, setIsSettedWithdraw] = useState<boolean>(userInfo.stripeCustomerID == undefined || userInfo.stripeCustomerID == '' ? false : true);
-
-  useEffect(() => {
-    let list: IBank[] = [];
-      setBankList(list);
-  }, [])
-
-  const onAddBankAccount = () => {
-    navigate('AddBankAccount');
-  }
+  const [ stripeUrl, setStripeUrl ] = useState<string>('');
+  const [ isSettedWithdraw, setIsSettedWithdraw ] = useState<boolean>(userInfo.stripeCustomerID == undefined || userInfo.stripeCustomerID == '' ? false : true);
 
   const onSaveAccount = async () => {
     if (fetching == true) {
@@ -113,30 +99,6 @@ export const WithdrawalScreen: React.FC = () => {
                 </TouchableWithoutFeedback>
               </View>
       
-              {/* <View style={styles.input_container}>
-                { bankList.length > 0 && 
-                  <View style={{width:'100%'}}>
-                    <CustomText style={styles.info_title}>Connected Account</CustomText>
-                    <FlatList
-                      style={{width: '100%', marginTop: 5, height: bankList.length * 78 <= viewportHeight - 350 ? bankList.length * 78 : viewportHeight - 350 }}
-                      contentContainerStyle={{paddingVertical: 0}}
-                      showsHorizontalScrollIndicator={false}
-                      horizontal={false}
-                      data={bankList}
-                      keyExtractor={(item, index) => index.toString()}
-                      renderItem={({item}) => <BankButton card={item} />}
-                    />
-                  </View>
-                }
-      
-                <CustomText style={{...styles.info_title, marginTop: 44}}>Add Account</CustomText>
-      
-                <TouchableWithoutFeedback onPress={() => onAddBankAccount() }>
-                  <View style={{width:'100%', marginTop: 22}}>
-                    <TitleArrowButton title={''} name={'Add Bank Account'} showArrow={true} white_color={true} />
-                  </View>
-                </TouchableWithoutFeedback>
-              </View> */}
               <TouchableWithoutFeedback onPress={onSaveAccount}>
                   <View style={styles.saveButton}>
                     <ColorButton 

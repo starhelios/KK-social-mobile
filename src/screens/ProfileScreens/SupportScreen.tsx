@@ -20,12 +20,9 @@ import {
   Icon_Back, 
   MARGIN_TOP,
 } from '../../constants';
-import { useGlobalState } from '../../redux/Store';
 
 
 export const SupportScreen: React.FC = () => {
-
-  const profile = useGlobalState('userInfo');
 
   const { goBack } = useNavigation();
 
@@ -43,9 +40,7 @@ export const SupportScreen: React.FC = () => {
 
         <View style={{width: '100%', height: '100%', flex: 1, marginTop: 0, backgroundColor: COLOR.systemWhiteColor}}>
           <WebView
-            source={
-              Platform.OS === 'android' ? { html: require('../../assets/html/contact_and_support.js')() } : WebViewFile
-            }
+            source={Platform.OS === 'android' ? { html: require('../../assets/html/contact_and_support.js')() } : WebViewFile}
             domStorageEnabled={true}
             allowUniversalAccessFromFileURLs={true}
             allowFileAccessFromFileURLs={true}

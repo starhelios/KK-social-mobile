@@ -45,6 +45,8 @@ import GlobalStyle from '../../styles/global';
 
 export const HostAnExperienceScreen: React.FC = () => {
 
+  const profile: IUser = useGlobalState('userInfo');
+  const allCategoryList: ICategory[] = useGlobalState('categoryList');
   const dispatch = useDispatch();
   const { navigate, goBack } = useNavigation();
   const { createExperience, getExperienceList } = useExperiences();
@@ -62,8 +64,7 @@ export const HostAnExperienceScreen: React.FC = () => {
   const [dateAvaibilityInfo, setDateAvaibilityInfo] = useState<IDateAvailabilityInfo>({startDay: '', endDay: '', dateAvaibility: []});
   const [uploading, setUploading] = useState(false);
   
-  const profile: IUser = useGlobalState('userInfo');
-  const allCategoryList: ICategory[] = useGlobalState('categoryList');
+  
 
   const comp = (a: string, b: string) => a.toLowerCase().trim() === b.toLowerCase().trim();
   const findCategory = (query: string) => {

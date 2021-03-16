@@ -10,10 +10,17 @@ import { Container } from 'native-base';
 import { useEffect, useState } from 'react';
 import { SvgXml } from 'react-native-svg';
 import Spinner from 'react-native-loading-spinner-overlay';
-import Moment from 'moment';
 
 // from app
-import { API_CONFIG, COLOR, convertStringToDate, CustomText, FONT, Icon_Back, MARGIN_TOP, viewportWidth } from '../../constants';
+import { 
+  COLOR, 
+  convertStringToDate, 
+  CustomText, 
+  FONT, 
+  Icon_Back, 
+  MARGIN_TOP, 
+  viewportWidth, 
+} from '../../constants';
 import { useExperiences } from '../../hooks';
 import { IExperienceDetail, ISpecificExperience } from '../../interfaces/app';
 import { ConfirmedBookingView } from '../../components/View';
@@ -35,12 +42,7 @@ export const ConfirmedBookingsScreen: React.FC = () => {
 
   useEffect(() => {
     getHostExperienceList();
-    
   }, [])
-
-  // useEffect(() => {
-  //   getHostExperienceList();
-  // }, [API_CONFIG]);
 
   const getHostExperienceList = async () => {
     await getHostExperienceListByUserId(userInfo.id)

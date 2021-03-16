@@ -35,9 +35,8 @@ export const ExperiencesHostedByMeScreen: React.FC = () => {
   const experienceList = useGlobalState('experienceList');
   const userInfo = useGlobalState('userInfo');
   const { navigate, goBack } = useNavigation();
-
-  const [myExperienceList, setMyExperienceList] = useState<IExperience[]>([]);
-  const [fetchingData, setFetchingData] = useState<boolean>(false);
+  const [ myExperienceList, setMyExperienceList ] = useState<IExperience[]>([]);
+  const [ fetchingData, setFetchingData ] = useState<boolean>(false);
 
   useEffect(() => {
     getMyExperienceList();

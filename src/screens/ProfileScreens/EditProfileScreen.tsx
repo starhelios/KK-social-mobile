@@ -18,12 +18,11 @@ import {
   GooglePlacesAutocompleteRef, 
 } from 'react-native-google-places-autocomplete';
 import { Container } from 'native-base';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { SvgXml } from 'react-native-svg';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import firebase from 'firebase';
-import Autocomplete from 'react-native-autocomplete-input';
 import ImagePicker from 'react-native-image-crop-picker';
 import LinearGradient from 'react-native-linear-gradient';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
@@ -33,8 +32,6 @@ import Spinner from 'react-native-loading-spinner-overlay';
 import { 
   COLOR, 
   convertDateToMomentDateFormat, 
-  convertStringToDate, 
-  convertStringToDateFormat, 
   CustomText, 
   CustomTextInput, 
   EMAIL_LOGIN, 
@@ -44,7 +41,6 @@ import {
   Icon_Back,
   Icon_Camera,
   Icon_Normal_Profile,
-  Icon_Search_White,
   LOGIN_STATE,
   MARGIN_TOP,
   SUCCESS_MESSAGE,

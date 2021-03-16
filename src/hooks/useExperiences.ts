@@ -122,30 +122,6 @@ export const useExperiences = () => {
     }
   };
 
-  const filterExperiences = async (
-    minPrice: number | null,
-    maxPrice: number | null,
-    startDay: string | null,
-    endDay: string | null,
-    categoryName: string[],
-  ): Promise<any> => {
-    const url = API_ENDPOINT.EXPERIENCES_FILTER;
-    const body = {
-      minPrice,
-      maxPrice,
-      startDay,
-      endDay,
-      categoryName,
-    }
-    try {
-      const { data } = await axios.post<IApiSuccess>(url, body, API_CONFIG);
-      const result: IExperience[] = data.payload;
-      return Promise.resolve(result);
-    } catch (err) {
-      return Promise.reject(null);
-    }
-  };
-
   const reserveBooking = async (
     userId: string,
     experienceId: string,
@@ -290,7 +266,6 @@ export const useExperiences = () => {
     getExperienceDetail, 
     createExperience, 
     updateExperience,
-    filterExperiences, 
     reserveBooking, 
     getReservedBookingList, 
     buildBooking, 

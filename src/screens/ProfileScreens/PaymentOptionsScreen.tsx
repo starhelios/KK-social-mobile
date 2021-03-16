@@ -33,13 +33,11 @@ export const PaymentOptionsScreen: React.FC = () => {
 
   const userInfo: IUser = useGlobalState('userInfo');
   const selectedCard: ICardInfo = useGlobalState('selectedCard');
-
   const dispatch = useDispatch();
   const { navigate, goBack } = useNavigation();
   const { deleteCard } = usePayments();
-
-  const [cardList, setCardList] = useState<ICardInfo[]>(userInfo.availableMethods);
-  const [isEditing, setIsEditing] = useState<boolean>(false);
+  const [ cardList, setCardList ] = useState<ICardInfo[]>(userInfo.availableMethods);
+  const [ isEditing, setIsEditing ] = useState<boolean>(false);
 
   useEffect(() => {
     let cards = userInfo.availableMethods.filter((item) => {
@@ -57,7 +55,6 @@ export const PaymentOptionsScreen: React.FC = () => {
         type: ActionType.SET_SELECT_CARD,
         payload: card,
       });
-      // goBack();
     }
   }
 

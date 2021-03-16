@@ -8,7 +8,7 @@ import {
   Alert,
 } from 'react-native';
 import { Container } from 'native-base';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { SvgXml } from 'react-native-svg';
 import { WebView, WebViewNavigation } from 'react-native-webview';
@@ -28,7 +28,6 @@ import {
   ZOOM_INTEGRATION_URL,
 } from '../../constants';
 import { ColorButton } from '../../components/Button';
-import { IBank } from '../../interfaces/app';
 import { useUsers } from '../../hooks';
 import { useGlobalState } from '../../redux/Store';
 
@@ -36,21 +35,9 @@ import { useGlobalState } from '../../redux/Store';
 export const ZoomIntegrationScreen: React.FC = () => {
 
   const profile = useGlobalState('userInfo');
-
   const { goBack } = useNavigation();
   const { updateZoomInformation } = useUsers();
-
-  const [bankList, setBankList] = useState<IBank[]>([]);
-  const [zoomIntegrationUrl, setZoomIntegrationUrl] = useState<string>('');
-
-  useEffect(() => {
-    let list: IBank[] = [];
-    setBankList(list);
-  }, [])
-
-  const onConnectZoom = async () => {
-    setZoomIntegrationUrl(ZOOM_INTEGRATION_URL);
-  }
+  const [ zoomIntegrationUrl, setZoomIntegrationUrl ] = useState<string>('');
 
   const handleWebViewNavigationStateChange = (newNavState: WebViewNavigation) => {
     if (newNavState.url.length > ZOOM_INTEGRATION_REDIRECT_URL.length && newNavState.url.substring(0, ZOOM_INTEGRATION_REDIRECT_URL.length) == ZOOM_INTEGRATION_REDIRECT_URL) {
@@ -90,7 +77,7 @@ export const ZoomIntegrationScreen: React.FC = () => {
         </View>
 
         { zoomIntegrationUrl == '' 
-          ? <TouchableWithoutFeedback onPress={onConnectZoom}>
+          ? <TouchableWithoutFeedback onPress={() => setZoomIntegrationUrl(ZOOM_INTEGRATION_URL)}>
               <View style={styles.saveButton}>
                 <ColorButton title={'Connect Your Zoom Account'} backgroundColor={COLOR.systemWhiteColor} color={COLOR.blackColor} />
               </View>
@@ -152,7 +139,6 @@ const styles = StyleSheet.create({
     bottom: 60,
     marginLeft: 24,
     marginRight: 24,
-    // marginTop: 150,
     width: viewportWidth - 48,
     height: 44,
   },
