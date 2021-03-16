@@ -14,8 +14,6 @@ export const API_ENDPOINT = {
   
   // Users
   USERS         : `${API_HOST}/users`,
-  // BOOKING_RESERVATION : `${API_HOST}/users/booking/reservation`,
-  // BOOKING_JOIN : `${API_HOST}/users/booking/join`,
 
   // Categories
   CATEGORIES        : `${API_HOST}/categories`,
