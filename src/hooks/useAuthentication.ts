@@ -20,7 +20,6 @@ export const useAuthentication = () => {
 
   const dispatch = useDispatch();
   
-  // Register User
   const registerUser = async (
     fullname: string,
     email: string,
@@ -32,9 +31,8 @@ export const useAuthentication = () => {
       email,
       password,
     }
-
     try {
-      const { data } = await axios.post<IApiSuccess>(url, body, API_CONFIG);
+      const { data } = await axios.post<IApiSuccess>(url, body);
       const result: ILoginUser = data.payload;
       SetLoginState(EMAIL_LOGIN);
       setLoginUserInfo(result);
@@ -49,7 +47,6 @@ export const useAuthentication = () => {
     }
   };
 
-  // Login User
   const loginUser = async (
     email: string,
     password: string,
@@ -59,9 +56,8 @@ export const useAuthentication = () => {
       email,
       password,
     }
-
     try {
-      const { data } = await axios.post<IApiSuccess>(url, body, API_CONFIG);
+      const { data } = await axios.post<IApiSuccess>(url, body);
       const result: ILoginUser = data.payload;
       SetLoginState(EMAIL_LOGIN);
       setLoginUserInfo(result);
@@ -76,7 +72,6 @@ export const useAuthentication = () => {
     }
   };
 
-  // Logout User
   const logoutUser = async (
     refreshToken: string,
   ): Promise<any> => {
@@ -98,7 +93,6 @@ export const useAuthentication = () => {
     }
   };
 
-  // Refresh Tokens
   const refreshTokens = async (
     refreshToken: string,
   ): Promise<any> => {
@@ -106,7 +100,6 @@ export const useAuthentication = () => {
     const body = {
       refreshToken,
     }
-
     try {
       const { data } = await axios.post<ITokens>(url, body, API_CONFIG);
       setAccessToken(data.access);
@@ -122,7 +115,6 @@ export const useAuthentication = () => {
     }
   };
 
-  // Forgot Password
   const forgotPassword = async (
     email: string,
   ): Promise<any> => {
@@ -132,7 +124,7 @@ export const useAuthentication = () => {
     }
 
     try {
-      const { data } = await axios.post<IApiSuccessMessage>(url, body, API_CONFIG);
+      const { data } = await axios.post<IApiSuccessMessage>(url, body);
       return Promise.resolve(data);
     } catch (err) {
       const apiError = handleError(err);
@@ -144,7 +136,6 @@ export const useAuthentication = () => {
     }
   };
 
-  // Change Password
   const changePassword = async (
     userId: string,
     password: string,
@@ -158,7 +149,6 @@ export const useAuthentication = () => {
       newPassword,
       setFirstPass,
     }
-
     try {
       const { data } = await axios.post<IApiSuccess>(url, body, API_CONFIG);
       return Promise.resolve(data);
@@ -172,7 +162,6 @@ export const useAuthentication = () => {
     }
   };
 
-  // Reset Password
   const resetPassword = async (
     token: string,
     password: string,
@@ -181,9 +170,8 @@ export const useAuthentication = () => {
     const body = {
       password,
     }
-
     try {
-      const { data } = await axios.post<IApiSuccessMessage>(url, body, API_CONFIG);
+      const { data } = await axios.post<IApiSuccessMessage>(url, body);
       return Promise.resolve(data);
     } catch (err) {
       const apiError = handleError(err);
@@ -237,7 +225,7 @@ export const useAuthentication = () => {
       accessToken,
     }
     try {
-      const { data } = await axios.post<IApiSuccess>(url, body, API_CONFIG);
+      const { data } = await axios.post<IApiSuccess>(url, body);
       const result: ILoginUser = data.payload;
       SetLoginState(GOOGLE_LOGIN);
       setLoginUserInfo(result);

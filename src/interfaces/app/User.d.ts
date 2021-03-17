@@ -11,7 +11,6 @@ export interface IUser {
   dateOfBirth: string,
   location: string,
   isHost: boolean,
-  joinDay: string,
   availableMethods: ICardInfo[],
   experiences: string,
   isZoom: string,

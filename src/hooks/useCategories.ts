@@ -15,7 +15,7 @@ export const useCategories = () => {
       url += '?q=' + q;
     }
     try {
-      const { data } = await axios.get<IApiSuccess>(url, API_CONFIG);
+      const { data } = await axios.get<IApiSuccess>(url);
       const result: ICategory[] = data.payload;
       return Promise.resolve(result);
     } catch (err) {

@@ -21,12 +21,11 @@ export const API_ENDPOINT = {
 
   // Experiences
   EXPERIENCES         : `${API_HOST}/experiences`,
-  EXPERIENCES_FILTER  : `${API_HOST}/experiences/filter`,
+  UPDATE_EXPERIENCE   : `${API_HOST}/experiences/updateExperience`,
   BOOKING_RESERVE     : `${API_HOST}/experiences/reserve`,
   BOOKING_BUILD       : `${API_HOST}/experiences/build`,
   BOOKING_RESERVED    : `${API_HOST}/experiences/reserved`,
   BOOKING_COMPLETE    : `${API_HOST}/experiences/complete`,
-  UPDATE_EXPERIENCE   : `${API_HOST}/experiences/updateExperience`,
   BOOKING_RATE        : `${API_HOST}/experiences/rate`,
   HOST_EXPERIENCE_LIST : `${API_HOST}/experiences/getHostExperiences`,
 

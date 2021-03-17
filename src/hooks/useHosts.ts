@@ -11,8 +11,8 @@ export const useHosts = () => {
   ): Promise<any> => {
     const url = API_ENDPOINT.HOSTS;
     try {
-      const { data } = await axios.get<IApiSuccess>(url, API_CONFIG);
-      const result: IHostList[] = data.payload;
+      const { data } = await axios.get<IApiSuccess>(url);
+      const result: IHostList = data.payload;      
       return Promise.resolve(result);
     } catch (err) {
       return Promise.reject(null);
@@ -24,7 +24,7 @@ export const useHosts = () => {
   ): Promise<any> => {
     const url = API_ENDPOINT.HOSTS + '/' + userId;
     try {
-      const { data } = await axios.get<IApiSuccess>(url, API_CONFIG);
+      const { data } = await axios.get<IApiSuccess>(url);
       const result: IHostDetail = data.payload;
       return Promise.resolve(result);
     } catch (err) {

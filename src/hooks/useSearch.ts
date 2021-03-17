@@ -28,7 +28,7 @@ export const useSearch = () => {
     }
     
     try {
-      const { data } = await axios.post<IApiSuccess>(url, body, API_CONFIG);
+      const { data } = await axios.post<IApiSuccess>(url, body);
       const result: ISearchHome = data.payload;
       return Promise.resolve(result);
     } catch (err) {

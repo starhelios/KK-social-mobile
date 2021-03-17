@@ -11,7 +11,7 @@ export const useTutorials = () => {
   ): Promise<any> => {
     const url = API_ENDPOINT.TUTORIALS;
     try {
-      const { data } = await axios.get<IApiSuccess>(url, API_CONFIG);
+      const { data } = await axios.get<IApiSuccess>(url);
       const result: ITutorial[] = data.payload;
       return Promise.resolve(result);
     } catch (err) {
