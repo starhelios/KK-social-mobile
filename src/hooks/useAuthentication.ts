@@ -184,7 +184,21 @@ export const useAuthentication = () => {
   };
 
   const setLoginUserInfo = (loginUser: ILoginUser) => {
-    setLoginUser(loginUser.user);
+    /** googleLogin come as User, normal login come as newUser
+    * {"newUser": {"availableMethods": [], 
+    * "avatarUrl": "", 
+    * "email": "", 
+    * "fullname": "", 
+    * "randomString": "", 
+    * "status": ""}, 
+     */
+    if(loginUser.user === undefined) {
+      setLoginUser(loginUser.newUser);
+    }
+    else
+    {
+      setLoginUser(loginUser.user);
+    }
     setAccessToken(loginUser.tokens.access);
     setRefreshToken(loginUser.tokens.refresh);
   };

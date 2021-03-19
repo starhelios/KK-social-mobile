@@ -100,11 +100,11 @@ export const HomeScreen: React.FC = () => {
   async function loadHostList() {
     setFetchingHostList(true);
     await getHostList()
-    .then(async (result: Promise<IHostList>) => {
-      setPopularHostList((await result).results);
+    .then(async (result: Promise<IUser[]>) => {
+      setPopularHostList(await result);
       dispatch({
         type: ActionType.SET_HOST_LIST,
-        payload: (await result).results,
+        payload: await result,
       });
       setFetchingHostList(false);
     }).catch(() => {
