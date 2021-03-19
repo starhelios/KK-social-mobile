@@ -18,8 +18,8 @@ import {
   Icon_Category, 
   Img_User_Avatar, 
 } from '../../constants';
-import { IUser, IHostDetail } from '../../interfaces/app';
-import { useHosts } from '../../hooks';
+import { IUser, IHostDetail, IExperience } from '../../interfaces/app';
+import { useExperiences, useHosts } from '../../hooks';
 
 
 interface props {
@@ -31,6 +31,7 @@ export const HostView: React.FC<props> = (props: props) => {
 
   const { navigate } = useNavigation();
   const { getHostDetail } = useHosts();
+  const { getExperienceListByUserId } = useExperiences();
   const host: IUser = props.host;
 
   return (
@@ -59,11 +60,21 @@ export const HostView: React.FC<props> = (props: props) => {
     props.onFetchingData(true);
     await getHostDetail(host.randomString)
     .then(async (hostDetail: Promise<IHostDetail>) => {
-      props.onFetchingData(false);
-      navigate('HostDetail', {hostDetail: hostDetail});
+      getExperienceList(await hostDetail);
     }).catch(() => {
       props.onFetchingData(false);
       Alert.alert('', ERROR_MESSAGE.GET_HOST_DETAIL_FAIL);
+    });
+  }
+
+  async function getExperienceList(hostDetail: IHostDetail) {
+    await getExperienceListByUserId(hostDetail.user.randomString)
+    .then(async (result: Promise<IExperience[]>) => {
+      props.onFetchingData(false);
+      navigate('HostDetail', {hostDetail: hostDetail, experienceList: result});
+    }).catch(() => {
+      props.onFetchingData(false);
+      navigate('HostDetail', {hostDetail: hostDetail, experienceList: []});
     });
   }
 }

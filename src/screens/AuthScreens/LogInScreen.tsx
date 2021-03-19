@@ -39,18 +39,16 @@ import {
   viewportWidth, 
 } from '../../constants';
 import { ColorButton } from '../../components/Button';
-import { useAuthentication, useUsers } from '../../hooks';
+import { useAuthentication } from '../../hooks';
 import { IApiError } from '../../interfaces/api';
-import { ILoginUser, IUser } from '../../interfaces/app';
+import { ILoginUser } from '../../interfaces/app';
 import GlobalStyle from '../../styles/global';
 
 
 export const LogInScreen: React.FC = () => {
 
   const { navigate, goBack } = useNavigation();
-  const { loginUser, setLoginUser } = useAuthentication();
-  const { getUserInformation } = useUsers();
-
+  const { loginUser } = useAuthentication();
   const [emailAddress, setEmailAddress] = useState('');
   const [password, setPassword] = useState('');
   const [fetchingData, setFetchingData] = useState<boolean>(false);
@@ -75,11 +73,6 @@ export const LogInScreen: React.FC = () => {
       setFetchingData(false);
       saveUserInfo();
       goBack();
-
-      getUserInformation((await result).user.randomString)
-      .then(async (user: Promise<IUser>) => {
-        setLoginUser(await user);
-      });
     }).catch(async (error: Promise<IApiError>) => {
       setFetchingData(false);
       Alert.alert('', (await error).error.message);

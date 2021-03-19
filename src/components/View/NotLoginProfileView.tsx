@@ -31,7 +31,7 @@ import {
 import { ColorButton } from '../Button';
 import { ContinueText } from '../Text';
 import { ILoginUser, ITutorial, IUser } from '../../interfaces/app';
-import { useAuthentication, useTutorials, useUsers } from '../../hooks';
+import { useAuthentication, useTutorials } from '../../hooks';
 import { IApiError } from '../../interfaces/api';
 import { useGlobalState } from '../../redux/Store';
 
@@ -39,17 +39,11 @@ import { useGlobalState } from '../../redux/Store';
 export const NotLoginProfileView: React.FC = () => {
 
   const profile: IUser = useGlobalState('userInfo');
-
   const { navigate } = useNavigation();
   const { tutorialList } = useTutorials();
-  const { loginByGoogle, setLoginUser } = useAuthentication();
-  const { getUserInformation } = useUsers();
-
+  const { loginByGoogle } = useAuthentication();
   const [profileHelpList, setProfileHelpList] = useState<ITutorial[]>([]);
   const [currentPage, setCurrentPage] = useState<number>(0);
-  const [loginType, setLoginType] = useState<string>('');
-  const [accessToken, setAccessToken] = useState<string>('');
-  const [code, setCode] = useState<string>('');
 
   let tutorialIndex = 0;
 
@@ -195,10 +189,6 @@ export const NotLoginProfileView: React.FC = () => {
           loginByGoogle(res.accessToken)
           .then(async (result: Promise<ILoginUser>) => {
             await AsyncStorage.setItem(LOGIN_TYPE, GOOGLE_LOGIN);
-            getUserInformation((await result).user.randomString)
-            .then(async (user: Promise<IUser>) => {
-              setLoginUser(await user);
-            });
           }).catch(async (error: Promise<IApiError>) => {
             Alert.alert('', (await error).error.message);
           }).catch(() => {

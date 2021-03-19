@@ -1,6 +1,5 @@
 import axios from 'axios';
 
-// from app
 import { API_ENDPOINT, API_CONFIG } from '../constants';
 import { IApiSuccess } from '../interfaces/api';
 import { IAvailableDateForCreate, IExperience, IExperienceDetail, IReservationBooking, IUserBooking } from '../interfaces/app';
@@ -24,6 +23,24 @@ export const useExperiences = () => {
       }
     }
   };
+
+  const getExperienceListByUserId = async (
+    userId: string,
+    ): Promise<any> => {
+      const url = API_ENDPOINT.EXPERIENCES_BY_HOST + '/' + userId;
+      try {
+        const { data } = await axios.get<IApiSuccess>(url);
+        const result: IExperience[] = data.payload;
+        return Promise.resolve(result);
+      } catch (err) {
+        const apiError = handleError(err);
+        if (apiError) {
+          return Promise.reject(apiError);
+        } else {
+          return Promise.reject(null);
+        }
+      }
+    };
 
   const getExperienceDetail = async (
     id: string,
@@ -79,6 +96,7 @@ export const useExperiences = () => {
     }
   };
 
+  
   const updateExperience = async (
     id: string,
     title: string,
@@ -122,6 +140,7 @@ export const useExperiences = () => {
     }
   };
 
+  
   const reserveBooking = async (
     userId: string,
     experienceId: string,
@@ -154,6 +173,7 @@ export const useExperiences = () => {
     }
   };
 
+  
   const getReservedBookingList = async (
     id: string,
   ): Promise<any> => {
@@ -172,6 +192,7 @@ export const useExperiences = () => {
     }
   };
 
+  
   const buildBooking = async (
     userId: string,
     specificExperienceId: string,
@@ -197,6 +218,7 @@ export const useExperiences = () => {
     }
   };
 
+  
   const completeBooking = async (
     itemsNeedUpdatedArray: string[],
   ): Promise<any> => {
@@ -218,6 +240,7 @@ export const useExperiences = () => {
     }
   };
 
+  
   const rateBooking = async (
     userId: string,
     experienceId: string,
@@ -242,6 +265,7 @@ export const useExperiences = () => {
     }
   };
 
+  
   const getHostExperienceListByUserId = async (
     user_id: string,
   ): Promise<any> => {
@@ -271,5 +295,6 @@ export const useExperiences = () => {
     completeBooking, 
     rateBooking, 
     getHostExperienceListByUserId,
+    getExperienceListByUserId,
   };
 };

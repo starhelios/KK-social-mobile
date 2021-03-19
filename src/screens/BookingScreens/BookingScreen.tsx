@@ -10,8 +10,14 @@ import { Container } from 'native-base';
 import { useEffect, useState } from 'react';
 import Spinner from 'react-native-loading-spinner-overlay';
 
-// from app
-import { API_CONFIG, COLOR, CustomText, FONT, MARGIN_TOP, viewportWidth } from '../../constants';
+import { 
+  API_CONFIG, 
+  COLOR, 
+  CustomText, 
+  FONT, 
+  MARGIN_TOP, 
+  viewportWidth, 
+} from '../../constants';
 import { useExperiences } from '../../hooks';
 import { IUserBooking } from '../../interfaces/app';
 import { BookingView } from '../../components/View';
@@ -23,15 +29,12 @@ export const BookingScreen: React.FC = () => {
   
   const userInfo = useGlobalState('userInfo');
   const reservedBookingList = useGlobalState('reservedBookingList');
-
   const dispatch = useDispatch();
   const { getReservedBookingList, completeBooking } = useExperiences();
-
   const [selectedTab, setSelectedTab] = useState<number>(0);
   const [upcomingBookingList, setUpcomingBookingList] = useState<IUserBooking[]>([]);
   const [completedBookingList, setCompletedBookingList] = useState<IUserBooking[]>([]);
   const [fetched, setFetched] = useState<boolean>(false);
-
 
   useEffect(() => {
     getReservedBookings();
@@ -73,21 +76,30 @@ export const BookingScreen: React.FC = () => {
   }, [reservedBookingList]);
 
   const getReservedBookings = async () => {
-    await getReservedBookingList(userInfo.randomString)
-    .then(async (result: Promise<IUserBooking[]>) => {
-      dispatch({
-        type: ActionType.SET_RESERVED_BOOKING_LIST,
-        payload: await result,
-      })
-      setFetched(true);
-    })
-    .catch(() => {
+    if (userInfo.randomString == '' || userInfo.randomString == undefined) {
       dispatch({
         type: ActionType.SET_RESERVED_BOOKING_LIST,
         payload: [],
       })
       setFetched(true);
-    })
+    } else {
+      await getReservedBookingList(userInfo.randomString)
+      .then(async (result: Promise<IUserBooking[]>) => {
+        dispatch({
+          type: ActionType.SET_RESERVED_BOOKING_LIST,
+          payload: await result,
+        })
+        setFetched(true);
+      })
+      .catch(() => {
+        dispatch({
+          type: ActionType.SET_RESERVED_BOOKING_LIST,
+          payload: [],
+        })
+        setFetched(true);
+      })
+    }
+    
   }
 
   const onShowUpcomingBookings = () => {

@@ -49,7 +49,6 @@ export const WithdrawalScreen: React.FC = () => {
     await generateAccountLink()
     .then(async (url: Promise<string>) => {
       fetching = false;
-      console.log(url);
       const supported = await Linking.canOpenURL(await url);
       if (supported) {
         setStripeUrl(await url);

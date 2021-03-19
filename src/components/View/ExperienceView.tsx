@@ -37,9 +37,8 @@ export const ExperienceView: React.FC<props> = (props: props) => {
   const white_color: boolean = props.white_color;
   const viewWidth: number = props.viewWidth;
   const is_edit: boolean = props.is_edit;
-
   const { navigate } = useNavigation();
-  const { getExperienceDetail } = useExperiences();
+  const { getExperienceDetail, getExperienceListByUserId } = useExperiences();
   const { getHostDetail } = useHosts();
 
   const goExperienceDetailScreen = async () => {
@@ -71,11 +70,23 @@ export const ExperienceView: React.FC<props> = (props: props) => {
   const getHostDetailInformation = async (experienceDetail: IExperienceDetail) => {
     await getHostDetail(experience.userId)
     .then(async (hostDetail: Promise<IHostDetail>) => {
-      props.onFetchingData(false);
-      navigate('ExperienceDetail' , {experienceDetail: experienceDetail, hostDetail: hostDetail});
+      getExperienceList(experienceDetail, await hostDetail);
     }).catch(() => {
       props.onFetchingData(false);
       Alert.alert('', ERROR_MESSAGE.GET_HOST_DETAIL_FAIL);
+    });
+  }
+  
+
+  const getExperienceList = async (experienceDetail: IExperienceDetail, hostDetail: IHostDetail) => {
+    await getExperienceListByUserId(hostDetail.user.randomString)
+    .then(async (result: Promise<IExperience[]>) => {
+      props.onFetchingData(false);
+      navigate('ExperienceDetail' , {experienceDetail: experienceDetail, hostDetail: hostDetail, experienceList: await result});
+    }).catch(() => {
+      props.onFetchingData(false);
+      props.onFetchingData(false);
+      navigate('ExperienceDetail' , {experienceDetail: experienceDetail, hostDetail: hostDetail, experienceList: []});
     });
   }
   

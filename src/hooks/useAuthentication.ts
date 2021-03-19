@@ -1,6 +1,5 @@
 import axios from 'axios';
 
-// from app
 import { 
   API_CONFIG, 
   API_ENDPOINT, 
@@ -93,7 +92,6 @@ export const useAuthentication = () => {
     }
   };
 
-  // dragon_need
   const refreshTokens = async (
     refreshToken: string,
   ): Promise<any> => {
@@ -163,7 +161,6 @@ export const useAuthentication = () => {
     }
   };
 
-  // dragon_need
   const resetPassword = async (
     token: string,
     password: string,
@@ -186,12 +183,9 @@ export const useAuthentication = () => {
   };
 
   const setLoginUserInfo = (loginUser: ILoginUser) => {
-    // google user
-    if (loginUser.user === undefined) {
+    if (loginUser.user === undefined) { // email user
       setLoginUser(loginUser.newUser);
-
-    // email user
-    } else {
+    } else { // google user
       setLoginUser(loginUser.user);
     }
     setAccessToken(loginUser.tokens.access);

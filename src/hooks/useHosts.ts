@@ -1,7 +1,6 @@
 import axios from 'axios';
 
-// from app
-import { API_ENDPOINT, API_CONFIG } from '../constants';
+import { API_ENDPOINT } from '../constants';
 import { IApiSuccess } from '../interfaces/api';
 import { IHostDetail, IHostList } from '../interfaces/app';
 

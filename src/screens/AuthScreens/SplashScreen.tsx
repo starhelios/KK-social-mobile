@@ -34,8 +34,6 @@ export const SplashScreen: React.FC = () => {
   const dispatch = useDispatch();
   const { reset } = useNavigation();
   const { loginUser, loginByGoogle, setLoginUser } = useAuthentication();
-  const { getUserInformation } = useUsers();
-
   const [fetchingData, setFetchingData] = useState<boolean>(false);
 
   let fetching = false;
@@ -81,6 +79,7 @@ export const SplashScreen: React.FC = () => {
         zoomId: '',
         experiences: [],
         availableMethods: [],
+        randomString: '',
       },
     });
   
@@ -134,27 +133,23 @@ export const SplashScreen: React.FC = () => {
         .then((res) => {
           loginByGoogle(res.accessToken)
           .then(async (result: Promise<ILoginUser>) => {
-            goMainScreen();
             fetching = false;
-            getUserInformation((await result).user.randomString)
-            .then(async (user: Promise<IUser>) => {
-              setLoginUser(await user);
-            });
+            goMainScreen();
           }).catch(() => {
-            goMainScreen();
             fetching = false;
+            goMainScreen();
           });
         }).catch(() => {
-          goMainScreen();
           fetching = false;
+            goMainScreen();
         });
       }).catch(() => {
-        goMainScreen();
         fetching = false;
+        goMainScreen();
       });
     } catch (error) {
-      goMainScreen();
       fetching = false;
+      goMainScreen();
     }
   };
 
@@ -162,12 +157,10 @@ export const SplashScreen: React.FC = () => {
     fetching = true;
     loginUser(emailAddress, passwordString)
     .then(async (result: Promise<ILoginUser>) => {
+      fetching = false;
       goMainScreen();
-      getUserInformation((await result).user.randomString)
-      .then(async (user: Promise<IUser>) => {
-        setLoginUser(await user);
-      });
     }).catch(() => {
+      fetching = false;
       goMainScreen();
     });
   }, []);

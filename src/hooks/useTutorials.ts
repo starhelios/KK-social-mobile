@@ -1,6 +1,5 @@
 import axios from 'axios';
 
-// from app
 import { API_ENDPOINT } from '../constants';
 import { IApiSuccess } from '../interfaces/api';
 import { ITutorial } from '../interfaces/app';

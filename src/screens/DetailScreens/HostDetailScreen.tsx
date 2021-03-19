@@ -9,11 +9,10 @@ import {
   FlatList,
 } from 'react-native';
 import { Container } from 'native-base';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { SvgXml } from 'react-native-svg';
 
-// from app
 import { 
   COLOR, 
   convertStringToDateFormat, 
@@ -28,7 +27,6 @@ import {
 } from '../../constants';
 import { IExperience, IUser, IHostDetail } from '../../interfaces/app';
 import { ExperienceView } from '../../components/View';
-import { useExperiences } from '../../hooks';
 import { useGlobalState } from '../../redux/Store';
 import GlobalStyle from '../../styles/global';
 import Spinner from 'react-native-loading-spinner-overlay';
@@ -38,35 +36,12 @@ export const HostDetailScreen: React.FC = ({route}) => {
 
   const experienceList = useGlobalState('experienceList');
 
-  const { navigate, goBack } = useNavigation();
-  const { getExperienceList } = useExperiences();
+  const { goBack } = useNavigation();
 
   const hostDetail: IHostDetail = route.params.hostDetail;
+  const hostExperienceList: IExperience[] = route.params.experienceList;
   const host: IUser = hostDetail.user;
-
-  const [hostExperienceList, setHostExperienceList] = useState<IExperience[]>([]);
   const [fetchingData, setFetchingData] = useState<boolean>(false);
-
-  useEffect(() => {
-    loadExperienceList();
-  }, [])
-
-  async function loadExperienceList() {
-    // await getExperienceList()
-    // .then(async (result: Promise<IExperience[]>) => {
-    //   setExperienceList(await result);
-    // }).catch(() => {
-    // });
-
-    let experiences: IExperience[] = [];
-    for (let i = 0; i < experienceList.length; i++) {
-      let experience = experienceList[i];
-      if (experience.userId == host.randomString) {
-        experiences.push(experience);
-      }
-    }
-    setHostExperienceList(experiences);
-  }
 
   return (
     <Container style={styles.background}>

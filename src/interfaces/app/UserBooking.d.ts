@@ -8,8 +8,5 @@ export interface IUserBooking {
 	usersGoing: string[];
 	day: string;
 	startTime: string;
-	endTime: string;
-	imageUrl: string;
-	createdAt: string;
 	completed: boolean;
 }

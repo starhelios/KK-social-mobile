@@ -80,7 +80,7 @@ export const BookingView: React.FC<props> = (props: props) => {
 
   return (
     <View style={styles.container}>
-      <Image style={styles.image} source={{uri: booking.imageUrl}} />
+      <Image style={styles.image} source={{uri: booking.experience.images.length > 0 ? booking.experience.images[0] : ''}} />
       { completed_booking == false
         ? <View style={{...styles.content_container, height: 190}}>
             <CustomText style={styles.experience}>{booking.experience.title}</CustomText>

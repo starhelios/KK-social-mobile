@@ -11,13 +11,12 @@ import {
   Alert,
 } from 'react-native';
 import { Container } from 'native-base';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { SvgXml } from 'react-native-svg';
 import { FlatList } from 'react-native-gesture-handler';
 import PageControl from 'react-native-page-control';
 
-// from app
 import { 
   COLOR, 
   convertStringToDateFormat, 
@@ -41,47 +40,25 @@ import { ColorButton } from '../../components/Button';
 import { IExperience, IExperienceDetail, IUser, IHostDetail } from '../../interfaces/app';
 import { useGlobalState } from '../../redux/Store';
 import { ExperienceView } from '../../components/View';
-import { useHosts } from '../../hooks';
+import { useExperiences, useHosts } from '../../hooks';
 import GlobalStyle from '../../styles/global';
 
 
 export const ExperienceDetailScreen: React.FC = ({route}) => {
 
-  const { navigate, goBack } = useNavigation();
-  const { getHostDetail } = useHosts();
-
-  const [currentPage, setCurrentPage] = useState<number>(0);
-  const [isBlackHeader, setIsBlackHeader] = useState<boolean>(true)
-  const [fetchingData, setFetchingData] = useState<boolean>(false);
-  const [hostExperienceList, setHostExperienceList] = useState<IExperience[]>([]);
-
   const userInfo: IUser = useGlobalState('userInfo');
-  const experienceList = useGlobalState('experienceList');
   const experienceDetail: IExperienceDetail = route.params.experienceDetail;
   const hostDetail: IHostDetail = route.params.hostDetail;
   const host: IUser = hostDetail.user;
+  const hostExperienceList: IExperience[] = route.params.experienceList;
   let scrollViewRef: ScrollView | null;
+  const { navigate, goBack } = useNavigation();
+  const { getHostDetail } = useHosts();
+  const { getExperienceListByUserId } = useExperiences();
+  const [currentPage, setCurrentPage] = useState<number>(0);
+  const [isBlackHeader, setIsBlackHeader] = useState<boolean>(true)
+  const [fetchingData, setFetchingData] = useState<boolean>(false);
 
-  useEffect(() => {
-    loadExperienceList();
-  }, [])
-
-  async function loadExperienceList() {
-    // await getExperienceList()
-    // .then(async (result: Promise<IExperience[]>) => {
-    //   setExperienceList(await result);
-    // }).catch(() => {
-    // });
-
-    let experiences: IExperience[] = [];
-    for (let i = 0; i < experienceList.length; i++) {
-      let experience = experienceList[i];
-      if (experience.userId == host.randomString) {
-        experiences.push(experience);
-      }
-    }
-    setHostExperienceList(experiences);
-  }
 
   const onShare = () => {
     ShowShareView('KloutKast', 'https://kloutkast.herokuapp.com');
@@ -90,9 +67,18 @@ export const ExperienceDetailScreen: React.FC = ({route}) => {
   async function goHostDetailScreen() {
     await getHostDetail(host.randomString)
     .then(async (hostDetail: Promise<IHostDetail>) => {
-      navigate('HostDetail', {hostDetail: hostDetail});
+      getExperienceList(await hostDetail);
     }).catch(() => {
       Alert.alert('', ERROR_MESSAGE.GET_HOST_DETAIL_FAIL);
+    });
+  }
+
+  async function getExperienceList(hostDetail: IHostDetail) {
+    await getExperienceListByUserId(hostDetail.user.randomString)
+    .then(async (result: Promise<IExperience[]>) => {
+      navigate('HostDetail', {hostDetail: hostDetail, experienceList: result});
+    }).catch(() => {
+      navigate('HostDetail', {hostDetail: hostDetail, experienceList: []});
     });
   }
 
@@ -257,7 +243,13 @@ export const ExperienceDetailScreen: React.FC = ({route}) => {
   }
 
   function onBook() {
-    if (userInfo.randomString != '' && userInfo.randomString == experienceDetail.userId) {
+    if (userInfo.randomString == '') {
+      Alert.alert('',
+      ERROR_MESSAGE.NEED_LOGIN_CONTINUE,
+      [{ text: "OK", onPress: () => navigate('TabBar', { screen: 'ProfileTab' }) }],
+      { cancelable: false }
+    );
+    } else if (userInfo.randomString != '' && userInfo.randomString == experienceDetail.userId) {
       Alert.alert('', ERROR_MESSAGE.ENABLE_BOOK_OWN_EXPERIENCE);
     } else {
       navigate('ExperienceDetailBook', {experienceDetail: experienceDetail, hostDetail: hostDetail});
