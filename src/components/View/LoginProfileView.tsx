@@ -38,13 +38,16 @@ import { ColorButton, TitleArrowButton } from '../Button';
 import { IExperience, IUser } from '../../interfaces/app';
 import { useDispatch, useGlobalState } from '../../redux/Store';
 import { ActionType } from '../../redux/Reducer';
+import { useAuthentication } from '../../hooks';
 
 export const LoginProfileView: React.FC = () => {
   
   const userInfo: IUser = useGlobalState('userInfo');
   const experienceList = useGlobalState('experienceList');
+  const refreshToken = useGlobalState('refreshToken');
 
   const { navigate, goBack } = useNavigation();
+  const { logoutUser } = useAuthentication();
   const dispatch = useDispatch();
 
   const [profile, setProfile] = useState<IUser>(userInfo);
@@ -62,7 +65,7 @@ export const LoginProfileView: React.FC = () => {
   const getMyExperienceList = () => {
     var myExperiences = [];
     for (let experience of experienceList) {
-      if (experience.userId == userInfo.id) {
+      if (experience.userId == userInfo.randomString) {
         myExperiences.push(experience);
       }
     }
@@ -92,6 +95,7 @@ export const LoginProfileView: React.FC = () => {
         zoomId: '',
 	      experiences: [],
 	      availableMethods: [],
+        randomString: '',
       },
     });
   
@@ -158,7 +162,7 @@ export const LoginProfileView: React.FC = () => {
           </TouchableWithoutFeedback>
 
           <CustomText style={{...styles.content_title, marginTop: 44}}>Hosting</CustomText>
-          { profile.isHost == false
+          { (profile.isHost == false || profile.isHost == undefined)
             ? <TouchableWithoutFeedback onPress={() => navigate('BecomeAHost') }>
                 <View style={{width:'100%', marginTop: 22}}>
                   <TitleArrowButton title={''} name={'Become a Host'} showArrow={true} white_color={true} />
@@ -234,6 +238,7 @@ export const LoginProfileView: React.FC = () => {
   function onLogOut() {
     AsyncStorage.getItem(LOGIN_TYPE).then((loginType) => {
       if (loginType == EMAIL_LOGIN) {
+        logoutUser(refreshToken.token);
       } else if (loginType == FACEBOOK_LOGIN) {
       } else if (loginType == GOOGLE_LOGIN) {
         googleSignOut();

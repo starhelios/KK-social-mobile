@@ -73,7 +73,7 @@ export const BookingScreen: React.FC = () => {
   }, [reservedBookingList]);
 
   const getReservedBookings = async () => {
-    await getReservedBookingList(userInfo.id)
+    await getReservedBookingList(userInfo.randomString)
     .then(async (result: Promise<IUserBooking[]>) => {
       dispatch({
         type: ActionType.SET_RESERVED_BOOKING_LIST,

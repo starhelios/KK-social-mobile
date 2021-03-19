@@ -124,7 +124,7 @@ export const ExperienceDetailBookScreen: React.FC = ({route}) => {
   }
 
   function onChooseDate(availableDate: ISpecificExperience) {
-    if (userInfo.id == '') {
+    if (userInfo.randomString == '') {
       Alert.alert('',
         ERROR_MESSAGE.NEED_LOGIN_CONTINUE,
         [{ text: "OK", onPress: () => navigate('TabBar', { screen: 'ProfileTab' }) }],

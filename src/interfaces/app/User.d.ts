@@ -13,7 +13,7 @@ export interface IUser {
   isHost: boolean,
   availableMethods: ICardInfo[],
   experiences: string,
-  isZoom: string,
+  zoomConnected: boolean,
   stripeAccountVerified: string,
   zoomAccessToken: string,
   zoomRefreshToken: string
@@ -21,4 +21,5 @@ export interface IUser {
 	stripeConnectID: string,
 	zoomId: string,
 	createdAt: string,
+  randomString: string,
 }

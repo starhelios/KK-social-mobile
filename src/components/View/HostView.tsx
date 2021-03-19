@@ -57,7 +57,7 @@ export const HostView: React.FC<props> = (props: props) => {
 
   async function goHostDetailScreen() {
     props.onFetchingData(true);
-    await getHostDetail(host.id)
+    await getHostDetail(host.randomString)
     .then(async (hostDetail: Promise<IHostDetail>) => {
       props.onFetchingData(false);
       navigate('HostDetail', {hostDetail: hostDetail});

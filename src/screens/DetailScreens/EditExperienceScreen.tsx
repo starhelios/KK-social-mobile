@@ -127,7 +127,7 @@ export const EditExperienceScreen: React.FC = ({route}) => {
     const firebaseHeader = 'https://firebasestorage.googleapis.com/';
     if (imageIndex >= imageList.length) {
       updateExperience(experienceDetail.id, title, description, parseInt(duration), parseInt(price), category, dateAvaibilityInfo.startDay, dateAvaibilityInfo.endDay, 
-            profile.id, experienceImageList, dateAvaibilityInfo.dateAvaibility, profile.location)
+            profile.randomString, experienceImageList, dateAvaibilityInfo.dateAvaibility, profile.location)
       .then(async (result: IExperience) => {
         fetchingData = false;
         setUploading(false);

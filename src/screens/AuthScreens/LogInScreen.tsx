@@ -16,6 +16,7 @@ import { useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { SvgXml } from 'react-native-svg';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
+import Spinner from 'react-native-loading-spinner-overlay';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 // from app
@@ -38,16 +39,17 @@ import {
   viewportWidth, 
 } from '../../constants';
 import { ColorButton } from '../../components/Button';
-import { useAuthentication } from '../../hooks';
+import { useAuthentication, useUsers } from '../../hooks';
 import { IApiError } from '../../interfaces/api';
+import { ILoginUser, IUser } from '../../interfaces/app';
 import GlobalStyle from '../../styles/global';
-import Spinner from 'react-native-loading-spinner-overlay';
 
 
 export const LogInScreen: React.FC = () => {
 
   const { navigate, goBack } = useNavigation();
-  const { loginUser } = useAuthentication();
+  const { loginUser, setLoginUser } = useAuthentication();
+  const { getUserInformation } = useUsers();
 
   const [emailAddress, setEmailAddress] = useState('');
   const [password, setPassword] = useState('');
@@ -69,14 +71,15 @@ export const LogInScreen: React.FC = () => {
     setFetchingData(true);
 
     loginUser(emailAddress, password)
-    .then(async (result: Promise<boolean>) => {
+    .then(async (result: Promise<ILoginUser>) => {
       setFetchingData(false);
-      if ((await result) == true) {
-        saveUserInfo();
-        goBack();
-      } else {
-        Alert.alert('', ERROR_MESSAGE.LOGIN_FAIL);
-      }
+      saveUserInfo();
+      goBack();
+
+      getUserInformation((await result).user.randomString)
+      .then(async (user: Promise<IUser>) => {
+        setLoginUser(await user);
+      });
     }).catch(async (error: Promise<IApiError>) => {
       setFetchingData(false);
       Alert.alert('', (await error).error.message);

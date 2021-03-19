@@ -45,7 +45,7 @@ export const ConfirmedBookingsScreen: React.FC = () => {
   }, [])
 
   const getHostExperienceList = async () => {
-    await getHostExperienceListByUserId(userInfo.id)
+    await getHostExperienceListByUserId(userInfo.randomString)
     .then(async (result: Promise<IExperienceDetail[]>) => {
       setFetched(true);
       let upcomingExperiences: ISpecificExperience[] = [];

@@ -23,8 +23,8 @@ import {
   SetApiConfig,
   PASSWORD,
 } from '../../constants';
-import { useAuthentication } from '../../hooks';
-import { ILoginUser } from '../../interfaces/app';
+import { useAuthentication, useUsers } from '../../hooks';
+import { ILoginUser, IUser } from '../../interfaces/app';
 import { ActionType } from '../../redux/Reducer';
 import { useDispatch } from '../../redux/Store';
 
@@ -33,7 +33,8 @@ export const SplashScreen: React.FC = () => {
   
   const dispatch = useDispatch();
   const { reset } = useNavigation();
-  const { loginUser, loginByGoogle } = useAuthentication();
+  const { loginUser, loginByGoogle, setLoginUser } = useAuthentication();
+  const { getUserInformation } = useUsers();
 
   const [fetchingData, setFetchingData] = useState<boolean>(false);
 
@@ -132,12 +133,13 @@ export const SplashScreen: React.FC = () => {
         const currentUser = GoogleSignin.getTokens()
         .then((res) => {
           loginByGoogle(res.accessToken)
-          .then(async (result: Promise<boolean>) => {
-            if ((await result) == true) {
-              goMainScreen();
-            } else {
-              fetching = false;
-            }
+          .then(async (result: Promise<ILoginUser>) => {
+            goMainScreen();
+            fetching = false;
+            getUserInformation((await result).user.randomString)
+            .then(async (user: Promise<IUser>) => {
+              setLoginUser(await user);
+            });
           }).catch(() => {
             goMainScreen();
             fetching = false;
@@ -161,6 +163,10 @@ export const SplashScreen: React.FC = () => {
     loginUser(emailAddress, passwordString)
     .then(async (result: Promise<ILoginUser>) => {
       goMainScreen();
+      getUserInformation((await result).user.randomString)
+      .then(async (user: Promise<IUser>) => {
+        setLoginUser(await user);
+      });
     }).catch(() => {
       goMainScreen();
     });

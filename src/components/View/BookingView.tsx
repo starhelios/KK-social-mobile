@@ -41,7 +41,7 @@ export const BookingView: React.FC<props> = (props: props) => {
   const completed_booking: boolean = props.completed_booking;
   const getMyRating = () => {
     const ratingList = booking.ratings.filter((element) => {
-      return userInfo.id === element.userId;
+      return userInfo.randomString === element.userId;
     })
     const ratingValue = ratingList.length > 0 ? ratingList[0].rating : 0;
     return ratingValue;
@@ -52,12 +52,12 @@ export const BookingView: React.FC<props> = (props: props) => {
   const [rating, setRating] = useState<number>(getMyRating());
 
   const getUserZoomRole = (itemIds: string[]) => {
-    return itemIds.indexOf(userInfo.id) > -1 ? '0': '1'
+    return itemIds.indexOf(userInfo.randomString) > -1 ? '0': '1'
   }
 
   const onJoinExperience = async () => {
     const userRole = getUserZoomRole(booking.usersGoing);
-    await buildBooking(userInfo.id, booking.id, userRole)
+    await buildBooking(userInfo.randomString, booking.id, userRole)
     .then(async (result: Promise<string>) => {
       const base64Url = await result;
       // const base64Url = Buffer.from(await result, 'utf-8').toString('base64');
@@ -72,7 +72,7 @@ export const BookingView: React.FC<props> = (props: props) => {
   const onRatingBook = async (rate: number) => {
     setRating(rate);
 
-    await rateBooking(userInfo.id, booking.id, rate)
+    await rateBooking(userInfo.randomString, booking.id, rate)
     .then((res) => {
       props.getReservedBookings();
     });

@@ -100,7 +100,7 @@ export const AddPaymentMethodScreen: React.FC = () => {
   }
 
   const loadUserInfo = async () => {
-    await getUserInformation(userInfo.id)
+    await getUserInformation(userInfo.randomString)
     .then(async (result: Promise<IUser>) => {
       setLoginUser(await result);
     })

@@ -61,7 +61,7 @@ export const useAuthentication = () => {
       const result: ILoginUser = data.payload;
       SetLoginState(EMAIL_LOGIN);
       setLoginUserInfo(result);
-      return Promise.resolve(true);
+      return Promise.resolve(result);
     } catch (err) {
       const apiError = handleError(err);
       if (apiError) {
@@ -93,6 +93,7 @@ export const useAuthentication = () => {
     }
   };
 
+  // dragon_need
   const refreshTokens = async (
     refreshToken: string,
   ): Promise<any> => {
@@ -142,7 +143,7 @@ export const useAuthentication = () => {
     newPassword: string,
     setFirstPass: boolean,
   ): Promise<any> => {
-    const url = API_ENDPOINT.USER_CHANGE_PASSWORD;
+    const url = `${API_ENDPOINT.USER_CHANGE_PASSWORD}/${userId}`;
     const body = {
       userId,
       password,
@@ -162,6 +163,7 @@ export const useAuthentication = () => {
     }
   };
 
+  // dragon_need
   const resetPassword = async (
     token: string,
     password: string,
@@ -184,19 +186,12 @@ export const useAuthentication = () => {
   };
 
   const setLoginUserInfo = (loginUser: ILoginUser) => {
-    /** googleLogin come as User, normal login come as newUser
-    * {"newUser": {"availableMethods": [], 
-    * "avatarUrl": "", 
-    * "email": "", 
-    * "fullname": "", 
-    * "randomString": "", 
-    * "status": ""}, 
-     */
-    if(loginUser.user === undefined) {
+    // google user
+    if (loginUser.user === undefined) {
       setLoginUser(loginUser.newUser);
-    }
-    else
-    {
+
+    // email user
+    } else {
       setLoginUser(loginUser.user);
     }
     setAccessToken(loginUser.tokens.access);
@@ -243,7 +238,7 @@ export const useAuthentication = () => {
       const result: ILoginUser = data.payload;
       SetLoginState(GOOGLE_LOGIN);
       setLoginUserInfo(result);
-      return Promise.resolve(true);
+      return Promise.resolve(result);
     } catch (err) {
       const apiError = handleError(err);
       if (apiError) {

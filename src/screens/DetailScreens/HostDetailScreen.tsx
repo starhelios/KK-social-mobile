@@ -61,7 +61,7 @@ export const HostDetailScreen: React.FC = ({route}) => {
     let experiences: IExperience[] = [];
     for (let i = 0; i < experienceList.length; i++) {
       let experience = experienceList[i];
-      if (experience.userId == host.id) {
+      if (experience.userId == host.randomString) {
         experiences.push(experience);
       }
     }

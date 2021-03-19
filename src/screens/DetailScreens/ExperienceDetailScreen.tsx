@@ -76,7 +76,7 @@ export const ExperienceDetailScreen: React.FC = ({route}) => {
     let experiences: IExperience[] = [];
     for (let i = 0; i < experienceList.length; i++) {
       let experience = experienceList[i];
-      if (experience.userId == host.id) {
+      if (experience.userId == host.randomString) {
         experiences.push(experience);
       }
     }
@@ -88,7 +88,7 @@ export const ExperienceDetailScreen: React.FC = ({route}) => {
   }
 
   async function goHostDetailScreen() {
-    await getHostDetail(host.id)
+    await getHostDetail(host.randomString)
     .then(async (hostDetail: Promise<IHostDetail>) => {
       navigate('HostDetail', {hostDetail: hostDetail});
     }).catch(() => {
@@ -257,7 +257,7 @@ export const ExperienceDetailScreen: React.FC = ({route}) => {
   }
 
   function onBook() {
-    if (userInfo.id != '' && userInfo.id == experienceDetail.userId) {
+    if (userInfo.randomString != '' && userInfo.randomString == experienceDetail.userId) {
       Alert.alert('', ERROR_MESSAGE.ENABLE_BOOK_OWN_EXPERIENCE);
     } else {
       navigate('ExperienceDetailBook', {experienceDetail: experienceDetail, hostDetail: hostDetail});

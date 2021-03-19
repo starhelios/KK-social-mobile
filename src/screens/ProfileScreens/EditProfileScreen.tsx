@@ -460,7 +460,7 @@ export const EditProfileScreen: React.FC = () => {
 
     setUploading(true);
     if (avatarFile != null) {
-      const filename = profile.id;
+      const filename = profile.randomString;
       const uploadUri = avatarFile.uri;
 
       const response = await fetch(uploadUri);
@@ -488,7 +488,7 @@ export const EditProfileScreen: React.FC = () => {
   }
 
   function saveProfile(avatarUrl: string, location: string) {
-    updateUserInformation(profile.id, emailAddress, fullName, convertDateToMomentDateFormat(pickerDate, 'MM-DD-YYYY'), aboutMe, location, category, avatarUrl, profile.isHost)
+    updateUserInformation(profile.randomString, emailAddress, fullName, convertDateToMomentDateFormat(pickerDate, 'MM-DD-YYYY'), aboutMe, location, category, avatarUrl, profile.isHost)
     .then(async (result: Promise<IUser>) => {
       setUploading(false);
       fetchingData = false;

@@ -13,10 +13,10 @@ import { useGlobalState } from '../../redux/Store';
 export const ProfileScreen: React.FC = () => {
 
   const profile: IUser = useGlobalState('userInfo');
-  const [ userID, setUserID ] = useState<string>(profile.id);
+  const [ userID, setUserID ] = useState<string>(profile.randomString);
 
   useEffect(() => {
-    setUserID(profile.id);
+    setUserID(profile.randomString);
   }, [profile])
 
   return (

@@ -224,7 +224,7 @@ export const BecomeAHostScreen: React.FC = () => {
 
     setUploading(true);
     if (avatarFile != null) {
-      const filename = profile.id;
+      const filename = profile.randomString;
       const uploadUri = avatarFile.uri;
 
       const response = await fetch(uploadUri);
@@ -252,7 +252,7 @@ export const BecomeAHostScreen: React.FC = () => {
   }
 
   const saveProfile = (avatarUrl: string, location: string) => {
-    updateUserInformation(profile.id, emailAddress, fullName, convertDateToMomentDateFormat(pickerDate, 'MM-DD-YYYY'), aboutMe, location, '', avatarUrl, true)
+    updateUserInformation(profile.randomString, emailAddress, fullName, convertDateToMomentDateFormat(pickerDate, 'MM-DD-YYYY'), aboutMe, location, '', avatarUrl, true)
     .then(async (result: Promise<IUser>) => {
       fetchingData = false;
       setUploading(false);

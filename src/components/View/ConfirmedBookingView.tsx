@@ -37,12 +37,12 @@ export const ConfirmedBookingView: React.FC<props> = (props: props) => {
   const { buildBooking } = useExperiences();
 
   const getUserZoomRole = (itemIds: string[]) => {
-    return itemIds.indexOf(userInfo.id) > -1 ? '0': '1'
+    return itemIds.indexOf(userInfo.randomString) > -1 ? '0': '1'
   }
 
   const onJoinExperience = async () => {
     const userRole = getUserZoomRole(specificExperience.usersGoing);
-    await buildBooking(userInfo.id, specificExperience.id, userRole)
+    await buildBooking(userInfo.randomString, specificExperience.id, userRole)
     .then(async (result: Promise<string>) => {
       const base64Url = await result;
       // const base64Url = Buffer.from(await result, 'utf-8').toString('base64');

@@ -118,18 +118,18 @@ export const ExperienceDetailConfirmPayScreen: React.FC = ({route}) => {
   }
 
   const onReserveBooking = async (client_secret: string, paymentIntentId: string) => {
-    await saveTransation(client_secret, paymentIntentId, userInfo.id, experienceDetail.id)
+    await saveTransation(client_secret, paymentIntentId, userInfo.randomString, experienceDetail.id)
       .then(() => {
       })
       .catch(() => {
       })
 
-    await reserveBooking(userInfo.id, experienceDetail.id, availableDate.id, paymentIntentId, guestCount, experienceDetail.images.length > 0 ? experienceDetail.images[0] : '')
+    await reserveBooking(userInfo.randomString, experienceDetail.id, availableDate.id, paymentIntentId, guestCount, experienceDetail.images.length > 0 ? experienceDetail.images[0] : '')
     .then(() => {
       fetching = false;
       setShowSpinner(false);
       
-      getReservedBookingList(userInfo.id)
+      getReservedBookingList(userInfo.randomString)
       .then(async (result: Promise<IUserBooking[]>) => {
         dispatch({
           type: ActionType.SET_RESERVED_BOOKING_LIST,

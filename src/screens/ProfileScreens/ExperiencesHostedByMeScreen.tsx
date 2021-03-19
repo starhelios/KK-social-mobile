@@ -45,7 +45,7 @@ export const ExperiencesHostedByMeScreen: React.FC = () => {
   const getMyExperienceList = () => {
     var myExperiences = [];
     for (let experience of experienceList) {
-      if (experience.userId == userInfo.id) {
+      if (experience.userId == userInfo.randomString) {
         myExperiences.push(experience);
       }
     }

@@ -64,7 +64,7 @@ export const ChangePasswordScreen: React.FC = () => {
     }
     setFetchingData(true);
 
-    changePassword(userInfo.id, currentPassword, newPassword, true)
+    changePassword(userInfo.randomString, currentPassword, newPassword, true)
     .then(async (result: Promise<IApiSuccess>) => {
       setFetchingData(false);
       if ((await result).error.status == false) {

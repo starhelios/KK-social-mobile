@@ -44,7 +44,7 @@ export const ZoomIntegrationScreen: React.FC = () => {
       const tokenInfo = newNavState.url.split('?code=');
       if (tokenInfo.length > 1) {
         const token = tokenInfo[1];
-        updateZoomInformation(profile.id, profile.email, token)
+        updateZoomInformation(profile.randomString, profile.email, token)
       }
       setZoomIntegrationUrl('');
       Alert.alert('', SUCCESS_MESSAGE.ZOOM_INTEGRATION_SUCCESS);

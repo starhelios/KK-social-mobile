@@ -43,7 +43,7 @@ export const SignUpAddProfilePictureConfirmScreen: React.FC = ({route}) => {
   const [uploading, setUploading] = useState(false);
 
   const onContinue = async () => {
-    const filename = userInfo.id;
+    const filename = userInfo.randomString;
     const uploadUri = profile_icon.uri;
 
     const response = await fetch(uploadUri);
@@ -57,7 +57,7 @@ export const SignUpAddProfilePictureConfirmScreen: React.FC = ({route}) => {
         .child(`${filename}.jpg`)
         .getDownloadURL()
         .then((url) => {
-          updateUserInformation(userInfo.id, userInfo.email, userInfo.fullname, '', '', '', '', url, false)
+          updateUserInformation(userInfo.randomString, userInfo.email, userInfo.fullname, '', '', '', '', url, false)
           .then(async (result: Promise<IUser>) => {
             setUploading(false);
             setLoginUser(await result);
