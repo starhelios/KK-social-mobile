@@ -5,10 +5,7 @@ import {
   View,
   Image,
   TouchableWithoutFeedback,
-  KeyboardAvoidingView,
-  Platform,
   Keyboard,
-  ScrollView,
   Alert,
 } from 'react-native';
 import { Container } from 'native-base';
@@ -16,6 +13,7 @@ import { useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { SvgXml } from 'react-native-svg';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
+import Spinner from 'react-native-loading-spinner-overlay';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 // from app
@@ -39,12 +37,14 @@ import {
 import { ColorButton } from '../../components/Button';
 import { useAuthentication } from '../../hooks';
 import { IApiError } from '../../interfaces/api';
+import { useDispatch } from '../../redux/Store';
+import { ActionType } from '../../redux/Reducer';
 import GlobalStyle from '../../styles/global';
-import Spinner from 'react-native-loading-spinner-overlay';
 
 
 export const SignUpScreen: React.FC = () => {
 
+  const dispatch = useDispatch();
   const { reset, goBack } = useNavigation();
   const { registerUser } = useAuthentication();
 
@@ -76,6 +76,10 @@ export const SignUpScreen: React.FC = () => {
       setFetchingData(false);
       if ((await result) == true) {
         saveUserInfo();
+        dispatch({
+          type: ActionType.SET_NEED_GO_PROFILE,
+          payload: true,
+        });
         reset({
           index: 0,
           routes: [{ name: 'SignUpAddProfilePicture' }],

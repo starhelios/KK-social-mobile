@@ -21,6 +21,9 @@ const initialState: State = {
     zoomId: '',
     experiences: [],
     availableMethods: [],
+    stripeAccountVerified: '',
+    zoomConnected: false,
+    randomString: '',
   },
 
   accessToken: {
@@ -52,6 +55,7 @@ const initialState: State = {
     expiryYear: 0,
     last4digits: '',
   },
+  needGoProfile: false,
 };
 
 const StoreContext = createContext<State>(initialState);

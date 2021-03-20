@@ -40,9 +40,12 @@ export const PaymentOptionsScreen: React.FC = () => {
   const [ isEditing, setIsEditing ] = useState<boolean>(false);
 
   useEffect(() => {
-    let cards = userInfo.availableMethods.filter((item) => {
-      return item.id != ''
-    });
+    let cards: ICardInfo[] = [];
+    if (userInfo.availableMethods != undefined && userInfo.availableMethods != null) {
+      cards = userInfo.availableMethods.filter((item) => {
+        return item.id != ''
+      });
+    }
     cards.push({id: '', cardBrand: 'Add New Payment', expiryMonth: 0, expiryYear: 0, last4digits: ''});
     setCardList(cards);
   }, [userInfo]);

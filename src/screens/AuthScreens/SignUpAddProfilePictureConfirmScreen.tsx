@@ -65,6 +65,7 @@ export const SignUpAddProfilePictureConfirmScreen: React.FC = ({route}) => {
               index: 0,
               routes: [{ name: 'TabBar' }],
             });
+            
           }).catch(() => {
             setUploading(false);
             Alert.alert('', ERROR_MESSAGE.UPDATE_USER_PROFILE_FAIL);

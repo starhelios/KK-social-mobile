@@ -8,5 +8,6 @@ export interface IUserBooking {
 	usersGoing: string[];
 	day: string;
 	startTime: string;
+	endTime: string,
 	completed: boolean;
 }

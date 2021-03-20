@@ -220,11 +220,11 @@ export const useExperiences = () => {
 
   
   const completeBooking = async (
-    itemsNeedUpdatedArray: string[],
+    ids: string[],
   ): Promise<any> => {
     const url = API_ENDPOINT.BOOKING_COMPLETE;
     let body = {
-      itemsNeedUpdatedArray,
+      ids,
     };
     try {
       const { data } = await axios.post<IApiSuccess>(url, body, API_CONFIG);

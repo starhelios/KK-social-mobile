@@ -12,6 +12,7 @@ import {
 import { useEffect, useState } from 'react';
 import { Container } from 'native-base';
 import { SvgXml } from 'react-native-svg';
+import { useNavigation } from '@react-navigation/native';
 import Spinner from 'react-native-loading-spinner-overlay';
 
 // from app
@@ -28,7 +29,7 @@ import {
   MARGIN_TOP,
 } from '../../constants';
 import { useCategories, useExperiences, useHosts, useSearch } from '../../hooks';
-import { ICategory, IExperience, IUser, IHostList, ISearchHome } from '../../interfaces/app';
+import { ICategory, IExperience, IUser, ISearchHome } from '../../interfaces/app';
 import { ExperienceView, FiltersView, HostView, SelectDateRangeView } from '../../components/View';
 import { useDispatch, useGlobalState } from '../../redux/Store';
 import { ActionType } from '../../redux/Reducer';
@@ -40,11 +41,13 @@ export const HomeScreen: React.FC = () => {
   const filter = useGlobalState('filter');
   const popularExperienceList = useGlobalState('experienceList');
   const categoryList = useGlobalState('categoryList');
+  const needGoProfile = useGlobalState('needGoProfile');
 
   const { getCategoryList } = useCategories();
   const { getExperienceList } = useExperiences();
   const { getHostList } = useHosts();
   const { searchHome } = useSearch();
+  const { navigate } = useNavigation();
 
   const [searchText, setSearchText] = useState<string>('');
   const [experienceList, setExperienceList] = useState<IExperience[]>([]);
@@ -61,7 +64,17 @@ export const HomeScreen: React.FC = () => {
   const [searching, setSearching] = useState<boolean>(false);
   const [filtering, setFiltering] = useState<boolean>(false);
 
-  
+  useEffect(() => {
+    if (needGoProfile == true) {
+      dispatch({
+        type: ActionType.SET_NEED_GO_PROFILE,
+        payload: false,
+      });
+
+      navigate('ProfileTab');
+    }
+  }, []);
+
   useEffect(() => {
     loadCategoryList();
     loadExperienceList();

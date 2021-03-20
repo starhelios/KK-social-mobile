@@ -79,7 +79,7 @@ export const ExperiencesHostedByMeScreen: React.FC = () => {
           />
 
           <TouchableWithoutFeedback onPress={() => {
-            userInfo.zoomAccessToken == undefined || userInfo.zoomAccessToken == ''
+            userInfo.zoomConnected != true
               ? Alert.alert('', ERROR_MESSAGE.NONE_CONNECT_ZOOM_ACCOUNT)
               : navigate('HostAnExperience')
           }}>

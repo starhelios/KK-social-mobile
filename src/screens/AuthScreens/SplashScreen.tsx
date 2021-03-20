@@ -133,22 +133,17 @@ export const SplashScreen: React.FC = () => {
         .then((res) => {
           loginByGoogle(res.accessToken)
           .then(async (result: Promise<ILoginUser>) => {
-            fetching = false;
             goMainScreen();
           }).catch(() => {
-            fetching = false;
             goMainScreen();
           });
         }).catch(() => {
-          fetching = false;
-            goMainScreen();
+          goMainScreen();
         });
       }).catch(() => {
-        fetching = false;
         goMainScreen();
       });
     } catch (error) {
-      fetching = false;
       goMainScreen();
     }
   };
@@ -157,10 +152,8 @@ export const SplashScreen: React.FC = () => {
     fetching = true;
     loginUser(emailAddress, passwordString)
     .then(async (result: Promise<ILoginUser>) => {
-      fetching = false;
       goMainScreen();
     }).catch(() => {
-      fetching = false;
       goMainScreen();
     });
   }, []);

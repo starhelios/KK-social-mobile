@@ -18,6 +18,7 @@ export enum ActionType {
   SET_CATEGORY_LIST = 'SET_CATEGORY_LIST',
   SET_RESERVED_BOOKING_LIST = 'SET_RESERVED_BOOKING_LIST',
   SET_SELECT_CARD = 'SET_SELECT_CARD',
+  SET_NEED_GO_PROFILE = 'SET_NEED_GO_PROFILE',
 }
 
 export interface Action {
@@ -36,6 +37,7 @@ export interface State {
   categoryList: ICategory[];
   reservedBookingList: IUserBooking[],
   selectedCard: ICardInfo,
+  needGoProfile: boolean,
 }
 
 /** Reducer */
@@ -69,6 +71,9 @@ const Reducer = (state: State, action: Action): any => {
 
     case ActionType.SET_SELECT_CARD:
       return {...state, selectedCard: payload};
+
+    case ActionType.SET_NEED_GO_PROFILE:
+      return {...state, needGoProfile: payload};
 
     default:
       break;

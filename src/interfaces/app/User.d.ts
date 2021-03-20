@@ -12,7 +12,7 @@ export interface IUser {
   location: string,
   isHost: boolean,
   availableMethods: ICardInfo[],
-  experiences: string,
+  experiences: string[],
   zoomConnected: boolean,
   stripeAccountVerified: string,
   zoomAccessToken: string,
